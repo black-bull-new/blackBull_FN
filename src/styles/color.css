@@ -1,6 +1,18 @@
 .bg-primary-color {
   background-color: #8d3194;
 }
-.text-primary{
-    color: #8d3194;
+.text-primary {
+  color: #8d3194;
+}
+.bg-accent3 {
+  background-color: #5c3e8e !important;
+}
+.bg-primary9 {
+  background-color: #e8d6ea;
+}
+.bg-blueGrey-100 {
+  background-color: #ced7db;
+}
+.text-blueGrey-700 {
+  color: #445963;
 }

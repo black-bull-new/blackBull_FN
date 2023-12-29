@@ -14,15 +14,13 @@ import StatusChip from "../../../components/StatusChip";
 
 const CreateVehicle = () => {
   const xyz = ownershipStatus?.map((item) => {
-    console.log("ch", { item });
     return item;
   });
-
-  console.log("cho", { xyz });
 
   const [ownerStatus, setOwnerStatus] = useState("");
   console.log("owner status on select", ownerStatus);
   const [selectedData, setSelectedData] = useState("");
+  const [state, setState] = useState("");
 
   return (
     <>
@@ -31,10 +29,10 @@ const CreateVehicle = () => {
         <div className="sticky top-0">
           <Sidebar />
         </div>
-        <div className=" w-full mt-4">
+        <div className="ml-[316px] w-full mt-4">
           <div className="bg-white mr-4 flex justify-between items-center rounded-md">
             <h2 className=" w-full p-4 rounded-md font-bold">Create Vehicle</h2>
-            <div className="h-8 w-8 flex justify-center cursor-pointer text-2xl items-center bg-[#CED7DB] rounded-full mr-4">
+            <div className="h-8 w-8 flex justify-center cursor-pointer text-2xl items-center bg-blueGrey-100 rounded-full mr-4">
               <span className="mt-[-2px] ml-[2px] text-[#292D32] rotate-45">
                 +
               </span>
@@ -58,26 +56,82 @@ const CreateVehicle = () => {
                   className="w-full"
                 />
                 <Maininputfield label="Vehicle Model" className="w-full" />
-                <Mainselectfield label="Vehicle Type" option="Choose vehicle" />
-                <Mainselectfield label="Type of Trailer" option="Straight" />
-                <Mainselectfield
+                {/* <Mainselectfield label="Vehicle Type" option="Choose vehicle" /> */}
+                <DropDownMap
+                  label="Vehicle Type"
+                  mapOption={vehicleTypeColleciton}
+                  selectedData={selectedData}
+                  setSelectedData={setSelectedData}
+                />
+                <DropDownMap
+                  label="Type of Trailer"
+                  mapOption={trailerTypeCollection}
+                  selectedData={selectedData}
+                  setSelectedData={setSelectedData}
+                />
+                <DropDownMap
+                  label="State of Registration"
+                  mapOption={registrationStateCollection}
+                  selectedData={selectedData}
+                  setSelectedData={setSelectedData}
+                />
+
+                {/* <Mainselectfield label="Type of Trailer" option="Straight" /> */}
+                {/* <Mainselectfield
                   label="State of Registration"
                   option="Victoria"
-                />
+                /> */}
                 <Maininputfield label="Engine Number" className="w-full" />
                 <Maininputfield label="Compliance Plate" className="w-full" />
+                <DropDownMap
+                  label={"Registration Status"}
+                  mapOption={registrationStatusCollection}
+                  selectedData={selectedData}
+                  setSelectedData={setSelectedData}
+                />
                 <DropDownMap
                   label={"Ownership Status"}
                   mapOption={ownershipStatus}
                   selectedData={selectedData}
                   setSelectedData={setSelectedData}
                 />
-
-                <Mainselectfield label="Registration Status" option="Active" />
-              </div>
-              <div className="mt-4 grid grid-cols-3">
+                {selectedData === "Hired" && (
+                  <>
+                    <Maininputfield label="Rented Company" className="w-full" />
+                    <DateWithoutDropdown
+                      label="Date of Hire"
+                      value="15/04/2023"
+                    />
+                    <DateWithoutDropdown
+                      label="Contract Valid Till"
+                      value="15/04/2023"
+                    />
+                    <DropDownMap
+                      label={"Term"}
+                      mapOption={termCollection}
+                      selectedData={state}
+                      setSelectedData={setState}
+                    />
+                    <Maininputfield label="Weekly Rent" className="w-full" />
+                    <DropDownMap
+                      label={"Tax"}
+                      mapOption={taxCollection}
+                      selectedData={state}
+                      setSelectedData={setState}
+                    />
+                    <DropDownMap
+                      label={"Payment Method"}
+                      mapOption={paymentMethodColleciton}
+                      selectedData={state}
+                      setSelectedData={setState}
+                    />
+                  </>
+                )}
                 <FileUpload />
+
+                {/* <Mainselectfield label="Registration Status" option="Active" /> */}
               </div>
+
               {selectedData === "Hired" && (
                 <div className="mt-8">
                   <h3 className="w-full mb-4 font-semibold">Bank Details</h3>
@@ -130,12 +184,30 @@ const CreateVehicle = () => {
                     value="288"
                     className="w-full"
                   />
-                  <Mainselectfield
+                  {/* <Mainselectfield
                     label="Insurance Coverage"
                     option="$1 Million Coverage"
+                  /> */}
+                  <DropDownMap
+                    mapOption={insuranceCoverageCollection}
+                    label="Insurance Coverage"
+                    selectedData={state}
+                    setSelectedData={setState}
                   />
-                  <Mainselectfield label="Insurance Status" option="Active" />
-                  <Mainselectfield label="Situation" option="Anywhere" />
+                  <DropDownMap
+                    mapOption={insuranceStatusCollection}
+                    label="Insurance Status"
+                    selectedData={state}
+                    setSelectedData={setState}
+                  />
+                  <DropDownMap
+                    mapOption={situationCollection}
+                    label="Situation"
+                    selectedData={state}
+                    setSelectedData={setState}
+                  />
+                  {/* <Mainselectfield label="Insurance Status" option="Active" /> */}
+                  {/* <Mainselectfield label="Situation" option="Anywhere" /> */}
                 </div>
               </div>
               <div className="mt-8">
@@ -192,8 +264,8 @@ const CreateVehicle = () => {
                           </span> */}
                           <StatusChip className="w-fit" />
                         </div>
-                        <div className="underline text-center">
-                          <span className="cursor-pointer">
+                        <div className="underline decoration-[#8D3194] text-center">
+                          <span className="cursor-pointer text-primary">
                             {" "}
                             {data.viewDoc}
                           </span>
@@ -274,5 +346,167 @@ const ownershipStatus = [
   },
   {
     value: "Sub-Contractor",
+  },
+];
+const vehicleTypeColleciton = [
+  {
+    value: "Prime Mover",
+  },
+  {
+    value: "Trailer A",
+  },
+  {
+    value: "Trailer B",
+  },
+  {
+    value: "Foklift",
+  },
+  {
+    value: "Car",
+  },
+  {
+    value: "UTE",
+  },
+];
+const trailerTypeCollection = [
+  {
+    value: "Straight",
+  },
+  { value: "Drop" },
+  {
+    value: "Freezer",
+  },
+  {
+    value: "Mezz",
+  },
+  {
+    value: "Box",
+  },
+  {
+    value: "Dog",
+  },
+  {
+    value: "Semi",
+  },
+  {
+    value: "Low loader",
+  },
+  {
+    value: "Tag",
+  },
+  {
+    value: "Drop Decks with Ramps",
+  },
+  {
+    value: "Drop Decks with Ramps",
+  },
+  {
+    value: "B-Doubles",
+  },
+  {
+    value: "Oversize Road Train",
+  },
+];
+const registrationStateCollection = [
+  {
+    value: "Victoria",
+  },
+  {
+    value: "Australian Capital Territory",
+  },
+  {
+    value: "New South Wales",
+  },
+  {
+    value: "Northern Territory",
+  },
+  {
+    value: "Queensland",
+  },
+  {
+    value: "South Australia",
+  },
+  {
+    value: "Tasmania",
+  },
+  {
+    value: "Western Australia",
+  },
+];
+const registrationStatusCollection = [
+  {
+    value: "Active",
+  },
+  {
+    value: "Cancelled",
+  },
+  {
+    value: "Suspended",
+  },
+  {
+    value: "Renewal Pending",
+  },
+];
+const termCollection = [
+  {
+    value: "Weekly",
+  },
+  {
+    value: "Fortnight",
+  },
+  {
+    value: "Monthly",
+  },
+];
+const taxCollection = [
+  {
+    value: "Inclusive",
+  },
+  {
+    value: "Exclusive",
+  },
+  {
+    value: "Free",
+  },
+];
+const paymentMethodColleciton = [
+  {
+    value: "Credit Card",
+  },
+];
+const insuranceCoverageCollection = [
+  {
+    value: "$1 Million Coverage",
+  },
+  {
+    value: "$2 Million Coverage",
+  },
+  {
+    value: "$3 Million Coverage",
+  },
+  {
+    value: "$5 Million Coverage",
+  },
+  {
+    value: "$10 Million Coverage",
+  },
+];
+const insuranceStatusCollection = [
+  {
+    value: "Active",
+  },
+  {
+    value: "Expired",
+  },
+  {
+    value: "Renewed",
+  },
+];
+const situationCollection = [
+  {
+    value: "Anywhere",
+  },
+  {
+    value: "Limited",
   },
 ];

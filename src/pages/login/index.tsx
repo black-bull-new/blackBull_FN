@@ -48,8 +48,8 @@ const Login = () => {
   return (
     <React.Fragment>
       <div>
-        <div className=" pt-4 pl-6 absolute">
-          <Image src="/logo.svg" alt="logo" width={150} height={150} />
+        <div className=" pt-6 pl-8 absolute">
+          <Image src="/logoOzi.svg" alt="logo" width={130} height={50} />
         </div>
         <div className="grid grid-cols-2 items-center">
           <form
@@ -62,11 +62,10 @@ const Login = () => {
           >
             <div className="max-w-[440px] ml-auto mr-auto text-center pt-10">
               <h1 className="font-bold text-3xl tracking-wide">
-                 User Login
+                Welcome Back!
               </h1>
               <p className="mt-2">
-                Sign in using your email and temporary password to set up your
-                account.
+                Log in to BlackBull for instant access to your dashboard.
               </p>
               <div className="flex gap-4 flex-col mt-11">
                 <InputField
@@ -145,7 +144,7 @@ const Login = () => {
               <div className="mt-8 mb-4">
                 <Button
                   visible={isValidVisibility}
-                  text="Proceed to Login"
+                  text="Login"
                   className="!rounded-[30px]  justify-center"
                 />
               </div>
@@ -154,15 +153,15 @@ const Login = () => {
                   className="text-[#737373] text-sm mt-10 font-medium cursor-pointer"
                   onClick={() => router.push("/signup")}
                 >
-                  Haven not joined yet? 
-                  <b className="text-black font-medium"> Register now</b>
+                  Don&apos;t have an account?
+                  <b className="text-primary font-medium"> Sign Up</b>
                 </span>
               </div>
             </div>
           </form>
           <div className="flex justify-center">
             <Image
-              src="/Background.png"
+              src="/Background.svg"
               alt="logo"
               width={700}
               height={700}

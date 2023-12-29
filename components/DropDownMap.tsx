@@ -26,7 +26,7 @@ const DropDownMap = ({
 }: ProposFrence) => {
   console.log("check kr", mapOption);
 
-//   const [selectedData, setSelectedData] = useState("");
+  //   const [selectedData, setSelectedData] = useState("");
 
   const selectValue = (value: any) => {
     setSelectedData(value.target.value);
@@ -34,7 +34,7 @@ const DropDownMap = ({
   console.log("data", selectedData);
 
   return (
-    <div className="bg-[#EFF2F3]  pt-[5px] pb-[5px] rounded-md">
+    <div className="bg-[#EFF2F3] dropdown pt-[5px] pb-[5px] rounded-md">
       <label className="text-[12px] block pl-[15px] text-[#57727E]">
         {label}
       </label>
@@ -48,6 +48,7 @@ const DropDownMap = ({
           return (
             <>
               <option
+                className="text-[Placeholder]"
                 key={`${index}`}
                 value={`${items.value}`}
                 onClick={() => selectValue(items.value)}

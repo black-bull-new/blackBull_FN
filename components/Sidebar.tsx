@@ -9,13 +9,27 @@ import Progressbar from "./Progressbar";
 import Image from "next/image";
 import DashboardSvgIcon from "./svg/DashboardSvgIcon";
 import VehiDetails from "./VehiDetails";
+import { useRouter } from "next/router";
 
 const Sidebar = () => {
-  const [state, setState] = useState("");
+  const router = useRouter();
+
+  const [state, setState] = useState(false);
+  const [sidebarValue, setSidebarValue] = useState("");
+
+  const toggleSidebar = (value: any) => {
+    setState(!state);
+    setSidebarValue(value);
+  };
+
   const [submenu, setSubmenu] = useState("");
+  const toggleSubmenu = (option: any) => {
+    setSubmenu(option);
+    submenu === "Vehicle" ? router.push("/onboarding/vehicle-list") : "";
+  };
   return (
     <>
-      <div className="text-black  flex  relative top-0 h-screen">
+      <div className="text-black flex relative top-0 h-screen">
         <nav className="fixed top-0 text-black bg-white p-4 w-[300px] h-screen">
           <Image
             src="/logo.svg"
@@ -29,9 +43,11 @@ const Sidebar = () => {
               return (
                 <>
                   <li
-                    className="flex items-center justify-between h-14"
+                    className={`flex items-center justify-between h-14 
+                    ${sidebarValue === value.value ? "text-primary" : ""}
+                    `}
                     key={index}
-                    onClick={() => setState(value.value)}
+                    onClick={() => toggleSidebar(value.value)}
                   >
                     <div className="flex justify-between items-center w-full gap-2 cursor-pointer">
                       <div className="flex items-center gap-2">
@@ -57,14 +73,17 @@ const Sidebar = () => {
                       )}
                     </div>
                   </li>
-                  {state === "Onboarding" && (
+
+                  {state && (
                     <div className="pl-6 font-semibold">
                       {value.submenu?.map((items, ind) => {
                         return (
                           <>
                             <div
-                              className="mb-2 cursor-pointer"
-                              onClick={() => setSubmenu(items.option)}
+                              className={`mb-2 cursor-pointer ${
+                                submenu === items.option ? "text-primary" : ""
+                              }`}
+                              onClick={() => toggleSubmenu(items.option)}
                             >
                               {items.option}
                             </div>
@@ -78,7 +97,7 @@ const Sidebar = () => {
             })}
           </ul>
         </nav>
-        <div className="content flex-grow ml-4 mt-4 ml-[316px]">
+        {/* <div className="content flex-grow ml-4 mt-4 ml-[316px]">
           {state === "Dashboard" && <div>dashboard</div>}
           {state === "Bookings" && <div>Bookings</div>}
           {state === "Accounts" && <div>Accounts</div>}
@@ -91,7 +110,7 @@ const Sidebar = () => {
           ) : (
             <></>
           )}
-        </div>
+        </div> */}
       </div>
     </>
   );

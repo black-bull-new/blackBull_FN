@@ -20,7 +20,9 @@ const config: Config = {
     "./src/pages/dashboard/index.tsx",
     "./components/InputField.tsx",
     "./src/pages/create-vehicle/index.tsx",
-    "./components/StatusChip.tsx"
+    "./components/StatusChip.tsx",
+    "./components/DropDownMap.tsx",
+    "./src/pages/onboarding/vehicle-list/index.tsx",
   ],
   theme: {
     extend: {

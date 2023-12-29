@@ -22,7 +22,7 @@ const VehiDetails = () => {
               <div className="flex gap-2 relative">
                 <Button
                   text="Bulk Upload"
-                  className="bg-transparent !text-[#6599FF] border border-[#6599FF] tracking-wide"
+                  className="bg-accent3 border border-[#6599FF] tracking-wide"
                 />
                 <Button
                   text="Choose Action"
@@ -116,7 +116,7 @@ const VehiDetails = () => {
                 <div className="flex justify-end absolute bottom-4 right-4 gap-2">
                   <Button
                     text="Cancel"
-                    className="bg-transparent border !text-[#000] !py-[4px] !px-[8px]"
+                    className="!bg-transparent border !text-[#000] !py-[4px] !px-[8px]"
                     onClick={() => setAddPop(false)}
                   />
                   <Button

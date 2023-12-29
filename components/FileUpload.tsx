@@ -20,7 +20,7 @@ const FileUpload = () => {
           <div className="bg-[#EFF2F3] px-4 py-2 rounded-md w-full">
             {fileName !== "" ? fileName : " Choose Rego Document"}
           </div>
-          <div className="bg-[#6599FF] text-white px-4 py-2 rounded-md">
+          <div className="bg-accent3 text-white px-4 py-2 rounded-md">
             Browse
           </div>
         </label>

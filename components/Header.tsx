@@ -13,7 +13,7 @@ const Header = () => {
             height={16}
           />
           <div className="flex gap">
-            <span className="bg-[#E9EFFF] w-8 h-8 flex justify-center items-center rounded-full text-sm font-bold text-primary">
+            <span className="bg-primary9 w-8 h-8 flex justify-center items-center rounded-full text-sm font-bold text-primary">
               R
             </span>
             <Image src="/dropdown.svg" alt="dropdown" width={18} height={14} />
