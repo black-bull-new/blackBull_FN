@@ -1,16 +1,16 @@
 import { useState } from "react";
-import Button from "../../../components/Button";
-import DateWithoutDropdown from "../../../components/DateWithoutDropdown";
-import DropDownMap from "../../../components/DropDownMap";
-import FileUpload from "../../../components/FileUpload";
-import Footer from "../../../components/Footer";
-import Header from "../../../components/Header";
-import Maindatefield from "../../../components/Maindatefield";
-import Maininputfield from "../../../components/Maininputfield";
-import Mainselectfield from "../../../components/Mainselectfield";
-import Progressbar from "../../../components/Progressbar";
-import Sidebar from "../../../components/Sidebar";
-import StatusChip from "../../../components/StatusChip";
+import Button from "../../../../components/Button";
+import DateWithoutDropdown from "../../../../components/DateWithoutDropdown";
+import DropDownMap from "../../../../components/DropDownMap";
+import FileUpload from "../../../../components/FileUpload";
+import Footer from "../../../../components/Footer";
+import Header from "../../../../components/Header";
+import Maindatefield from "../../../../components/Maindatefield";
+import Maininputfield from "../../../../components/Maininputfield";
+import Mainselectfield from "../../../../components/Mainselectfield";
+import Progressbar from "../../../../components/Progressbar";
+import Sidebar from "../../../../components/Sidebar";
+import StatusChip from "../../../../components/StatusChip";
 
 const CreateVehicle = () => {
   const xyz = ownershipStatus?.map((item) => {

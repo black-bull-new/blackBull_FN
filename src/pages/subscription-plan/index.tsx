@@ -30,7 +30,7 @@ const SubscriptionPlan = () => {
             return (
               <>
                 <div
-                  className="px-6 pt-10 pb-6 w-fit bg-white rounded-xl overflow-hidden"
+                  className="px-6 pt-10 pb-6 w-fit bg-white rounded-xl overflow-hidden shadow-md"
                   key={index}
                 >
                   <div className="border-b border-[#CED7DB] pb-4 relative">
@@ -48,9 +48,11 @@ const SubscriptionPlan = () => {
                         {value.planContent}
                       </p>
                     </div>
-                    <div className="bg-primary-color text-white text-center p-2 absolute right-[-140px] top-8 w-full rotate-45">
-                      Popular
-                    </div>
+                    {value?.planHeading === "Business Plan" && (
+                      <div className="bg-primary-color text-white text-center p-2 absolute right-[-180px] top-[-20px] w-full rotate-45">
+                        Popular
+                      </div>
+                    )}
                   </div>
                   <div className="mt-6 grid gap-2">
                     <div className="flex gap-2 ">

@@ -122,7 +122,7 @@ const VehiDetails = () => {
                   <Button
                     text="Add Vehicle"
                     className=" !py-[4px] !px-[8px]"
-                    onClick={() => router.push("/create-vehicle")}
+                    onClick={() => router.push("/onboarding/create-vehicle")}
                   />
                 </div>
               </div>
