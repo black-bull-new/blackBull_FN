@@ -23,6 +23,7 @@ const config: Config = {
     "./components/StatusChip.tsx",
     "./components/DropDownMap.tsx",
     "./src/pages/onboarding/vehicle-list/index.tsx",
+    "./src/pages/subscription-plan/index.tsx",
   ],
   theme: {
     extend: {

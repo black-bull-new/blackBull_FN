@@ -62,135 +62,199 @@ const SignUp = () => {
           >
             <div className="max-w-[440px] ml-auto mr-auto text-center pt-10">
               <h1 className="font-bold text-3xl tracking-wide">
-                New User Register
+                Join the Journey
               </h1>
               <p className="mt-2">
-                Sign in using your email and temporary password to set up your
-                account.
+                Your route to hassle-free logistics begins here.
               </p>
-              <div className="flex gap-4 flex-col mt-11">
-                <InputField
-                  type="text"
-                  placeholder="User Name"
-                  className="bg-cool-gray"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.username}
-                  hasError={
-                    formik.touched.username && formik.errors.username
-                      ? true
-                      : false
-                  }
-                  name={"username"}
-                  id={""}
-                  required={"required"}
-                  src="/mail.svg"
-                  alt="mail"
-                  svgWidth={16}
-                  svgHeight={16}
-                />
-                {formik.touched.username && formik?.errors.username ? (
-                  <div
-                    style={{
-                      textAlign: "left",
-                      fontSize: "12px",
-                      marginTop: "-10px",
-                      color: "red",
+              <div className="flex gap-2 flex-col mt-11">
+                <div className="flex gap-2 items-center">
+                  <Image
+                    src={"/image.svg"}
+                    alt="userIcon"
+                    width={16}
+                    height={16}
+                  />
+                  <h1 className="text-left font-semibold">
+                    Personal Information
+                  </h1>
+                </div>
+                <div className="grid grid-cols-2 gap">
+                  <InputField
+                    type="text"
+                    placeholder="First Name"
+                    className="bg-cool-gray"
+                    name={"firstName"}
+                    id={"firstName"}
+                    required={"required"}
+                    value={""}
+                    onChange={function (e: any): void {
+                      throw new Error("Function not implemented.");
                     }}
-                  >
-                    {formik?.errors?.username as React.ReactNode}
-                  </div>
-                ) : null}
+                    alt={""}
+                    src={""}
+                    svgWidth={0}
+                    svgHeight={0}
+                  />
+                  <InputField
+                    type="text"
+                    placeholder="Last Name"
+                    className="bg-cool-gray"
+                    name={"lastName"}
+                    id={"lastName"}
+                    required={"required"}
+                    value={""}
+                    onChange={function (e: any): void {
+                      throw new Error("Function not implemented.");
+                    }}
+                    alt={""}
+                    src={""}
+                    svgWidth={0}
+                    svgHeight={0}
+                  />
+                </div>
+
                 <InputField
                   required={"required"}
                   type="text"
-                  placeholder="Email address"
+                  placeholder="Email"
                   className="bg-cool-gray"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.email}
                   name={"email"}
-                  hasError={
-                    formik.touched.email && formik.errors.email ? true : false
-                  }
                   id={""}
-                  src="/mail.svg"
-                  alt="mail"
-                  svgWidth={16}
-                  svgHeight={16}
+                  src=""
+                  alt=""
+                  svgWidth={0}
+                  svgHeight={0}
+                  value={""}
+                  onChange={function (e: any): void {
+                    throw new Error("Function not implemented.");
+                  }}
                 />
-                {formik.touched.email && formik.errors.email ? (
-                  <div
-                    style={{
-                      textAlign: "left",
-                      fontSize: "12px",
-                      marginTop: "-10px",
-                      color: "red",
-                    }}
-                  >
-                    {formik.errors.email as React.ReactNode}
-                  </div>
-                ) : null}
+
                 <InputField
-                  type={visibel ? "text" : "password"}
-                  placeholder="password"
+                  type={"number"}
+                  placeholder="Contact Number"
                   className="bg-cool-gray"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.password}
-                  hasError={
-                    formik.touched.password && formik.errors.password
-                      ? true
-                      : false
-                  }
-                  name={"password"}
-                  id={""}
-                  src="/lock.svg"
-                  alt="lock"
-                  svgWidth={16}
+                  name={"number"}
+                  id={"number"}
+                  src=""
+                  alt=""
+                  svgWidth={0}
                   required={"required"}
-                  svgHeight={16}
-                  onClick={() => SetVisible(!visibel)}
-                  isvisibel={visibel}
+                  svgHeight={0}
+                  value={""}
+                  onChange={function (e: any): void {
+                    throw new Error("Function not implemented.");
+                  }}
                 />
-                {formik.touched.password && formik.errors.password ? (
-                  <div
-                    style={{
-                      textAlign: "left",
-                      fontSize: "12px",
-                      marginTop: "-10px",
-                      color: "red",
-                    }}
-                  >
-                    {formik.errors.password as React.ReactNode}
-                  </div>
-                ) : null}
-                <p className="text-right text-[#0F172A] font-semibold text-sm ">
-                  <span className="cursor-pointer">Forgot Password?</span>
-                </p>
               </div>
-              <div>
-                <Checkbox content="Remember Me" />
+              <div className="flex gap-2 flex-col mt-4">
+                <div className="flex gap-2 items-center">
+                  <Image
+                    src={"/image.svg"}
+                    alt="userIcon"
+                    width={16}
+                    height={16}
+                  />
+                  <h1 className="text-left font-semibold">
+                    Personal Information
+                  </h1>
+                </div>
+                <div className="grid grid-cols-2 gap">
+                  <InputField
+                    type="text"
+                    placeholder="Designation"
+                    className="bg-cool-gray"
+                    name={"designation"}
+                    id={"designation"}
+                    required={"required"}
+                    value={""}
+                    onChange={function (e: any): void {
+                      throw new Error("Function not implemented.");
+                    }}
+                    alt={""}
+                    src={""}
+                    svgWidth={0}
+                    svgHeight={0}
+                  />
+                  <InputField
+                    type="text"
+                    placeholder="Company Name"
+                    className="bg-cool-gray"
+                    name={"company"}
+                    id={"company"}
+                    required={"required"}
+                    value={""}
+                    onChange={function (e: any): void {
+                      throw new Error("Function not implemented.");
+                    }}
+                    alt={""}
+                    src={""}
+                    svgWidth={0}
+                    svgHeight={0}
+                  />
+                </div>
+
+                <InputField
+                  required={"required"}
+                  type="text"
+                  placeholder="Email"
+                  className="bg-cool-gray"
+                  name={"email"}
+                  id={""}
+                  src=""
+                  alt=""
+                  svgWidth={0}
+                  svgHeight={0}
+                  value={""}
+                  onChange={function (e: any): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                />
+
+                <InputField
+                  type={"text"}
+                  placeholder="Address"
+                  className="bg-cool-gray"
+                  name={"address"}
+                  id={"address"}
+                  src=""
+                  alt=""
+                  svgWidth={0}
+                  required={"required"}
+                  svgHeight={0}
+                  value={""}
+                  onChange={function (e: any): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                />
               </div>
 
               <div className="mt-8 mb-4">
                 <Button
                   visible={isValidVisibility}
-                  text="Proceed to Register"
+                  text="Get Started"
                   className="!rounded-[30px]  justify-center"
+                  onClick={() => router.push("/subscription-plan")}
                 />
               </div>
               <div>
-                <span className="text-[#737373] text-sm mt-10 font-medium cursor-pointer " onClick={()=>router.push("/signin")}>
-                  Already joined?{" "}
-                  <b className="text-black font-medium">Login now</b>
+                <span className="text-[#737373] text-sm mt-10 font-medium cursor-pointer ">
+                  Already have an account?
+                  <b
+                    className="text-black font-medium text-primary"
+                    onClick={() => router.push("/login")}
+                  >
+                    {" "}
+                    Login
+                  </b>
                 </span>
               </div>
             </div>
           </form>
           <div className="flex justify-center">
             <Image
-              src="/Background.png"
+              src="/Background.svg"
               alt="logo"
               width={700}
               height={700}

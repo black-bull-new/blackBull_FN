@@ -145,7 +145,7 @@ const Login = () => {
                 <Button
                   visible={isValidVisibility}
                   text="Login"
-                  className="!rounded-[30px]  justify-center"
+                  className="!rounded-[30px] justify-center"
                 />
               </div>
               <div>
