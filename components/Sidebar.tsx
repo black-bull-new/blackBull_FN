@@ -19,13 +19,15 @@ const Sidebar = () => {
 
   const toggleSidebar = (value: any) => {
     setState(!state);
-    setSidebarValue(value);
+    // setSidebarValue(value);
+    sidebarValue === "" ? setSidebarValue(value) : setSidebarValue("");
   };
 
   const [submenu, setSubmenu] = useState("");
   const toggleSubmenu = (option: any) => {
     setSubmenu(option);
     submenu === "Vehicle" ? router.push("/onboarding/vehicle-list") : "";
+    submenu === "Driver" ? router.push("/onboarding/driver-list") : "";
   };
   return (
     <>
@@ -74,7 +76,7 @@ const Sidebar = () => {
                     </div>
                   </li>
 
-                  {state && (
+                  {sidebarValue === "Onboarding" && (
                     <div className="pl-6 font-semibold">
                       {value.submenu?.map((items, ind) => {
                         return (
@@ -84,6 +86,7 @@ const Sidebar = () => {
                                 submenu === items.option ? "text-primary" : ""
                               }`}
                               onClick={() => toggleSubmenu(items.option)}
+                              key={index}
                             >
                               {items.option}
                             </div>

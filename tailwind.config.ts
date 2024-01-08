@@ -24,6 +24,8 @@ const config: Config = {
     "./components/DropDownMap.tsx",
     "./src/pages/onboarding/vehicle-list/index.tsx",
     "./src/pages/subscription-plan/index.tsx",
+    "./src/pages/onboarding/driver-list/index.tsx",
+    "./components/DriverDetails.tsx",
   ],
   theme: {
     extend: {
