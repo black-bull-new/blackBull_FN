@@ -112,7 +112,7 @@ const DriverDetails = () => {
                   <Button
                     text="Add Driver"
                     className=" !py-[4px] !px-[8px]"
-                    onClick={() => router.push("/onboarding/create-vehicle")}
+                    onClick={() => router.push("/onboarding/create-driver")}
                   />
                 </div>
               </div>

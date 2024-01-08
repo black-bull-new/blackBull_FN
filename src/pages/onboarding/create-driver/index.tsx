@@ -1,9 +1,15 @@
+import { useState } from "react";
+import DropDownMap from "../../../../components/DropDownMap";
 import Footer from "../../../../components/Footer";
 import Header from "../../../../components/Header";
+import Maindatefield from "../../../../components/Maindatefield";
+import Maininputfield from "../../../../components/Maininputfield";
 import Progressbar from "../../../../components/Progressbar";
 import Sidebar from "../../../../components/Sidebar";
+import Image from "next/image";
 
 const CreateDriver = () => {
+  const [selectedData, setSelectedData] = useState("");
   return (
     <>
       <Header />
@@ -13,7 +19,7 @@ const CreateDriver = () => {
         </div>
         <div className="ml-[316px] w-full mt-4">
           <div className="bg-white mr-4 flex justify-between items-center rounded-md">
-            <h2 className=" w-full p-4 rounded-md font-bold">Create Vehicle</h2>
+            <h2 className=" w-full p-4 rounded-md font-bold">Create Driver</h2>
             <div className="h-8 w-8 flex justify-center cursor-pointer text-2xl items-center bg-blueGrey-100 rounded-full mr-4">
               <span className="mt-[-2px] ml-[2px] text-[#292D32] rotate-45">
                 +
@@ -21,221 +27,105 @@ const CreateDriver = () => {
             </div>
           </div>
           <div className="bg-white mr-4 px-4 rounded-md mt-4 p-4">
-            <Progressbar />
-            {/* <div>
+            <div className="mx-2">
+              <Progressbar />
+            </div>
+            <div className="relative w-fit">
+              <Image
+                src="/driverImage.svg"
+                alt="driver"
+                width={100}
+                height={100}
+              />
+              <span className="w-6 h-6 rounded-full bg-accent3 block text-white flex justify-center items-end text-xl absolute right-2 bottom-2">
+                +
+              </span>
+            </div>
+            <div>
               <h3 className=" w-full my-4 rounded-md font-semibold">
                 Vehicle Information
               </h3>
               <div className="grid grid-cols-3 gap-4">
                 <Maininputfield
-                  label="Registration Number"
+                  label="House Number"
+                  value={"12/20"}
                   className="w-full"
                 />
-                <Maindatefield label="Registration Expiry" className="w-full" />
-                <Maininputfield label="VIN No." className="w-full" />
                 <Maininputfield
-                  label="Vehicle Manufacturer"
+                  label="Middle Name"
+                  value={"Raju"}
                   className="w-full"
                 />
-                <Maininputfield label="Vehicle Model" className="w-full" />
+                <Maininputfield
+                  label="Last Name"
+                  value="Salve"
+                  className="w-full"
+                />
+                <Maindatefield label="DOB" className="w-full" />
+
+                <Maininputfield
+                  label="Email"
+                  value="sanket.r.salve@gmail.com"
+                  className="w-full"
+                />
+                <Maininputfield
+                  label="Mobile"
+                  value="+91 9584586482"
+                  className="w-full"
+                />
+                <Maininputfield
+                  label="Nationality"
+                  value="Indian"
+                  className="w-full"
+                />
+
+                {/* <FileUpload /> */}
+              </div>
+            </div>
+            <div className="mb-4 mt-8">
+              <h3 className=" w-full mb-4 rounded-md font-semibold">
+                Address Information
+              </h3>
+              <h4 className="text-sm font-semibold mb-4">Current Address</h4>
+              <div className="grid grid-cols-3 gap-4">
+                <Maininputfield
+                  label="House Number"
+                  value={"12/20"}
+                  className="w-full"
+                />
+                <Maininputfield
+                  label="Street"
+                  value={"Payne Street"}
+                  className="w-full"
+                />
+                <Maininputfield
+                  label="Suburb"
+                  value="Caulfield"
+                  className="w-full"
+                />
                 <DropDownMap
+                  label="State"
+                  mapOption={stateCollection}
+                  selectedData={selectedData}
+                  setSelectedData={setSelectedData}
+                />
+                <DropDownMap
+                  label="Country"
+                  mapOption={stateCollection}
+                  selectedData={selectedData}
+                  setSelectedData={setSelectedData}
+                />
+
+                {/* <DropDownMap
                   label="Vehicle Type"
                   mapOption={vehicleTypeColleciton}
                   selectedData={selectedData}
                   setSelectedData={setSelectedData}
-                />
-                <DropDownMap
-                  label="Type of Trailer"
-                  mapOption={trailerTypeCollection}
-                  selectedData={selectedData}
-                  setSelectedData={setSelectedData}
-                />
-                <DropDownMap
-                  label="State of Registration"
-                  mapOption={registrationStateCollection}
-                  selectedData={selectedData}
-                  setSelectedData={setSelectedData}
-                />
+                /> */}
 
-               
-                <Maininputfield label="Engine Number" className="w-full" />
-                <Maininputfield label="Compliance Plate" className="w-full" />
-                <DropDownMap
-                  label={"Registration Status"}
-                  mapOption={registrationStatusCollection}
-                  selectedData={selectedData}
-                  setSelectedData={setSelectedData}
-                />
-                <DropDownMap
-                  label={"Ownership Status"}
-                  mapOption={ownershipStatus}
-                  selectedData={selectedData}
-                  setSelectedData={setSelectedData}
-                />
-                {selectedData === "Hired" && (
-                  <>
-                    <Maininputfield label="Rented Company" className="w-full" />
-                    <DateWithoutDropdown
-                      label="Date of Hire"
-                      value="15/04/2023"
-                    />
-                    <DateWithoutDropdown
-                      label="Contract Valid Till"
-                      value="15/04/2023"
-                    />
-                    <DropDownMap
-                      label={"Term"}
-                      mapOption={termCollection}
-                      selectedData={state}
-                      setSelectedData={setState}
-                    />
-                    <Maininputfield label="Weekly Rent" className="w-full" />
-                    <DropDownMap
-                      label={"Tax"}
-                      mapOption={taxCollection}
-                      selectedData={state}
-                      setSelectedData={setState}
-                    />
-                    <DropDownMap
-                      label={"Payment Method"}
-                      mapOption={paymentMethodColleciton}
-                      selectedData={state}
-                      setSelectedData={setState}
-                    />
-                  </>
-                )}
-                <FileUpload />
-
+                {/* <FileUpload /> */}
               </div>
-
-              {selectedData === "Hired" && (
-                <div className="mt-8">
-                  <h3 className="w-full mb-4 font-semibold">Bank Details</h3>
-                  <div className="grid grid-cols-3 gap-4">
-                    <Maininputfield
-                      label="BSB"
-                      value="Allianz"
-                      className="w-full"
-                    />
-                    <Maininputfield
-                      label="Account Number"
-                      value="1234-5678-9012"
-                      className="w-full"
-                    />
-                    <Maininputfield
-                      label="Account Name"
-                      value="Rentals Pty Ltd"
-                      className="w-full"
-                    />
-                  </div>
-                </div>
-              )}
-              <div className="mt-8">
-                <h3 className="w-full mb-4 font-semibold">Vehicle Insurance</h3>
-                <div className="grid grid-cols-3 gap-4">
-                  <Maininputfield
-                    label="Insurance Company"
-                    className="w-full"
-                    value="Allianz"
-                  />
-                  <Maininputfield
-                    label="Policy Number"
-                    className="w-full"
-                    value="10578475"
-                  />
-                  <DateWithoutDropdown
-                    label="Vehicle Insurance Start Date"
-                    value="02/08/2023"
-                  />
-                  <DateWithoutDropdown
-                    label="Renewal Date"
-                    value="15/09/2025"
-                  />
-                  <DateWithoutDropdown
-                    label="Date Valid Until"
-                    value="15/10/2025"
-                  />
-                  <Maininputfield
-                    label="Days Left"
-                    value="288"
-                    className="w-full"
-                  />
-                
-                  <DropDownMap
-                    mapOption={insuranceCoverageCollection}
-                    label="Insurance Coverage"
-                    selectedData={state}
-                    setSelectedData={setState}
-                  />
-                  <DropDownMap
-                    mapOption={insuranceStatusCollection}
-                    label="Insurance Status"
-                    selectedData={state}
-                    setSelectedData={setState}
-                  />
-                  <DropDownMap
-                    mapOption={situationCollection}
-                    label="Situation"
-                    selectedData={state}
-                    setSelectedData={setState}
-                  />
-                 
-                </div>
-              </div>
-              <div className="mt-8">
-                <h3 className="w-full mb-4 font-semibold">Truck Odometer</h3>
-                <div className="grid grid-cols-3 gap-4">
-                  <Maininputfield
-                    label="Truck Odometer"
-                    value="50,000 km"
-                    className="w-full"
-                  />
-                </div>
-              </div>
-              <div className="mt-8">
-                <h3 className="w-full mb-4 font-semibold">Vehicle Documents</h3>
-                <div className="grid grid-cols-[16%_16%_16%_16%_16%_20%] bg-[#EFF2F3] py-4 rounded-md flex text-center">
-                  {vehicleDocumentCollection?.map((value, index) => {
-                    return (
-                      <>
-                        <div
-                          className="font-semibold text-sm text-[#151515]"
-                          key={index}
-                        >
-                          {value.heading}
-                        </div>
-                      </>
-                    );
-                  })}
-                </div>
-
-                {documentDataCollection?.map((data, ind) => {
-                  return (
-                    <>
-                      <div
-                        className="grid grid-cols-[16%_16%_16%_16%_16%_20%] py-4 flex text-center"
-                        key={ind}
-                      >
-                        <div>{data.Vehicle}</div>
-                        <div>{data.rego}</div>
-                        <div>{data.uploadDate}</div>
-                        <div>{data.UploadedDoc}</div>
-                        <div className="text-center items-center justify-center m-auto">
-                        
-                          <StatusChip className="w-fit" />
-                        </div>
-                        <div className="underline decoration-[#8D3194] text-center">
-                          <span className="cursor-pointer text-primary">
-                            {" "}
-                            {data.viewDoc}
-                          </span>
-                        </div>
-                      </div>
-                    </>
-                  );
-                })}
-              </div>
-            </div> */}
+            </div>
           </div>
           {/* <div className="mr-4 px-4 rounded-md mt-4 p-4 flex justify-end gap-2">
             <Button
@@ -251,3 +141,43 @@ const CreateDriver = () => {
   );
 };
 export default CreateDriver;
+const stateCollection = [
+  {
+    value: "Victoria",
+  },
+  {
+    value: "items1",
+  },
+  {
+    value: "items2",
+  },
+  {
+    value: "items3",
+  },
+  {
+    value: "items4",
+  },
+  {
+    value: "items5",
+  },
+];
+const countryCollection = [
+  {
+    value: "Australia",
+  },
+  {
+    value: "item1",
+  },
+  {
+    value: "item2",
+  },
+  {
+    value: "item3",
+  },
+  {
+    value: "item1",
+  },
+  {
+    value: "item1",
+  },
+];
