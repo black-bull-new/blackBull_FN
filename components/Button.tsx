@@ -10,7 +10,10 @@ const Button = (props: any) => {
         onClick={props.onClick}
         disabled={props.disabled}
       >
-        {props.text}
+        {props.signatureIcon && (
+          <Image src="/signature.svg" alt="signature" width={20} height={20} />
+        )}
+        <span className="text-base"> {props.text}</span>
         {props.dropDownIcon ? (
           <Image src="/arrow-down.svg" alt="dropdown" width={16} height={16} />
         ) : (

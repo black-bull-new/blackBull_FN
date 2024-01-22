@@ -26,6 +26,7 @@ const config: Config = {
     "./src/pages/subscription-plan/index.tsx",
     "./src/pages/onboarding/driver-list/index.tsx",
     "./components/DriverDetails.tsx",
+    "./components/imageUpload/ImageUpload.tsx",
   ],
   theme: {
     extend: {

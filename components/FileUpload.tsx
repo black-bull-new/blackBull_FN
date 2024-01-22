@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const FileUpload = () => {
+const FileUpload = (props: any) => {
   const [fileName, setFileName] = useState("");
   const handleFileUpload = (event: any) => {
     const file = event.target.files[0];
@@ -17,10 +17,10 @@ const FileUpload = () => {
           htmlFor="myFile"
           className="flex gap-2 items-center cursor-pointer"
         >
-          <div className="bg-[#EFF2F3] px-4 py-2 rounded-md w-full">
-            {fileName !== "" ? fileName : " Choose Rego Document"}
+          <div className="bg-[#EFF2F3] px-4 py-[12px] rounded-md w-full">
+            {fileName !== "" ? fileName : props.file}
           </div>
-          <div className="bg-accent3 text-white px-4 py-2 rounded-md">
+          <div className="bg-accent3 text-white px-10 py-[12px] font-semibold rounded-md">
             Browse
           </div>
         </label>
