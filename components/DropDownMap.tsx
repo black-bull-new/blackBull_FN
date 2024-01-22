@@ -34,7 +34,7 @@ const DropDownMap = ({
   console.log("data", selectedData);
 
   return (
-    <div className="bg-[#EFF2F3] dropdown pt-[5px] pb-[5px] rounded-md">
+    <div className="bg-[#EFF2F3] dropdown pt-[5px] pb-[5px] rounded-md leading-none">
       <label className="text-[12px] block pl-[15px] text-[#57727E]">
         {label}
       </label>

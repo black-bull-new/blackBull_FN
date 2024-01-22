@@ -5,7 +5,7 @@ import React from "react";
 const Dashboard = () => {
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       <div className="flex bg-[#E9EFFF]">
         <div className="sticky top-0 w-full">
           <Sidebar />

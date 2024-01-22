@@ -3,6 +3,7 @@ import "@/styles/color.css";
 import type { AppProps } from "next/app";
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
+import Header from "../../components/Header";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(
@@ -20,6 +21,7 @@ export default function App({ Component, pageProps }: AppProps) {
   );
   return (
     <QueryClientProvider client={queryClient}>
+      <Header />
       <Component {...pageProps} />
     </QueryClientProvider>
   );

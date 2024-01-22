@@ -1,5 +1,5 @@
 .bg-primary-color {
-  background-color: #2B36D9;
+  background-color: #2b36d9;
 }
 .text-primary {
   color: #8d3194;
@@ -25,6 +25,12 @@
 .text-blueGrey-900 {
   color: #28353a;
 }
-.bg-table-header{
-  background-color: #EFF2F3;
+.text-blueGrey-400 {
+  color: #8097a2;
+}
+.bg-table-header {
+  background-color: #eff2f3;
+}
+.text-coolGrey-500 {
+  color: #64748b;
 }

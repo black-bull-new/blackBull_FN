@@ -28,6 +28,9 @@ const Sidebar = () => {
     setSubmenu(option);
     submenu === "Vehicle" ? router.push("/onboarding/vehicle-list") : "";
     submenu === "Driver" ? router.push("/onboarding/driver-list") : "";
+    submenu === "Customer" ? router.push("/onboarding/add-customer") : "";
+    submenu === "Supplier" ? router.push("/onboarding/add-supplier") : "";
+    submenu === "User" ? router.push("/onboarding/user") : "";
   };
   return (
     <>
@@ -171,6 +174,9 @@ const sidebarCollection = [
       },
       {
         option: "Supplier",
+      },
+      {
+        option: "User",
       },
     ],
   },

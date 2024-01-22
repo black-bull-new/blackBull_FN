@@ -2,7 +2,7 @@ import React from "react";
 
 const Maininputfield = (props: any) => {
   return (
-    <div className="bg-[#EFF2F3]  pt-[6px] pb-[6px] rounded-md h-fit">
+    <div className="bg-[#EFF2F3]  pt-[6px] pb-[6px] rounded-md h-fit leading-none">
       <label className="text-[12px] block pl-[15px] text-[#57727E] leading-none">
         {props.label}
       </label>
