@@ -6,15 +6,12 @@ import Checkbox from "../../../components/Checkbox";
 import InputField from "../../../components/InputField";
 import Image from "next/image";
 import Button from "../../../components/Button";
-import { useLogin } from "@/network-request/mutation";
-import { LoginvalidationSchema } from "../../../components/fomsValidation";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import { Login } from "@/network-request/types";
 import { loginUser } from "@/network-request/api";
 
 const Login = () => {
-  const { mutate } = useLogin();
   const router = useRouter();
 
   const formik = useFormik({
