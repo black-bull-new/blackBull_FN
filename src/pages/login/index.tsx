@@ -35,7 +35,7 @@ const Login = () => {
       const response = await loginUser(values?.email, values?.password)
       console.log({ response })
       if (response?.token) {
-        // router.push("/dashboard")
+        router.push("/onboarding")
       } else {
         console.log("Login credentials error")
       }
