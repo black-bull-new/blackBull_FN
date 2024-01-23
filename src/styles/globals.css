@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+}
+
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  left: 0px;
+  font-size: 25px;
+  top: 16px;
+  z-index: 999;
+  opacity: 0;
+}
+
+.mainlogo {
+  margin: 0 auto;
+}
+.bg-cool-gray {
+  background-color: #f1f5f9;
+}
+.text-primary {
+  color: #032272;
+}
+input:focus-visible {
+  border: 0;
+  outline: 0;
+}
+progress::-webkit-progress-bar {
+  background-color: #eff2f3;
+  border-radius: 10px;
+}
+progress::-webkit-progress-value {
+  background-color: #8d3194;
+  border-radius: 10px;
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+  background: transparent;
+  bottom: 0;
+  color: transparent;
+  cursor: pointer;
+  height: auto;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: auto;
+}
+.dropdown select option {
+  background-color: white;
+  color: black !important;
+  text-align: left;
+  font-size: 14px;
+  height: 20px !important;
+}
+.dropdown select {
+  color: black !important;
+  font-weight: 500;
+}
+input::-webkit-inner-spin-button {
+  appearance: none;
+}
