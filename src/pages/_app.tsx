@@ -4,6 +4,9 @@ import type { AppProps } from "next/app";
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Header from "../../components/Header";
+import Sidebar from "../../components/Sidebar";
+import Footer from "../../components/Footer";
+import { useRouter } from "next/router";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(
@@ -19,10 +22,29 @@ export default function App({ Component, pageProps }: AppProps) {
         },
       })
   );
+  const router = useRouter();
+  const currentUrl = router.asPath;
+  console.log(currentUrl, "url:");
   return (
     <QueryClientProvider client={queryClient}>
-      <Header />
-      <Component {...pageProps} />
+      {currentUrl === "/login" ||
+      currentUrl === "/signup" ||
+      currentUrl === "/subscription-plan" ? (
+        <>
+          <Component {...pageProps} />
+        </>
+      ) : (
+        <>
+          <Header />
+          <div className="sticky top-0">
+            <Sidebar />
+          </div>
+          <Component {...pageProps} />
+          <div className="fixed bottom-0 w-full">
+            <Footer />
+          </div>
+        </>
+      )}
     </QueryClientProvider>
   );
 }

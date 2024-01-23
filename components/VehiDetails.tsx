@@ -14,7 +14,7 @@ const VehiDetails = () => {
           Vehicle Details
         </h2>
         <div>
-          <div className="mt-4 bg-white p-4 rounded-md items-center ">
+          <div className="mt-4 mb-20 bg-white p-4 rounded-md items-center ">
             <div className="flex items-center justify-between">
               <h3 className="leading-loose font-semibold">
                 Existing Vehicle List
@@ -22,17 +22,17 @@ const VehiDetails = () => {
               <div className="flex gap-2 relative">
                 <Button
                   text="Bulk Upload"
-                  className="bg-accent3 border border-[#6599FF] tracking-wide"
+                  className="bg-accent3 rounded-xl px-4 border border-[#6599FF] tracking-wide"
                 />
                 <Button
                   text="Choose Action"
-                  className=""
+                  className="rounded-xl px-4"
                   dropDownIcon
                   onClick={() => setAction(!action)}
                 />
                 {action === true && (
                   <>
-                    <div className="absolute top-[40px] right-0 w-[142px] text-center bg-white font-semibold">
+                    <div className="absolute top-[42px] right-2 w-[142px] text-center bg-white font-semibold">
                       <div
                         className="py-2 rounded cursor-pointer hover:bg-[#032272] hover:text-white"
                         onClick={() => setAddPop(true)}
@@ -51,16 +51,16 @@ const VehiDetails = () => {
               </div>
             </div>
             <div>
-              <div className="grid text-center grid-cols-[14%_14%_14%_14%_14%_14%_16%] bg-[#EFF2F3] p-4 rounded-md mt-4">
+              <div className="grid text-center grid-cols-[12%_16%_12%_12%_12%_12%_12%_12%] bg-[#EFF2F3] p-4 rounded-md mt-4">
                 {vehicleDetailsHeading.map((value, index) => {
                   return (
-                    <div className="text-primary font-semibold" key={index}>
+                    <div className="font-semibold" key={index}>
                       {value.heading}
                     </div>
                   );
                 })}
               </div>
-              <div className="grid text-center grid-cols-[14%_14%_14%_14%_14%_14%_16%] p-4 border">
+              <div className="grid text-center grid-cols-[12%_16%_12%_12%_12%_12%_12%_12%] p-4 border">
                 {vehicleDetailsCollection.map((items, ind) => {
                   return (
                     <>
@@ -85,10 +85,27 @@ const VehiDetails = () => {
                       <div key={ind} className="mb-4">
                         {items.complaints}
                       </div>
+                      <div className="mb-6 flex gap-2 justify-center">
+                        <Image
+                          src={"/edit.svg"}
+                          alt="svg"
+                          width={24}
+                          height={24}
+                          className="cursor-pointer"
+                        />
+                        <Image
+                          src={"/trash.svg"}
+                          alt="svg"
+                          width={24}
+                          height={24}
+                          className="cursor-pointer"
+                        />
+                      </div>
                     </>
                   );
                 })}
               </div>
+              
             </div>
             <div className="flex justify-between pt-4 bg-white  p-4">
               <div>Showing 1 to 7 of 56 entries</div>

@@ -37,7 +37,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   background-color: #f1f5f9;
 }
 .text-primary {
-  color: #032272;
+  color: #2b36d9;
 }
 input:focus-visible {
   border: 0;
@@ -48,7 +48,7 @@ progress::-webkit-progress-bar {
   border-radius: 10px;
 }
 progress::-webkit-progress-value {
-  background-color: #8d3194;
+  background-color: #2b36d9;
   border-radius: 10px;
 }
 input[type="date"]::-webkit-calendar-picker-indicator {

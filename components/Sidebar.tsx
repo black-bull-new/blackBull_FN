@@ -1,40 +1,32 @@
 import React, { useState } from "react";
-import Checkbox from "./Checkbox";
-import Maininputfield from "./Maininputfield";
-import Mainselectfield from "./Mainselectfield";
-import Maindatefield from "./Maindatefield";
-import Maintable from "./Maintable";
-import CloseIcon from "./svg/CloseIcon";
-import Progressbar from "./Progressbar";
 import Image from "next/image";
-import DashboardSvgIcon from "./svg/DashboardSvgIcon";
-import VehiDetails from "./VehiDetails";
 import { useRouter } from "next/router";
 
 const Sidebar = () => {
   const router = useRouter();
 
-  const [state, setState] = useState(false);
+  // const [state, setState] = useState(false);
   const [sidebarValue, setSidebarValue] = useState("");
 
   const toggleSidebar = (value: any) => {
-    setState(!state);
+    // setState(!state);
     // setSidebarValue(value);
     sidebarValue === "" ? setSidebarValue(value) : setSidebarValue("");
   };
 
   const [submenu, setSubmenu] = useState("");
   const toggleSubmenu = (option: any) => {
+    option === "Vehicle" ? router.push("/onboarding/vehicle-list") : "";
+    option === "Driver" ? router.push("/onboarding/driver-list") : "";
+    option === "Customer" ? router.push("/onboarding/add-customer") : "";
+    option === "Supplier" ? router.push("/onboarding/add-supplier") : "";
+    option === "User" ? router.push("/onboarding/user") : "";
+    option === "Onboarding" ? router.push("/onboarding") : "";
     setSubmenu(option);
-    submenu === "Vehicle" ? router.push("/onboarding/vehicle-list") : "";
-    submenu === "Driver" ? router.push("/onboarding/driver-list") : "";
-    submenu === "Customer" ? router.push("/onboarding/add-customer") : "";
-    submenu === "Supplier" ? router.push("/onboarding/add-supplier") : "";
-    submenu === "User" ? router.push("/onboarding/user") : "";
   };
   return (
     <>
-      <div className="text-black flex relative top-0 h-screen">
+      <div className="text-black flex relative top-0">
         <nav className="fixed top-0 text-black bg-white p-4 w-[300px] h-screen">
           <Image
             src="/logoOzi.svg"
@@ -72,6 +64,9 @@ const Sidebar = () => {
                           alt={value.imageDesc}
                           width={20}
                           height={20}
+                          className={
+                            sidebarValue === value.value ? "rotate-180" : ""
+                          }
                         />
                       ) : (
                         ""
@@ -103,20 +98,6 @@ const Sidebar = () => {
             })}
           </ul>
         </nav>
-        {/* <div className="content flex-grow ml-4 mt-4 ml-[316px]">
-          {state === "Dashboard" && <div>dashboard</div>}
-          {state === "Bookings" && <div>Bookings</div>}
-          {state === "Accounts" && <div>Accounts</div>}
-          {state === "Compliances" && <div>Compliances</div>}
-          {state === "User Management" && <div>User Management</div>}
-          {state === "Onboarding" && submenu === "Vehicle" ? (
-            <>
-              <VehiDetails />
-            </>
-          ) : (
-            <></>
-          )}
-        </div> */}
       </div>
     </>
   );

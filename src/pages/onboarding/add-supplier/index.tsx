@@ -1,8 +1,7 @@
 import Image from "next/image";
-import Footer from "../../../../components/Footer";
+
 import Progressbar from "../../../../components/Progressbar";
-import Sidebar from "../../../../components/Sidebar";
-import Header from "../../../../components/Header";
+
 import Maininputfield from "../../../../components/Maininputfield";
 import DropDownMap from "../../../../components/DropDownMap";
 import { useState } from "react";
@@ -19,9 +18,9 @@ const AddSupplier = () => {
     <>
       {/* <Header /> */}
       <div className="flex bg-[#E9EFFF]">
-        <div className="sticky top-0">
+        {/* <div className="sticky top-0">
           <Sidebar />
-        </div>
+        </div> */}
         <div className="ml-[316px] w-full mt-4">
           <div className="bg-white mr-4 flex justify-between items-center rounded-md">
             <h2 className=" w-full p-4 rounded-md font-bold">Add Customer</h2>
@@ -494,7 +493,7 @@ const AddSupplier = () => {
                 {documentCollectionHeading?.map((value, index) => {
                   return (
                     <>
-                      <h4 key={index} className="font-semibold">
+                      <h4 key={index} className="font-semibold text-sm">
                         {value.heading}
                       </h4>
                     </>
@@ -684,7 +683,7 @@ const AddSupplier = () => {
                           </span> */}
                       <StatusChip className="w-fit" />
                     </div>
-                    <div className="underline decoration-[#8D3194] text-center">
+                    <div className="underline decoration-[#2B36D9] text-center">
                       <span className="cursor-pointer text-primary">
                         {" "}
                         {data.viewDoc}
@@ -698,7 +697,7 @@ const AddSupplier = () => {
           <div className="font-semibold text-xl mt-4 bg-white p-4 mr-4 rounded-md">
             <h2>Driver Onboarding</h2>
           </div>
-          <div className="font-semibold text-xl mt-4 bg-white p-4 mr-4 rounded-md mb-4">
+          <div className="font-semibold text-xl mt-4 bg-white p-4 mr-4 rounded-md mb-20">
             <Progressbar />
             <div className="relative w-fit mt-4">
               <Image
@@ -966,7 +965,7 @@ const AddSupplier = () => {
                 {documentCollectionHeadingDriver?.map((value, index) => {
                   return (
                     <>
-                      <h4 key={index} className="font-semibold">
+                      <h4 key={index} className="font-semibold text-sm">
                         {value.heading}
                       </h4>
                     </>
@@ -1010,7 +1009,6 @@ const AddSupplier = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };

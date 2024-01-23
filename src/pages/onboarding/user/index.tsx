@@ -1,8 +1,6 @@
 import Image from "next/image";
 import Progressbar from "../../../../components/Progressbar";
-import Sidebar from "../../../../components/Sidebar";
-import Header from "../../../../components/Header";
-import Footer from "../../../../components/Footer";
+
 import Maininputfield from "../../../../components/Maininputfield";
 import DropDownMap from "../../../../components/DropDownMap";
 import { useState } from "react";
@@ -15,11 +13,7 @@ const User = () => {
 
   return (
     <>
-      {/* <Header /> */}
       <div className="flex bg-[#E9EFFF]">
-        <div className="sticky top-0">
-          <Sidebar />
-        </div>
         <div className="ml-[316px] w-full mt-4">
           <div className="bg-white mr-4 flex justify-between items-center rounded-md">
             <h2 className=" w-full p-4 rounded-md font-bold">Create User</h2>
@@ -29,7 +23,7 @@ const User = () => {
               </span>
             </div>
           </div>
-          <div className="bg-white mr-4 px-4 rounded-md mt-4 p-4 mb-4">
+          <div className="bg-white mr-4 px-4 rounded-md mt-4 p-4 mb-20">
             <div className="mx-2">
               <Progressbar />
             </div>
@@ -45,7 +39,7 @@ const User = () => {
               </span>
             </div>
             <div className="mt-4">
-              <h2 className="font-semibold">Personal Information</h2>
+              <h2 className="font-semibold mb-4">Personal Information</h2>
               <div className="grid grid-cols-3 gap-4">
                 <Maininputfield
                   label="First Name"
@@ -91,7 +85,7 @@ const User = () => {
               </div>
             </div>
             <div className="mt-4">
-              <h2 className="font-semibold">Professional Information</h2>
+              <h2 className="font-semibold mb-4">Professional Information</h2>
               <div className="grid grid-cols-3 gap-4">
                 <Maininputfield
                   label="Employee ID"
@@ -111,7 +105,7 @@ const User = () => {
               </div>
             </div>
             <div className="mt-4">
-              <h2 className="font-semibold">User Role</h2>
+              <h2 className="font-semibold mb-4">User Role</h2>
 
               <div className="grid grid-cols-3 gap-4">
                 <DropDownMap
@@ -142,7 +136,6 @@ const User = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };
@@ -163,9 +156,28 @@ const roleCollection = [
     value: "Global Administrator",
   },
   {
-    value: "role1",
+    value: "Account Administrator",
   },
   {
-    value: "role2",
+    value: "Operations Administrator",
+  },
+  { value: "Booking Administrator" },
+  {
+    value: "Dispatch Administrator",
+  },
+  {
+    value: "User Administrator",
+  },
+  {
+    value: "Compliance Administrator",
+  },
+  {
+    value: "Supplier Administrator",
+  },
+  {
+    value: "Customer Administrator",
+  },
+  {
+    value: "Custom Access",
   },
 ];
