@@ -5,6 +5,6 @@ export const useLogin = () =>
   useMutation(({ email, password }: Login) => loginUser(email, password));
 
   export const useRegister = () =>
-  useMutation(({ email, password, username }: Register) =>
-    register({ username, email, password })
+  useMutation(({ firstName, lastName, email, number,designation, companyName, profEmail, address, password, role}: Register) =>
+    register({ firstName, lastName, email, number,designation, companyName, profEmail, address, password, role })
   );

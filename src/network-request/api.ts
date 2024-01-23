@@ -1,4 +1,5 @@
 import axios from "./axios"
+import { Register } from "./types";
 export const loginUser = async (email: string, password: string) =>
   axios
     .post("/login", { email, password })
@@ -7,6 +8,15 @@ export const loginUser = async (email: string, password: string) =>
       throw error;
     });
 
-export const register = ({ email, password,username }: Register) => {
-  return axios.post("/signup", { email, password, username }).then((response:any)=>response.data);
-};
+export const createUser = (payload: Register) => {
+  const axiosConfig = {
+    method: "post",
+    url: "/add-user",
+    data: payload
+  }
+
+  console.log({ axiosConfig })
+
+  return axios.request(axiosConfig);
+}
+

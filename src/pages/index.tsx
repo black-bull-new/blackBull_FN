@@ -35,6 +35,7 @@ export default function Home() {
             <Button
               text="Sign up"
               className="px-12 pt-[8px] pb-[10px] text-sm font-semibold !rounded-full !bg-transparent text-primary border !border-[#8D3194]"
+              onClick={() => router.push("/signup")}
             />
           </div>
         </div>

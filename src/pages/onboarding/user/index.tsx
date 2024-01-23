@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Progressbar from "../../../../components/Progressbar";
-
 import Maininputfield from "../../../../components/Maininputfield";
 import DropDownMap from "../../../../components/DropDownMap";
 import { useState } from "react";

@@ -6,42 +6,43 @@ import Checkbox from "../../../components/Checkbox";
 import InputField from "../../../components/InputField";
 import Image from "next/image";
 import Button from "../../../components/Button";
-import { useLogin } from "@/network-request/mutation";
-import { LoginvalidationSchema } from "../../../components/fomsValidation";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
+import { Login } from "@/network-request/types";
+import { loginUser } from "@/network-request/api";
 
 const Login = () => {
-  const { mutate } = useLogin();
   const router = useRouter();
+
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
-    },
-    validationSchema: LoginvalidationSchema,
-    onSubmit: (values: any) => {
-      const { email, password } = values;
-      mutate(
-        { email, password },
-        {
-          onSuccess: (data: any) => {
-            if (data.success) {
-              console.log("data", { data });
-              setTimeout(() => {
-                window.location.href = "/vehicle-details";
-              }, 2000);
-            } else {
-              console.log("Login Failed");
-            }
-          },
-          onError: (data: any) => {
-            console.log("Something Went Wrong");
-          },
-        }
-      );
+    } as Login,
+
+    // validationSchema: SignupvalidationSchema,
+    onSubmit: (values: Login) => {
+      console.log("VALUES", { values })
+      onLogin(values)
     },
   });
+
+  const { values, errors, handleChange, handleSubmit, touched, setFieldValue, handleBlur } = formik;
+  console.log({ values })
+
+  const onLogin = React.useCallback(async (values: any) => {
+    try {
+      const response = await loginUser(values?.email, values?.password)
+      console.log({ response })
+      if (response?.token) {
+        router.push("/onboarding")
+      } else {
+        console.log("Login credentials error")
+      }
+    } catch (error: any) {
+      console.log({ error })
+    }
+  }, [])
 
   const [visibel, SetVisible] = React.useState(false);
   const isValidVisibility = formik.dirty && formik.isValid;
