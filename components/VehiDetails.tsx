@@ -2,11 +2,14 @@ import Image from "next/image";
 import Button from "./Button";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import Maininputfield from "./Maininputfield";
+import MobileInput from "./mobile-input/MobileInput";
 
 const VehiDetails = () => {
   const [action, setAction] = useState(false);
   const [addPopUp, setAddPop] = useState(false);
   const router = useRouter();
+  const [link, setLink] = useState(false);
   return (
     <>
       <div className="mr-4">
@@ -39,7 +42,10 @@ const VehiDetails = () => {
                       >
                         Add Vehicle
                       </div>
-                      <div className="py-2 rounded cursor-pointer hover:bg-[#032272] hover:text-white">
+                      <div
+                        className="py-2 rounded cursor-pointer hover:bg-[#032272] hover:text-white"
+                        onClick={() => setLink(true)}
+                      >
                         Send Form Link
                       </div>
                       <div className="py-2 rounded cursor-pointer hover:bg-[#032272] hover:text-white">
@@ -105,7 +111,6 @@ const VehiDetails = () => {
                   );
                 })}
               </div>
-              
             </div>
             <div className="flex justify-between pt-4 bg-white  p-4">
               <div>Showing 1 to 7 of 56 entries</div>
@@ -133,12 +138,12 @@ const VehiDetails = () => {
                 <div className="flex justify-end absolute bottom-4 right-4 gap-2">
                   <Button
                     text="Cancel"
-                    className="!bg-transparent border !text-[#000] !py-[4px] !px-[8px]"
+                    className="!bg-transparent border !text-[#000] !py-[6px] !px-4"
                     onClick={() => setAddPop(false)}
                   />
                   <Button
                     text="Add Vehicle"
-                    className=" !py-[4px] !px-[8px]"
+                    className=" !py-[6px] !px-4"
                     onClick={() => router.push("/onboarding/create-vehicle")}
                   />
                 </div>
@@ -147,6 +152,41 @@ const VehiDetails = () => {
           </>
         ) : (
           ""
+        )}
+        {link === true && (
+          <div className="w-screen h-screen  fixed top-0 left-0 backdrop-blur-md flex">
+            <div className="w-[550px] h-fit p-4 bg-white m-auto rounded-xl relative border">
+              <h4 className="text-center font-semibold p-4 mb-2">
+                Choose your preferred option for receiving the form link
+              </h4>
+              <div className="grid gap-2 justify-center">
+                <div>
+                  <MobileInput />
+                </div>
+                <div className="text-center">or</div>
+                <div>
+                  <Maininputfield
+                    label="Email"
+                    labelClass="text-sm mb-1 font-semibold"
+                    value="sanket.r.salve@gmail.com"
+                    className="!font-bold"
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end mt-4 gap-2">
+                <Button
+                  text="Cancel"
+                  className="!bg-transparent border !text-[#000] !py-[6px] !px-4"
+                  onClick={() => setLink(false)}
+                />
+                <Button
+                  text="Send Link"
+                  className=" !py-[6px] !px-4"
+                  onClick={() => router.push("/onboarding/create-vehicle")}
+                />
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </>
