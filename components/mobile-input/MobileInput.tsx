@@ -5,7 +5,7 @@ const MobileInput = () => {
     <>
       <div>
         <div className="flex gap-2 border border-[#CED7DB] rounded-md">
-          <div className="flex gap-2 py-2 px-4 bg-blueGrey-50">
+          <div className="flex gap-2 py-2 px-4 bg-blueGrey-50 cursor-pointer">
             <Image src="/flagSvg/Au.svg" alt="flag" width={28} height={20} />
             <Image src="/dropdown.svg" alt="flag" width={20} height={20} />
           </div>

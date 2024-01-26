@@ -4,12 +4,14 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Maininputfield from "./Maininputfield";
 import MobileInput from "./mobile-input/MobileInput";
+import FileUpload from "./FileUpload";
 
 const VehiDetails = () => {
   const [action, setAction] = useState(false);
   const [addPopUp, setAddPop] = useState(false);
   const router = useRouter();
   const [link, setLink] = useState(false);
+  const [bulkUpload, setBulkUpload] = useState(false);
   return (
     <>
       <div className="mr-4">
@@ -26,6 +28,7 @@ const VehiDetails = () => {
                 <Button
                   text="Bulk Upload"
                   className="bg-accent3 rounded-xl px-4 border border-[#6599FF] tracking-wide"
+                  onClick={() => setBulkUpload(true)}
                 />
                 <Button
                   text="Choose Action"
@@ -181,6 +184,43 @@ const VehiDetails = () => {
                 />
                 <Button
                   text="Send Link"
+                  className=" !py-[6px] !px-4"
+                  onClick={() => router.push("/onboarding/create-vehicle")}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+        {bulkUpload === true && (
+          <div className="w-screen h-screen  fixed top-0 left-0 backdrop-blur-md flex">
+            <div className="w-[450px] h-fit p-4 bg-white m-auto rounded-xl relative border relative">
+              <div
+                className="bg-blueGrey-50 rounded-full absolute right-4 top-2 flex justify-center items-center w-[35px] h-[35px] text-2xl rotate-45 cursor-pointer font-semibold"
+                onClick={() => setBulkUpload(false)}
+              >
+                +
+              </div>
+              <h4 className="text-center font-bold p-4">
+                Streamline Your Fleet
+              </h4>
+              <p className="mb-4 text-center">
+                Upload your list in bulk for a seamless and time-saving
+                experience.
+              </p>
+              <div className="grid gap-2 justify-center">
+                <FileUpload
+                  file="Upload Vehicle Document"
+                  className="font-semibold"
+                />
+              </div>
+              <div className="flex justify-end mt-4 gap-2">
+                <Button
+                  text="Download Template"
+                  className="!bg-transparent border !text-[#000] !py-[6px] !px-4"
+                  // onClick={() => setLink(false)}
+                />
+                <Button
+                  text="Upload"
                   className=" !py-[6px] !px-4"
                   onClick={() => router.push("/onboarding/create-vehicle")}
                 />
