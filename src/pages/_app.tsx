@@ -30,7 +30,9 @@ export default function App({ Component, pageProps }: AppProps) {
       {currentUrl === "/login" ||
       currentUrl === "/signup" ||
       currentUrl === "/subscription-plan" ||
-      currentUrl === "/" ? (
+      currentUrl === "/" ||
+      currentUrl === "/login/update-password" ||
+      currentUrl === "/login/update-password?" ? (
         <>
           <Component {...pageProps} />
         </>

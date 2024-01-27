@@ -22,27 +22,35 @@ const Login = () => {
 
     // validationSchema: SignupvalidationSchema,
     onSubmit: (values: Login) => {
-      console.log("VALUES", { values })
-      onLogin(values)
+      console.log("VALUES", { values });
+      onLogin(values);
     },
   });
 
-  const { values, errors, handleChange, handleSubmit, touched, setFieldValue, handleBlur } = formik;
-  console.log({ values })
+  const {
+    values,
+    errors,
+    handleChange,
+    handleSubmit,
+    touched,
+    setFieldValue,
+    handleBlur,
+  } = formik;
+  console.log({ values });
 
   const onLogin = React.useCallback(async (values: any) => {
     try {
-      const response = await loginUser(values?.email, values?.password)
-      console.log({ response })
+      const response = await loginUser(values?.email, values?.password);
+      console.log({ response });
       if (response?.token) {
-        router.push("/onboarding")
+        router.push("/onboarding");
       } else {
-        console.log("Login credentials error")
+        console.log("Login credentials error");
       }
     } catch (error: any) {
-      console.log({ error })
+      console.log({ error });
     }
-  }, [])
+  }, []);
 
   const [visibel, SetVisible] = React.useState(false);
   const isValidVisibility = formik.dirty && formik.isValid;
@@ -68,11 +76,11 @@ const Login = () => {
               <p className="mt-2">
                 Log in to BlackBull for instant access to your dashboard.
               </p>
-              <div className="flex gap-4 flex-col mt-11">
+              <div className="flex flex-col mt-11">
                 <InputField
                   type="text"
                   placeholder="Email address"
-                  className="bg-cool-gray"
+                  className="bg-cool-gray py-[10px] text-black"
                   onChange={formik.handleChange}
                   required={"required"}
                   onBlur={formik.handleBlur}
@@ -84,8 +92,8 @@ const Login = () => {
                   id={""}
                   src="/mail.svg"
                   alt="mail"
-                  svgWidth={16}
-                  svgHeight={16}
+                  svgWidth={18}
+                  svgHeight={18}
                 />
                 {formik.touched.email && formik.errors.email ? (
                   <div
@@ -103,7 +111,7 @@ const Login = () => {
                 <InputField
                   type={visibel ? "text" : "password"}
                   placeholder="password"
-                  className="bg-cool-gray"
+                  className="bg-cool-gray py-[10px] text-black"
                   onChange={formik.handleChange}
                   required={"required"}
                   onBlur={formik.handleBlur}
@@ -117,8 +125,8 @@ const Login = () => {
                   id={""}
                   src="/lock.svg"
                   alt="lock"
-                  svgWidth={16}
-                  svgHeight={16}
+                  svgWidth={18}
+                  svgHeight={18}
                   onClick={() => SetVisible(!visibel)}
                   isvisibel={visibel}
                 />
