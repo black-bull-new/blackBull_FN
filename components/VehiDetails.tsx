@@ -2,11 +2,16 @@ import Image from "next/image";
 import Button from "./Button";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import Maininputfield from "./Maininputfield";
+import MobileInput from "./mobile-input/MobileInput";
+import FileUpload from "./FileUpload";
 
 const VehiDetails = () => {
   const [action, setAction] = useState(false);
   const [addPopUp, setAddPop] = useState(false);
   const router = useRouter();
+  const [link, setLink] = useState(false);
+  const [bulkUpload, setBulkUpload] = useState(false);
   return (
     <>
       <div className="mr-4">
@@ -14,7 +19,7 @@ const VehiDetails = () => {
           Vehicle Details
         </h2>
         <div>
-          <div className="mt-4 bg-white p-4 rounded-md items-center ">
+          <div className="mt-4 mb-20 bg-white p-4 rounded-md items-center ">
             <div className="flex items-center justify-between">
               <h3 className="leading-loose font-semibold">
                 Existing Vehicle List
@@ -22,24 +27,28 @@ const VehiDetails = () => {
               <div className="flex gap-2 relative">
                 <Button
                   text="Bulk Upload"
-                  className="bg-accent3 border border-[#6599FF] tracking-wide"
+                  className="bg-accent3 rounded-xl px-4 border border-[#6599FF] tracking-wide"
+                  onClick={() => setBulkUpload(true)}
                 />
                 <Button
                   text="Choose Action"
-                  className=""
+                  className="rounded-xl px-4"
                   dropDownIcon
                   onClick={() => setAction(!action)}
                 />
                 {action === true && (
                   <>
-                    <div className="absolute top-[40px] right-0 w-[142px] text-center bg-white font-semibold">
+                    <div className="absolute top-[42px] right-2 w-[142px] text-center bg-white font-semibold">
                       <div
                         className="py-2 rounded cursor-pointer hover:bg-[#032272] hover:text-white"
                         onClick={() => setAddPop(true)}
                       >
                         Add Vehicle
                       </div>
-                      <div className="py-2 rounded cursor-pointer hover:bg-[#032272] hover:text-white">
+                      <div
+                        className="py-2 rounded cursor-pointer hover:bg-[#032272] hover:text-white"
+                        onClick={() => setLink(true)}
+                      >
                         Send Form Link
                       </div>
                       <div className="py-2 rounded cursor-pointer hover:bg-[#032272] hover:text-white">
@@ -51,16 +60,16 @@ const VehiDetails = () => {
               </div>
             </div>
             <div>
-              <div className="grid text-center grid-cols-[14%_14%_14%_14%_14%_14%_16%] bg-[#EFF2F3] p-4 rounded-md mt-4">
+              <div className="grid text-center grid-cols-[12%_16%_12%_12%_12%_12%_12%_12%] bg-[#EFF2F3] p-4 rounded-md mt-4">
                 {vehicleDetailsHeading.map((value, index) => {
                   return (
-                    <div className="text-primary font-semibold" key={index}>
+                    <div className="font-semibold" key={index}>
                       {value.heading}
                     </div>
                   );
                 })}
               </div>
-              <div className="grid text-center grid-cols-[14%_14%_14%_14%_14%_14%_16%] p-4 border">
+              <div className="grid text-center grid-cols-[12%_16%_12%_12%_12%_12%_12%_12%] p-4 border">
                 {vehicleDetailsCollection.map((items, ind) => {
                   return (
                     <>
@@ -84,6 +93,22 @@ const VehiDetails = () => {
                       </div>
                       <div key={ind} className="mb-4">
                         {items.complaints}
+                      </div>
+                      <div className="mb-6 flex gap-2 justify-center">
+                        <Image
+                          src={"/edit.svg"}
+                          alt="svg"
+                          width={24}
+                          height={24}
+                          className="cursor-pointer"
+                        />
+                        <Image
+                          src={"/trash.svg"}
+                          alt="svg"
+                          width={24}
+                          height={24}
+                          className="cursor-pointer"
+                        />
                       </div>
                     </>
                   );
@@ -116,12 +141,12 @@ const VehiDetails = () => {
                 <div className="flex justify-end absolute bottom-4 right-4 gap-2">
                   <Button
                     text="Cancel"
-                    className="!bg-transparent border !text-[#000] !py-[4px] !px-[8px]"
+                    className="!bg-transparent border !text-[#000] !py-[6px] !px-4"
                     onClick={() => setAddPop(false)}
                   />
                   <Button
                     text="Add Vehicle"
-                    className=" !py-[4px] !px-[8px]"
+                    className=" !py-[6px] !px-4"
                     onClick={() => router.push("/onboarding/create-vehicle")}
                   />
                 </div>
@@ -130,6 +155,78 @@ const VehiDetails = () => {
           </>
         ) : (
           ""
+        )}
+        {link === true && (
+          <div className="w-screen h-screen  fixed top-0 left-0 backdrop-blur-md flex">
+            <div className="w-[550px] h-fit p-4 bg-white m-auto rounded-xl relative border">
+              <h4 className="text-center font-semibold p-4 mb-2">
+                Choose your preferred option for receiving the form link
+              </h4>
+              <div className="grid gap-2 justify-center">
+                <div>
+                  <MobileInput />
+                </div>
+                <div className="text-center">or</div>
+                <div>
+                  <Maininputfield
+                    label="Email"
+                    labelClass="text-sm mb-1 font-semibold"
+                    value="sanket.r.salve@gmail.com"
+                    className="!font-bold"
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end mt-4 gap-2">
+                <Button
+                  text="Cancel"
+                  className="!bg-transparent border !text-[#000] !py-[6px] !px-4"
+                  onClick={() => setLink(false)}
+                />
+                <Button
+                  text="Send Link"
+                  className=" !py-[6px] !px-4"
+                  onClick={() => router.push("/onboarding/create-vehicle")}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+        {bulkUpload === true && (
+          <div className="w-screen h-screen  fixed top-0 left-0 backdrop-blur-md flex">
+            <div className="w-[450px] h-fit p-4 bg-white m-auto rounded-xl relative border relative">
+              <div
+                className="bg-blueGrey-50 rounded-full absolute right-4 top-2 flex justify-center items-center w-[35px] h-[35px] text-2xl rotate-45 cursor-pointer font-semibold"
+                onClick={() => setBulkUpload(false)}
+              >
+                +
+              </div>
+              <h4 className="text-center font-bold p-4">
+                Streamline Your Fleet
+              </h4>
+              <p className="mb-4 text-center">
+                Upload your list in bulk for a seamless and time-saving
+                experience.
+              </p>
+              <div className="grid gap-2 justify-center">
+                <FileUpload
+                  file="Upload Vehicle Document"
+                  className="font-semibold"
+                />
+              </div>
+              <div className="flex justify-end mt-4 gap-2">
+                <Button
+                  text="Download Template"
+                  className="!bg-transparent border !text-[#000] !py-[6px] !px-4"
+                  // onClick={() => setLink(false)}
+                />
+                <Button
+                  text="Upload"
+                  className=" !py-[6px] !px-4"
+                  onClick={() => router.push("/onboarding/create-vehicle")}
+                />
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </>

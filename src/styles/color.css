@@ -2,7 +2,7 @@
   background-color: #2b36d9;
 }
 .text-primary {
-  color: #8d3194;
+  color: #2b36d9;
 }
 .bg-accent3 {
   background-color: #5c3e8e !important;
@@ -33,4 +33,10 @@
 }
 .text-coolGrey-500 {
   color: #64748b;
+}
+.text-blueGrey-600 {
+  color: #57727e;
+}
+.bg-blueGrey-50 {
+  background-color: #eff2f3;
 }

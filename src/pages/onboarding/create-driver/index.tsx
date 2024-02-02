@@ -1,28 +1,22 @@
 import { useState } from "react";
 import DropDownMap from "../../../../components/DropDownMap";
-import Footer from "../../../../components/Footer";
-import Header from "../../../../components/Header";
+
 import Maindatefield from "../../../../components/Maindatefield";
 import Maininputfield from "../../../../components/Maininputfield";
 import Progressbar from "../../../../components/Progressbar";
-import Sidebar from "../../../../components/Sidebar";
+
 import Image from "next/image";
 import Checkbox from "../../../../components/Checkbox";
 import Button from "../../../../components/Button";
 import DateWithoutDropdown from "../../../../components/DateWithoutDropdown";
 import FileUpload from "../../../../components/FileUpload";
 import ImageUpload from "../../../../components/imageUpload/ImageUpload";
-import CustomFileInput from "../../../../components/imageUpload/ImageUpload";
 
 const CreateDriver = () => {
   const [selectedData, setSelectedData] = useState("");
   return (
     <>
-      {/* <Header /> */}
       <div className="flex bg-[#E9EFFF]">
-        <div className="sticky top-0">
-          <Sidebar />
-        </div>
         <div className="ml-[316px] w-full mt-4">
           <div className="bg-white mr-4 flex justify-between items-center rounded-md">
             <h2 className=" w-full p-4 rounded-md font-bold">Create Driver</h2>
@@ -353,11 +347,11 @@ const CreateDriver = () => {
                 Onboarding Documents
               </h3>
 
-              <div className="grid grid-cols-5 bg-table-header p-4 rounded-md text-center mb-2">
+              <div className="grid grid-cols-5 bg-table-header p-4 rounded-md text-center mb-2 ">
                 {documentCollectionHeading?.map((value, index) => {
                   return (
                     <>
-                      <h4 key={index} className="font-semibold">
+                      <h4 key={index} className="font-semibold text-sm">
                         {value.heading}
                       </h4>
                     </>
@@ -397,28 +391,11 @@ const CreateDriver = () => {
               </div>
             </div>
           </div>
-          {/* <div className="w-full flex flex-col gap-4 items-end justify-end p-4 mb-4">
-            <div className="w-[343px] h-[180px] bg-white border border-[#CED7DB] rounded-md"></div>
-            <Button
-              signatureIcon={true}
-              text="Upload Signature"
-              className="bg-accent3 px-4 rounded-[8px]"
-            />
-            <div className="flex gap-2">
-              <Button
-              
-                text="Save"
-                className="!bg-transparent !text-black px-4 border border-[#e5e5e5] rounded-[8px]"
-              />
-              <Button text="Create" className="bg-primary px-4 rounded-[8px]" />
-            </div>
-          </div> */}
-          <div>
+          <div className="mb-20 mr-4">
             <ImageUpload />
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };

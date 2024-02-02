@@ -55,7 +55,7 @@ const InputField = ({
             required={required}
           />
         </div>
-        {placeholder === "password" && (
+        {type === "password" && (
           <Image
             src={!isvisibel?"/eye.svg":"unlock.svg"}
             alt={alt}

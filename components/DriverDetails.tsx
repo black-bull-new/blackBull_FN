@@ -14,7 +14,7 @@ const DriverDetails = () => {
           Driver Details
         </h2>
         <div>
-          <div className="mt-4 bg-white p-4 rounded-md items-center ">
+          <div className="mt-4 mb-20 bg-white p-4 rounded-md items-center ">
             <div className="flex items-center justify-between">
               <h3 className="leading-loose font-semibold">
                 Existing Driver List
@@ -22,11 +22,11 @@ const DriverDetails = () => {
               <div className="flex gap-2 relative">
                 <Button
                   text="Bulk Upload"
-                  className="bg-accent3 border border-[#6599FF] tracking-wide"
+                  className="bg-accent3  px-4 rounded-xl border border-[#6599FF] tracking-wide"
                 />
                 <Button
                   text="Choose Action"
-                  className=""
+                  className="px-4 rounded-xl"
                   dropDownIcon
                   onClick={() => setAction(!action)}
                 />

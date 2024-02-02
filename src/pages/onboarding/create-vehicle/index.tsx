@@ -3,8 +3,7 @@ import Button from "../../../../components/Button";
 import DateWithoutDropdown from "../../../../components/DateWithoutDropdown";
 import DropDownMap from "../../../../components/DropDownMap";
 import FileUpload from "../../../../components/FileUpload";
-import Footer from "../../../../components/Footer";
-import Header from "../../../../components/Header";
+
 import Maindatefield from "../../../../components/Maindatefield";
 import Maininputfield from "../../../../components/Maininputfield";
 import Mainselectfield from "../../../../components/Mainselectfield";
@@ -24,11 +23,7 @@ const CreateVehicle = () => {
 
   return (
     <>
-      {/* <Header /> */}
       <div className="flex bg-[#E9EFFF]">
-        <div className="sticky top-0">
-          <Sidebar />
-        </div>
         <div className="ml-[316px] w-full mt-4">
           <div className="bg-white mr-4 flex justify-between items-center rounded-md">
             <h2 className=" w-full p-4 rounded-md font-bold">Create Vehicle</h2>
@@ -264,7 +259,7 @@ const CreateVehicle = () => {
                           </span> */}
                           <StatusChip className="w-fit" />
                         </div>
-                        <div className="underline decoration-[#8D3194] text-center">
+                        <div className="underline decoration-[#2B36D9] text-center">
                           <span className="cursor-pointer text-primary">
                             {" "}
                             {data.viewDoc}
@@ -277,7 +272,7 @@ const CreateVehicle = () => {
               </div>
             </div>
           </div>
-          <div className="mr-4 px-4 rounded-md mt-4 p-4 flex justify-end gap-2">
+          <div className="mr-4 px-4 rounded-md mt-4 mb-20 p-4 flex justify-end gap-2">
             <Button
               text="Save"
               className="!bg-transparent !text-[#000] border px-8 !rounded-xl text-sm border-[#032272]"
@@ -286,7 +281,6 @@ const CreateVehicle = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };

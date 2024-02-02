@@ -1,8 +1,6 @@
 import Image from "next/image";
-import Footer from "../../../../components/Footer";
-import Header from "../../../../components/Header";
+
 import Progressbar from "../../../../components/Progressbar";
-import Sidebar from "../../../../components/Sidebar";
 import Maininputfield from "../../../../components/Maininputfield";
 import DropDownMap from "../../../../components/DropDownMap";
 import { useState } from "react";
@@ -16,9 +14,9 @@ const AddCustomer = () => {
     <>
       {/* <Header /> */}
       <div className="flex bg-[#E9EFFF]">
-        <div className="sticky top-0">
+        {/* <div className="sticky top-0">
           <Sidebar />
-        </div>
+        </div> */}
         <div className="ml-[316px] w-full mt-4">
           <div className="bg-white mr-4 flex justify-between items-center rounded-md">
             <h2 className=" w-full p-4 rounded-md font-bold">Add Customer</h2>
@@ -387,7 +385,7 @@ const AddCustomer = () => {
               <FileUpload file="Choose Contract Document" />
             </div>
           </div>
-          <div className="flex justify-end gap-4 my-4 px-4">
+          <div className="flex justify-end gap-4 my-4 px-4 mb-20">
             <Button
               text="Save"
               className="!bg-transparent !w-fit border border-[#e5e5e5] !text-black px-8"
@@ -396,8 +394,6 @@ const AddCustomer = () => {
           </div>
         </div>
       </div>
-
-      <Footer />
     </>
   );
 };

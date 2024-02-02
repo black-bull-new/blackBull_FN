@@ -31,27 +31,35 @@ const SignUp = () => {
 
     // validationSchema: SignupvalidationSchema,
     onSubmit: (values: Register) => {
-      console.log("VALUES", { values })
-      onSignup(values)
+      console.log("VALUES", { values });
+      onSignup(values);
       // onDriver(values);
     },
   });
 
-  const { values, errors, handleChange, handleSubmit, touched, setFieldValue, handleBlur } = formik;
-  console.log({ values })
+  const {
+    values,
+    errors,
+    handleChange,
+    handleSubmit,
+    touched,
+    setFieldValue,
+    handleBlur,
+  } = formik;
+  console.log({ values });
 
   const onSignup = React.useCallback(async (values: any) => {
     try {
-      const response = await createUser(values)
-      const result = response?.data
-      console.log({ result })
+      const response = await createUser(values);
+      const result = response?.data;
+      console.log({ result });
       if (result) {
-        router.push("/login")
+        router.push("/login");
       }
     } catch (error: any) {
-      console.log({ error })
+      console.log({ error });
     }
-  }, [])
+  }, []);
 
   const [visibel, SetVisible] = React.useState(false);
   const isValidVisibility = formik.dirty && formik.isValid;
@@ -71,7 +79,7 @@ const SignUp = () => {
               <p className="mt-2">
                 Your route to hassle-free logistics begins here.
               </p>
-              <div className="flex gap-2 flex-col mt-11">
+              <div className="flex flex-col mt-11">
                 <div className="flex gap-2 items-center">
                   <Image
                     src={"/image.svg"}
@@ -87,7 +95,7 @@ const SignUp = () => {
                   <InputField
                     type="text"
                     placeholder="First Name"
-                    className="bg-cool-gray"
+                    className="bg-cool-gray pl-0"
                     name={"firstName"}
                     id={"firstName"}
                     required={"required"}
@@ -102,7 +110,7 @@ const SignUp = () => {
                   <InputField
                     type="text"
                     placeholder="Last Name"
-                    className="bg-cool-gray"
+                    className="bg-cool-gray pl-0"
                     name={"lastName"}
                     id={"lastName"}
                     onBlur={handleBlur}
@@ -120,7 +128,7 @@ const SignUp = () => {
                   required={"required"}
                   type="text"
                   placeholder="Email"
-                  className="bg-cool-gray"
+                  className="bg-cool-gray pl-0"
                   name={"email"}
                   id={"email"}
                   src=""
@@ -135,7 +143,7 @@ const SignUp = () => {
                 <InputField
                   type={"number"}
                   placeholder="Contact Number"
-                  className="bg-cool-gray"
+                  className="bg-cool-gray pl-0"
                   name={"number"}
                   id={"number"}
                   src=""
@@ -147,7 +155,7 @@ const SignUp = () => {
                   onChange={handleChange}
                 />
               </div>
-              <div className="flex gap-2 flex-col mt-4">
+              <div className="flex flex-col mt-2">
                 <div className="flex gap-2 items-center">
                   <Image
                     src={"/image.svg"}
@@ -163,7 +171,7 @@ const SignUp = () => {
                   <InputField
                     type="text"
                     placeholder="Designation"
-                    className="bg-cool-gray"
+                    className="bg-cool-gray pl-0"
                     name={"designation"}
                     id={"designation"}
                     // required={"required"}
@@ -177,7 +185,7 @@ const SignUp = () => {
                   <InputField
                     type="text"
                     placeholder="Company Name"
-                    className="bg-cool-gray"
+                    className="bg-cool-gray pl-0"
                     name={"companyName"}
                     id={"companyName"}
                     // required={"required"}
@@ -194,7 +202,7 @@ const SignUp = () => {
                   // required={"required"}
                   type="text"
                   placeholder="Email"
-                  className="bg-cool-gray"
+                  className="bg-cool-gray pl-0"
                   name={"profEmail"}
                   id={"profEmail"}
                   src=""
@@ -208,7 +216,7 @@ const SignUp = () => {
                 <InputField
                   type={"text"}
                   placeholder="Address"
-                  className="bg-cool-gray"
+                  className="bg-cool-gray pl-0"
                   name={"address"}
                   id={"address"}
                   src=""
@@ -223,7 +231,7 @@ const SignUp = () => {
               <InputField
                 type={visibel ? "text" : "password"}
                 placeholder="password"
-                className="bg-cool-gray"
+                className="bg-cool-gray "
                 onChange={handleChange}
                 required={"required"}
                 onBlur={handleBlur}
@@ -244,7 +252,11 @@ const SignUp = () => {
               />
 
               <div className="mt-8 mb-4">
-                <Button text="Get Started" type="submit" className="!w-fit text-white mt-4" />
+                <Button
+                  text="Get Started"
+                  type="submit"
+                  className="flex justify-center !rounded-full text-white mt-4"
+                />
                 {/* <Button
                   // visible={isValidVisibility}
                   type="submit"
@@ -278,7 +290,7 @@ const SignUp = () => {
           </div>
         </div>
       </div>
-    </React.Fragment >
+    </React.Fragment>
   );
 };
 export default SignUp;
