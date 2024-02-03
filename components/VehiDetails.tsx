@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Button from "./Button";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import Maininputfield from "./Maininputfield";
 import MobileInput from "./mobile-input/MobileInput";
 import FileUpload from "./FileUpload";
+import { getCookie } from "cookies-next";
 
 const VehiDetails = () => {
   const [action, setAction] = useState(false);
@@ -12,6 +13,35 @@ const VehiDetails = () => {
   const router = useRouter();
   const [link, setLink] = useState(false);
   const [bulkUpload, setBulkUpload] = useState(false);
+  // fetching vechial list
+  const [vehicleList, setvehicleList] = React.useState([]);
+
+  const fetchingVehicleList = async () => {
+    const token = getCookie("token");
+    console.log("token", token);
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_APP_API_URL_V1}/vehicle`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // get token from cookies
+          },
+        }
+      );
+      const data = await res.json();
+      setvehicleList(data);
+      console.log("data fetching", { data });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchingVehicleList();
+  }, []);
+  console.log("vehicleList", vehicleList);
   return (
     <>
       <div className="mr-4">
@@ -63,7 +93,11 @@ const VehiDetails = () => {
               <div className="grid text-center grid-cols-[12%_16%_12%_12%_12%_12%_12%_12%] bg-[#EFF2F3] p-4 rounded-md mt-4">
                 {vehicleDetailsHeading.map((value, index) => {
                   return (
-                    <div className="font-semibold" key={index}>
+                    <div
+                      className="font-semibold"
+                      key={index}
+                      style={{ color: "#000" }}
+                    >
                       {value.heading}
                     </div>
                   );
@@ -73,28 +107,31 @@ const VehiDetails = () => {
                 {vehicleDetailsCollection.map((items, ind) => {
                   return (
                     <>
-                      <div key={ind} className="mb-4">
+                      <div key={ind} className="mb-4" style={{ color: "#000" }}>
                         {items.regoNumber}
                       </div>
-                      <div key={ind} className="mb-4">
+                      <div key={ind} className="mb-4" style={{ color: "#000" }}>
                         {items.type}
                       </div>
-                      <div key={ind} className="mb-4">
+                      <div key={ind} className="mb-4" style={{ color: "#000" }}>
                         {items.category}
                       </div>
-                      <div key={ind} className="mb-4">
+                      <div key={ind} className="mb-4" style={{ color: "#000" }}>
                         {items.expiry}
                       </div>
-                      <div key={ind} className="mb-4">
+                      <div key={ind} className="mb-4" style={{ color: "#000" }}>
                         {items.regoDoc}
                       </div>
-                      <div key={ind} className="mb-4">
+                      <div key={ind} className="mb-4" style={{ color: "#000" }}>
                         {items.status}
                       </div>
-                      <div key={ind} className="mb-4">
+                      <div key={ind} className="mb-4" style={{ color: "#000" }}>
                         {items.complaints}
                       </div>
-                      <div className="mb-6 flex gap-2 justify-center">
+                      <div
+                        className="mb-6 flex gap-2 justify-center"
+                        style={{ color: "#000" }}
+                      >
                         <Image
                           src={"/edit.svg"}
                           alt="svg"
