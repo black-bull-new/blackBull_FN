@@ -8,25 +8,23 @@ import { getCookie } from "cookies-next";
 const DriverDetails = () => {
   const [action, setAction] = useState(false);
   const [addPopUp, setAddPop] = useState(false);
+  const [deletePopUp, setDelete] = useState(false);
   const router = useRouter();
-  const token = getCookie("token")
+  const token = getCookie("token");
 
-  const [drivers, setDrivers] = useState([])  
+  const [drivers, setDrivers] = useState([]);
 
-  const getDrivers = async()=>{
-      const data = await getAllDrives(token || '')
-      if (data) {
-        setDrivers(data.data)
-        console.log('data', data.data)
-      }
-  }
+  const getDrivers = async () => {
+    const data = await getAllDrives(token || "");
+    if (data) {
+      setDrivers(data.data);
+      console.log("data", data.data);
+    }
+  };
 
-
-  useEffect(()=>{
-    getDrivers()
-  }, [])
-
-
+  useEffect(() => {
+    getDrivers();
+  }, []);
 
   return (
     <>
@@ -72,7 +70,7 @@ const DriverDetails = () => {
               </div>
             </div>
             <div>
-              <div className="grid text-center grid-cols-[11%_11%_11%_11%_11%_11%_11%_11%_12%] bg-[#EFF2F3] p-4 rounded-md mt-4">
+              <div className="grid text-center grid-cols-[10%_10%_10%_10%_10%_10%_10%_10%_10%_10%] bg-[#EFF2F3] p-4 rounded-md mt-4">
                 {driverDetailsHeading?.map((value, index) => {
                   return (
                     <>
@@ -83,19 +81,39 @@ const DriverDetails = () => {
                   );
                 })}
               </div>
-              <div className="grid text-center grid-cols-[11%_11%_11%_11%_11%_11%_11%_11%_12%] p-4 border">
-                {drivers?.map((item:any, ind:number) => {
+              <div className="grid items-center text-center grid-cols-[10%_10%_10%_10%_10%_10%_10%_10%_10%_10%] p-4 border">
+                {drivers?.map((item: any, ind: number) => {
                   return (
                     <React.Fragment key={item?._id}>
                       <p className="mb-4">{item?.firstName}</p>
                       <p className="mb-4">{item?.lastName}</p>
-                      <p className="mb-4">{item?.licenseDetails?.licenseNumber}</p>
+                      <p className="mb-4">
+                        {item?.licenseDetails?.licenseNumber}
+                      </p>
                       <p className="mb-4">{item?.licenseDetails?.expiryDate}</p>
                       <p className="mb-4">{item?.licenseDetails?.state}</p>
                       <p className="mb-4">{item?.licenseDetails?.state}</p>
                       <p className="mb-4">No Data</p>
                       <p className="mb-4">No Data</p>
                       <p className="mb-4">No Data</p>
+                      <div className="flex justify-center gap-2 mb-4">
+                        <Image
+                          src={"/edit.svg"}
+                          alt="edit"
+                          width={18}
+                          height={18}
+                          onClick={() => router.push("/onboarding/edit-driver")}
+                          className="cursor-pointer"
+                        />
+                        <Image
+                          src={"/trash.svg"}
+                          alt="edit"
+                          width={18}
+                          height={18}
+                          className="cursor-pointer"
+                          onClick={() => setDelete(true)}
+                        />
+                      </div>
 
                       {/* <div className="mb-4">{item?.licenseDetails?.licenseType}</div>
                       <div className="mb-4">{item?.licenseDetails?.expiryDate}</div>
@@ -107,6 +125,33 @@ const DriverDetails = () => {
                   );
                 })}
               </div>
+              {deletePopUp === true ? (
+                <>
+                  <div className="w-screen h-screen  fixed top-0 left-0 backdrop-blur-md flex">
+                    <div className="w-[440px] h-[120px] bg-white m-auto rounded-xl relative border">
+                      <p className="text-center mt-4 mb-2">
+                        Are you sure you want to delete this driver details?
+                      </p>
+                      <div className="flex justify-end absolute bottom-4 right-4 gap-2">
+                        <Button
+                          text="Cancel"
+                          className="!bg-transparent border !text-[#000] !py-[4px] !px-[8px]"
+                          onClick={() => setDelete(false)}
+                        />
+                        <Button
+                          text="Confirm"
+                          className=" !py-[4px] !px-[8px] !bg-red-500"
+                          onClick={() =>
+                            router.push("/onboarding/create-driver")
+                          }
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                ""
+              )}
             </div>
             <div className="flex justify-between pt-4 bg-white  p-4">
               <div>Showing 1 to 6 of 56 entries</div>
@@ -181,6 +226,9 @@ const driverDetailsHeading = [
   },
   {
     heading: "COMPLAINT",
+  },
+  {
+    heading: "Action",
   },
 ];
 const driverDetailsData = [
