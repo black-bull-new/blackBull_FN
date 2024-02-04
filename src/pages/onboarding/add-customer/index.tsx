@@ -6,9 +6,109 @@ import DropDownMap from "../../../../components/DropDownMap";
 import { useState } from "react";
 import Button from "../../../../components/Button";
 import FileUpload from "../../../../components/FileUpload";
+import { addCustomer } from "@/network-request/customer/customerApi";
+import { getCookie } from "cookies-next";
+import { useRouter } from "next/navigation";
 
 const AddCustomer = () => {
   const [selectedData, setSelectedData] = useState("");
+  const token = getCookie("token") 
+  const router = useRouter() 
+
+  const [customer, setCustomer] = useState(
+    {
+      companyName: "",
+      tradingName: "",
+      abnNumber: Number(),
+      legalName: "",
+      websiteAddress: "",
+      firstName: "",
+      lastName: "",
+      designation: "",
+
+      companyAddress: {
+        street1: "",
+        street2: "",
+        suburb: "",
+        state: "",
+        country: "",
+        postCode: ""
+      },
+
+      accountPayble: {
+        contactPerson: "",
+        designation: "",
+        contactNumber: "",
+        accountsPaybleEmail: ""
+      },
+
+      accountReceivable: {
+        contactPerson: "",
+        designation: "",
+        contactNumber: "",
+        accountsReceivableEmail: ""
+      },
+      opreations: {
+        contactPerson: "",
+        designation: "",
+        contactNumber: "",
+        opreationsEmail: ""
+      },
+      compliance: {
+        contactPerson: "",
+        designation: "",
+        contactNumber: "",
+        complianceEmail: ""
+      },
+      admin: {
+        contactPerson: "",
+        designation: "",
+        contactNumber: "",
+        adminEmail: ""
+      },
+      invoicePrefrences: "",
+      invoiceCommunicationPrefrences: "",
+      companySuiteDetails: [
+        {
+          designation: "",
+          directorEmailAddress: "",
+          directorContactNumber: ""
+        }
+       
+      ],
+      payment: {
+        accountName: "",
+        bankName: "",
+        bsb: "",
+        accountNumber: ""
+      },
+      paymentTerm: "",
+      warehouseLocation: {
+        street1: "",
+        street2: "",
+        suburb: "", 
+        state: "",
+        country: "",
+        postCode: ""
+      },
+      document: [
+      
+      ]
+    }
+  )
+
+
+
+  const handleSubmit = async()=>{
+    console.log('customer', customer.document)
+    // const response :any = await addCustomer(customer, token || "")
+
+    // if(response?.status === 200){
+    //     alert('Customer Added Successfully')    
+    // }else{
+    //     alert('Something went Wrong! Please try again later.')
+    // }
+  }
 
   return (
     <>
@@ -26,7 +126,7 @@ const AddCustomer = () => {
               </span>
             </div>
           </div>
-          <div className="bg-white mr-4 px-4 rounded-md mt-4 p-4 rounded-md">
+          <div className="bg-white mr-4 px-4  mt-4 p-4 rounded-md">
             <div className="mx-2">
               <Progressbar />
             </div>
@@ -37,7 +137,7 @@ const AddCustomer = () => {
                 width={100}
                 height={100}
               />
-              <span className="w-6 h-6 rounded-full bg-accent3 block text-white flex justify-center items-end text-xl absolute right-2 bottom-2">
+              <span className="w-6 h-6 rounded-full bg-accent3  text-white flex justify-center items-end text-xl absolute right-2 bottom-2">
                 +
               </span>
             </div>
@@ -47,47 +147,55 @@ const AddCustomer = () => {
             <div className="grid grid-cols-3 gap-4 p-4">
               <Maininputfield
                 label="Company Name"
-                value={"Sanket"}
+                value={customer.companyName}
+                onChange={(e:any) => setCustomer({ ...customer, companyName: e.target.value })} 
                 className="w-full"
               />
               <Maininputfield
                 label="Trading Name"
-                value={"Raju"}
+                vsalue={customer.tradingName}
+                onChange={(e:any) => setCustomer({ ...customer, tradingName: e.target.value })}
                 className="w-full"
               />
               <Maininputfield
                 label="ABN"
-                value={"08548445"}
+                value={customer.abnNumber}
+                onChange={(e:any) => setCustomer({ ...customer, abnNumber: Number(e.target.value) })} 
                 className="w-full"
               />
               <Maininputfield
                 label="Legal Name"
-                value={"Raju"}
+                value={customer.legalName}
+                onChange={(e:any) => setCustomer({ ...customer, legalName: e.target.value })} 
                 className="w-full"
               />
               <Maininputfield
                 label="Website Address"
-                value={"xyz.com"}
+                value={customer.websiteAddress}
+                onChange={(e:any) => setCustomer({ ...customer, websiteAddress: e.target.value })}  
                 className="w-full"
               />
-              <Maininputfield
+              {/* <Maininputfield
                 label="Customer ID"
-                value={"BBT - 1200"}
+                value={customer.customerId}
                 className="w-full"
-              />
+              /> */}
               <Maininputfield
                 label="First Name"
-                value={"Jordan"}
+                value={customer.firstName}
+                onChange={(e:any) => setCustomer({ ...customer, firstName: e.target.value })}
                 className="w-full"
               />
               <Maininputfield
                 label="Last Name"
-                value={"Wheatley"}
+                value={customer.lastName}
+                onChange={(e:any) => setCustomer({ ...customer, lastName: e.target.value })}
                 className="w-full"
               />
               <Maininputfield
                 label="Designation"
-                value={"CEO"}
+                value={customer.designation}
+                onChange={(e:any) => setCustomer({ ...customer, designation: e.target.value })}
                 className="w-full"
               />
             </div>
@@ -97,34 +205,42 @@ const AddCustomer = () => {
             <div className="grid grid-cols-3 gap-4 p-4">
               <Maininputfield
                 label="Street 1"
-                value={"Payne Street"}
+                value={customer.companyAddress.street1}  
+                onChange={(e:any) => setCustomer({ ...customer, companyAddress: { ...customer.companyAddress, street1: e.target.value } })}
                 className="w-full"
               />
               <Maininputfield
                 label="Street 2"
-                value={"Payne Street"}
+                value={customer.companyAddress.street2}
+                onChange={(e:any) => setCustomer({ ...customer, companyAddress: { ...customer.companyAddress, street2: e.target.value } })}
                 className="w-full"
               />
               <Maininputfield
                 label="Suburb"
-                value={"Caulfield"}
+                value={customer.companyAddress.suburb}
+                onChange={(e:any) => setCustomer({ ...customer, companyAddress: { ...customer.companyAddress, suburb: e.target.value } })}
                 className="w-full"
               />
               <DropDownMap
                 label="State"
                 mapOption={stateCollection}
-                selectedData={selectedData}
-                setSelectedData={setSelectedData}
+                value={customer.companyAddress.state}
+                onChange={(e:any) => setCustomer({ ...customer, companyAddress: { ...customer.companyAddress, state: e.target.value } })}
+                // selectedData={selectedData}
+                // setSelectedData={setSelectedData}
               />
               <DropDownMap
                 label="Country"
                 mapOption={countryCollection}
-                selectedData={selectedData}
-                setSelectedData={setSelectedData}
+                value={customer.companyAddress.country}
+                onChange={(e:any) => setCustomer({ ...customer, companyAddress: { ...customer.companyAddress, country: e.target.value } })}
+                // selectedData={selectedData}
+                // setSelectedData={setSelectedData}
               />
               <Maininputfield
                 label="Post Code"
-                value={"3161"}
+                value={customer.companyAddress.postCode}
+                onChange={(e:any) => setCustomer({ ...customer, companyAddress: { ...customer.companyAddress, postCode: e.target.value } })}
                 className="w-full"
               />
             </div>
@@ -135,23 +251,27 @@ const AddCustomer = () => {
             <div className="grid grid-cols-3 gap-4 p-4">
               <Maininputfield
                 label="Contact Person"
-                value={"Sanket"}
+                value={customer.accountPayble.contactPerson}
+                onChange={(e:any) => setCustomer({ ...customer, accountPayble: { ...customer.accountPayble, contactPerson: e.target.value } })}
                 className="w-full"
               />
               <Maininputfield
                 label="Designation"
-                value={"CEO"}
+                value={customer.accountPayble.designation}
+                onChange={(e:any) => setCustomer({ ...customer, accountPayble: { ...customer.accountPayble, designation: e.target.value } })}
                 className="w-full"
               />
               <Maininputfield
                 label="Contact Number"
-                value={"045489548"}
+                value={customer.accountPayble.contactNumber}
+                onChange={(e:any) => setCustomer({ ...customer, accountPayble: { ...customer.accountPayble, contactNumber: e.target.value } })}
                 className="w-full"
               />
 
               <Maininputfield
                 label="Accounts Payable Email"
-                value={"sanket.salve@gmail.com"}
+                value={customer.accountPayble.accountsPaybleEmail}
+                onChange={(e:any) => setCustomer({ ...customer, accountPayble: { ...customer.accountPayble, accountsPaybleEmail: e.target.value } })}
                 className="w-full"
               />
             </div>
@@ -159,23 +279,27 @@ const AddCustomer = () => {
             <div className="grid grid-cols-3 gap-4 p-4">
               <Maininputfield
                 label="Contact Person"
-                value={"Sanket"}
+                value={customer.accountReceivable.contactPerson}
+                onChange={(e:any) => setCustomer({ ...customer, accountReceivable: { ...customer.accountReceivable, contactPerson: e.target.value } })}
                 className="w-full"
               />
               <Maininputfield
                 label="Designation"
-                value={"CEO"}
+                value={customer.accountReceivable.designation}
+                onChange={(e:any) => setCustomer({ ...customer, accountReceivable: { ...customer.accountReceivable, designation: e.target.value } })}
                 className="w-full"
               />
               <Maininputfield
                 label="Contact Number"
-                value={"045489548"}
+                value={customer.accountReceivable.contactNumber}
+                onChange={(e:any) => setCustomer({ ...customer, accountReceivable: { ...customer.accountReceivable, contactNumber: e.target.value } })}
                 className="w-full"
               />
 
               <Maininputfield
                 label="Accounts Receivable Email"
-                value={"sanket.salve@gmail.com"}
+                value={customer.accountReceivable.accountsReceivableEmail}
+                onChange={(e:any) => setCustomer({ ...customer, accountReceivable: { ...customer.accountReceivable, accountsReceivableEmail: e.target.value } })}
                 className="w-full"
               />
             </div>
@@ -183,23 +307,27 @@ const AddCustomer = () => {
             <div className="grid grid-cols-3 gap-4 p-4">
               <Maininputfield
                 label="Contact Person"
-                value={"Sanket"}
+                value={customer.opreations.contactPerson}
+                onChange={(e:any) => setCustomer({ ...customer, opreations: { ...customer.opreations, contactPerson: e.target.value } })}
                 className="w-full"
               />
               <Maininputfield
                 label="Designation"
-                value={"CEO"}
+                value={customer.opreations.designation}
+                onChange={(e:any) => setCustomer({ ...customer, opreations: { ...customer.opreations, designation: e.target.value } })}
                 className="w-full"
               />
               <Maininputfield
                 label="Contact Number"
-                value={"045489548"}
+                value={customer.opreations.contactNumber}
+                onChange={(e:any) => setCustomer({ ...customer, opreations: { ...customer.opreations, contactNumber: e.target.value } })}
                 className="w-full"
               />
 
               <Maininputfield
                 label="Operations Email"
-                value={"sanket.salve@gmail.com"}
+                value={customer.opreations.opreationsEmail}
+                onChange={(e:any) => setCustomer({ ...customer, opreations: { ...customer.opreations, opreationsEmail: e.target.value } })}
                 className="w-full"
               />
             </div>
@@ -207,23 +335,27 @@ const AddCustomer = () => {
             <div className="grid grid-cols-3 gap-4 p-4">
               <Maininputfield
                 label="Contact Person"
-                value={"Sanket"}
+                value={customer.compliance.contactPerson}
+                onChange={(e:any) => setCustomer({ ...customer, compliance: { ...customer.compliance, contactPerson: e.target.value } })}
                 className="w-full"
               />
               <Maininputfield
                 label="Designation"
-                value={"CEO"}
+                value={customer.compliance.designation}
+                onChange={(e:any) => setCustomer({ ...customer, compliance: { ...customer.compliance, designation: e.target.value } })}
                 className="w-full"
               />
               <Maininputfield
                 label="Contact Number"
-                value={"045489548"}
+                value={customer.compliance.contactNumber}
+                onChange={(e:any) => setCustomer({ ...customer, compliance: { ...customer.compliance, contactNumber: e.target.value } })}
                 className="w-full"
               />
 
               <Maininputfield
                 label="Compliance Email"
-                value={"sanket.salve@gmail.com"}
+                value={customer.compliance.complianceEmail}
+                onChange={(e:any) => setCustomer({ ...customer, compliance: { ...customer.compliance, complianceEmail: e.target.value } })}
                 className="w-full"
               />
             </div>
@@ -231,23 +363,27 @@ const AddCustomer = () => {
             <div className="grid grid-cols-3 gap-4 p-4">
               <Maininputfield
                 label="Contact Person"
-                value={"Sanket"}
+                value={customer.admin.contactPerson}
+                onChange={(e:any) => setCustomer({ ...customer, admin: { ...customer.admin, contactPerson: e.target.value } })}
                 className="w-full"
               />
               <Maininputfield
                 label="Designation"
-                value={"CEO"}
+                value={customer.admin.designation}
+                onChange={(e:any) => setCustomer({ ...customer, admin: { ...customer.admin, designation: e.target.value } })}
                 className="w-full"
               />
               <Maininputfield
                 label="Contact Number"
-                value={"045489548"}
+                value={customer.admin.contactNumber}
+                onChange={(e:any) => setCustomer({ ...customer, admin: { ...customer.admin, contactNumber: e.target.value } })}
                 className="w-full"
               />
 
               <Maininputfield
                 label="Admin Email"
-                value={"sanket.salve@gmail.com"}
+                value={customer.admin.adminEmail}
+                onChange={(e:any) => setCustomer({ ...customer, admin: { ...customer.admin, adminEmail: e.target.value } })}
                 className="w-full"
               />
             </div>
@@ -257,8 +393,8 @@ const AddCustomer = () => {
               <DropDownMap
                 label="Invoice Preferences"
                 mapOption={invoiceColletion}
-                selectedData={selectedData}
-                setSelectedData={setSelectedData}
+                value={customer.invoicePrefrences}
+                onChange={(e:any) => setCustomer({ ...customer, invoicePrefrences: e.target.value })}
               />
             </div>
             <h3 className="font-semibold px-4 text-sm">
@@ -269,8 +405,8 @@ const AddCustomer = () => {
               <DropDownMap
                 label="Select Email"
                 mapOption={invoiceComuColletion}
-                selectedData={selectedData}
-                setSelectedData={setSelectedData}
+                value={customer.invoiceCommunicationPrefrences}
+                onChange={(e:any) => setCustomer({ ...customer, invoiceCommunicationPrefrences: e.target.value })}
               />
             </div>
             <h3 className="font-semibold px-4 text-sm">
@@ -279,17 +415,20 @@ const AddCustomer = () => {
             <div className="grid grid-cols-3 gap-4 p-4">
               <Maininputfield
                 label="Designation"
-                value={"CEO"}
+                value={customer.companySuiteDetails[0].designation}
+                onChange={(e:any) => setCustomer({ ...customer, companySuiteDetails: [{ ...customer.companySuiteDetails[0], designation: e.target.value }] })}
                 className="w-full"
               />
               <Maininputfield
                 label="Director Email Address"
-                value={"sanket.salve@gmail.com"}
+                value={customer.companySuiteDetails[0].directorEmailAddress}
+                onChange={(e:any) => setCustomer({ ...customer, companySuiteDetails: [{ ...customer.companySuiteDetails[0], directorEmailAddress: e.target.value }] })}
                 className="w-full"
               />
               <Maininputfield
                 label="Director Contact Number"
-                value={"045489548"}
+                value={customer.companySuiteDetails[0].directorContactNumber}
+                onChange={(e:any) => setCustomer({ ...customer, companySuiteDetails: [{ ...customer.companySuiteDetails[0], directorContactNumber: e.target.value }] })}
                 className="w-full"
               />
             </div>
@@ -305,22 +444,26 @@ const AddCustomer = () => {
             <div className="grid grid-cols-3 gap-4 p-4">
               <Maininputfield
                 label="Account Name"
-                value={"Rentals Pty Ltd"}
+                value={customer.payment.accountName}
+                onChange={(e:any) => setCustomer({ ...customer, payment: { ...customer.payment, accountName: e.target.value } })}
                 className="w-full"
               />
               <Maininputfield
                 label="Bank Name"
-                value={"St George Bank"}
+                value={customer.payment.bankName}
+                onChange={(e:any) => setCustomer({ ...customer, payment: { ...customer.payment, bankName: e.target.value } })}
                 className="w-full"
               />
               <Maininputfield
                 label="BSB"
-                value={"113 100"}
+                value={customer.payment.bsb}
+                onChange={(e:any) => setCustomer({ ...customer, payment: { ...customer.payment, bsb: e.target.value } })}
                 className="w-full"
               />
               <Maininputfield
                 label="Account Number"
-                value={"1234-5678-9012"}
+                value={customer.payment.accountNumber}
+                onChange={(e:any) => setCustomer({ ...customer, payment: { ...customer.payment, accountNumber: e.target.value } })}
                 className="w-full"
               />
             </div>
@@ -329,8 +472,8 @@ const AddCustomer = () => {
               <DropDownMap
                 label="Term"
                 mapOption={paymentTermsCollection}
-                selectedData={selectedData}
-                setSelectedData={setSelectedData}
+                value={customer.paymentTerm}
+                onChange={(e:any) => setCustomer({ ...customer, paymentTerm: e.target.value })}
               />
             </div>
             <h2 className="font-semibold p-4">
@@ -342,34 +485,38 @@ const AddCustomer = () => {
             <div className="grid grid-cols-3 gap-4 p-4">
               <Maininputfield
                 label="Street 1"
-                value={"Payne Street"}
+                value={customer.warehouseLocation.street1}
+                onChange={(e:any) => setCustomer({ ...customer, warehouseLocation: { ...customer.warehouseLocation, street1: e.target.value } })}
                 className="w-full"
               />
               <Maininputfield
                 label="Street 2"
-                value={"Payne Street"}
+                value={customer.warehouseLocation.street2}
+                onChange={(e:any) => setCustomer({ ...customer, warehouseLocation: { ...customer.warehouseLocation, street2: e.target.value } })}
                 className="w-full"
               />
               <Maininputfield
                 label="Suburb"
-                value={"Caulfield"}
+                value={customer.warehouseLocation.suburb}
+                onChange={(e:any) => setCustomer({ ...customer, warehouseLocation: { ...customer.warehouseLocation, suburb: e.target.value } })}
                 className="w-full"
               />
               <DropDownMap
                 label="State"
                 mapOption={stateCollection}
-                selectedData={selectedData}
-                setSelectedData={setSelectedData}
+               value={customer.warehouseLocation.state}
+                onChange={(e:any) => setCustomer({ ...customer, warehouseLocation: { ...customer.warehouseLocation, state: e.target.value } })}
               />
               <DropDownMap
                 label="Country"
                 mapOption={countryCollection}
-                selectedData={selectedData}
-                setSelectedData={setSelectedData}
+                value={customer.warehouseLocation.country}
+                onChange={(e:any) => setCustomer({ ...customer, warehouseLocation: { ...customer.warehouseLocation, country: e.target.value } })}
               />
               <Maininputfield
                 label="Post Code"
-                value={"3161"}
+                value={customer.warehouseLocation.postCode}
+                onChange={(e:any) => setCustomer({ ...customer, warehouseLocation: { ...customer.warehouseLocation, postCode: e.target.value } })}
                 className="w-full"
               />
             </div>
@@ -382,7 +529,11 @@ const AddCustomer = () => {
             <h2 className="font-semibold p-4"> Contract Document</h2>
 
             <div className="grid grid-cols-3 gap-4 p-4">
-              <FileUpload file="Choose Contract Document" />
+              <FileUpload 
+              file="Choose Contract Document" 
+              value={customer.document}
+              onChange={(e:any) => setCustomer({ ...customer, document: e.target.value })}
+              />
             </div>
           </div>
           <div className="flex justify-end gap-4 my-4 px-4 mb-20">
@@ -390,7 +541,7 @@ const AddCustomer = () => {
               text="Save"
               className="!bg-transparent !w-fit border border-[#e5e5e5] !text-black px-8"
             />
-            <Button text="Create" className="!w-fit px-8" />
+            <Button onClick={handleSubmit} text="Create" className="!w-fit px-8" />
           </div>
         </div>
       </div>

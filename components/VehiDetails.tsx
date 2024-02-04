@@ -7,6 +7,7 @@ import MobileInput from "./mobile-input/MobileInput";
 import FileUpload from "./FileUpload";
 import { getCookie } from "cookies-next";
 
+
 const VehiDetails = () => {
   const [action, setAction] = useState(false);
   const [addPopUp, setAddPop] = useState(false);
@@ -17,8 +18,7 @@ const VehiDetails = () => {
   const [vehicleList, setvehicleList] = React.useState([]);
 
   const fetchingVehicleList = async () => {
-    const token = getCookie("token");
-    console.log("token", token);
+   const token = getCookie("token", {httpOnly:true});
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_APP_API_URL_V1}/vehicle`,
@@ -26,13 +26,11 @@ const VehiDetails = () => {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
-            // get token from cookies
           },
         }
       );
       const data = await res.json();
       setvehicleList(data);
-      console.log("data fetching", { data });
     } catch (error) {
       console.log(error);
     }

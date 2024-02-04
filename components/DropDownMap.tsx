@@ -24,14 +24,11 @@ const DropDownMap = ({
   selectedData,
   setSelectedData,
 }: ProposFrence) => {
-  console.log("check kr", mapOption);
-
-  //   const [selectedData, setSelectedData] = useState("");
-
+  
   const selectValue = (value: any) => {
     setSelectedData(value.target.value);
   };
-  console.log("data", selectedData);
+  
 
   return (
     <div className="bg-[#EFF2F3] dropdown pt-[5px] pb-[5px] rounded-md leading-none">
@@ -39,19 +36,21 @@ const DropDownMap = ({
         {label}
       </label>
       <select
-        id={id}
         className="pl-[10px] bg-[#EFF2F3] outline-none w-[97%] h-[70%] text-[12px] text-[#8097A2]"
-        onChange={selectValue}
+        onChange={onChange}
+        value={value}
+        defaultValue='India'
+        
       >
         {mapOption?.map((items: any, index: number) => {
-          console.log("new data", { items });
           return (
             <>
               <option
                 className="text-[Placeholder]"
-                key={`${index}`}
-                value={`${items.value}`}
-                onClick={() => selectValue(items.value)}
+                key={index}
+                value={items.value}
+                // onClick={() => selectValue(items.value)}
+                // onChange={() => selectValue(items.value)}
               >
                 {items.value}
               </option>

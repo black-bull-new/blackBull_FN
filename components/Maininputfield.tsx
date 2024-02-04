@@ -11,9 +11,10 @@ const Maininputfield = (props: any) => {
       <input
         type="First Name"
         id={props.id}
-        className={`pl-[15px] bg-[#EFF2F3] outline-none w-[300px] placeholder:text-[12px] text-[12px] font-medium leading-none ${props.className}`}
+        className={`pl-[15px] bg-[#EFF2F3] outline-none w-[300px] placeholder:text-[12px]  text-[12px] font-medium leading-none ${props.className}`}
         placeholder={props.placeholder}
         value={props.value}
+        onChange={props.onChange}
       />
     </div>
   );

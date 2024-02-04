@@ -1,12 +1,33 @@
 import Image from "next/image";
 import Button from "./Button";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { getAllDrives } from "@/network-request/driver/driverApi";
+import { getCookie } from "cookies-next";
 
 const DriverDetails = () => {
   const [action, setAction] = useState(false);
   const [addPopUp, setAddPop] = useState(false);
   const router = useRouter();
+  const token = getCookie("token")
+
+  const [drivers, setDrivers] = useState([])  
+
+  const getDrivers = async()=>{
+      const data = await getAllDrives(token || '')
+      if (data) {
+        setDrivers(data.data)
+        console.log('data', data.data)
+      }
+  }
+
+
+  useEffect(()=>{
+    getDrivers()
+  }, [])
+
+
+
   return (
     <>
       <div className="mr-4">
@@ -63,19 +84,26 @@ const DriverDetails = () => {
                 })}
               </div>
               <div className="grid text-center grid-cols-[11%_11%_11%_11%_11%_11%_11%_11%_12%] p-4 border">
-                {driverDetailsData.map((item, ind) => {
+                {drivers?.map((item:any, ind:number) => {
                   return (
-                    <>
-                      <div className="mb-4">{item.firstName}</div>
-                      <div className="mb-4">{item.lastName}</div>
-                      <div className="mb-4">{item.licenceNo}</div>
-                      <div className="mb-4">{item.licenceType}</div>
-                      <div className="mb-4">{item.expiryDate}</div>
-                      <div className="mb-4">{item.state}</div>
-                      <div className="mb-4">{item.licenceDoc}</div>
-                      <div className="mb-4">{item.status}</div>
-                      <div className="mb-4">{item.complaint}</div>
-                    </>
+                    <React.Fragment key={item?._id}>
+                      <p className="mb-4">{item?.firstName}</p>
+                      <p className="mb-4">{item?.lastName}</p>
+                      <p className="mb-4">{item?.licenseDetails?.licenseNumber}</p>
+                      <p className="mb-4">{item?.licenseDetails?.expiryDate}</p>
+                      <p className="mb-4">{item?.licenseDetails?.state}</p>
+                      <p className="mb-4">{item?.licenseDetails?.state}</p>
+                      <p className="mb-4">No Data</p>
+                      <p className="mb-4">No Data</p>
+                      <p className="mb-4">No Data</p>
+
+                      {/* <div className="mb-4">{item?.licenseDetails?.licenseType}</div>
+                      <div className="mb-4">{item?.licenseDetails?.expiryDate}</div>
+                      <div className="mb-4">{item?.licenseDetails?.state}</div>
+                      <div className="mb-4">{item?.licenceDoc}</div>
+                      <div className="mb-4">{item?.visaStatus}</div>
+                      <div className="mb-4">{item?.complaint}</div> */}
+                    </React.Fragment>
                   );
                 })}
               </div>
