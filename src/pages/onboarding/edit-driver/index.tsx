@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DropDownMap from "../../../../components/DropDownMap";
 
 import Maindatefield from "../../../../components/Maindatefield";
@@ -11,14 +11,18 @@ import Button from "../../../../components/Button";
 import DateWithoutDropdown from "../../../../components/DateWithoutDropdown";
 import FileUpload from "../../../../components/FileUpload";
 import ImageUpload from "../../../../components/imageUpload/ImageUpload";
-import { addDriver } from "@/network-request/driver/driverApi";
+import { addDriver, editDriver, getDriver } from "@/network-request/driver/driverApi";
 import { getCookie } from "cookies-next";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 
 const EditDriver = () => {
   const [selectedData, setSelectedData] = useState("");
   const token = getCookie("token");
   const router = useRouter();
+  const id = router.query.id;
+ 
+  
+
 
   const [driverDetails, setDriverDetails] = useState({
     firstName: "",
@@ -62,9 +66,9 @@ const EditDriver = () => {
       daysLeftForRenewal: "",
     },
     employmentHistory: {
-      perviousEmployer: "",
+      previousEmployer: "",
       yearsOfExperience: "",
-      reasonForLeaving: "",
+      reasonOfLeaving: "",
 
       companyName: "",
       referenceContactName: "",
@@ -126,14 +130,93 @@ const EditDriver = () => {
     },
   });
 
+
+
+const getDriverAndSettoState= async ()=>{
+
+  const response = await getDriver(token as string, id as string);
+ 
+  if (response?.status == 200) {
+    const data = response?.data;
+
+    setDriverDetails({
+      ...driverDetails,
+      firstName: data?.data?.firstName,
+      middleName: data?.data?.middleName,
+      lastName: data?.data?.lastName,
+      dateOfBirth: data?.data?.dateOfBirth,
+      email: data?.data?.email, 
+      mobile: data?.data?.mobile,
+      currentAddress: {
+        houseNumber: data?.data?.currentAddress?.houseNumber,
+        street: data?.data?.currentAddress?.street,
+        suburb: data?.data?.currentAddress?.suburb,
+        state: data?.data?.currentAddress?.state,
+        country: data?.data?.currentAddress?.country,
+        pincode: data?.data?.currentAddress?.pincode,
+      }, 
+      permanentAddress:{
+        houseNumber: data?.data?.permanentAddress?.houseNumber,
+        street: data?.data?.permanentAddress?.street,
+        suburb: data?.data?.permanentAddress?.suburb,
+        state: data?.data?.permanentAddress?.state,
+        country: data?.data?.permanentAddress?.country,
+        pincode: data?.data?.permanentAddress?.pincode,
+      },  
+      emergencyContactInformation:{
+        contactName: data?.data?.emergencyContactInformation?.contactName,
+        contactNumber: data?.data?.emergencyContactInformation?.contactNumber,
+        relationship: data?.data?.emergencyContactInformation?.relationship,
+      },
+      employmentHistory:{
+        previousEmployer: data?.data?.employmentHistory?.[0]?.previousEmployer,
+        yearsOfExperience: data?.data?.employmentHistory?.[0]?.yearsOfExperience,
+        reasonOfLeaving: data?.data?.employmentHistory?.[0]?.reasonOfLeaving,
+
+        companyName: data?.data?.employmentHistory?.[0]?.companyName,
+        referenceContactName: data?.data?.employmentHistory?.[0]?.referenceContactName,
+        referenceEmailId: data?.data?.employmentHistory?.[0]?.referenceEmailId,
+        referenceContactNumber: data?.data?.employmentHistory?.[0]?.referenceContactNumber,
+      },  
+      licenseDetails:{
+        licenseNumber: data?.data?.licenseDetails?.licenseNumber,
+        licenseCardNumber: data?.data?.licenseDetails?.licenseCardNumber,
+        licenceType: data?.data?.licenseDetails?.licenceType,
+        state: data?.data?.licenseDetails?.state,
+        dateOfIssue: data?.data?.licenseDetails?.dateOfIssue,
+        expiryDate: data?.data?.licenseDetails?.expiryDate,
+        daysLeftForRenewal: data?.data?.licenseDetails?.daysLeftForRenewal,
+      },
+      
+      
+      
+    })
+    
+   
+    
+  } 
+}
+
+
+useEffect(()=>{
+  getDriverAndSettoState()
+}, [])
+
+
   const handleSubmit = async () => {
-    const response = await addDriver(driverDetails, token || "");
+
+    
+
+    const response = await editDriver(token as string, id as string, driverDetails);
     if (response?.status == 200) {
-      alert("Driver added successfully");
+      console.log(response, "response");
       router.push("/onboarding/driver-list");
+      alert("Driver updated successfully");
     } else {
       alert("Something went wrong");
     }
+    
+
   };
 
   return (
@@ -167,7 +250,7 @@ const EditDriver = () => {
               <div className="grid grid-cols-3 gap-4">
                 <Maininputfield
                   label="First Name"
-                  value={driverDetails.firstName}
+                  value={driverDetails?.firstName}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
@@ -178,7 +261,7 @@ const EditDriver = () => {
                 />
                 <Maininputfield
                   label="Middle Name"
-                  value={driverDetails.middleName}
+                  value={driverDetails?.middleName}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
@@ -189,7 +272,7 @@ const EditDriver = () => {
                 />
                 <Maininputfield
                   label="Last Name"
-                  value={driverDetails.lastName}
+                  value={driverDetails?.lastName}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
@@ -201,7 +284,7 @@ const EditDriver = () => {
 
                 <Maindatefield
                   label="DOB"
-                  value={driverDetails.dateOfBirth}
+                  value={driverDetails?.dateOfBirth}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
@@ -214,7 +297,7 @@ const EditDriver = () => {
 
                 <Maininputfield
                   label="Email"
-                  value={driverDetails.email}
+                  value={driverDetails?.email}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
@@ -225,7 +308,7 @@ const EditDriver = () => {
                 />
                 <Maininputfield
                   label="Mobile"
-                  value={driverDetails.mobile}
+                  value={driverDetails?.mobile}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
@@ -234,7 +317,8 @@ const EditDriver = () => {
                   }
                   className="w-full"
                 />
-                <Maininputfield
+
+                {/* <Maininputfield
                   label="Nationality"
                   value={driverDetails?.nationality}
                   onChange={(e: any) =>
@@ -244,7 +328,7 @@ const EditDriver = () => {
                     })
                   }
                   className="w-full"
-                />
+                /> */}
 
                 {/* <FileUpload /> */}
               </div>
@@ -260,12 +344,12 @@ const EditDriver = () => {
               <div className="grid grid-cols-3 gap-4">
                 <Maininputfield
                   label="House Number"
-                  value={driverDetails.currentAddress.houseNumber}
+                  value={driverDetails?.currentAddress?.houseNumber}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
                       currentAddress: {
-                        ...driverDetails.currentAddress,
+                        ...driverDetails?.currentAddress,
                         houseNumber: e.target.value,
                       },
                     })
@@ -274,12 +358,12 @@ const EditDriver = () => {
                 />
                 <Maininputfield
                   label="Street"
-                  value={driverDetails.currentAddress.street}
+                  value={driverDetails?.currentAddress?.street}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
                       currentAddress: {
-                        ...driverDetails.currentAddress,
+                        ...driverDetails?.currentAddress,
                         street: e.target.value,
                       },
                     })
@@ -288,12 +372,12 @@ const EditDriver = () => {
                 />
                 <Maininputfield
                   label="Suburb"
-                  value={driverDetails.currentAddress.suburb}
+                  value={driverDetails?.currentAddress?.suburb}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
                       currentAddress: {
-                        ...driverDetails.currentAddress,
+                        ...driverDetails?.currentAddress,
                         suburb: e.target.value,
                       },
                     })
@@ -312,12 +396,12 @@ const EditDriver = () => {
                       },
                     })
                   }
-                  value={driverDetails.currentAddress.state}
+                  value={driverDetails?.currentAddress?.state}
                 />
                 <DropDownMap
                   label="Country"
                   mapOption={countryCollection}
-                  value={driverDetails.currentAddress.country}
+                  value={driverDetails?.currentAddress?.country}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
@@ -330,7 +414,7 @@ const EditDriver = () => {
                 />
                 <Maininputfield
                   label="Post Code"
-                  value={driverDetails.currentAddress.pincode}
+                  value={driverDetails?.currentAddress?.pincode}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
@@ -362,7 +446,7 @@ const EditDriver = () => {
               <div className="grid grid-cols-3 gap-4">
                 <Maininputfield
                   label="House Number"
-                  value={driverDetails.permanentAddress.houseNumber}
+                  value={driverDetails?.permanentAddress?.houseNumber}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
@@ -376,7 +460,7 @@ const EditDriver = () => {
                 />
                 <Maininputfield
                   label="Street"
-                  value={driverDetails.permanentAddress.street}
+                  value={driverDetails?.permanentAddress?.street}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
@@ -390,7 +474,7 @@ const EditDriver = () => {
                 />
                 <Maininputfield
                   label="Suburb"
-                  value={driverDetails.permanentAddress.suburb}
+                  value={driverDetails?.permanentAddress?.suburb}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
@@ -407,7 +491,7 @@ const EditDriver = () => {
                   mapOption={stateCollection}
                   // selectedData={selectedData}
                   // setSelectedData={setSelectedData}
-                  value={driverDetails.permanentAddress.state}
+                  value={driverDetails?.permanentAddress?.state}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
@@ -423,7 +507,7 @@ const EditDriver = () => {
                   mapOption={countryCollection}
                   // selectedData={selectedData}
                   // setSelectedData={setSelectedData}
-                  value={driverDetails.permanentAddress.country}
+                  value={driverDetails?.permanentAddress?.country}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
@@ -436,7 +520,7 @@ const EditDriver = () => {
                 />
                 <Maininputfield
                   label="Post Code"
-                  value={driverDetails.permanentAddress.pincode}
+                  value={driverDetails?.permanentAddress?.pincode}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
@@ -459,7 +543,7 @@ const EditDriver = () => {
               <div className="grid grid-cols-3 gap-4">
                 <Maininputfield
                   label="Contact Name"
-                  value={driverDetails.emergencyContactInformation.contactName}
+                  value={driverDetails?.emergencyContactInformation?.contactName}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
@@ -474,7 +558,7 @@ const EditDriver = () => {
                 <Maininputfield
                   label="Contact Number"
                   value={
-                    driverDetails.emergencyContactInformation.contactNumber
+                    driverDetails?.emergencyContactInformation?.contactNumber
                   }
                   onChange={(e: any) =>
                     setDriverDetails({
@@ -489,7 +573,7 @@ const EditDriver = () => {
                 />
                 <Maininputfield
                   label="Relationship"
-                  value={driverDetails.emergencyContactInformation.relationship}
+                  value={driverDetails?.emergencyContactInformation?.relationship}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
@@ -514,13 +598,13 @@ const EditDriver = () => {
               <div className="grid grid-cols-3 gap-4">
                 <Maininputfield
                   label="Pervious Employer"
-                  value={driverDetails.employmentHistory.perviousEmployer}
+                  value={driverDetails?.employmentHistory?.previousEmployer}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
                       employmentHistory: {
                         ...driverDetails.employmentHistory,
-                        perviousEmployer: e.target.value,
+                        previousEmployer: e.target.value,
                       },
                     })
                   }
@@ -528,7 +612,7 @@ const EditDriver = () => {
                 />
                 <Maininputfield
                   label="Years Of Experience"
-                  value={driverDetails.employmentHistory.yearsOfExperience}
+                  value={driverDetails?.employmentHistory?.yearsOfExperience}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
@@ -542,13 +626,13 @@ const EditDriver = () => {
                 />
                 <Maininputfield
                   label="Reason for leaving"
-                  value={driverDetails.employmentHistory.reasonForLeaving}
+                  value={driverDetails?.employmentHistory?.reasonOfLeaving}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
                       employmentHistory: {
                         ...driverDetails.employmentHistory,
-                        reasonForLeaving: e.target.value,
+                        reasonOfLeaving: e.target.value,
                       },
                     })
                   }
@@ -565,7 +649,7 @@ const EditDriver = () => {
                 <div className="grid grid-cols-3 gap-4">
                   <Maininputfield
                     label="Company Name"
-                    value={driverDetails.employmentHistory.companyName}
+                    value={driverDetails?.employmentHistory?.companyName}
                     onChange={(e: any) =>
                       setDriverDetails({
                         ...driverDetails,
@@ -579,7 +663,7 @@ const EditDriver = () => {
                   />
                   <Maininputfield
                     label="Reference (Contact Name)"
-                    value={driverDetails.employmentHistory.referenceContactName}
+                    value={driverDetails?.employmentHistory?.referenceContactName}
                     onChange={(e: any) =>
                       setDriverDetails({
                         ...driverDetails,
@@ -593,7 +677,7 @@ const EditDriver = () => {
                   />
                   <Maininputfield
                     label="Reference (Email ID)"
-                    value={driverDetails.employmentHistory.referenceEmailId}
+                    value={driverDetails?.employmentHistory?.referenceEmailId}
                     onChange={(e: any) =>
                       setDriverDetails({
                         ...driverDetails,
@@ -608,7 +692,7 @@ const EditDriver = () => {
                   <Maininputfield
                     label="Reference (Contact Number)"
                     value={
-                      driverDetails.employmentHistory.referenceContactNumber
+                      driverDetails?.employmentHistory?.referenceContactNumber
                     }
                     onChange={(e: any) =>
                       setDriverDetails({
@@ -639,7 +723,7 @@ const EditDriver = () => {
               <div className="grid grid-cols-3 gap-4">
                 <Maininputfield
                   label="Licence Number"
-                  value={driverDetails.licenseDetails.licenseNumber}
+                  value={driverDetails?.licenseDetails?.licenseNumber}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
@@ -653,7 +737,7 @@ const EditDriver = () => {
                 />
                 <Maininputfield
                   label="Licence Card Number"
-                  value={driverDetails.licenseDetails.licenseCardNumber}
+                  value={driverDetails?.licenseDetails?.licenseCardNumber}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
@@ -670,7 +754,7 @@ const EditDriver = () => {
                   mapOption={licenceTypes}
                   // selectedData={selectedData}
                   // setSelectedData={setSelectedData}
-                  value={driverDetails.licenseDetails.licenceType}
+                  value={driverDetails?.licenseDetails?.licenceType}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
@@ -686,7 +770,7 @@ const EditDriver = () => {
                   mapOption={stateCollection}
                   // selectedData={selectedData}
                   // setSelectedData={setSelectedData}
-                  value={driverDetails.licenseDetails.state}
+                  value={driverDetails?.licenseDetails?.state}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
@@ -699,7 +783,7 @@ const EditDriver = () => {
                 />
                 <DateWithoutDropdown
                   label="Date Of Issue "
-                  value={driverDetails.licenseDetails.dateOfIssue}
+                  value={driverDetails?.licenseDetails?.dateOfIssue}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
@@ -713,7 +797,7 @@ const EditDriver = () => {
 
                 <DateWithoutDropdown
                   label="Expiry Date "
-                  value={driverDetails.licenseDetails.expiryDate}
+                  value={driverDetails?.licenseDetails?.expiryDate}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
@@ -727,7 +811,7 @@ const EditDriver = () => {
 
                 <Maininputfield
                   label="Days left for renewal"
-                  value={driverDetails.licenseDetails.daysLeftForRenewal}
+                  value={driverDetails?.licenseDetails?.daysLeftForRenewal}
                   onChange={(e: any) =>
                     setDriverDetails({
                       ...driverDetails,
@@ -784,7 +868,7 @@ const EditDriver = () => {
                   // selectedData={selectedData}
                   // setSelectedData={setSelectedData}
                   value={
-                    driverDetails.specialDrivingLicence.specialDrivingLicence
+                    driverDetails?.specialDrivingLicence?.specialDrivingLicence
                   }
                   onChange={(e: any) =>
                     setDriverDetails({

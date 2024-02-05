@@ -100,14 +100,14 @@ const AddCustomer = () => {
 
 
   const handleSubmit = async()=>{
-    console.log('customer', customer.document)
-    // const response :any = await addCustomer(customer, token || "")
+    // console.log('customer', customer.document)
+    const response :any = await addCustomer(customer, token || "")
 
-    // if(response?.status === 200){
-    //     alert('Customer Added Successfully')    
-    // }else{
-    //     alert('Something went Wrong! Please try again later.')
-    // }
+    if(response?.status === 200){
+        alert('Customer Added Successfully')    
+    }else{
+        alert('Something went Wrong! Please try again later.')
+    }
   }
 
   return (

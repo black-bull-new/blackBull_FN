@@ -2,7 +2,7 @@ import Image from "next/image";
 import Button from "./Button";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { getAllDrives } from "@/network-request/driver/driverApi";
+import { deleteDriver, getAllDrives } from "@/network-request/driver/driverApi";
 import { getCookie } from "cookies-next";
 
 const DriverDetails = () => {
@@ -12,19 +12,36 @@ const DriverDetails = () => {
   const router = useRouter();
   const token = getCookie("token");
 
+  const [driveToDelete, setDriverToDelete]= useState('')
+
+
   const [drivers, setDrivers] = useState([]);
 
   const getDrivers = async () => {
     const data = await getAllDrives(token || "");
     if (data) {
       setDrivers(data.data);
-      console.log("data", data.data);
     }
   };
 
   useEffect(() => {
     getDrivers();
   }, []);
+  
+  const handleDelete = async()=>{
+    const response = await deleteDriver(token || "", driveToDelete)
+    if(response){
+      setDriverToDelete('')
+      setDelete(false)
+      getDrivers()
+    } else{
+      setDelete(false)
+      setDriverToDelete('')
+    }
+  }
+
+
+  
 
   return (
     <>
@@ -102,7 +119,12 @@ const DriverDetails = () => {
                           alt="edit"
                           width={18}
                           height={18}
-                          onClick={() => router.push("/onboarding/edit-driver")}
+                          onClick={() =>{ 
+                            
+                            router.push({
+                              pathname: "/onboarding/edit-driver",
+                              query: { id: item?._id },
+                            })}}
                           className="cursor-pointer"
                         />
                         <Image
@@ -111,7 +133,7 @@ const DriverDetails = () => {
                           width={18}
                           height={18}
                           className="cursor-pointer"
-                          onClick={() => setDelete(true)}
+                          onClick={() => {setDelete(true); setDriverToDelete(item?._id)}}
                         />
                       </div>
 
@@ -121,6 +143,7 @@ const DriverDetails = () => {
                       <div className="mb-4">{item?.licenceDoc}</div>
                       <div className="mb-4">{item?.visaStatus}</div>
                       <div className="mb-4">{item?.complaint}</div> */}
+                     
                     </React.Fragment>
                   );
                 })}
@@ -136,14 +159,12 @@ const DriverDetails = () => {
                         <Button
                           text="Cancel"
                           className="!bg-transparent border !text-[#000] !py-[4px] !px-[8px]"
-                          onClick={() => setDelete(false)}
+                          onClick={() => {setDelete(false); setDriverToDelete('')}}
                         />
                         <Button
                           text="Confirm"
                           className=" !py-[4px] !px-[8px] !bg-red-500"
-                          onClick={() =>
-                            router.push("/onboarding/create-driver")
-                          }
+                          onClick={() => handleDelete()}
                         />
                       </div>
                     </div>

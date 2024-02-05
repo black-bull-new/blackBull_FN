@@ -38,3 +38,49 @@ export const getAllDrives = async(token:string)=>{
         console.log('error', error) 
     }
 }
+
+
+export const getDriver = async(token:string, id:string)=>{
+    try {
+        const response = await axios.get(`${DRIVER_BASE_URL}/driver/${id}`,{
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        return response
+    } catch (error) {
+        console.log('error', error) 
+    }
+}
+
+export const editDriver = async(token:string, id:string, data:any)=>{
+    try {
+        const response = await axios.put(`${DRIVER_BASE_URL}/driver/${id}`, data, {
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        return response
+    } catch (error) {
+        console.log('error', error) 
+    }
+}
+
+
+export const deleteDriver = async(token:string, id:string)=>{
+    try {
+        const response = await axios.delete(`${DRIVER_BASE_URL}/driver/${id}`,{
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        return response
+    } catch (error) {
+        console.log('error', error) 
+    }
+}
+
+

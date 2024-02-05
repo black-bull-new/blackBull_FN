@@ -136,8 +136,8 @@ const CreateDriver = () => {
   const handleSubmit = async()=>{
     const response = await addDriver(driverDetails, token || "")
     if(response?.status == 200){
-      alert('Driver added successfully')
       router.push('/onboarding/driver-list')
+      alert('Driver added successfully')
     }else{
       alert('Something went wrong')
     }
