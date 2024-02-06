@@ -28,8 +28,9 @@ const FileUpload = (props: any) => {
           type="file"
           id="myFile"
           name="filename"
+          multiple
           hidden
-          onChange={handleFileUpload}
+          onChange={props.onChange}
         />
       </div>
     </>

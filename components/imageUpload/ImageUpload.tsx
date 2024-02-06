@@ -104,7 +104,7 @@ const dummyPayload: any = {
   },
 };
 
-const ImageUpload = () => {
+const ImageUpload = ({handleSubmit}:any) => {
   const [image, setImage] = useState("");
 
   const handleImageChange = (e: any) => {
@@ -161,11 +161,7 @@ const ImageUpload = () => {
             text="Save"
             className="!bg-transparent !text-black border border-[#e5e5e5] !px-8"
           />
-          <Button
-            onClick={onAddDriver}
-            text="Create"
-            className="!px-8 bg-[#2B36D9]"
-          />
+          <Button onClick={()=>handleSubmit()} text="Create" className="!px-8 bg-[#2B36D9]" />
         </div>
       </div>
     </div>

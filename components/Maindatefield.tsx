@@ -16,6 +16,8 @@ const Maindatefield = (props: any) => {
           id="cal"
           className="bg-[#EFF2F3] outline-none  placeholder:text-[12px] text-[12px] font-medium "
           placeholder={props.placeholder}
+          value={props.value} 
+          onChange={props.onChange}
         />
       </div>
     </div>
