@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Button from "./Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Maininputfield from "./Maininputfield";
 import MobileInput from "./mobile-input/MobileInput";
@@ -12,6 +12,12 @@ const VehiDetails = () => {
   const router = useRouter();
   const [link, setLink] = useState(false);
   const [bulkUpload, setBulkUpload] = useState(false);
+
+  useEffect(()=>{
+    console.log("Hello Kaif")
+    
+  },[])
+
   return (
     <>
       <div className="mr-4">

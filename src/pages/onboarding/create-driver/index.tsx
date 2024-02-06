@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DropDownMap from "../../../../components/DropDownMap";
 
 import Maindatefield from "../../../../components/Maindatefield";
@@ -14,6 +14,9 @@ import ImageUpload from "../../../../components/imageUpload/ImageUpload";
 
 const CreateDriver = () => {
   const [selectedData, setSelectedData] = useState("");
+  useEffect(()=>{
+   console.log('cookie',document.cookie) 
+  },[])
   return (
     <>
       <div className="flex bg-[#E9EFFF]">
@@ -342,12 +345,12 @@ const CreateDriver = () => {
           </div>
           <div className="bg-white mr-4 px-4 rounded-md mt-4 p-4">
             <div className="mb-4 mt-8">
-              <h3 className="w-full mb-4 rounded-md font-semibold">
+              <h3 className="w-full mb-4 rounded-md font-semibold text-black">
                 {" "}
                 Onboarding Documents
               </h3>
 
-              <div className="grid grid-cols-5 bg-table-header p-4 rounded-md text-center mb-2 ">
+              <div className="grid grid-cols-5 bg-table-header p-4 rounded-md text-black text-center mb-2 ">
                 {documentCollectionHeading?.map((value, index) => {
                   return (
                     <>
@@ -358,7 +361,7 @@ const CreateDriver = () => {
                   );
                 })}
               </div>
-              <div className="grid grid-cols-5 p-4 rounded-md text-center items-center">
+              <div className="grid grid-cols-5 p-4 rounded-md text-black text-center items-center">
                 {documentCollectionData.map((value, index) => {
                   return (
                     <>
