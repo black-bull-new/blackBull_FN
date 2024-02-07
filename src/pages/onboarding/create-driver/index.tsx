@@ -14,147 +14,299 @@ import ImageUpload from "../../../../components/imageUpload/ImageUpload";
 import { addDriver } from "@/network-request/driver/driverApi";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
+import { correctDriverStateName } from "../utility/utilityMethod";
+
 
 const CreateDriver = () => {
   const [selectedData, setSelectedData] = useState("");
-  const token = getCookie("token")
-  const router = useRouter()
+  const token = getCookie("token");
+  const router = useRouter();
+  console.log("token check",{token})
 
-
-  const [driverDetails, setDriverDetails]= useState({
+  const [driverDetails, setDriverDetails] = useState<any>({
     firstName: "",
     middleName: "",
     lastName: "",
     dateOfBirth: "",
-    email:"",
-    mobile:"",
-    nationality:"",
+    email: "",
+    mobile: "",
+    nationality: "",
 
-    currentAddress:{
-      houseNumber:undefined,
-      street: "",
-      suburb: "",
-      state: "",
-      country: "",
-      pincode: ""
-    }, 
-    permanentAddress:{
+    currentAddress: {
       houseNumber: undefined,
       street: "",
       suburb: "",
       state: "",
       country: "",
-      pincode: ""
+      pincode: "",
+    },
+    permanentAddress: {
+      houseNumber: undefined,
+      street: "",
+      suburb: "",
+      state: "",
+      country: "",
+      pincode: "",
     },
 
     emergencyContactInformation: {
-      contactName: '',
+      contactName: "",
       contactNumber: "",
-      relationship: '', 
+      relationship: "",
     },
 
-    licenseDetails:{
+    licenseDetails: {
       licenseNumber: "",
       licenseCardNumber: "",
       licenceType: "",
       state: "",
       dateOfIssue: "",
       expiryDate: "",
-      daysLeftForRenewal: ""
+      daysLeftForRenewal: "",
     },
-    employmentHistory:{
+    employmentHistory: {
       perviousEmployer: "",
       yearsOfExperience: "",
-      reasonForLeaving: "", 
+      reasonForLeaving: "",
 
       companyName: "",
       referenceContactName: "",
       referenceEmailId: "",
-      referenceContactNumber:"", 
+      referenceContactNumber: "",
     },
-    specialDrivingLicence:{
-      specialDrivingLicence: ""
+    specialDrivingLicence: {
+      specialDrivingLicence: "",
     },
-    onboardingDocuments:{
+    onboardingDocuments: {
       documentType: "ggweg",
       attachFiles: "gwegweg",
       uploadedDocuments: "ewgwegw",
-      dateOfUpload: "gwegwg"
-    }, 
+      dateOfUpload: "gwegwg",
+    },
     visaStatus: {
       type: "Work",
-      uploadDate: "2023-01-15"
+      uploadDate: "2023-01-15",
     },
     driverLicenseFront: {
       type: "Front",
-      uploadDate: "2023-02-01"
+      uploadDate: "2023-02-01",
     },
     driverLicenseBack: {
       type: "Back",
-      uploadDate: "2023-02-05"
+      uploadDate: "2023-02-05",
     },
     licenseHistory: {
       type: "History",
-      uploadDate: "2023-03-01"
+      uploadDate: "2023-03-01",
     },
     policeVerification: {
       type: "Verification",
-      uploadDate: "2023-03-15"
+      uploadDate: "2023-03-15",
     },
     passportFront: {
       type: "Front",
-      uploadDate: "2023-04-01"
+      uploadDate: "2023-04-01",
     },
     passportBack: {
       type: "Back",
-      uploadDate: "2023-04-05"
+      uploadDate: "2023-04-05",
     },
     healthInsurance: {
       type: "Insurance",
-      uploadDate: "2023-05-01"
+      uploadDate: "2023-05-01",
     },
     driverCertificate: {
       type: "Certificate",
-      uploadDate: "2023-05-15"
+      uploadDate: "2023-05-15",
     },
     fitness: {
       type: "Fitness",
-      uploadDate: "2023-06-01"
+      uploadDate: "2023-06-01",
     },
     drugTest: {
       type: "Drug Test",
-      uploadDate: "2023-06-15"
-    } , 
+      uploadDate: "2023-06-15",
+    },
+  });
 
+  const [error, setError] = useState<any>({
+    firstNameError: "",
+    middleNameError: "",
+    lastNameError: "",
+    dateOfBirthError: "",
+    emailError: "",
+    mobileError: "",
+    nationalityError: "",
 
-    
+    currentAddressError: {
+      houseNumber: undefined,
+      street: "",
+      suburb: "",
+      state: "",
+      country: "",
+      pincode: "",
+    },
 
-  })
+    permanentAddressError: {
+      houseNumber: undefined,
+      street: "",
+      suburb: "",
+      state: "",
+      country: "",
+      pincode: "",
+    },
 
+    emergencyContactInformationError: {
+      contactName: "",
+      contactNumber: "",
+      relationship: "",
+    },
 
+    licenseDetailsError: {
+      licenseNumber: "",
+      licenseCardNumber: "",
+      licenceType: "",
+      state: "",
+      dateOfIssue: "",
+      expiryDate: "",
+      daysLeftForRenewal: "",
+    },
+    employmentHistoryError: {
+      perviousEmployer: "",
+      yearsOfExperience: "",
+      reasonForLeaving: "",
 
-  const handleSubmit = async()=>{
-    const response = await addDriver(driverDetails, token || "")
-    if(response?.status == 200){
-      router.push('/onboarding/driver-list')
-      alert('Driver added successfully')
-    }else{
-      alert('Something went wrong')
+      companyName: "",
+      referenceContactName: "",
+      referenceEmailId: "",
+      referenceContactNumber: "",
+    },
+    specialDrivingLicenceError: {
+      specialDrivingLicence: "",
+    },
+    onboardingDocumentsError: {
+      documentType: "ggweg",
+      attachFiles: "gwegweg",
+      uploadedDocuments: "ewgwegw",
+      dateOfUpload: "gwegwg",
+    },
+    visaStatusError: {
+      type: "Work",
+      uploadDate: "2023-01-15",
+    },
+    driverLicenseFrontError: {
+      type: "Front",
+      uploadDate: "2023-02-01",
+    },
+    driverLicenseBackError: {
+      type: "Back",
+      uploadDate: "2023-02-05",
+    },
+    licenseHistoryError: {
+      type: "History",
+      uploadDate: "2023-03-01",
+    },
+    policeVerificationError: {
+      type: "Verification",
+      uploadDate: "2023-03-15",
+    },
+    passportFrontError: {
+      type: "Front",
+      uploadDate: "2023-04-01",
+    },
+    passportBackError: {
+      type: "Back",
+      uploadDate: "2023-04-05",
+    },
+    healthInsuranceError: {
+      type: "Insurance",
+      uploadDate: "2023-05-01",
+    },
+    driverCertificateError: {
+      type: "Certificate",
+      uploadDate: "2023-05-15",
+    },
+    fitnessError: {
+      type: "Fitness",
+      uploadDate: "2023-06-01",
+    },
+    drugTestError: {
+      type: "Drug Test",
+      uploadDate: "2023-06-15",
+    },
+  });
+
+  const handleSubmit = async () => {
+    // Check validation and get error status
+    const hasErrors = checkValidation();
+    if (hasErrors) {
+      alert("Please fix the validation errors before submitting.");
+      return;
     }
-   
-  }
+    const response = await addDriver(driverDetails, token || "");
+    if (response?.status == 200) {
+      router.push("/onboarding/driver-list");
+      alert("Driver added successfully");
+    } else {
+      alert("Something went wrong");
+    }
+  };
 
-  
+  const checkValidation = () => {
+    const newErrors = { ...error };
+    let hasErrors = false;
+    Object.keys(driverDetails).forEach((key) => {
+      if (
+        typeof driverDetails[key] === "object" &&
+        driverDetails[key] !== null
+      ) {
+        // Handle nested objects with a different logic
+        Object.keys(driverDetails[key]).forEach((nestedKey) => {
+          const nestedKeyPath = `${key}Error.${nestedKey}`;
+          if (
+            !driverDetails[key][nestedKey] ||
+            driverDetails[key][nestedKey] === undefined
+          ) {
+            newErrors[key + "Error"][nestedKey] = `${correctDriverStateName(
+              nestedKey
+            )} is required in ${correctDriverStateName(key)}`;
+            hasErrors = true;
+          } else {
+            newErrors[nestedKeyPath] = "";
+          }
+        });
+      } else {
+        // Handle non-nested fields
+        // Auto scroll up for better user experience
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth", // for smooth scrolling
+        });
 
+        if (!driverDetails[key]) {
+          newErrors[key + "Error"] = `${correctDriverStateName(
+            key
+          )} is required`;
+          hasErrors = true;
+        } else {
+          newErrors[key + "Error"] = "";
+        }
+      }
+    });
+    setError(newErrors);
+    // Return the error status
+    return hasErrors;
+  };
 
-
+  console.log("State : ", driverDetails);
+  console.log("Error", error);
 
   return (
     <>
       <div className="flex bg-[#E9EFFF]">
         <div className="ml-[316px] w-full mt-4">
           <div className="bg-white mr-4 flex justify-between items-center rounded-md">
-            <h2 className=" w-full p-4 rounded-md font-bold">Create Driver</h2>
+            <h2 className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">Create Driver</h2>
             <div className="h-8 w-8 flex justify-center cursor-pointer text-2xl items-center bg-blueGrey-100 rounded-full mr-4">
               <span className="mt-[-2px] ml-[2px] text-[#292D32] rotate-45">
                 +
@@ -184,52 +336,134 @@ const CreateDriver = () => {
                 <Maininputfield
                   label="First Name"
                   value={driverDetails.firstName}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, firstName: e.target.value})}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      firstName: e.target.value,
+                    });
+
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        firstNameError: "",
+                      });
+                    }
+                  }}
                   className="w-full"
+                  errorMessage={error.firstNameError}
                 />
                 <Maininputfield
                   label="Middle Name"
                   value={driverDetails.middleName}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, middleName: e.target.value})}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      middleName: e.target.value,
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        middleNameError: "",
+                      });
+                    }
+                  }}
                   className="w-full"
+                  errorMessage={error.middleNameError}
                 />
                 <Maininputfield
                   label="Last Name"
                   value={driverDetails.lastName}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, lastName: e.target.value})}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      lastName: e.target.value,
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        lastNameError: "",
+                      });
+                    }
+                  }}
                   className="w-full"
+                  errorMessage={error.lastNameError}
                 />
 
                 <Maindatefield
-                 label="DOB"
-                 value={driverDetails.dateOfBirth}
-                onChange={(e:any)=>setDriverDetails({...driverDetails, dateOfBirth: e.target.value})}
-                className="w-full" va />
+                  label="DOB"
+                  value={driverDetails.dateOfBirth}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      dateOfBirth: e.target.value,
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        dateOfBirthError: "",
+                      });
+                    }
+                  }}
+                  className="w-full"
+                  errorMessage={error.dateOfBirthError}
+                />
 
                 <Maininputfield
                   label="Email"
                   value={driverDetails.email}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, email: e.target.value})}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      email: e.target.value,
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        emailError: "",
+                      });
+                    }
+                  }}
                   className="w-full"
+                  errorMessage={error.emailError}
                 />
                 <Maininputfield
                   label="Mobile"
                   value={driverDetails.mobile}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, mobile: e.target.value})}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      mobile: e.target.value,
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        mobileError: "",
+                      });
+                    }
+                  }}
                   className="w-full"
+                  errorMessage={error.mobileError}
                 />
                 <Maininputfield
                   label="Nationality"
                   value={driverDetails?.nationality}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, nationality: e.target.value})}
-                  
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      nationality: e.target.value,
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        nationalityError: "",
+                      });
+                    }
+                  }}
                   className="w-full"
+                  errorMessage={error.nationalityError}
                 />
 
                 {/* <FileUpload /> */}
-
-
-
               </div>
             </div>
 
@@ -244,40 +478,146 @@ const CreateDriver = () => {
                 <Maininputfield
                   label="House Number"
                   value={driverDetails.currentAddress.houseNumber}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, currentAddress: {...driverDetails.currentAddress, houseNumber: e.target.value}})}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      currentAddress: {
+                        ...driverDetails.currentAddress,
+                        houseNumber: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        currentAddressError: {
+                          ...error.currentAddressError,
+                          houseNumber: "",
+                        },
+                      });
+                    }
+                  }}
+                  errorMessage={error.currentAddressError?.houseNumber}
                   className="w-full"
                 />
                 <Maininputfield
                   label="Street"
                   value={driverDetails.currentAddress.street}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, currentAddress: {...driverDetails.currentAddress, street: e.target.value}})}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      currentAddress: {
+                        ...driverDetails.currentAddress,
+                        street: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        currentAddressError: {
+                          ...error.currentAddressError,
+                          street: "",
+                        },
+                      });
+                    }
+                  }}
+                  errorMessage={error.currentAddressError?.street}
                   className="w-full"
                 />
                 <Maininputfield
                   label="Suburb"
                   value={driverDetails.currentAddress.suburb}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, currentAddress: {...driverDetails.currentAddress, suburb: e.target.value}})}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      currentAddress: {
+                        ...driverDetails.currentAddress,
+                        suburb: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        currentAddressError: {
+                          ...error.currentAddressError,
+                          suburb: "",
+                        },
+                      });
+                    }
+                  }}
                   className="w-full"
+                  errorMessage={error.currentAddressError?.suburb}
                 />
                 <DropDownMap
                   label="State"
                   mapOption={stateCollection}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, currentAddress: {...driverDetails.currentAddress, state: e.target.value}})}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      currentAddress: {
+                        ...driverDetails.currentAddress,
+                        state: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        currentAddressError: {
+                          ...error.currentAddressError,
+                          state: "",
+                        },
+                      });
+                    }
+                  }}
                   value={driverDetails.currentAddress.state}
-                 
+                  errorMessage={error.currentAddressError?.state}
                 />
                 <DropDownMap
                   label="Country"
                   mapOption={countryCollection}
                   value={driverDetails.currentAddress.country}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, currentAddress: {...driverDetails.currentAddress, country: e.target.value}})}
-                 
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      currentAddress: {
+                        ...driverDetails.currentAddress,
+                        country: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        currentAddressError: {
+                          ...error.currentAddressError,
+                          country: "",
+                        },
+                      });
+                    }
+                  }}
+                  errorMessage={error.currentAddressError?.country}
                 />
                 <Maininputfield
                   label="Post Code"
                   value={driverDetails.currentAddress.pincode}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, currentAddress: {...driverDetails.currentAddress, pincode: e.target.value}})}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      currentAddress: {
+                        ...driverDetails.currentAddress,
+                        pincode: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        currentAddressError: {
+                          ...error.currentAddressError,
+                          pincode: "",
+                        },
+                      });
+                    }
+                  }}
                   className="w-full"
+                  errorMessage={error.currentAddressError?.pincode}
                 />
                 {/* <DropDownMap
                   label="Vehicle Type"
@@ -300,20 +640,74 @@ const CreateDriver = () => {
                 <Maininputfield
                   label="House Number"
                   value={driverDetails.permanentAddress.houseNumber}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, permanentAddress: {...driverDetails.permanentAddress, houseNumber: e.target.value}})}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      permanentAddress: {
+                        ...driverDetails.permanentAddress,
+                        houseNumber: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        permanentAddressError: {
+                          ...error.permanentAddressError,
+                          houseNumber: "",
+                        },
+                      });
+                    }
+                  }}
                   className="w-full"
+                  errorMessage={error.permanentAddressError?.houseNumber}
                 />
                 <Maininputfield
                   label="Street"
                   value={driverDetails.permanentAddress.street}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, permanentAddress: {...driverDetails.permanentAddress, street: e.target.value}})}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      permanentAddress: {
+                        ...driverDetails.permanentAddress,
+                        street: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        permanentAddressError: {
+                          ...error.permanentAddressError,
+                          street: "",
+                        },
+                      });
+                    }
+                  }}
                   className="w-full"
+                  errorMessage={error.permanentAddressError?.street}
                 />
                 <Maininputfield
                   label="Suburb"
                   value={driverDetails.permanentAddress.suburb}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, permanentAddress: {...driverDetails.permanentAddress, suburb: e.target.value}})}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      permanentAddress: {
+                        ...driverDetails.permanentAddress,
+                        suburb: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        permanentAddressError: {
+                          ...error.permanentAddressError,
+                          suburb: "",
+                        },
+                      });
+                    }
+                  }}
                   className="w-full"
+                  errorMessage={error.permanentAddressError?.suburb}
                 />
                 <DropDownMap
                   label="State"
@@ -321,8 +715,25 @@ const CreateDriver = () => {
                   // selectedData={selectedData}
                   // setSelectedData={setSelectedData}
                   value={driverDetails.permanentAddress.state}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, permanentAddress: {...driverDetails.permanentAddress, state: e.target.value}})}
-
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      permanentAddress: {
+                        ...driverDetails.permanentAddress,
+                        state: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        permanentAddressError: {
+                          ...error.permanentAddressError,
+                          state: "",
+                        },
+                      });
+                    }
+                  }}
+                  errorMessage={error.permanentAddressError?.state}
                 />
                 <DropDownMap
                   label="Country"
@@ -330,18 +741,52 @@ const CreateDriver = () => {
                   // selectedData={selectedData}
                   // setSelectedData={setSelectedData}
                   value={driverDetails.permanentAddress.country}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, permanentAddress: {...driverDetails.permanentAddress, country: e.target.value}})}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      permanentAddress: {
+                        ...driverDetails.permanentAddress,
+                        country: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        permanentAddressError: {
+                          ...error.permanentAddressError,
+                          country: "",
+                        },
+                      });
+                    }
+                  }}
+                  errorMessage={error.permanentAddressError?.country}
                 />
                 <Maininputfield
                   label="Post Code"
                   value={driverDetails.permanentAddress.pincode}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, permanentAddress: {...driverDetails.permanentAddress, pincode: e.target.value}})}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      permanentAddress: {
+                        ...driverDetails.permanentAddress,
+                        pincode: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        permanentAddressError: {
+                          ...error.permanentAddressError,
+                          pincode: "",
+                        },
+                      });
+                    }
+                  }}
                   className="w-full"
+                  errorMessage={error.permanentAddressError?.pincode}
                 />
               </div>
             </div>
-
-
 
             <div className="mb-4 mt-8">
               <h3 className="w-full mb-4 rounded-md font-semibold text-black">
@@ -352,19 +797,81 @@ const CreateDriver = () => {
                 <Maininputfield
                   label="Contact Name"
                   value={driverDetails.emergencyContactInformation.contactName}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, emergencyContactInformation: {...driverDetails.emergencyContactInformation, contactName: e.target.value}})}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      emergencyContactInformation: {
+                        ...driverDetails.emergencyContactInformation,
+                        contactName: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        emergencyContactInformationError: {
+                          ...error.emergencyContactInformationError,
+                          contactName: "",
+                        },
+                      });
+                    }
+                  }}
+                  errorMessage={
+                    error.emergencyContactInformationError?.contactName
+                  }
                   className="w-full"
                 />
                 <Maininputfield
                   label="Contact Number"
-                  value={driverDetails.emergencyContactInformation.contactNumber}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, emergencyContactInformation: {...driverDetails.emergencyContactInformation, contactNumber: e.target.value}})}
+                  value={
+                    driverDetails.emergencyContactInformation.contactNumber
+                  }
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      emergencyContactInformation: {
+                        ...driverDetails.emergencyContactInformation,
+                        contactNumber: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        emergencyContactInformationError: {
+                          ...error.emergencyContactInformationError,
+                          contactNumber: "",
+                        },
+                      });
+                    }
+                  }}
                   className="w-full"
+                  errorMessage={
+                    error.emergencyContactInformationError?.contactNumber
+                  }
                 />
                 <Maininputfield
                   label="Relationship"
                   value={driverDetails.emergencyContactInformation.relationship}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, emergencyContactInformation: {...driverDetails.emergencyContactInformation, relationship: e.target.value}})}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      emergencyContactInformation: {
+                        ...driverDetails.emergencyContactInformation,
+                        relationship: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        emergencyContactInformationError: {
+                          ...error.emergencyContactInformationError,
+                          relationship: "",
+                        },
+                      });
+                    }
+                  }}
+                  errorMessage={
+                    error.emergencyContactInformationError?.relationship
+                  }
                   className="w-full"
                 />
               </div>
@@ -381,24 +888,78 @@ const CreateDriver = () => {
                 <Maininputfield
                   label="Pervious Employer"
                   value={driverDetails.employmentHistory.perviousEmployer}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, employmentHistory: {...driverDetails.employmentHistory, perviousEmployer: e.target.value}})}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      employmentHistory: {
+                        ...driverDetails.employmentHistory,
+                        perviousEmployer: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        employmentHistoryError: {
+                          ...error.employmentHistoryError,
+                          perviousEmployer: "",
+                        },
+                      });
+                    }
+                  }}
                   className="w-full"
+                  errorMessage={error.employmentHistoryError?.perviousEmployer}
                 />
                 <Maininputfield
                   label="Years Of Experience"
                   value={driverDetails.employmentHistory.yearsOfExperience}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, employmentHistory: {...driverDetails.employmentHistory, yearsOfExperience: e.target.value}})}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      employmentHistory: {
+                        ...driverDetails.employmentHistory,
+                        yearsOfExperience: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        employmentHistoryError: {
+                          ...error.employmentHistoryError,
+                          yearsOfExperience: "",
+                        },
+                      });
+                    }
+                  }}
                   className="w-full"
+                  errorMessage={error.employmentHistoryError?.yearsOfExperience}
                 />
                 <Maininputfield
                   label="Reason for leaving"
                   value={driverDetails.employmentHistory.reasonForLeaving}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, employmentHistory: {...driverDetails.employmentHistory, reasonForLeaving: e.target.value}})}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      employmentHistory: {
+                        ...driverDetails.employmentHistory,
+                        reasonForLeaving: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        employmentHistoryError: {
+                          ...error.employmentHistoryError,
+                          reasonForLeaving: "",
+                        },
+                      });
+                    }
+                  }}
                   className="w-full"
+                  errorMessage={error.employmentHistoryError?.reasonForLeaving}
                 />
               </div>
 
-                {/* commenting out for temporary as backend is not accepting referance informtion objext*/}
+              {/* commenting out for temporary as backend is not accepting referance informtion objext*/}
               <div className="mb-4 mt-8">
                 <h4 className="text-sm font-semibold mb-4 text-blueGrey-900">
                   Reference Information
@@ -408,31 +969,109 @@ const CreateDriver = () => {
                   <Maininputfield
                     label="Company Name"
                     value={driverDetails.employmentHistory.companyName}
-                    onChange={(e:any)=>setDriverDetails({...driverDetails, employmentHistory: {...driverDetails.employmentHistory, companyName: e.target.value}})}
+                    onChange={(e: any) => {
+                      setDriverDetails({
+                        ...driverDetails,
+                        employmentHistory: {
+                          ...driverDetails.employmentHistory,
+                          companyName: e.target.value,
+                        },
+                      });
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          employmentHistoryError: {
+                            ...error.employmentHistoryError,
+                            companyName: "",
+                          },
+                        });
+                      }
+                    }}
                     className="w-full"
+                    errorMessage={error.employmentHistoryError?.companyName}
                   />
                   <Maininputfield
                     label="Reference (Contact Name)"
                     value={driverDetails.employmentHistory.referenceContactName}
-                    onChange={(e:any)=>setDriverDetails({...driverDetails, employmentHistory: {...driverDetails.employmentHistory, referenceContactName: e.target.value}})}
+                    onChange={(e: any) => {
+                      setDriverDetails({
+                        ...driverDetails,
+                        employmentHistory: {
+                          ...driverDetails.employmentHistory,
+                          referenceContactName: e.target.value,
+                        },
+                      });
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          employmentHistoryError: {
+                            ...error.employmentHistoryError,
+                            referenceContactName: "",
+                          },
+                        });
+                      }
+                    }}
                     className="w-full"
+                    errorMessage={
+                      error.employmentHistoryError?.referenceContactName
+                    }
                   />
                   <Maininputfield
                     label="Reference (Email ID)"
                     value={driverDetails.employmentHistory.referenceEmailId}
-                    onChange={(e:any)=>setDriverDetails({...driverDetails, employmentHistory: {...driverDetails.employmentHistory, referenceEmailId: e.target.value}})}
+                    onChange={(e: any) => {
+                      setDriverDetails({
+                        ...driverDetails,
+                        employmentHistory: {
+                          ...driverDetails.employmentHistory,
+                          referenceEmailId: e.target.value,
+                        },
+                      });
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          employmentHistoryError: {
+                            ...error.employmentHistoryError,
+                            referenceEmailId: "",
+                          },
+                        });
+                      }
+                    }}
                     className="w-full"
+                    errorMessage={
+                      error.employmentHistoryError?.referenceEmailId
+                    }
                   />
                   <Maininputfield
                     label="Reference (Contact Number)"
-                    value={driverDetails.employmentHistory.referenceContactNumber}
-                    onChange={(e:any)=>setDriverDetails({...driverDetails, employmentHistory: {...driverDetails.employmentHistory, referenceContactNumber: e.target.value}})}
+                    value={
+                      driverDetails.employmentHistory.referenceContactNumber
+                    }
+                    onChange={(e: any) => {
+                      setDriverDetails({
+                        ...driverDetails,
+                        employmentHistory: {
+                          ...driverDetails.employmentHistory,
+                          referenceContactNumber: e.target.value,
+                        },
+                      });
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          employmentHistoryError: {
+                            ...error.employmentHistoryError,
+                            referenceContactNumber: "",
+                          },
+                        });
+                      }
+                    }}
                     className="w-full"
+                    errorMessage={
+                      error.employmentHistoryError?.referenceContactNumber
+                    }
                   />
                 </div>
               </div>
-
-
             </div>
             <div className="mb-8 mt-8 flex justify-end">
               <Button
@@ -450,13 +1089,49 @@ const CreateDriver = () => {
                 <Maininputfield
                   label="Licence Number"
                   value={driverDetails.licenseDetails.licenseNumber}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, licenseDetails: {...driverDetails.licenseDetails, licenseNumber: e.target.value}})}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      licenseDetails: {
+                        ...driverDetails.licenseDetails,
+                        licenseNumber: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        licenseDetailsError: {
+                          ...error.licenseDetailsError,
+                          licenseNumber: "",
+                        },
+                      });
+                    }
+                  }}
                   className="w-full"
+                  errorMessage={error.licenseDetailsError?.licenseNumber}
                 />
                 <Maininputfield
                   label="Licence Card Number"
                   value={driverDetails.licenseDetails.licenseCardNumber}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, licenseDetails: {...driverDetails.licenseDetails, licenseCardNumber: e.target.value}})}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      licenseDetails: {
+                        ...driverDetails.licenseDetails,
+                        licenseCardNumber: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        licenseDetailsError: {
+                          ...error.licenseDetailsError,
+                          licenseCardNumber: "",
+                        },
+                      });
+                    }
+                  }}
+                  errorMessage={error.licenseDetailsError?.licenseCardNumber}
                   className="w-full"
                 />
                 <DropDownMap
@@ -465,7 +1140,25 @@ const CreateDriver = () => {
                   // selectedData={selectedData}
                   // setSelectedData={setSelectedData}
                   value={driverDetails.licenseDetails.licenceType}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, licenseDetails: {...driverDetails.licenseDetails, licenceType: e.target.value}})}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      licenseDetails: {
+                        ...driverDetails.licenseDetails,
+                        licenceType: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        licenseDetailsError: {
+                          ...error.licenseDetailsError,
+                          licenceType: "",
+                        },
+                      });
+                    }
+                  }}
+                  errorMessage={error.licenseDetailsError?.licenceType}
                 />
                 <DropDownMap
                   label="State of Issue"
@@ -473,32 +1166,101 @@ const CreateDriver = () => {
                   // selectedData={selectedData}
                   // setSelectedData={setSelectedData}
                   value={driverDetails.licenseDetails.state}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, licenseDetails: {...driverDetails.licenseDetails, state: e.target.value}})} 
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      licenseDetails: {
+                        ...driverDetails.licenseDetails,
+                        state: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        licenseDetailsError: {
+                          ...error.licenseDetailsError,
+                          state: "",
+                        },
+                      });
+                    }
+                  }}
+                  errorMessage={error.licenseDetailsError?.state}
                 />
                 <DateWithoutDropdown
                   label="Date Of Issue "
-                 value={driverDetails.licenseDetails.dateOfIssue}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, licenseDetails: {...driverDetails.licenseDetails, dateOfIssue: e.target.value}})}
+                  value={driverDetails.licenseDetails.dateOfIssue}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      licenseDetails: {
+                        ...driverDetails.licenseDetails,
+                        dateOfIssue: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        licenseDetailsError: {
+                          ...error.licenseDetailsError,
+                          dateOfIssue: "",
+                        },
+                      });
+                    }
+                  }}
+                  errorMessage={error.licenseDetailsError?.dateOfIssue}
                 />
 
-                  <DateWithoutDropdown 
-                  label="Expiry Date " 
-                 value={driverDetails.licenseDetails.expiryDate}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, licenseDetails: {...driverDetails.licenseDetails, expiryDate: e.target.value}})}
-                  />
+                <DateWithoutDropdown
+                  label="Expiry Date "
+                  value={driverDetails.licenseDetails.expiryDate}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      licenseDetails: {
+                        ...driverDetails.licenseDetails,
+                        expiryDate: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        licenseDetailsError: {
+                          ...error.licenseDetailsError,
+                          expiryDate: "",
+                        },
+                      });
+                    }
+                  }}
+                  errorMessage={error.licenseDetailsError?.expiryDate}
+                />
 
                 <Maininputfield
                   label="Days left for renewal"
                   value={driverDetails.licenseDetails.daysLeftForRenewal}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, licenseDetails: {...driverDetails.licenseDetails, daysLeftForRenewal: e.target.value}})}
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      licenseDetails: {
+                        ...driverDetails.licenseDetails,
+                        daysLeftForRenewal: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        licenseDetailsError: {
+                          ...error.licenseDetailsError,
+                          daysLeftForRenewal: "",
+                        },
+                      });
+                    }
+                  }}
                   className="w-full"
+                  errorMessage={error.licenseDetailsError?.daysLeftForRenewal}
                 />
                 <FileUpload file="Choose License Document " />
-
               </div>
             </div>
-
-
 
             {/* <div className="mb-4 mt-8">
               <h3 className="w-full mb-4 rounded-md font-semibold text-black">
@@ -529,7 +1291,6 @@ const CreateDriver = () => {
               </div>
             </div> */}
 
-
             <div className="mb-4 mt-8">
               <h3 className="w-full mb-4 rounded-md font-semibold text-black">
                 {" "}
@@ -541,9 +1302,31 @@ const CreateDriver = () => {
                   label="Special Driving Licence"
                   // selectedData={selectedData}
                   // setSelectedData={setSelectedData}
-                  value={driverDetails.specialDrivingLicence.specialDrivingLicence}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, specialDrivingLicence: {...driverDetails.specialDrivingLicence, specialDrivingLicence: e.target.value}})}
+                  value={
+                    driverDetails.specialDrivingLicence.specialDrivingLicence
+                  }
+                  onChange={(e: any) => {
+                    setDriverDetails({
+                      ...driverDetails,
+                      specialDrivingLicence: {
+                        ...driverDetails.specialDrivingLicence,
+                        specialDrivingLicence: e.target.value,
+                      },
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        specialDrivingLicenceError: {
+                          ...error.specialDrivingLicenceError,
+                          specialDrivingLicence: "",
+                        },
+                      });
+                    }
+                  }}
                   mapOption={drivingLicenceCollection}
+                  errorMessage={
+                    error.specialDrivingLicenceError?.specialDrivingLicence
+                  }
                 />
               </div>
             </div>
@@ -600,7 +1383,7 @@ const CreateDriver = () => {
             </div>
           </div>
           <div className="mb-20 mr-4">
-            <ImageUpload handleSubmit={handleSubmit}/>
+            <ImageUpload handleSubmit={handleSubmit} />
           </div>
         </div>
       </div>
