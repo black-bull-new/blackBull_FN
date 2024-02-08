@@ -168,14 +168,18 @@ const AddCustomer = () => {
   });
 
   const handleSubmit = async () => {
-    checkValidation();
-    // const response :any = await addCustomer(customer, token || "")
+    const hasErrors = checkValidation();
+    if (hasErrors) {
+      alert("Please fix the validation errors before submitting.");
+      return;
+    }
+    const response: any = await addCustomer(customer, token || "");
 
-    // if(response?.status === 200){
-    //     alert('Customer Added Successfully')
-    // }else{
-    //     alert('Something went Wrong! Please try again later.')
-    // }
+    if (response?.status === 200) {
+      alert("Customer Added Successfully");
+    } else {
+      alert("Something went Wrong! Please try again later.");
+    }
   };
 
   const checkValidation = () => {
