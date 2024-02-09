@@ -14,7 +14,7 @@ export const addDriver = async (data:any, token:string)=>{
         const response = await axios.post(`${DRIVER_BASE_URL}/add-driver`,data, {
             headers: {
                 'Content-Type': 'application/json', 
-                'Authorization': `Bearer ${token}`  
+                'Authorization': `Basic ${token}`  
             }
         })
         return response
@@ -30,7 +30,7 @@ export const getAllDrives = async(token:string)=>{
         const response = await axios.get(`${DRIVER_BASE_URL}/drivers`,{
             headers:{
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Basic ${token}`
             }
         })
         return response.data
@@ -45,7 +45,7 @@ export const getDriver = async(token:string, id:string)=>{
         const response = await axios.get(`${DRIVER_BASE_URL}/driver/${id}`,{
             headers:{
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Basic ${token}`
             }
         })
         return response
@@ -59,7 +59,7 @@ export const editDriver = async(token:string, id:string, data:any)=>{
         const response = await axios.put(`${DRIVER_BASE_URL}/driver/${id}`, data, {
             headers:{
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Basic ${token}`
             }
         })
         return response
@@ -74,7 +74,7 @@ export const deleteDriver = async(token:string, id:string)=>{
         const response = await axios.delete(`${DRIVER_BASE_URL}/driver/${id}`,{
             headers:{
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Basic ${token}`
             }
         })
         return response

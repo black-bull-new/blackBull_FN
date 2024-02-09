@@ -11,7 +11,6 @@ import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { correctCustomerStateName } from "../utility/utilityMethod";
 import { regexOfPhoneNumber } from "../utility/commonRegex";
-
 const AddCustomer = () => {
   const [selectedData, setSelectedData] = useState("");
   const token = getCookie("token");

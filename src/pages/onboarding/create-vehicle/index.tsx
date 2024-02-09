@@ -10,8 +10,12 @@ import Mainselectfield from "../../../../components/Mainselectfield";
 import Progressbar from "../../../../components/Progressbar";
 import Sidebar from "../../../../components/Sidebar";
 import StatusChip from "../../../../components/StatusChip";
+import { correctVehicleStateName } from "../utility/utilityMethod";
+import { addVehicle } from "@/network-request/vehicle/vehicleApi";
+import { getCookie } from "cookies-next";
 
 const CreateVehicle = () => {
+  const token = getCookie("token");
   const xyz = ownershipStatus?.map((item) => {
     return item;
   });
@@ -21,12 +25,158 @@ const CreateVehicle = () => {
   const [selectedData, setSelectedData] = useState("");
   const [state, setState] = useState("");
 
+  const [vehicleDetails, setVehicleDetails] = useState<any>({
+    registrationNumber: "",
+    registrationExpiry: "",
+    vinNumber: "",
+    vehicleManufacturer: "",
+    vehicleModel: "",
+    vehicleType: "",
+    typeOfTrailer: "",
+    stateOfRegistration: "",
+    engineNumber: "",
+    compliancePlate: "",
+    ownershipStatus: "",
+    registrationStatus: "",
+    insuranceCompanyName: "",
+    policyNumber: "",
+    vehicleInsuranceStartDate: "",
+    renewalDate: "",
+    dateValidUntil: "",
+    daysLeft: "",
+    insuranceCoverage: "",
+    insuranceStatus: "",
+    situation: "",
+    truckOdometer: "",
+    documents: [
+      { type: "Registration Certificate", uploadDate: "2023-01-15" },
+      { type: "Insurance Policy", uploadDate: "2023-01-20" },
+    ],
+    rentedCompanyName: "",
+    dateOfHire: "",
+    contractValidTill: "",
+    term: "",
+    weeklyRent: "",
+    tax: "",
+    paymentMethod: "",
+    bankName: "",
+    accountNumber: "",
+    accountName: "",
+    vehicleDocumentStatus: "Complete",
+  });
+
+  const [error, setError] = useState<any>({
+    registrationNumberError: "",
+    registrationExpiryError: "",
+    vinNumberError: "",
+    vehicleManufacturerError: "",
+    vehicleModelError: "",
+    vehicleTypeError: "",
+    typeOfTrailerError: "",
+    stateOfRegistrationError: "",
+    engineNumberError: "",
+    compliancePlateError: "",
+    ownershipStatusError: "",
+    registrationStatusError: "",
+    insuranceCompanyNameError: "",
+    policyNumberError: "",
+    vehicleInsuranceStartDateError: "",
+    renewalDateError: "",
+    dateValidUntilError: "",
+    daysLeftError: "",
+    insuranceCoverageError: "",
+    insuranceStatusError: "",
+    situationError: "",
+    truckOdometerError: "",
+    documents: [
+      { type: "Registration Certificate", uploadDate: "2023-01-15" },
+      { type: "Insurance Policy", uploadDate: "2023-01-20" },
+    ],
+    rentedCompanyNameError: "",
+    dateOfHireError: "",
+    contractValidTillError: "",
+    termError: "",
+    weeklyRentError: "",
+    taxError: "",
+    paymentMethodError: "",
+    bankNameError: "",
+    accountNumberError: "",
+    accountNameError: "",
+    vehicleDocumentStatusError: "Complete",
+  });
+
+  const handleSubmit = async () => {
+    // Check validation and get error status
+    const hasErrors = checkValidation();
+    console.log("Vehicle State : ", vehicleDetails);
+    if (hasErrors) {
+      alert("Please fix the validation errors before submitting.");
+      return;
+    }
+
+    const response: any = await addVehicle(vehicleDetails, token || "");
+    if (response?.status == 200) {
+      alert("Vehical added successfully");
+      console.log("response :", response);
+    } else {
+      alert("Something went wrong");
+    }
+  };
+
+  const checkValidation = () => {
+    const newErrors = { ...error };
+    let hasErrors = false;
+    Object.keys(vehicleDetails).forEach((key) => {
+      if (
+        typeof vehicleDetails[key] === "object" &&
+        vehicleDetails[key] !== null
+      ) {
+        // Handle nested objects with a different logic
+        Object.keys(vehicleDetails[key]).forEach((nestedKey) => {
+          const nestedKeyPath = `${key}Error.${nestedKey}`;
+          if (
+            !vehicleDetails[key][nestedKey] ||
+            vehicleDetails[key][nestedKey] === undefined
+          ) {
+            newErrors[key + "Error"][
+              nestedKey
+            ] = `${nestedKey} is required in ${key}`;
+            hasErrors = true;
+          } else {
+            newErrors[nestedKeyPath] = "";
+          }
+        });
+      } else {
+        // Handle non-nested fields
+        // Auto scroll up for better user experience
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth", // for smooth scrolling
+        });
+
+        if (!vehicleDetails[key]) {
+          newErrors[key + "Error"] = `${correctVehicleStateName(
+            key
+          )} is required`;
+          hasErrors = true;
+        } else {
+          newErrors[key + "Error"] = "";
+        }
+      }
+    });
+    setError(newErrors);
+    // Return the error status
+    return hasErrors;
+  };
+
   return (
     <>
       <div className="flex bg-[#E9EFFF]">
         <div className="ml-[316px] w-full mt-4">
           <div className="bg-white mr-4 flex justify-between items-center rounded-md">
-            <h2 className=" w-full p-4 rounded-md font-bold">Create Vehicle</h2>
+            <h2 className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">
+              Create Vehicle
+            </h2>
             <div className="h-8 w-8 flex justify-center cursor-pointer text-2xl items-center bg-blueGrey-100 rounded-full mr-4">
               <span className="mt-[-2px] ml-[2px] text-[#292D32] rotate-45">
                 +
@@ -36,39 +186,160 @@ const CreateVehicle = () => {
           <div className="bg-white mr-4 px-4 rounded-md mt-4 p-4">
             <Progressbar />
             <div>
-              <h3 className=" w-full my-4 rounded-md font-semibold">
+              <h3 className="text-black w-full my-4 rounded-md font-semibold">
                 Vehicle Information
               </h3>
               <div className="grid grid-cols-3 gap-4">
                 <Maininputfield
                   label="Registration Number"
+                  value={vehicleDetails.registrationNumber}
+                  onChange={(e: any) => {
+                    setVehicleDetails({
+                      ...vehicleDetails,
+                      registrationNumber: e.target.value,
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        registrationNumberError: "",
+                      });
+                    }
+                  }}
                   className="w-full"
+                  errorMessage={error.registrationNumberError}
                 />
-                <Maindatefield label="Registration Expiry" className="w-full" />
-                <Maininputfield label="VIN No." className="w-full" />
+                <Maindatefield
+                  label="Registration Expiry"
+                  value={vehicleDetails.registrationExpiry}
+                  onChange={(e: any) => {
+                    setVehicleDetails({
+                      ...vehicleDetails,
+                      registrationExpiry: e.target.value,
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        registrationExpiryError: "",
+                      });
+                    }
+                  }}
+                  className="w-full"
+                  errorMessage={error.registrationExpiryError}
+                />
+                <Maininputfield
+                  label="VIN No."
+                  value={vehicleDetails.vinNumber}
+                  onChange={(e: any) => {
+                    setVehicleDetails({
+                      ...vehicleDetails,
+                      vinNumber: e.target.value,
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        vinNumberError: "",
+                      });
+                    }
+                  }}
+                  className="w-full"
+                  errorMessage={error.vinNumberError}
+                />
                 <Maininputfield
                   label="Vehicle Manufacturer"
                   className="w-full"
+                  value={vehicleDetails.vehicleManufacturer}
+                  onChange={(e: any) => {
+                    setVehicleDetails({
+                      ...vehicleDetails,
+                      vehicleManufacturer: e.target.value,
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        vehicleManufacturerError: "",
+                      });
+                    }
+                  }}
+                  errorMessage={error.vehicleManufacturerError}
                 />
-                <Maininputfield label="Vehicle Model" className="w-full" />
+                <Maininputfield
+                  label="Vehicle Model"
+                  value={vehicleDetails.vehicleModel}
+                  onChange={(e: any) => {
+                    setVehicleDetails({
+                      ...vehicleDetails,
+                      vehicleModel: e.target.value,
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        vehicleModelError: "",
+                      });
+                    }
+                  }}
+                  errorMessage={error.vehicleModelError}
+                  className="w-full"
+                />
                 {/* <Mainselectfield label="Vehicle Type" option="Choose vehicle" /> */}
                 <DropDownMap
                   label="Vehicle Type"
                   mapOption={vehicleTypeColleciton}
-                  selectedData={selectedData}
-                  setSelectedData={setSelectedData}
+                  // selectedData={selectedData}
+                  // setSelectedData={setSelectedData}
+                  value={vehicleDetails.vehicleType}
+                  onChange={(e: any) => {
+                    setVehicleDetails({
+                      ...vehicleDetails,
+                      vehicleType: e.target.value,
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        vehicleTypeError: "",
+                      });
+                    }
+                  }}
+                  errorMessage={error.vehicleTypeError}
                 />
                 <DropDownMap
                   label="Type of Trailer"
                   mapOption={trailerTypeCollection}
-                  selectedData={selectedData}
-                  setSelectedData={setSelectedData}
+                  // selectedData={selectedData}
+                  // setSelectedData={setSelectedData}
+                  value={vehicleDetails.typeOfTrailer}
+                  onChange={(e: any) => {
+                    setVehicleDetails({
+                      ...vehicleDetails,
+                      typeOfTrailer: e.target.value,
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        typeOfTrailerError: "",
+                      });
+                    }
+                  }}
+                  errorMessage={error.typeOfTrailerError}
                 />
                 <DropDownMap
                   label="State of Registration"
                   mapOption={registrationStateCollection}
-                  selectedData={selectedData}
-                  setSelectedData={setSelectedData}
+                  // selectedData={selectedData}
+                  // setSelectedData={setSelectedData}
+                  value={vehicleDetails.stateOfRegistration}
+                  onChange={(e: any) => {
+                    setVehicleDetails({
+                      ...vehicleDetails,
+                      stateOfRegistration: e.target.value,
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        stateOfRegistrationError: "",
+                      });
+                    }
+                  }}
+                  errorMessage={error.stateOfRegistrationError}
                 />
 
                 {/* <Mainselectfield label="Type of Trailer" option="Straight" /> */}
@@ -76,49 +347,215 @@ const CreateVehicle = () => {
                   label="State of Registration"
                   option="Victoria"
                 /> */}
-                <Maininputfield label="Engine Number" className="w-full" />
-                <Maininputfield label="Compliance Plate" className="w-full" />
+                <Maininputfield
+                  label="Engine Number"
+                  value={vehicleDetails.engineNumber}
+                  onChange={(e: any) => {
+                    setVehicleDetails({
+                      ...vehicleDetails,
+                      engineNumber: e.target.value,
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        engineNumberError: "",
+                      });
+                    }
+                  }}
+                  className="w-full"
+                  errorMessage={error.engineNumberError}
+                />
+                <Maininputfield
+                  label="Compliance Plate"
+                  value={vehicleDetails.compliancePlate}
+                  onChange={(e: any) => {
+                    setVehicleDetails({
+                      ...vehicleDetails,
+                      compliancePlate: e.target.value,
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        compliancePlateError: "",
+                      });
+                    }
+                  }}
+                  className="w-full"
+                  errorMessage={error.compliancePlateError}
+                />
                 <DropDownMap
                   label={"Registration Status"}
                   mapOption={registrationStatusCollection}
-                  selectedData={selectedData}
-                  setSelectedData={setSelectedData}
+                  // selectedData={selectedData}
+                  // setSelectedData={setSelectedData}
+                  value={vehicleDetails.registrationStatus}
+                  onChange={(e: any) => {
+                    setVehicleDetails({
+                      ...vehicleDetails,
+                      registrationStatus: e.target.value,
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        registrationStatusError: "",
+                      });
+                    }
+                  }}
+                  errorMessage={error.registrationStatusError}
                 />
                 <DropDownMap
                   label={"Ownership Status"}
                   mapOption={ownershipStatus}
-                  selectedData={selectedData}
-                  setSelectedData={setSelectedData}
+                  // selectedData={selectedData}
+                  // setSelectedData={setSelectedData}
+                  value={vehicleDetails.ownershipStatus}
+                  onChange={(e: any) => {
+                    setVehicleDetails({
+                      ...vehicleDetails,
+                      ownershipStatus: e.target.value,
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        ownershipStatusError: "",
+                      });
+                    }
+                  }}
+                  errorMessage={error.ownershipStatusError}
                 />
-                {selectedData === "Hired" && (
+                {vehicleDetails.ownershipStatus === "Hired" && (
+                  // {selectedData === "Hired" && (
                   <>
-                    <Maininputfield label="Rented Company" className="w-full" />
+                    <Maininputfield
+                      label="Rented Company"
+                      value={vehicleDetails.rentedCompanyName}
+                      onChange={(e: any) => {
+                        setVehicleDetails({
+                          ...vehicleDetails,
+                          rentedCompanyName: e.target.value,
+                        });
+                        if (e.target.value.length > 0) {
+                          setError({
+                            ...error,
+                            rentedCompanyNameError: "",
+                          });
+                        }
+                      }}
+                      className="w-full"
+                      errorMessage={error.rentedCompanyNameError}
+                    />
                     <DateWithoutDropdown
                       label="Date of Hire"
-                      value="15/04/2023"
+                      value={vehicleDetails.dateOfHire}
+                      onChange={(e: any) => {
+                        setVehicleDetails({
+                          ...vehicleDetails,
+                          dateOfHire: e.target.value,
+                        });
+                        if (e.target.value.length > 0) {
+                          setError({
+                            ...error,
+                            dateOfHireError: "",
+                          });
+                        }
+                      }}
+                      errorMessage={error.dateOfHireError}
                     />
                     <DateWithoutDropdown
                       label="Contract Valid Till"
-                      value="15/04/2023"
+                      value={vehicleDetails.contractValidTill}
+                      onChange={(e: any) => {
+                        setVehicleDetails({
+                          ...vehicleDetails,
+                          contractValidTill: e.target.value,
+                        });
+                        if (e.target.value.length > 0) {
+                          setError({
+                            ...error,
+                            contractValidTillError: "",
+                          });
+                        }
+                      }}
+                      errorMessage={error.contractValidTillError}
                     />
                     <DropDownMap
                       label={"Term"}
                       mapOption={termCollection}
-                      selectedData={state}
-                      setSelectedData={setState}
+                      // selectedData={state}
+                      // setSelectedData={setState}
+                      value={vehicleDetails.term}
+                      onChange={(e: any) => {
+                        setVehicleDetails({
+                          ...vehicleDetails,
+                          term: e.target.value,
+                        });
+                        if (e.target.value.length > 0) {
+                          setError({
+                            ...error,
+                            termError: "",
+                          });
+                        }
+                      }}
+                      errorMessage={error.termError}
                     />
-                    <Maininputfield label="Weekly Rent" className="w-full" />
+                    <Maininputfield
+                      label="Weekly Rent"
+                      value={vehicleDetails.weeklyRent}
+                      onChange={(e: any) => {
+                        setVehicleDetails({
+                          ...vehicleDetails,
+                          weeklyRent: e.target.value,
+                        });
+                        if (e.target.value.length > 0) {
+                          setError({
+                            ...error,
+                            weeklyRentError: "",
+                          });
+                        }
+                      }}
+                      className="w-full"
+                      errorMessage={error.weeklyRentError}
+                    />
                     <DropDownMap
                       label={"Tax"}
                       mapOption={taxCollection}
-                      selectedData={state}
-                      setSelectedData={setState}
+                      // selectedData={state}
+                      // setSelectedData={setState}
+                      value={vehicleDetails.tax}
+                      onChange={(e: any) => {
+                        setVehicleDetails({
+                          ...vehicleDetails,
+                          tax: e.target.value,
+                        });
+                        if (e.target.value.length > 0) {
+                          setError({
+                            ...error,
+                            taxError: "",
+                          });
+                        }
+                      }}
+                      errorMessage={error.taxError}
                     />
                     <DropDownMap
                       label={"Payment Method"}
                       mapOption={paymentMethodColleciton}
-                      selectedData={state}
-                      setSelectedData={setState}
+                      // selectedData={state}
+                      // setSelectedData={setState}
+
+                      value={vehicleDetails.paymentMethod}
+                      onChange={(e: any) => {
+                        setVehicleDetails({
+                          ...vehicleDetails,
+                          paymentMethod: e.target.value,
+                        });
+                        if (e.target.value.length > 0) {
+                          setError({
+                            ...error,
+                            paymentMethodError: "",
+                          });
+                        }
+                      }}
+                      errorMessage={error.paymentMethodError}
                     />
                   </>
                 )}
@@ -126,57 +563,178 @@ const CreateVehicle = () => {
 
                 {/* <Mainselectfield label="Registration Status" option="Active" /> */}
               </div>
-
-              {selectedData === "Hired" && (
+              {vehicleDetails.ownershipStatus === "Hired" && (
+                //  {selectedData === "Hired" && (
                 <div className="mt-8">
-                  <h3 className="w-full mb-4 font-semibold">Bank Details</h3>
+                  <h3 className="text-black w-full mb-4 font-semibold">
+                    Bank Details
+                  </h3>
                   <div className="grid grid-cols-3 gap-4">
                     <Maininputfield
                       label="BSB"
-                      value="Allianz"
+                      value={vehicleDetails.bankName}
+                      onChange={(e: any) => {
+                        setVehicleDetails({
+                          ...vehicleDetails,
+                          bankName: e.target.value,
+                        });
+                        if (e.target.value.length > 0) {
+                          setError({
+                            ...error,
+                            bankNameError: "",
+                          });
+                        }
+                      }}
                       className="w-full"
+                      errorMessage={error.bankNameError}
                     />
                     <Maininputfield
                       label="Account Number"
-                      value="1234-5678-9012"
+                      value={vehicleDetails.accountNumber}
+                      onChange={(e: any) => {
+                        setVehicleDetails({
+                          ...vehicleDetails,
+                          accountNumber: e.target.value,
+                        });
+                        if (e.target.value.length > 0) {
+                          setError({
+                            ...error,
+                            accountNumberError: "",
+                          });
+                        }
+                      }}
                       className="w-full"
+                      errorMessage={error.accountNumberError}
                     />
                     <Maininputfield
                       label="Account Name"
-                      value="Rentals Pty Ltd"
+                      value={vehicleDetails.accountName}
+                      onChange={(e: any) => {
+                        setVehicleDetails({
+                          ...vehicleDetails,
+                          accountName: e.target.value,
+                        });
+                        if (e.target.value.length > 0) {
+                          setError({
+                            ...error,
+                            accountNameError: "",
+                          });
+                        }
+                      }}
                       className="w-full"
+                      errorMessage={error.accountNameError}
                     />
                   </div>
                 </div>
               )}
               <div className="mt-8">
-                <h3 className="w-full mb-4 font-semibold">Vehicle Insurance</h3>
+                <h3 className="text-black w-full mb-4 font-semibold">
+                  Vehicle Insurance
+                </h3>
                 <div className="grid grid-cols-3 gap-4">
                   <Maininputfield
                     label="Insurance Company"
                     className="w-full"
-                    value="Allianz"
+                    value={vehicleDetails.insuranceCompanyName}
+                    onChange={(e: any) => {
+                      setVehicleDetails({
+                        ...vehicleDetails,
+                        insuranceCompanyName: e.target.value,
+                      });
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          insuranceCompanyNameError: "",
+                        });
+                      }
+                    }}
+                    errorMessage={error.insuranceCompanyNameError}
                   />
                   <Maininputfield
                     label="Policy Number"
                     className="w-full"
-                    value="10578475"
+                    value={vehicleDetails.policyNumber}
+                    onChange={(e: any) => {
+                      setVehicleDetails({
+                        ...vehicleDetails,
+                        policyNumber: e.target.value,
+                      });
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          policyNumberError: "",
+                        });
+                      }
+                    }}
+                    errorMessage={error.policyNumberError}
                   />
                   <DateWithoutDropdown
                     label="Vehicle Insurance Start Date"
-                    value="02/08/2023"
+                    value={vehicleDetails.vehicleInsuranceStartDate}
+                    onChange={(e: any) => {
+                      setVehicleDetails({
+                        ...vehicleDetails,
+                        vehicleInsuranceStartDate: e.target.value,
+                      });
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          vehicleInsuranceStartDateError: "",
+                        });
+                      }
+                    }}
+                    errorMessage={error.vehicleInsuranceStartDateError}
                   />
                   <DateWithoutDropdown
                     label="Renewal Date"
-                    value="15/09/2025"
+                    value={vehicleDetails.renewalDate}
+                    onChange={(e: any) => {
+                      setVehicleDetails({
+                        ...vehicleDetails,
+                        renewalDate: e.target.value,
+                      });
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          renewalDateError: "",
+                        });
+                      }
+                    }}
+                    errorMessage={error.renewalDateError}
                   />
                   <DateWithoutDropdown
                     label="Date Valid Until"
-                    value="15/10/2025"
+                    value={vehicleDetails.dateValidUntil}
+                    onChange={(e: any) => {
+                      setVehicleDetails({
+                        ...vehicleDetails,
+                        dateValidUntil: e.target.value,
+                      });
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          dateValidUntilError: "",
+                        });
+                      }
+                    }}
+                    errorMessage={error.dateValidUntilError}
                   />
                   <Maininputfield
                     label="Days Left"
-                    value="288"
+                    value={vehicleDetails.daysLeft}
+                    onChange={(e: any) => {
+                      setVehicleDetails({
+                        ...vehicleDetails,
+                        daysLeft: e.target.value,
+                      });
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          daysLeftError: "",
+                        });
+                      }
+                    }}
+                    errorMessage={error.daysLeftError}
                     className="w-full"
                   />
                   {/* <Mainselectfield
@@ -186,38 +744,97 @@ const CreateVehicle = () => {
                   <DropDownMap
                     mapOption={insuranceCoverageCollection}
                     label="Insurance Coverage"
-                    selectedData={state}
-                    setSelectedData={setState}
+                    // selectedData={state}
+                    // setSelectedData={setState}
+                    value={vehicleDetails.insuranceCoverage}
+                    onChange={(e: any) => {
+                      setVehicleDetails({
+                        ...vehicleDetails,
+                        insuranceCoverage: e.target.value,
+                      });
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          insuranceCoverageError: "",
+                        });
+                      }
+                    }}
+                    errorMessage={error.insuranceCoverageError}
                   />
                   <DropDownMap
                     mapOption={insuranceStatusCollection}
                     label="Insurance Status"
-                    selectedData={state}
-                    setSelectedData={setState}
+                    // selectedData={state}
+                    // setSelectedData={setState}
+                    value={vehicleDetails.insuranceStatus}
+                    onChange={(e: any) => {
+                      setVehicleDetails({
+                        ...vehicleDetails,
+                        insuranceStatus: e.target.value,
+                      });
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          insuranceStatusError: "",
+                        });
+                      }
+                    }}
+                    errorMessage={error.insuranceStatusError}
                   />
                   <DropDownMap
                     mapOption={situationCollection}
                     label="Situation"
-                    selectedData={state}
-                    setSelectedData={setState}
+                    // selectedData={state}
+                    // setSelectedData={setState}
+                    value={vehicleDetails.situation}
+                    onChange={(e: any) => {
+                      setVehicleDetails({
+                        ...vehicleDetails,
+                        situation: e.target.value,
+                      });
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          situationError: "",
+                        });
+                      }
+                    }}
+                    errorMessage={error.situationError}
                   />
                   {/* <Mainselectfield label="Insurance Status" option="Active" /> */}
                   {/* <Mainselectfield label="Situation" option="Anywhere" /> */}
                 </div>
               </div>
               <div className="mt-8">
-                <h3 className="w-full mb-4 font-semibold">Truck Odometer</h3>
+                <h3 className="text-black w-full mb-4 font-semibold">
+                  Truck Odometer
+                </h3>
                 <div className="grid grid-cols-3 gap-4">
                   <Maininputfield
                     label="Truck Odometer"
-                    value="50,000 km"
+                    value={vehicleDetails.truckOdometer}
+                    onChange={(e: any) => {
+                      setVehicleDetails({
+                        ...vehicleDetails,
+                        truckOdometer: e.target.value,
+                      });
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          truckOdometerError: "",
+                        });
+                      }
+                    }}
                     className="w-full"
+                    errorMessage={error.truckOdometerError}
                   />
                 </div>
               </div>
               <div className="mt-8">
-                <h3 className="w-full mb-4 font-semibold">Vehicle Documents</h3>
-                <div className="grid grid-cols-[16%_16%_16%_16%_16%_20%] bg-[#EFF2F3] py-4 rounded-md flex text-center">
+                <h3 className="text-black w-full mb-4 font-semibold">
+                  Vehicle Documents
+                </h3>
+                <div className="grid grid-cols-[16%_16%_16%_16%_16%_20%] text-black bg-[#EFF2F3] py-4 rounded-md flex text-center">
                   {vehicleDocumentCollection?.map((value, index) => {
                     return (
                       <>
@@ -236,7 +853,7 @@ const CreateVehicle = () => {
                   return (
                     <>
                       <div
-                        className="grid grid-cols-[16%_16%_16%_16%_16%_20%] py-4 flex text-center"
+                        className="text-black grid grid-cols-[16%_16%_16%_16%_16%_20%] py-4 flex text-center"
                         key={ind}
                       >
                         <div>{data.Vehicle}</div>
@@ -277,7 +894,11 @@ const CreateVehicle = () => {
               text="Save"
               className="!bg-transparent !text-[#000] border px-8 !rounded-xl text-sm border-[#032272]"
             />
-            <Button text="Create" className="px-8 !rounded-xl text-sm" />
+            <Button
+              onClick={handleSubmit}
+              text="Create"
+              className="px-8 !rounded-xl text-sm"
+            />
           </div>
         </div>
       </div>
@@ -464,6 +1085,9 @@ const taxCollection = [
   },
 ];
 const paymentMethodColleciton = [
+  {
+    value: "Select Payment Method",
+  },
   {
     value: "Credit Card",
   },

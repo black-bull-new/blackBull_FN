@@ -23,7 +23,7 @@ const AddSupplier = () => {
         </div> */}
         <div className="ml-[316px] w-full mt-4">
           <div className="bg-white mr-4 flex justify-between items-center rounded-md">
-            <h2 className=" w-full p-4 rounded-md font-bold">Add Customer</h2>
+            <h2 className="text-black w-full p-4 rounded-md font-bold">Add Customer</h2>
             <div className="h-8 w-8 flex justify-center cursor-pointer text-2xl items-center bg-blueGrey-100 rounded-full mr-4">
               <span className="mt-[-2px] ml-[2px] text-[#292D32] rotate-45">
                 +
@@ -46,7 +46,7 @@ const AddSupplier = () => {
               </span>
             </div>
             <div className="bg-white mr-4 mt-4 rounded-md">
-              <h2 className="font-semibold mt-8">Supplier Information</h2>
+              <h2 className="text-black font-semibold mt-8">Supplier Information</h2>
               <div className="grid grid-cols-3 gap-4">
                 <Maininputfield
                   label="Company Name"
@@ -79,8 +79,8 @@ const AddSupplier = () => {
                   className="w-full"
                 />
               </div>
-              <h2 className="font-semibold mt-8">Contact Information</h2>
-              <h3 className="font-semibold text-sm my-4">Operations</h3>
+              <h2 className="text-black font-semibold mt-8">Contact Information</h2>
+              <h3 className="text-black font-semibold text-sm my-4">Operations</h3>
               <div className="grid grid-cols-3 gap-4">
                 <Maininputfield
                   label="Contact Person"
@@ -103,7 +103,7 @@ const AddSupplier = () => {
                   className="w-full"
                 />
               </div>
-              <h3 className="font-semibold text-sm my-4">Compliance</h3>
+              <h3 className="text-black font-semibold text-sm my-4">Compliance</h3>
               <div className="grid grid-cols-3 gap-4">
                 <Maininputfield
                   label="Contact Person"
@@ -126,7 +126,7 @@ const AddSupplier = () => {
                   className="w-full"
                 />
               </div>
-              <h3 className="font-semibold text-sm my-4">Admin</h3>
+              <h3 className="text-black font-semibold text-sm my-4">Admin</h3>
               <div className="grid grid-cols-3 gap-4">
                 <Maininputfield
                   label="Contact Person"
@@ -149,7 +149,7 @@ const AddSupplier = () => {
                   className="w-full"
                 />
               </div>
-              <h3 className="font-semibold text-sm my-4">Dispatch</h3>
+              <h3 className="text-black font-semibold text-sm my-4">Dispatch</h3>
               <div className="grid grid-cols-3 gap-4">
                 <Maininputfield
                   label="Contact Person"
@@ -172,7 +172,7 @@ const AddSupplier = () => {
                   className="w-full"
                 />
               </div>
-              <h3 className="font-semibold text-sm my-4">
+              <h3 className="text-black font-semibold text-sm my-4">
                 Invoice Preferences
               </h3>
               <div className="grid grid-cols-3 gap-4">
@@ -183,7 +183,7 @@ const AddSupplier = () => {
                   setSelectedData={setSelectedData}
                 />
               </div>
-              <h3 className="font-semibold text-sm my-4">
+              <h3 className="text-black font-semibold text-sm my-4">
                 Invoice Communication Preferences
               </h3>
               <div className="grid grid-cols-3 gap-4">
@@ -200,7 +200,7 @@ const AddSupplier = () => {
                   className="!w-fit bg-accent3 !px-4"
                 />
               </div>
-              <h2 className="font-semibold mt-8 mb-4">
+              <h2 className="text-black font-semibold mt-8 mb-4">
                 Company C-Suite Details
               </h2>
               <div className="grid grid-cols-3 gap-4">
@@ -226,7 +226,7 @@ const AddSupplier = () => {
                   className="!w-fit bg-accent3 !px-4"
                 />
               </div>
-              <h2 className="font-semibold mt-8 mb-4">Bank Details</h2>
+              <h2 className="text-black font-semibold mt-8 mb-4">Bank Details</h2>
               <div className="grid grid-cols-3 gap-4">
                 <Maininputfield
                   label="Account Name"
@@ -249,7 +249,7 @@ const AddSupplier = () => {
                   className="w-full"
                 />
               </div>
-              <h2 className="font-semibold mt-8 mb-4">Business Coverage</h2>
+              <h2 className="text-black font-semibold mt-8 mb-4">Business Coverage</h2>
               <div className="grid grid-cols-3 gap-4">
                 <DropDownMap
                   label="Area Covered"
@@ -264,8 +264,8 @@ const AddSupplier = () => {
                   setSelectedData={setSelectedData}
                 />
               </div>
-              <h2 className="font-semibold mt-8 mb-4">Warehouse Details</h2>
-              <h3 className="font-semibold text-sm my-4">Address 1</h3>
+              <h2 className="text-black font-semibold mt-8 mb-4">Warehouse Details</h2>
+              <h3 className="text-black font-semibold text-sm my-4">Address 1</h3>
               <div className="grid grid-cols-3 gap-4">
                 <DropDownMap
                   label="State"
@@ -307,7 +307,7 @@ const AddSupplier = () => {
                 />
               </div>
 
-              <h2 className="font-semibold mt-8 mb-4">
+              <h2 className="text-black font-semibold mt-8 mb-4">
                 Cerificate Of Accreditation
               </h2>
 
@@ -342,8 +342,8 @@ const AddSupplier = () => {
               <div className="w-fit my-4">
                 <FileUpload file="Choose Accreditation Document" />
               </div>
-              <h2 className="font-semibold mt-8 mb-4">Insurance Details</h2>
-              <h3 className="font-semibold text-sm mb-4">Product Liability</h3>
+              <h2 className="text-black font-semibold mt-8 mb-4">Insurance Details</h2>
+              <h3 className="text-black font-semibold text-sm mb-4">Product Liability</h3>
 
               <div className="grid grid-cols-3 gap-4">
                 <Maininputfield
@@ -366,7 +366,7 @@ const AddSupplier = () => {
                 />
                 <FileUpload file="Choose Document" />
               </div>
-              <h3 className="font-semibold text-sm my-4">Public Liability</h3>
+              <h3 className="text-black font-semibold text-sm my-4">Public Liability</h3>
 
               <div className="grid grid-cols-3 gap-4">
                 <Maininputfield
@@ -389,7 +389,7 @@ const AddSupplier = () => {
                 />
                 <FileUpload file="Choose Document" />
               </div>
-              <h3 className="font-semibold text-sm my-4">Work Cover</h3>
+              <h3 className="text-black font-semibold text-sm my-4">Work Cover</h3>
 
               <div className="grid grid-cols-3 gap-4">
                 <Maininputfield
@@ -409,7 +409,7 @@ const AddSupplier = () => {
                 />
                 <FileUpload file="Choose Document" />
               </div>
-              <h3 className="font-semibold text-sm my-4">
+              <h3 className="text-black font-semibold text-sm my-4">
                 Marine (General & Refrigerated)
               </h3>
 
@@ -434,7 +434,7 @@ const AddSupplier = () => {
                 />
                 <FileUpload file="Choose Document" />
               </div>
-              <h3 className="font-semibold text-sm my-4">Marine (Alcohol)</h3>
+              <h3 className="text-black font-semibold text-sm my-4">Marine (Alcohol)</h3>
 
               <div className="grid grid-cols-3 gap-4">
                 <Maininputfield
@@ -457,7 +457,7 @@ const AddSupplier = () => {
                 />
                 <FileUpload file="Choose Document" />
               </div>
-              <h3 className="font-semibold text-sm my-4">COC</h3>
+              <h3 className="text-black font-semibold text-sm my-4">COC</h3>
 
               <div className="grid grid-cols-3 gap-4">
                 <Maininputfield
@@ -484,12 +484,12 @@ const AddSupplier = () => {
           </div>
           <div className="bg-white mr-4 px-4 rounded-md mt-4 p-4 rounded-md">
             <div className="mb-4 mt-2">
-              <h3 className="w-full mb-4 rounded-md font-semibold">
+              <h3 className="text-black w-full mb-4 rounded-md font-semibold">
                 {" "}
                 Compliance Documents
               </h3>
 
-              <div className="grid grid-cols-5 bg-table-header p-4 rounded-md text-center mb-2">
+              <div className="text-black grid grid-cols-5 bg-table-header p-4 rounded-md text-center mb-2">
                 {documentCollectionHeading?.map((value, index) => {
                   return (
                     <>
@@ -500,7 +500,7 @@ const AddSupplier = () => {
                   );
                 })}
               </div>
-              <div className="grid grid-cols-5 p-4 rounded-md text-center items-center">
+              <div className="text-black grid grid-cols-5 p-4 rounded-md text-center items-center">
                 {documentCollectionData.map((value, index) => {
                   return (
                     <>
@@ -534,14 +534,14 @@ const AddSupplier = () => {
             </div>
           </div>
           <div>
-            <h3 className="font-semibold p-4 bg-white mr-4 mt-4 rounded-md">
+            <h3 className="text-black font-semibold p-4 bg-white mr-4 mt-4 rounded-md">
               Vehicle Onboarding
             </h3>
           </div>
           <div className="p-4 bg-white mr-4 mt-4 rounded-md">
             <Progressbar />
 
-            <h4 className="font-semibold text-sm my-4">Vehicle Information</h4>
+            <h4 className="text-black font-semibold text-sm my-4">Vehicle Information</h4>
             <div className="grid grid-cols-3 gap-4">
               <Maininputfield
                 label="Registration Number"
@@ -586,7 +586,7 @@ const AddSupplier = () => {
             <div className="mt-4 w-fit">
               <FileUpload file="Choose Rego Document" />
             </div>
-            <h4 className="font-semibold text-sm my-4">Vehicle Insurance</h4>
+            <h4 className="text-black font-semibold text-sm my-4">Vehicle Insurance</h4>
             <div className="grid grid-cols-3 gap-4">
               <Maininputfield
                 label="Insurance Company"
@@ -630,7 +630,7 @@ const AddSupplier = () => {
               />
               <DropDownMap label="Situation" mapOption={situationCollection} />
             </div>
-            <h4 className="font-semibold text-sm my-4">Truck Odometer</h4>
+            <h4 className="text-black font-semibold text-sm my-4">Truck Odometer</h4>
             <div className="grid grid-cols-3 gap-4">
               <Maininputfield
                 label="Truck Odometer"
@@ -638,10 +638,10 @@ const AddSupplier = () => {
                 className="w-full"
               />
             </div>
-            <h3 className="w-full mb-4 font-semibold mt-8">
+            <h3 className="text-black w-full mb-4 font-semibold mt-8">
               Vehicle Documents
             </h3>
-            <div className="grid grid-cols-[16%_16%_16%_16%_16%_20%] bg-[#EFF2F3] py-4 rounded-md flex text-center">
+            <div className="text-black grid grid-cols-[16%_16%_16%_16%_16%_20%] bg-[#EFF2F3] py-4 rounded-md flex text-center">
               {vehicleDocumentCollection?.map((value, index) => {
                 return (
                   <>
@@ -660,7 +660,7 @@ const AddSupplier = () => {
               return (
                 <>
                   <div
-                    className="grid grid-cols-[16%_16%_16%_16%_16%_20%] py-4 flex text-center"
+                    className="text-black grid grid-cols-[16%_16%_16%_16%_16%_20%] py-4 flex text-center"
                     key={ind}
                   >
                     <div>{data.Vehicle}</div>
@@ -695,7 +695,7 @@ const AddSupplier = () => {
             })}
           </div>
           <div className="font-semibold text-xl mt-4 bg-white p-4 mr-4 rounded-md">
-            <h2>Driver Onboarding</h2>
+            <h2 className="text-black">Driver Onboarding</h2>
           </div>
           <div className="font-semibold text-xl mt-4 bg-white p-4 mr-4 rounded-md mb-20">
             <Progressbar />
@@ -710,7 +710,7 @@ const AddSupplier = () => {
                 +
               </span>
             </div>
-            <h2 className="font-semibold p-4 mt-6">Personal Information</h2>
+            <h2 className="text-black font-semibold p-4 mt-6">Personal Information</h2>
             <div className="grid grid-cols-3 gap-4 p-4">
               <Maininputfield
                 label="First Name"
@@ -745,8 +745,8 @@ const AddSupplier = () => {
                 className="w-full"
               />
             </div>
-            <h2 className="font-semibold p-4 mt-6">Address Information</h2>
-            <h3 className="font-semibold text-sm pl-4">Current Address</h3>
+            <h2 className="text-black font-semibold p-4 mt-6">Address Information</h2>
+            <h3 className="text-black font-semibold text-sm pl-4">Current Address</h3>
             <div className="grid grid-cols-3 gap-4 p-4">
               <Maininputfield
                 label="House Number"
@@ -787,7 +787,7 @@ const AddSupplier = () => {
               content="Same as above"
               color="text-blueGrey-900"
             />
-            <h3 className="font-semibold text-sm pl-4">Permanent Address</h3>
+            <h3 className="text-black font-semibold text-sm pl-4">Permanent Address</h3>
             <div className="grid grid-cols-3 gap-4 p-4">
               <Maininputfield
                 label="House Number"
@@ -823,7 +823,7 @@ const AddSupplier = () => {
                 className="w-full"
               />
             </div>
-            <h2 className="font-semibold p-4 mt-6">
+            <h2 className="text-black font-semibold p-4 mt-6">
               Emergency Contact Information
             </h2>
             <div className="grid grid-cols-3 gap-4 p-4">
@@ -843,8 +843,8 @@ const AddSupplier = () => {
                 className="w-full"
               />
             </div>
-            <h2 className="font-semibold p-4 mt-6">Employment History</h2>
-            <h3 className="font-semibold text-sm pl-4 text-blueGrey-900">
+            <h2 className="text-black font-semibold p-4 mt-6">Employment History</h2>
+            <h3 className="text-black font-semibold text-sm pl-4 text-blueGrey-900">
               Experience
             </h3>
             <div className="grid grid-cols-3 gap-4 p-4">
@@ -864,7 +864,7 @@ const AddSupplier = () => {
                 className="w-full"
               />
             </div>
-            <h3 className="font-semibold text-sm pl-4 text-blueGrey-900">
+            <h3 className="text-black font-semibold text-sm pl-4 text-blueGrey-900">
               Reference Information
             </h3>
             <div className="grid grid-cols-3 gap-4 p-4">
@@ -895,7 +895,7 @@ const AddSupplier = () => {
                 className="!w-fit bg-accent3 !px-4"
               />
             </div>
-            <h2 className="font-semibold p-4 mt-6">License Details</h2>
+            <h2 className="text-black font-semibold p-4 mt-6">License Details</h2>
             <div className="grid grid-cols-3 gap-4 p-4">
               <Maininputfield
                 label="Licence Numbere"
@@ -928,7 +928,7 @@ const AddSupplier = () => {
               />
               <FileUpload file="Choose License Document " />
             </div>
-            <h2 className="font-semibold p-4 mt-4">Employment History</h2>
+            <h2 className="text-black font-semibold p-4 mt-4">Employment History</h2>
             <div className="grid grid-cols-3 gap-4 p-4">
               <Maininputfield
                 label="Pervious Employer"
@@ -946,7 +946,7 @@ const AddSupplier = () => {
                 className="w-full"
               />
             </div>
-            <h2 className="font-semibold p-4 mt-4">Special Driving Licence</h2>
+            <h2 className="text-black font-semibold p-4 mt-4">Special Driving Licence</h2>
             <div className="grid grid-cols-3 gap-4 p-4">
               <DropDownMap
                 label="Special Driving Licence"
@@ -956,12 +956,12 @@ const AddSupplier = () => {
               />
             </div>
             <div className="mb-4 mt-8">
-              <h3 className="w-full mb-6 rounded-md font-semibold pl-4">
+              <h3 className="text-black w-full mb-6 rounded-md font-semibold pl-4">
                 {" "}
                 Onboarding Documents
               </h3>
 
-              <div className="grid grid-cols-5 bg-table-header p-4 rounded-md text-center mb-2">
+              <div className="text-black grid grid-cols-5 bg-table-header p-4 rounded-md text-center mb-2">
                 {documentCollectionHeadingDriver?.map((value, index) => {
                   return (
                     <>
@@ -972,7 +972,7 @@ const AddSupplier = () => {
                   );
                 })}
               </div>
-              <div className="grid grid-cols-5 p-4 rounded-md text-center font-normal text-[16px] items-center">
+              <div className="text-black grid grid-cols-5 p-4 rounded-md text-center font-normal text-[16px] items-center">
                 {documentCollectionDataDriver.map((value, index) => {
                   return (
                     <>
@@ -1006,6 +1006,18 @@ const AddSupplier = () => {
                 })}
               </div>
             </div>
+          </div>
+          {/* create and save button */}
+          <div className="mr-4 px-4 rounded-md mt-4 mb-20 p-4 flex justify-end gap-2">
+            <Button
+              text="Save"
+              className="!bg-transparent !text-[#000] border px-8 !rounded-xl text-sm border-[#032272]"
+            />
+            <Button
+              // onClick={handleSubmit}
+              text="Create"
+              className="px-8 !rounded-xl text-sm"
+            />
           </div>
         </div>
       </div>

@@ -16,12 +16,11 @@ import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { correctDriverStateName } from "../utility/utilityMethod";
 
-
 const CreateDriver = () => {
   const [selectedData, setSelectedData] = useState("");
   const token = getCookie("token");
   const router = useRouter();
-  console.log("token check",{token})
+  console.log("token check", { token });
 
   const [driverDetails, setDriverDetails] = useState<any>({
     firstName: "",
@@ -306,7 +305,9 @@ const CreateDriver = () => {
       <div className="flex bg-[#E9EFFF]">
         <div className="ml-[316px] w-full mt-4">
           <div className="bg-white mr-4 flex justify-between items-center rounded-md">
-            <h2 className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">Create Driver</h2>
+            <h2 className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">
+              Create Driver
+            </h2>
             <div className="h-8 w-8 flex justify-center cursor-pointer text-2xl items-center bg-blueGrey-100 rounded-full mr-4">
               <span className="mt-[-2px] ml-[2px] text-[#292D32] rotate-45">
                 +
