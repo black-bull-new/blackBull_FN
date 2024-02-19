@@ -12,6 +12,7 @@ import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import { Register } from "@/network-request/types";
 import { createUser } from "@/network-request/api";
+import toast, { Toaster } from "react-hot-toast";
 const SignUp = () => {
   const { mutate } = useRegister();
   const router = useRouter();
@@ -54,8 +55,21 @@ const SignUp = () => {
       const result = response?.data;
       console.log({ result });
       if (result) {
-        router.push("/login");
+        toast('Congratulations! You have successfully signed up.',
+          {
+            icon: '👏',
+            style: {
+              borderRadius: '10px',
+              background: '#333',
+              color: '#fff',
+            },
+          }
+        );
+        setTimeout(() => {
+          router.push("/redirect");
+        }, 3000);
       }
+
     } catch (error: any) {
       console.log({ error });
     }
@@ -70,6 +84,7 @@ const SignUp = () => {
         <div className=" pt-4 pl-6 absolute">
           <Image src="/logoOzi.svg" alt="logo" width={150} height={150} />
         </div>
+        <div><Toaster /></div>
         <div className="grid grid-cols-2 items-center">
           <form onSubmit={handleSubmit}>
             <div className="max-w-[440px] ml-auto mr-auto text-center pt-10">

@@ -21,24 +21,24 @@ const CreateDriver = () => {
   const router = useRouter()
 
 
-  const [driverDetails, setDriverDetails]= useState({
+  const [driverDetails, setDriverDetails] = useState({
     firstName: "",
     middleName: "",
     lastName: "",
     dateOfBirth: "",
-    email:"",
-    mobile:"",
-    nationality:"",
+    email: "",
+    mobile: "",
+    nationality: "",
 
-    currentAddress:{
-      houseNumber:undefined,
+    currentAddress: {
+      houseNumber: undefined,
       street: "",
       suburb: "",
       state: "",
       country: "",
       pincode: ""
-    }, 
-    permanentAddress:{
+    },
+    permanentAddress: {
       houseNumber: undefined,
       street: "",
       suburb: "",
@@ -50,10 +50,10 @@ const CreateDriver = () => {
     emergencyContactInformation: {
       contactName: '',
       contactNumber: "",
-      relationship: '', 
+      relationship: '',
     },
 
-    licenseDetails:{
+    licenseDetails: {
       licenseNumber: "",
       licenseCardNumber: "",
       licenceType: "",
@@ -62,25 +62,25 @@ const CreateDriver = () => {
       expiryDate: "",
       daysLeftForRenewal: ""
     },
-    employmentHistory:{
+    employmentHistory: {
       perviousEmployer: "",
       yearsOfExperience: "",
-      reasonForLeaving: "", 
+      reasonForLeaving: "",
 
       companyName: "",
       referenceContactName: "",
       referenceEmailId: "",
-      referenceContactNumber:"", 
+      referenceContactNumber: "",
     },
-    specialDrivingLicence:{
+    specialDrivingLicence: {
       specialDrivingLicence: ""
     },
-    onboardingDocuments:{
+    onboardingDocuments: {
       documentType: "ggweg",
       attachFiles: "gwegweg",
       uploadedDocuments: "ewgwegw",
       dateOfUpload: "gwegwg"
-    }, 
+    },
     visaStatus: {
       type: "Work",
       uploadDate: "2023-01-15"
@@ -124,30 +124,19 @@ const CreateDriver = () => {
     drugTest: {
       type: "Drug Test",
       uploadDate: "2023-06-15"
-    } , 
-
-
-    
-
+    },
   })
 
-
-
-  const handleSubmit = async()=>{
+  const handleSubmit = async () => {
     const response = await addDriver(driverDetails, token || "")
-    if(response?.status == 200){
+    if (response?.status == 200) {
       router.push('/onboarding/driver-list')
       alert('Driver added successfully')
-    }else{
+    } else {
       alert('Something went wrong')
     }
-   
+
   }
-
-  
-
-
-
 
   return (
     <>
@@ -184,51 +173,49 @@ const CreateDriver = () => {
                 <Maininputfield
                   label="First Name"
                   value={driverDetails.firstName}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, firstName: e.target.value})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, firstName: e.target.value })}
                   className="w-full"
                 />
                 <Maininputfield
                   label="Middle Name"
                   value={driverDetails.middleName}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, middleName: e.target.value})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, middleName: e.target.value })}
                   className="w-full"
                 />
                 <Maininputfield
                   label="Last Name"
                   value={driverDetails.lastName}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, lastName: e.target.value})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, lastName: e.target.value })}
                   className="w-full"
                 />
 
                 <Maindatefield
-                 label="DOB"
-                 value={driverDetails.dateOfBirth}
-                onChange={(e:any)=>setDriverDetails({...driverDetails, dateOfBirth: e.target.value})}
-                className="w-full" va />
+                  label="DOB"
+                  value={driverDetails.dateOfBirth}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, dateOfBirth: e.target.value })}
+                  className="w-full" va />
 
                 <Maininputfield
                   label="Email"
                   value={driverDetails.email}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, email: e.target.value})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, email: e.target.value })}
                   className="w-full"
                 />
                 <Maininputfield
                   label="Mobile"
                   value={driverDetails.mobile}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, mobile: e.target.value})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, mobile: e.target.value })}
                   className="w-full"
                 />
                 <Maininputfield
                   label="Nationality"
                   value={driverDetails?.nationality}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, nationality: e.target.value})}
-                  
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, nationality: e.target.value })}
+
                   className="w-full"
                 />
 
                 {/* <FileUpload /> */}
-
-
 
               </div>
             </div>
@@ -244,39 +231,39 @@ const CreateDriver = () => {
                 <Maininputfield
                   label="House Number"
                   value={driverDetails.currentAddress.houseNumber}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, currentAddress: {...driverDetails.currentAddress, houseNumber: e.target.value}})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, currentAddress: { ...driverDetails.currentAddress, houseNumber: e.target.value } })}
                   className="w-full"
                 />
                 <Maininputfield
                   label="Street"
                   value={driverDetails.currentAddress.street}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, currentAddress: {...driverDetails.currentAddress, street: e.target.value}})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, currentAddress: { ...driverDetails.currentAddress, street: e.target.value } })}
                   className="w-full"
                 />
                 <Maininputfield
                   label="Suburb"
                   value={driverDetails.currentAddress.suburb}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, currentAddress: {...driverDetails.currentAddress, suburb: e.target.value}})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, currentAddress: { ...driverDetails.currentAddress, suburb: e.target.value } })}
                   className="w-full"
                 />
                 <DropDownMap
                   label="State"
                   mapOption={stateCollection}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, currentAddress: {...driverDetails.currentAddress, state: e.target.value}})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, currentAddress: { ...driverDetails.currentAddress, state: e.target.value } })}
                   value={driverDetails.currentAddress.state}
-                 
+
                 />
                 <DropDownMap
                   label="Country"
                   mapOption={countryCollection}
                   value={driverDetails.currentAddress.country}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, currentAddress: {...driverDetails.currentAddress, country: e.target.value}})}
-                 
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, currentAddress: { ...driverDetails.currentAddress, country: e.target.value } })}
+
                 />
                 <Maininputfield
                   label="Post Code"
                   value={driverDetails.currentAddress.pincode}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, currentAddress: {...driverDetails.currentAddress, pincode: e.target.value}})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, currentAddress: { ...driverDetails.currentAddress, pincode: e.target.value } })}
                   className="w-full"
                 />
                 {/* <DropDownMap
@@ -300,19 +287,19 @@ const CreateDriver = () => {
                 <Maininputfield
                   label="House Number"
                   value={driverDetails.permanentAddress.houseNumber}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, permanentAddress: {...driverDetails.permanentAddress, houseNumber: e.target.value}})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, permanentAddress: { ...driverDetails.permanentAddress, houseNumber: e.target.value } })}
                   className="w-full"
                 />
                 <Maininputfield
                   label="Street"
                   value={driverDetails.permanentAddress.street}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, permanentAddress: {...driverDetails.permanentAddress, street: e.target.value}})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, permanentAddress: { ...driverDetails.permanentAddress, street: e.target.value } })}
                   className="w-full"
                 />
                 <Maininputfield
                   label="Suburb"
                   value={driverDetails.permanentAddress.suburb}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, permanentAddress: {...driverDetails.permanentAddress, suburb: e.target.value}})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, permanentAddress: { ...driverDetails.permanentAddress, suburb: e.target.value } })}
                   className="w-full"
                 />
                 <DropDownMap
@@ -321,7 +308,7 @@ const CreateDriver = () => {
                   // selectedData={selectedData}
                   // setSelectedData={setSelectedData}
                   value={driverDetails.permanentAddress.state}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, permanentAddress: {...driverDetails.permanentAddress, state: e.target.value}})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, permanentAddress: { ...driverDetails.permanentAddress, state: e.target.value } })}
 
                 />
                 <DropDownMap
@@ -330,12 +317,12 @@ const CreateDriver = () => {
                   // selectedData={selectedData}
                   // setSelectedData={setSelectedData}
                   value={driverDetails.permanentAddress.country}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, permanentAddress: {...driverDetails.permanentAddress, country: e.target.value}})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, permanentAddress: { ...driverDetails.permanentAddress, country: e.target.value } })}
                 />
                 <Maininputfield
                   label="Post Code"
                   value={driverDetails.permanentAddress.pincode}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, permanentAddress: {...driverDetails.permanentAddress, pincode: e.target.value}})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, permanentAddress: { ...driverDetails.permanentAddress, pincode: e.target.value } })}
                   className="w-full"
                 />
               </div>
@@ -352,19 +339,19 @@ const CreateDriver = () => {
                 <Maininputfield
                   label="Contact Name"
                   value={driverDetails.emergencyContactInformation.contactName}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, emergencyContactInformation: {...driverDetails.emergencyContactInformation, contactName: e.target.value}})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, emergencyContactInformation: { ...driverDetails.emergencyContactInformation, contactName: e.target.value } })}
                   className="w-full"
                 />
                 <Maininputfield
                   label="Contact Number"
                   value={driverDetails.emergencyContactInformation.contactNumber}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, emergencyContactInformation: {...driverDetails.emergencyContactInformation, contactNumber: e.target.value}})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, emergencyContactInformation: { ...driverDetails.emergencyContactInformation, contactNumber: e.target.value } })}
                   className="w-full"
                 />
                 <Maininputfield
                   label="Relationship"
                   value={driverDetails.emergencyContactInformation.relationship}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, emergencyContactInformation: {...driverDetails.emergencyContactInformation, relationship: e.target.value}})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, emergencyContactInformation: { ...driverDetails.emergencyContactInformation, relationship: e.target.value } })}
                   className="w-full"
                 />
               </div>
@@ -381,24 +368,24 @@ const CreateDriver = () => {
                 <Maininputfield
                   label="Pervious Employer"
                   value={driverDetails.employmentHistory.perviousEmployer}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, employmentHistory: {...driverDetails.employmentHistory, perviousEmployer: e.target.value}})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, employmentHistory: { ...driverDetails.employmentHistory, perviousEmployer: e.target.value } })}
                   className="w-full"
                 />
                 <Maininputfield
                   label="Years Of Experience"
                   value={driverDetails.employmentHistory.yearsOfExperience}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, employmentHistory: {...driverDetails.employmentHistory, yearsOfExperience: e.target.value}})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, employmentHistory: { ...driverDetails.employmentHistory, yearsOfExperience: e.target.value } })}
                   className="w-full"
                 />
                 <Maininputfield
                   label="Reason for leaving"
                   value={driverDetails.employmentHistory.reasonForLeaving}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, employmentHistory: {...driverDetails.employmentHistory, reasonForLeaving: e.target.value}})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, employmentHistory: { ...driverDetails.employmentHistory, reasonForLeaving: e.target.value } })}
                   className="w-full"
                 />
               </div>
 
-                {/* commenting out for temporary as backend is not accepting referance informtion objext*/}
+              {/* commenting out for temporary as backend is not accepting referance informtion objext*/}
               <div className="mb-4 mt-8">
                 <h4 className="text-sm font-semibold mb-4 text-blueGrey-900">
                   Reference Information
@@ -408,25 +395,25 @@ const CreateDriver = () => {
                   <Maininputfield
                     label="Company Name"
                     value={driverDetails.employmentHistory.companyName}
-                    onChange={(e:any)=>setDriverDetails({...driverDetails, employmentHistory: {...driverDetails.employmentHistory, companyName: e.target.value}})}
+                    onChange={(e: any) => setDriverDetails({ ...driverDetails, employmentHistory: { ...driverDetails.employmentHistory, companyName: e.target.value } })}
                     className="w-full"
                   />
                   <Maininputfield
                     label="Reference (Contact Name)"
                     value={driverDetails.employmentHistory.referenceContactName}
-                    onChange={(e:any)=>setDriverDetails({...driverDetails, employmentHistory: {...driverDetails.employmentHistory, referenceContactName: e.target.value}})}
+                    onChange={(e: any) => setDriverDetails({ ...driverDetails, employmentHistory: { ...driverDetails.employmentHistory, referenceContactName: e.target.value } })}
                     className="w-full"
                   />
                   <Maininputfield
                     label="Reference (Email ID)"
                     value={driverDetails.employmentHistory.referenceEmailId}
-                    onChange={(e:any)=>setDriverDetails({...driverDetails, employmentHistory: {...driverDetails.employmentHistory, referenceEmailId: e.target.value}})}
+                    onChange={(e: any) => setDriverDetails({ ...driverDetails, employmentHistory: { ...driverDetails.employmentHistory, referenceEmailId: e.target.value } })}
                     className="w-full"
                   />
                   <Maininputfield
                     label="Reference (Contact Number)"
                     value={driverDetails.employmentHistory.referenceContactNumber}
-                    onChange={(e:any)=>setDriverDetails({...driverDetails, employmentHistory: {...driverDetails.employmentHistory, referenceContactNumber: e.target.value}})}
+                    onChange={(e: any) => setDriverDetails({ ...driverDetails, employmentHistory: { ...driverDetails.employmentHistory, referenceContactNumber: e.target.value } })}
                     className="w-full"
                   />
                 </div>
@@ -450,13 +437,13 @@ const CreateDriver = () => {
                 <Maininputfield
                   label="Licence Number"
                   value={driverDetails.licenseDetails.licenseNumber}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, licenseDetails: {...driverDetails.licenseDetails, licenseNumber: e.target.value}})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, licenseDetails: { ...driverDetails.licenseDetails, licenseNumber: e.target.value } })}
                   className="w-full"
                 />
                 <Maininputfield
                   label="Licence Card Number"
                   value={driverDetails.licenseDetails.licenseCardNumber}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, licenseDetails: {...driverDetails.licenseDetails, licenseCardNumber: e.target.value}})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, licenseDetails: { ...driverDetails.licenseDetails, licenseCardNumber: e.target.value } })}
                   className="w-full"
                 />
                 <DropDownMap
@@ -465,7 +452,7 @@ const CreateDriver = () => {
                   // selectedData={selectedData}
                   // setSelectedData={setSelectedData}
                   value={driverDetails.licenseDetails.licenceType}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, licenseDetails: {...driverDetails.licenseDetails, licenceType: e.target.value}})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, licenseDetails: { ...driverDetails.licenseDetails, licenceType: e.target.value } })}
                 />
                 <DropDownMap
                   label="State of Issue"
@@ -473,24 +460,24 @@ const CreateDriver = () => {
                   // selectedData={selectedData}
                   // setSelectedData={setSelectedData}
                   value={driverDetails.licenseDetails.state}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, licenseDetails: {...driverDetails.licenseDetails, state: e.target.value}})} 
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, licenseDetails: { ...driverDetails.licenseDetails, state: e.target.value } })}
                 />
                 <DateWithoutDropdown
                   label="Date Of Issue "
-                 value={driverDetails.licenseDetails.dateOfIssue}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, licenseDetails: {...driverDetails.licenseDetails, dateOfIssue: e.target.value}})}
+                  value={driverDetails.licenseDetails.dateOfIssue}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, licenseDetails: { ...driverDetails.licenseDetails, dateOfIssue: e.target.value } })}
                 />
 
-                  <DateWithoutDropdown 
-                  label="Expiry Date " 
-                 value={driverDetails.licenseDetails.expiryDate}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, licenseDetails: {...driverDetails.licenseDetails, expiryDate: e.target.value}})}
-                  />
+                <DateWithoutDropdown
+                  label="Expiry Date "
+                  value={driverDetails.licenseDetails.expiryDate}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, licenseDetails: { ...driverDetails.licenseDetails, expiryDate: e.target.value } })}
+                />
 
                 <Maininputfield
                   label="Days left for renewal"
                   value={driverDetails.licenseDetails.daysLeftForRenewal}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, licenseDetails: {...driverDetails.licenseDetails, daysLeftForRenewal: e.target.value}})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, licenseDetails: { ...driverDetails.licenseDetails, daysLeftForRenewal: e.target.value } })}
                   className="w-full"
                 />
                 <FileUpload file="Choose License Document " />
@@ -542,7 +529,7 @@ const CreateDriver = () => {
                   // selectedData={selectedData}
                   // setSelectedData={setSelectedData}
                   value={driverDetails.specialDrivingLicence.specialDrivingLicence}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, specialDrivingLicence: {...driverDetails.specialDrivingLicence, specialDrivingLicence: e.target.value}})}
+                  onChange={(e: any) => setDriverDetails({ ...driverDetails, specialDrivingLicence: { ...driverDetails.specialDrivingLicence, specialDrivingLicence: e.target.value } })}
                   mapOption={drivingLicenceCollection}
                 />
               </div>
@@ -600,7 +587,7 @@ const CreateDriver = () => {
             </div>
           </div>
           <div className="mb-20 mr-4">
-            <ImageUpload handleSubmit={handleSubmit}/>
+            <ImageUpload handleSubmit={handleSubmit} />
           </div>
         </div>
       </div>

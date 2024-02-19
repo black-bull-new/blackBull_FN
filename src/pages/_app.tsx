@@ -28,11 +28,12 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
       {currentUrl === "/login" ||
-      currentUrl === "/signup" ||
-      currentUrl === "/subscription-plan" ||
-      currentUrl === "/" ||
-      currentUrl === "/login/update-password" ||
-      currentUrl === "/login/update-password?" ? (
+        currentUrl === "/signup" ||
+        currentUrl === "/redirect" ||
+        currentUrl === "/subscription-plan" ||
+        currentUrl === "/" ||
+        currentUrl === "/login/update-password" ||
+        currentUrl === "/login/update-password?" ? (
         <>
           <Component {...pageProps} />
         </>
