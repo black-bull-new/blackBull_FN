@@ -28,14 +28,14 @@ const DriverDetails = () => {
   }, []);
 
   const handleDelete = async () => {
-    const response = await deleteDriver(token || "", driveToDelete);
+    const response = await deleteDriver(token || "", driveToDelete)
     if (response) {
-      setDriverToDelete("");
-      setDelete(false);
-      getDrivers();
+      setDriverToDelete('')
+      setDelete(false)
+      getDrivers()
     } else {
-      setDelete(false);
-      setDriverToDelete("");
+      setDelete(false)
+      setDriverToDelete('')
     }
   };
 
@@ -118,10 +118,11 @@ const DriverDetails = () => {
                           width={18}
                           height={18}
                           onClick={() => {
+
                             router.push({
                               pathname: "/onboarding/edit-driver",
                               query: { id: item?._id },
-                            });
+                            })
                           }}
                           className="cursor-pointer"
                         />
@@ -131,10 +132,7 @@ const DriverDetails = () => {
                           width={18}
                           height={18}
                           className="cursor-pointer"
-                          onClick={() => {
-                            setDelete(true);
-                            setDriverToDelete(item?._id);
-                          }}
+                          onClick={() => { setDelete(true); setDriverToDelete(item?._id) }}
                         />
                       </div>
 
@@ -159,10 +157,7 @@ const DriverDetails = () => {
                         <Button
                           text="Cancel"
                           className="!bg-transparent border !text-[#000] !py-[4px] !px-[8px]"
-                          onClick={() => {
-                            setDelete(false);
-                            setDriverToDelete("");
-                          }}
+                          onClick={() => { setDelete(false); setDriverToDelete('') }}
                         />
                         <Button
                           text="Confirm"

@@ -10,6 +10,7 @@ import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import { Login } from "@/network-request/types";
 import { loginUser } from "@/network-request/api";
+import toast, { Toaster } from "react-hot-toast";
 
 const Login = () => {
   const router = useRouter();
@@ -44,7 +45,19 @@ const Login = () => {
       const response = await loginUser(values?.email, values?.password);
       console.log({ response });
       if (response?.token) {
-        router.push("/onboarding");
+        toast('Welcome back! You are now signed in.',
+          {
+            icon: '👏',
+            style: {
+              borderRadius: '10px',
+              background: '#333',
+              color: '#fff',
+            },
+          }
+        );
+        setTimeout(() => {
+          router.push("/onboarding");
+        }, 3000)
       } else {
         console.log("Login credentials error");
       }
@@ -61,6 +74,7 @@ const Login = () => {
         <div className=" pt-6 pl-8 absolute">
           <Image src="/logoOzi.svg" alt="logo" width={130} height={50} priority quality={100}/>
         </div>
+        <div><Toaster /></div>
         <div className="grid grid-cols-2 items-center">
           <form
             onSubmit={
