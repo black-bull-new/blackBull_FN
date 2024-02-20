@@ -7,7 +7,6 @@ import Header from "../../components/Header";
 import Sidebar from "../../components/Sidebar";
 import Footer from "../../components/Footer";
 import { useRouter } from "next/router";
-import RedirectUrl from "./redirect";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(
@@ -23,22 +22,27 @@ export default function App({ Component, pageProps }: AppProps) {
         },
       })
   );
+
+  // Get current URL using Next.js router
   const router = useRouter();
   const currentUrl = router.asPath;
-  console.log(currentUrl, "url:");
+
+  // Define an array of URLs where sidebar and footer won't be displayed
+  const noSidebarFooterUrls = [
+    "/login",
+    "/signup",
+    "/redirect",
+    "/subscription-plan",
+    "/",
+    "/login/update-password",
+    "/login/update-password?",
+  ];
+
+  const displaySidebarFooter = !noSidebarFooterUrls.includes(currentUrl);
+
   return (
     <QueryClientProvider client={queryClient}>
-      {currentUrl === "/login" ||
-        currentUrl === "/signup" ||
-        currentUrl === "/redirect" ||
-        currentUrl === "/subscription-plan" ||
-        currentUrl === "/" ||
-        currentUrl === "/login/update-password" ||
-        currentUrl === "/login/update-password?" ? (
-        <>
-          <Component {...pageProps} />
-        </>
-      ) : (
+      {displaySidebarFooter ? (
         <>
           <Header />
           <div className="sticky top-0">
@@ -49,6 +53,8 @@ export default function App({ Component, pageProps }: AppProps) {
             <Footer />
           </div>
         </>
+      ) : (
+        <Component {...pageProps} />
       )}
     </QueryClientProvider>
   );
