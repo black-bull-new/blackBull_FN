@@ -30,6 +30,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       {currentUrl === "/login" ||
         currentUrl === "/signup" ||
+        currentUrl === "/redirect" ||
         currentUrl === "/subscription-plan" ||
         currentUrl === "/" ||
         currentUrl === "/login/update-password" ||

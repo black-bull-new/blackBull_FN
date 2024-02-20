@@ -11,7 +11,6 @@ const DriverDetails = () => {
   const [deletePopUp, setDelete] = useState(false);
   const router = useRouter();
   const token = getCookie("token");
-
   const [driveToDelete, setDriverToDelete] = useState("");
 
   const [drivers, setDrivers] = useState([]);

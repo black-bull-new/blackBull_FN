@@ -31,7 +31,7 @@ const AddCustomer = () => {
       street2: "",
       suburb: "",
       state: "",
-      country: "",
+      country: "Australia",
       postCode: "",
     },
 
@@ -487,13 +487,13 @@ const AddCustomer = () => {
                   }
                 }}
                 errorMessage={error.companyAddressError?.state}
-                // selectedData={selectedData}
-                // setSelectedData={setSelectedData}
+              // selectedData={selectedData}
+              // setSelectedData={setSelectedData}
               />
-              <DropDownMap
+              <Maininputfield
                 label="Country"
-                mapOption={countryCollection}
-                value={customer.companyAddress.country}
+                // mapOption={countryCollection}
+                value={customer?.companyAddress?.country}
                 onChange={(e: any) => {
                   setCustomer({
                     ...customer,
@@ -513,8 +513,8 @@ const AddCustomer = () => {
                   }
                 }}
                 errorMessage={error.companyAddressError?.country}
-                // selectedData={selectedData}
-                // setSelectedData={setSelectedData}
+              // selectedData={selectedData}
+              // setSelectedData={setSelectedData}
               />
               <Maininputfield
                 label="Post Code"
