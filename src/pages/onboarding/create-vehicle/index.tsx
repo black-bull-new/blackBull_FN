@@ -13,9 +13,11 @@ import StatusChip from "../../../../components/StatusChip";
 import { correctVehicleStateName } from "../utility/utilityMethod";
 import { addVehicle } from "@/network-request/vehicle/vehicleApi";
 import { getCookie } from "cookies-next";
-
+import { useRouter } from "next/router";
+import toast, { Toaster } from "react-hot-toast";
 const CreateVehicle = () => {
   const token = getCookie("token");
+  const router = useRouter();
   const xyz = ownershipStatus?.map((item) => {
     return item;
   });
@@ -111,16 +113,40 @@ const CreateVehicle = () => {
     console.log("Vehicle State : ", vehicleDetails);
     console.log("Error State", error);
     if (hasErrors) {
-      alert("Please fix the validation errors before submitting.");
+      toast("Please fix the validation errors before submitting.", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
       return;
     }
 
     const response: any = await addVehicle(vehicleDetails, token || "");
     if (response?.status == 200) {
-      alert("Vehical added successfully");
+      toast("Vehicle Added Successfully", {
+        icon: "👏",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+      setTimeout(() => {
+        router.push("/onboarding/vehicle-list");
+      }, 3000);
       console.log("response :", response);
     } else {
-      alert("Something went wrong");
+      toast("Something went wrong", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
     }
   };
 
@@ -186,6 +212,9 @@ const CreateVehicle = () => {
   return (
     <>
       <div className="flex bg-[#E9EFFF]">
+        <div>
+          <Toaster />
+        </div>
         <div className="ml-[316px] w-full mt-4">
           <div className="bg-white mr-4 flex justify-between items-center rounded-md">
             <h2 className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">

@@ -158,3 +158,75 @@ export const correctUserStateName = (stateName: string): string => {
 
   return nameMapping[stateName] || stateName;
 };
+
+export const correctAddVehicleStateName = (stateName: string): string => {
+  const nameMapping: { [key: string]: string } = {
+    registrationNumber: "Registration Number",
+    registrationExpiry: "Registration Expiry",
+    vinNumber: "VIN Number",
+    vehicleManufacturer: "Vehicle Manufacturer",
+    vehicleModel: "Vehicle Model",
+    vehicleType: "Vehicle Type",
+    typeOfTrailer: "Type Of Trailer",
+    stateOfRegistration: "State Of Registration",
+    engineNumber: "Engine Number",
+    compliancePlate: "Compliance Plate",
+    registrationStatus: "Registration Status",
+    document: "Document",
+    insuranceCompanyName: "Insurance Company Name",
+    policyNumber: "Policy Number",
+    vehicleInsuranceStartDate: "Vehicle Insurance Start Date",
+    renewalDate: "Renewal Date",
+    dateValidUntil: "Date Valid Until",
+    daysLeft: "Days Left",
+    insuranceCoverage: "Insurance Coverage",
+    insuranceStatus: "Insurance Status",
+    situation: "Situation",
+    truckOdometer: "Truck Odometer",
+  };
+
+  return nameMapping[stateName] || stateName;
+};
+
+export const correctAddSupplierStateName = (stateName: string): string => {
+  const nameMapping: { [key: string]: string } = {
+    companyName: "Company Name",
+    tradingName: "Trading Name",
+    abn: "ABN",
+    legalName: "Legal Name",
+    website: "Website",
+    profile: "Profile",
+    opreations: "opreations",
+    contactPerson: "Contact Person",
+    desgination: "Desgination",
+    number: "Number",
+    opreationEmail: "Opreation Email",
+    compliance: "compliance",
+    complianceEmail: "",
+    admin: "Admin",
+    adminEmail: "Admin Email",
+    dispatch: "Dispatch",
+    dispatchEmail: "Dispatch Email",
+    invoicePreferences: "Invoice Preferences",
+    invoiceCommunicationPreferences: "Invoice Communication Preferences",
+    bankDetails: "Bank Details",
+    accountName: "Account Name",
+    bankName: "Bank Name",
+    bsb: "BSB",
+    accountNumber: "Account Number",
+    businessCoverage: "Business Coverage",
+    areaCovered: "Area Covered",
+    businessOpreations: "Business Opreations",
+    certificateOfAccreditation: "Certificate Of Accreditation",
+    accreditationNumber: "Accreditation Number",
+    massManagementExpiryDate: "Mass Management Expiry Date",
+    basicFatigueExpiryDate: "Basic Fatigue Expiry Date",
+    dangerousGoodsExpiryDate: "Dangerous Goods Expiry Date",
+    nhvassExpiryDate: "Nhvass Expiry Date",
+    haccpExpiryDate: "Haccp Expiry Date",
+    uploadAccreditationDocuments: "Upload Accreditation Documents",
+    accreditationDocument: "Accreditation Document",
+  };
+
+  return nameMapping[stateName] || stateName;
+};

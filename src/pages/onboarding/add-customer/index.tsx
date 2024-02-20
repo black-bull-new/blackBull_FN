@@ -292,22 +292,24 @@ const AddCustomer = () => {
               />
               <Maininputfield
                 label="ABN"
-                value={customer.abnNumber}
+                value={
+                  customer.abnNumber === undefined ? "" : customer.abnNumber
+                }
                 onChange={(e: any) => {
-                  // regex for only accept integer values
-                  const regex = /^-?\d+$/;
+                  // regex for only accepting integer values
+                  const regex = /^-?\d*$/; // Allow an empty string or any integer
                   if (!regex.test(e.target.value)) {
                     setError({
                       ...error,
                       abnNumberError: "Please enter only numbers",
                     });
                   } else {
-                    setCustomer({
-                      ...customer,
-                      abnNumber:
+                    setCustomer((prevCustomer: any) => {
+                      const newAbnNumber =
                         e.target.value === ""
                           ? undefined
-                          : Number(e.target.value),
+                          : Number(e.target.value);
+                      return { ...prevCustomer, abnNumber: newAbnNumber };
                     });
                     if (e.target.value.length > 0) {
                       setError({ ...error, abnNumberError: "" });
@@ -317,6 +319,7 @@ const AddCustomer = () => {
                 className="w-full"
                 errorMessage={error.abnNumberError}
               />
+
               <Maininputfield
                 label="Legal Name"
                 value={customer.legalName}
