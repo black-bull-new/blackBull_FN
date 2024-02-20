@@ -3,6 +3,10 @@
 import Image from "next/image";
 import { useState } from "react";
 import Button from "../Button";
+import React from "react";
+import { addDriver } from "@/network-request/driver-api";
+import DriverDetails from "../DriverDetails";
+
 
 const ImageUpload = ({handleSubmit}:any) => {
   const [image, setImage] = useState("");
@@ -13,6 +17,8 @@ const ImageUpload = ({handleSubmit}:any) => {
       setImage(URL.createObjectURL(file));
     }
   };
+
+
 
   return (
     <div className="grid gap-4 justify-end mt-4">

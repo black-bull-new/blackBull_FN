@@ -8,7 +8,7 @@ export const addCustomer = async (data:any, token:string)=>{
         const response = await axios.post(`${customerBaseUrl}/add-customer`, data, {
              headers:{
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Basic ${token}`
              }      
         })
         return response

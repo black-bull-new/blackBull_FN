@@ -12,8 +12,7 @@ const DriverDetails = () => {
   const router = useRouter();
   const token = getCookie("token");
 
-  const [driveToDelete, setDriverToDelete] = useState('')
-
+  const [driveToDelete, setDriverToDelete] = useState("");
 
   const [drivers, setDrivers] = useState([]);
 
@@ -38,7 +37,9 @@ const DriverDetails = () => {
       setDelete(false)
       setDriverToDelete('')
     }
-  }
+  };
+
+  console.log({ drivers }, { token });
 
   return (
     <>
@@ -141,7 +142,6 @@ const DriverDetails = () => {
                       <div className="mb-4">{item?.licenceDoc}</div>
                       <div className="mb-4">{item?.visaStatus}</div>
                       <div className="mb-4">{item?.complaint}</div> */}
-
                     </React.Fragment>
                   );
                 })}

@@ -11,7 +11,7 @@ const FileUpload = (props: any) => {
     }
   };
   return (
-    <>
+    <div className="relative">
       <div>
         <label
           htmlFor="myFile"
@@ -33,7 +33,12 @@ const FileUpload = (props: any) => {
           onChange={props.onChange}
         />
       </div>
-    </>
+      {props.errorMessage && (
+        <div className="text-red-500 text-[12px] mt-1">
+          {props.errorMessage}
+        </div>
+      )}
+    </div>
   );
 };
 export default FileUpload;

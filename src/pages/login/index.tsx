@@ -40,6 +40,7 @@ const Login = () => {
   console.log({ values });
 
   const onLogin = React.useCallback(async (values: any) => {
+    console.log("values>>>>>>",values);
     try {
       const response = await loginUser(values?.email, values?.password);
       console.log({ response });
@@ -71,7 +72,7 @@ const Login = () => {
     <React.Fragment>
       <div>
         <div className=" pt-6 pl-8 absolute">
-          <Image src="/logoOzi.svg" alt="logo" width={130} height={50} />
+          <Image src="/logoOzi.svg" alt="logo" width={130} height={50} priority quality={100}/>
         </div>
         <div><Toaster /></div>
         <div className="grid grid-cols-2 items-center">
@@ -188,6 +189,7 @@ const Login = () => {
               alt="logo"
               width={700}
               height={700}
+              quality={100}
               className="w-full h-screen"
             />
           </div>
