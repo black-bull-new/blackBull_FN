@@ -14,6 +14,11 @@ import { NestedAddVehicle } from "../../../../components/supplier/NestedAddVehic
 import NestedAddDriver from "../../../../components/supplier/NestedAddDriver";
 import { getCookie } from "cookies-next";
 import { addSupplierIntoSupplier } from "@/network-request/supplier/supplier";
+import { addVehicleIntoSupplier } from "@/network-request/supplier/vehicle";
+import {
+  correctAddSupplierStateName,
+  correctAddVehicleStateName,
+} from "../utility/utilityMethod";
 import { addSupplierDriver } from "@/network-request/supplier/driver";
 const AddSupplier = () => {
   const token = getCookie("token");
@@ -21,11 +26,10 @@ const AddSupplier = () => {
   const step1Btn = "Proceed to Add Vehicle";
   const step2Btn = "Proceed to Add Driver";
   const step3Btn = "Submit";
-  const [buttonState, seButtonState] = useState(step3Btn);
-
-  const currentDate = new Date();
-  console.log({ currentDate });
-
+  const [buttonState, seButtonState] = useState(step1Btn);
+  /**
+   * add supplier state and its error state
+   */
   const [addSupplier, setAddSupplier] = useState<any>({
     companyName: "",
     tradingName: "",
@@ -174,8 +178,65 @@ const AddSupplier = () => {
       uploadDate: "",
     },
   });
+  const [addSupplierError, setAddSupplierError] = useState<any>({
+    companyNameError: "",
+    tradingNameError: "",
+    abnError: "",
+    legalNameError: "",
+    websiteError: "",
+    profileError: "",
+    opreationsError: {
+      contactPerson: "",
+      desgination: "",
+      number: "",
+      opreationEmail: "",
+    },
+    complianceError: {
+      contactPerson: "",
+      desgination: "",
+      number: "",
+      complianceEmail: "",
+    },
+    adminError: {
+      contactPerson: "",
+      desgination: "",
+      number: "",
+      adminEmail: "",
+    },
+    dispatchError: {
+      contactPerson: "",
+      desgination: "",
+      number: "",
+      dispatchEmail: "",
+    },
+    invoicePreferencesError: "",
+    invoiceCommunicationPreferencesError: "",
+    bankDetailsError: {
+      accountName: "",
+      bankName: "",
+      bsb: "",
+      accountNumber: "",
+    },
+    businessCoverageError: {
+      areaCovered: "",
+      businessOpreations: "",
+    },
+    certificateOfAccreditationError: {
+      accreditationNumber: "",
+      massManagementExpiryDate: "",
+      basicFatigueExpiryDate: "",
+      dangerousGoodsExpiryDate: "",
+      nhvassExpiryDate: "",
+      haccpExpiryDate: "",
+      uploadAccreditationDocuments: "",
+    },
+    // accreditationDocument: "",
+  });
 
-  const [addVehicle, setAddVehicle] = useState({
+  /**
+   * add vehicle state and its error state
+   */
+  const [addVehicle, setAddVehicle] = useState<any>({
     registrationNumber: "",
     registrationExpiry: "",
     vinNumber: "",
@@ -198,6 +259,29 @@ const AddSupplier = () => {
     insuranceStatus: "",
     situation: "",
     truckOdometer: "",
+  });
+  const [addVehicleError, setAddVehicleError] = useState<any>({
+    registrationNumberError: "",
+    registrationExpiryError: "",
+    vinNumberError: "",
+    vehicleManufacturerError: "",
+    vehicleModelError: "",
+    vehicleTypeError: "",
+    typeOfTrailerError: "",
+    stateOfRegistrationError: "",
+    engineNumberError: "",
+    compliancePlateError: "",
+    registrationStatusError: "",
+    insuranceCompanyNameError: "",
+    policyNumberError: "",
+    vehicleInsuranceStartDateError: "",
+    renewalDateError: "",
+    dateValidUntilError: "",
+    daysLeftError: "",
+    insuranceCoverageError: "",
+    insuranceStatusError: "",
+    situationError: "",
+    truckOdometerError: "",
   });
 
   const [addDriver, setAddDriver] = useState<any>({
@@ -301,13 +385,20 @@ const AddSupplier = () => {
 
   const handleSubmit = async () => {
     if (buttonState === step1Btn) {
+      // Check validation and get error status
+      const hasErrors = checkValidationForAddSupplier();
+      if (hasErrors) {
+        alert("Please fix the validation errors before submitting.");
+        return;
+      }
       const response: any = await addSupplierIntoSupplier(
         addSupplier,
         token || ""
       );
       if (response?.status === 200) {
         alert("Supplier Added Successfully");
-        seButtonState(step2Btn);
+        // Uncomment the following line when whole code of add supplier is finished
+        // seButtonState(step2Btn);
         // Auto scroll up for better user experience
         window.scrollTo({
           top: 0,
@@ -317,7 +408,23 @@ const AddSupplier = () => {
         alert("Something went Wrong! Please try again later.");
       }
     } else if (buttonState === step2Btn) {
-      seButtonState(step3Btn);
+      // Check validation and get error status
+      const hasErrors = checkValidationForAddVehicle();
+      if (hasErrors) {
+        alert("Please fix the validation errors before submitting.");
+        return;
+      }
+      const response: any = await addVehicleIntoSupplier(
+        addVehicle,
+        token || ""
+      );
+      if (response?.status === 200) {
+        alert("Vehicle Added Successfully");
+      } else {
+        alert("Something went Wrong! Please try again later.");
+      }
+      // Uncomment the following line when whole code of add vehicle is finished
+      // seButtonState(step3Btn);
       window.scrollTo({
         top: 0,
         behavior: "smooth", // for smooth scrolling
@@ -334,6 +441,107 @@ const AddSupplier = () => {
       }
     }
   };
+  /**
+   *
+   * @returns true if error occurred in add supplier state otherwise false
+   */
+  const checkValidationForAddSupplier = () => {
+    const newErrors = { ...addSupplierError };
+    let hasErrors = false;
+
+    Object.keys(addSupplier).forEach((key) => {
+      if (
+        key !== "companySuiteDetails" &&
+        key !== "warehouseDetails" &&
+        key !== "insuranceDetails" &&
+        key !== "accreditationDocument" &&
+        key !== "alcoholPolicy" &&
+        key !== "drug" &&
+        key !== "fatiquePolicyPresentationSystem" &&
+        key !== "gpsSnapshot" &&
+        key !== "procedure" &&
+        key !== "riskManagementPolicy" &&
+        key !== "speedPolicy" &&
+        key !== "workHealthSafetyPolicy" &&
+        key !== "certificateOfAccreditation"
+      ) {
+        if (typeof addSupplier[key] === "object" && addSupplier[key] !== null) {
+          // Ensure that nested error objects are initialized
+          newErrors[key + "Error"] = newErrors[key + "Error"] || {};
+
+          // Handle nested objects with a different logic
+          Object.keys(addSupplier[key]).forEach((nestedKey) => {
+            const nestedKeyPath = `${key}Error.${nestedKey}`;
+
+            if (
+              !addSupplier[key][nestedKey] ||
+              addSupplier[key][nestedKey] === undefined
+            ) {
+              newErrors[key + "Error"][
+                nestedKey
+              ] = `${correctAddSupplierStateName(
+                nestedKey
+              )} is required in ${correctAddSupplierStateName(key)}`;
+              hasErrors = true;
+            } else {
+              newErrors[key + "Error"][nestedKey] = "";
+            }
+          });
+        } else {
+          // Handle non-nested fields
+          // Auto scroll up for better user experience
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth", // for smooth scrolling
+          });
+
+          if (!addSupplier[key]) {
+            newErrors[key + "Error"] = `${correctAddSupplierStateName(
+              key
+            )} is required`;
+            hasErrors = true;
+          } else {
+            newErrors[key + "Error"] = "";
+          }
+        }
+      }
+    });
+
+    setAddSupplierError(newErrors);
+    // Return the error status
+    return hasErrors;
+  };
+  /**
+   *
+   * @returns true if error occurred in add vehicle state otherwise false
+   */
+  const checkValidationForAddVehicle = () => {
+    const newErrors = { ...addVehicleError };
+    let hasErrors = false;
+    Object.keys(addVehicle).forEach((key) => {
+      // Handle non-nested fields
+      // Auto scroll up for better user experience
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth", // for smooth scrolling
+      });
+
+      if (key !== "document") {
+        if (!addVehicle[key]) {
+          newErrors[key + "Error"] = `${correctAddVehicleStateName(
+            key
+          )} is required`;
+          hasErrors = true;
+        } else {
+          newErrors[key + "Error"] = "";
+        }
+      }
+    });
+    setAddVehicleError(newErrors);
+    // Return the error status
+    return hasErrors;
+  };
+
   return (
     <>
       {/* <Header /> */}
@@ -346,11 +554,15 @@ const AddSupplier = () => {
             <NestedAddSupplier
               addSupplier={addSupplier}
               setAddSupplier={setAddSupplier}
+              error={addSupplierError}
+              setError={setAddSupplierError}
             />
           ) : buttonState === step2Btn ? (
             <NestedAddVehicle
               addVehicle={addVehicle}
               setAddVehicle={setAddVehicle}
+              error={addVehicleError}
+              setError={setAddVehicleError}
             />
           ) : buttonState === step3Btn ? (
             <NestedAddDriver

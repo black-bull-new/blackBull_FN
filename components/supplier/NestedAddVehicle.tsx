@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Progressbar from "../Progressbar";
 import Maininputfield from "../Maininputfield";
 import DateWithoutDropdown from "../DateWithoutDropdown";
@@ -8,8 +8,9 @@ import DropDownMap from "../DropDownMap";
 import StatusChip from "../StatusChip";
 
 export const NestedAddVehicle = (props: any) => {
-  const { addVehicle, setAddVehicle } = props;
+  const { addVehicle, setAddVehicle, error, setError } = props;
   console.log("AddVehicle", addVehicle);
+
   return (
     <div>
       <div>
@@ -33,7 +34,14 @@ export const NestedAddVehicle = (props: any) => {
                 ...addVehicle,
                 registrationNumber: e.target.value,
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  registrationNumberError: "",
+                });
+              }
             }}
+            errorMessage={error.registrationNumberError}
           />
           <DateWithoutDropdown
             label="Registration Expiry"
@@ -44,7 +52,14 @@ export const NestedAddVehicle = (props: any) => {
                 ...addVehicle,
                 registrationExpiry: e.target.value,
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  registrationExpiryError: "",
+                });
+              }
             }}
+            errorMessage={error.registrationExpiryError}
           />
           <Maininputfield
             label="VIN No."
@@ -55,7 +70,14 @@ export const NestedAddVehicle = (props: any) => {
                 ...addVehicle,
                 vinNumber: e.target.value,
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  vinNumberError: "",
+                });
+              }
             }}
+            errorMessage={error.vinNumberError}
           />
           <Maininputfield
             label="Vehicle Manufacturer"
@@ -66,7 +88,14 @@ export const NestedAddVehicle = (props: any) => {
                 ...addVehicle,
                 vehicleManufacturer: e.target.value,
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  vehicleManufacturerError: "",
+                });
+              }
             }}
+            errorMessage={error.vehicleManufacturerError}
           />
           <Maininputfield
             label="Vehicle Model"
@@ -77,7 +106,14 @@ export const NestedAddVehicle = (props: any) => {
                 ...addVehicle,
                 vehicleModel: e.target.value,
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  vehicleModelError: "",
+                });
+              }
             }}
+            errorMessage={error.vehicleModelError}
           />
           <Maindatefield
             label="Vehicle Type"
@@ -88,7 +124,14 @@ export const NestedAddVehicle = (props: any) => {
                 ...addVehicle,
                 vehicleType: e.target.value,
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  vehicleTypeError: "",
+                });
+              }
             }}
+            errorMessage={error.vehicleTypeError}
           />
           <Maindatefield
             label="Type of Trailer"
@@ -99,7 +142,14 @@ export const NestedAddVehicle = (props: any) => {
                 ...addVehicle,
                 typeOfTrailer: e.target.value,
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  typeOfTrailerError: "",
+                });
+              }
             }}
+            errorMessage={error.typeOfTrailerError}
           />
           <Maindatefield
             label="State of Registration"
@@ -110,7 +160,14 @@ export const NestedAddVehicle = (props: any) => {
                 ...addVehicle,
                 stateOfRegistration: e.target.value,
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  stateOfRegistrationError: "",
+                });
+              }
             }}
+            errorMessage={error.stateOfRegistrationError}
           />
           <Maininputfield
             label="Engine Number"
@@ -121,7 +178,14 @@ export const NestedAddVehicle = (props: any) => {
                 ...addVehicle,
                 engineNumber: e.target.value,
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  engineNumberError: "",
+                });
+              }
             }}
+            errorMessage={error.engineNumberError}
           />
           <Maininputfield
             label="Compliance Plate"
@@ -132,7 +196,14 @@ export const NestedAddVehicle = (props: any) => {
                 ...addVehicle,
                 compliancePlate: e.target.value,
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  compliancePlateError: "",
+                });
+              }
             }}
+            errorMessage={error.compliancePlateError}
           />
           <Maindatefield
             label="Registration Status"
@@ -143,7 +214,14 @@ export const NestedAddVehicle = (props: any) => {
                 ...addVehicle,
                 registrationStatus: e.target.value,
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  registrationStatusError: "",
+                });
+              }
             }}
+            errorMessage={error.registrationStatusError}
           />
         </div>
         <div className="mt-4 w-fit">
@@ -172,7 +250,14 @@ export const NestedAddVehicle = (props: any) => {
                 ...addVehicle,
                 insuranceCompanyName: e.target.value,
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  insuranceCompanyNameError: "",
+                });
+              }
             }}
+            errorMessage={error.insuranceCompanyNameError}
           />
           <Maininputfield
             label="Policy Number"
@@ -183,7 +268,14 @@ export const NestedAddVehicle = (props: any) => {
                 ...addVehicle,
                 policyNumber: e.target.value,
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  policyNumberError: "",
+                });
+              }
             }}
+            errorMessage={error.policyNumberError}
           />
           <DateWithoutDropdown
             label="Vehicle Insurance Start Date"
@@ -194,7 +286,14 @@ export const NestedAddVehicle = (props: any) => {
                 ...addVehicle,
                 vehicleInsuranceStartDate: e.target.value,
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  vehicleInsuranceStartDateError: "",
+                });
+              }
             }}
+            errorMessage={error.vehicleInsuranceStartDateError}
           />
           <DateWithoutDropdown
             label="Renewal Date"
@@ -205,7 +304,14 @@ export const NestedAddVehicle = (props: any) => {
                 ...addVehicle,
                 renewalDate: e.target.value,
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  renewalDateError: "",
+                });
+              }
             }}
+            errorMessage={error.renewalDateError}
           />
           <DateWithoutDropdown
             label="Date Valid Until"
@@ -216,38 +322,40 @@ export const NestedAddVehicle = (props: any) => {
                 ...addVehicle,
                 dateValidUntil: e.target.value,
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  dateValidUntilError: "",
+                });
+              }
             }}
+            errorMessage={error.dateValidUntilError}
           />
 
           <Maininputfield
             label="Days Left"
-            value={addVehicle.daysLeft}
+            value={addVehicle.daysLeft === undefined ? "" : addVehicle.daysLeft}
             className="w-full"
             onChange={(e: any) => {
-              // setAddVehicle({
-              //   ...addVehicle,
-              //   daysLeft: parseInt(e.target.value),
-              // });
               // regex for only accept integer values
-              const regex = /^-?\d+$/;
+              const regex = /^-?\d*$/; // Allow an empty string or any integer
               if (!regex.test(e.target.value)) {
-                // setError({
-                //   ...error,
-                //   abnNumberError: "Please enter only numbers",
-                // });
-              } else {
-                setAddVehicle({
-                  ...addVehicle,
-                  daysLeft:
-                    e.target.value === ""
-                      ? undefined
-                      : Number(e.target.value),
+                setError({
+                  ...error,
+                  daysLeftError: "Please enter only numbers",
                 });
-                // if (e.target.value.length > 0) {
-                //   setError({ ...error, abnNumberError: "" });
-                // }
+              } else {
+                setAddVehicle((prevVehicle: any) => {
+                  const newDaysLeft =
+                    e.target.value === "" ? undefined : Number(e.target.value);
+                  return { ...prevVehicle, daysLeft: newDaysLeft };
+                });
+                if (e.target.value.length > 0) {
+                  setError({ ...error, daysLeftError: "" });
+                }
               }
             }}
+            errorMessage={error.daysLeftError}
           />
 
           <DropDownMap
@@ -259,7 +367,14 @@ export const NestedAddVehicle = (props: any) => {
                 ...addVehicle,
                 insuranceCoverage: e.target.value,
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  insuranceCoverageError: "",
+                });
+              }
             }}
+            errorMessage={error.insuranceCoverageError}
           />
           <DropDownMap
             label="Insurance Status"
@@ -270,7 +385,14 @@ export const NestedAddVehicle = (props: any) => {
                 ...addVehicle,
                 insuranceStatus: e.target.value,
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  insuranceStatusError: "",
+                });
+              }
             }}
+            errorMessage={error.insuranceStatusError}
           />
           <DropDownMap
             label="Situation"
@@ -281,7 +403,14 @@ export const NestedAddVehicle = (props: any) => {
                 ...addVehicle,
                 situation: e.target.value,
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  situationError: "",
+                });
+              }
             }}
+            errorMessage={error.situationError}
           />
         </div>
         <h4 className="text-black font-semibold text-sm my-4">
@@ -296,8 +425,15 @@ export const NestedAddVehicle = (props: any) => {
                 ...addVehicle,
                 truckOdometer: e.target.value,
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  truckOdometerError: "",
+                });
+              }
             }}
             className="w-full"
+            errorMessage={error.truckOdometerError}
           />
         </div>
         <h3 className="text-black w-full mb-4 font-semibold mt-8">

@@ -9,8 +9,9 @@ import FileUpload from "../FileUpload";
 
 export const NestedAddSupplier = (props: any) => {
   const [selectedData, setSelectedData] = useState();
-  const { addSupplier, setAddSupplier } = props;
+  const { addSupplier, setAddSupplier, error, setError } = props;
   console.log("addSupplier", addSupplier);
+  console.log("error in add supplier", error);
   return (
     <div className="">
       <div className="bg-white mr-4 flex justify-between items-center rounded-md">
@@ -45,7 +46,11 @@ export const NestedAddSupplier = (props: any) => {
                   ...addSupplier,
                   companyName: e.target.value,
                 });
+                if (e.target.value.length > 0) {
+                  setError({ ...error, companyNameError: "" });
+                }
               }}
+              errorMessage={error.companyNameError}
             />
             <Maininputfield
               label="Trading Name"
@@ -56,7 +61,11 @@ export const NestedAddSupplier = (props: any) => {
                   ...addSupplier,
                   tradingName: e.target.value,
                 });
+                if (e.target.value.length > 0) {
+                  setError({ ...error, tradingNameError: "" });
+                }
               }}
+              errorMessage={error.tradingNameError}
             />
             <Maininputfield
               label="ABN"
@@ -67,7 +76,11 @@ export const NestedAddSupplier = (props: any) => {
                   ...addSupplier,
                   abn: e.target.value,
                 });
+                if (e.target.value.length > 0) {
+                  setError({ ...error, abnError: "" });
+                }
               }}
+              errorMessage={error.abnError}
             />
             <Maininputfield
               label="Legal Name"
@@ -78,7 +91,11 @@ export const NestedAddSupplier = (props: any) => {
                   ...addSupplier,
                   legalName: e.target.value,
                 });
+                if (e.target.value.length > 0) {
+                  setError({ ...error, legalNameError: "" });
+                }
               }}
+              errorMessage={error.legalNameError}
             />
             <Maininputfield
               label="Website Address"
@@ -89,7 +106,11 @@ export const NestedAddSupplier = (props: any) => {
                   ...addSupplier,
                   website: e.target.value,
                 });
+                if (e.target.value.length > 0) {
+                  setError({ ...error, websiteError: "" });
+                }
               }}
+              errorMessage={error.websiteError}
             />
             <Maininputfield
               label="Supplier ID"
@@ -118,7 +139,17 @@ export const NestedAddSupplier = (props: any) => {
                     contactPerson: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    opreationsError: {
+                      ...error.opreationsError,
+                      contactPerson: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={error.opreationsError?.contactPerson}
             />
             <Maininputfield
               label="Designation"
@@ -132,7 +163,17 @@ export const NestedAddSupplier = (props: any) => {
                     desgination: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    opreationsError: {
+                      ...error.opreationsError,
+                      desgination: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={error.opreationsError?.desgination}
             />
             <Maininputfield
               label="Contact Number"
@@ -146,7 +187,17 @@ export const NestedAddSupplier = (props: any) => {
                     number: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    opreationsError: {
+                      ...error.opreationsError,
+                      number: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={error.opreationsError?.number}
             />
             <Maininputfield
               label="Operations Email"
@@ -160,7 +211,17 @@ export const NestedAddSupplier = (props: any) => {
                     opreationEmail: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    opreationsError: {
+                      ...error.opreationsError,
+                      opreationEmail: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={error.opreationsError?.opreationEmail}
             />
           </div>
           <h3 className="text-black font-semibold text-sm my-4">Compliance</h3>
@@ -177,7 +238,17 @@ export const NestedAddSupplier = (props: any) => {
                     contactPerson: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    complianceError: {
+                      ...error.complianceError,
+                      contactPerson: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={error.complianceError?.contactPerson}
             />
             <Maininputfield
               label="Designation"
@@ -191,7 +262,17 @@ export const NestedAddSupplier = (props: any) => {
                     desgination: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    complianceError: {
+                      ...error.complianceError,
+                      desgination: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={error.complianceError?.desgination}
             />
             <Maininputfield
               label="Contact Number"
@@ -205,7 +286,17 @@ export const NestedAddSupplier = (props: any) => {
                     number: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    complianceError: {
+                      ...error.complianceError,
+                      number: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={error.complianceError?.number}
             />
             <Maininputfield
               label="Compliance Email"
@@ -219,7 +310,17 @@ export const NestedAddSupplier = (props: any) => {
                     complianceEmail: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    complianceError: {
+                      ...error.complianceError,
+                      complianceEmail: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={error.complianceError?.complianceEmail}
             />
           </div>
           <h3 className="text-black font-semibold text-sm my-4">Admin</h3>
@@ -236,7 +337,17 @@ export const NestedAddSupplier = (props: any) => {
                     contactPerson: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    adminError: {
+                      ...error.adminError,
+                      contactPerson: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={error.adminError?.contactPerson}
             />
             <Maininputfield
               label="Designation"
@@ -250,7 +361,17 @@ export const NestedAddSupplier = (props: any) => {
                     desgination: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    adminError: {
+                      ...error.adminError,
+                      desgination: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={error.adminError?.desgination}
             />
             <Maininputfield
               label="Contact Number"
@@ -264,7 +385,17 @@ export const NestedAddSupplier = (props: any) => {
                     number: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    adminError: {
+                      ...error.adminError,
+                      number: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={error.adminError?.number}
             />
             <Maininputfield
               label="Admin Email"
@@ -278,7 +409,17 @@ export const NestedAddSupplier = (props: any) => {
                     adminEmail: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    adminError: {
+                      ...error.adminError,
+                      adminEmail: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={error.adminError?.adminEmail}
             />
           </div>
           <h3 className="text-black font-semibold text-sm my-4">Dispatch</h3>
@@ -295,7 +436,17 @@ export const NestedAddSupplier = (props: any) => {
                     contactPerson: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    dispatchError: {
+                      ...error.dispatchError,
+                      contactPerson: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={error.dispatchError?.contactPerson}
             />
             <Maininputfield
               label="Designation"
@@ -309,7 +460,17 @@ export const NestedAddSupplier = (props: any) => {
                     desgination: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    dispatchError: {
+                      ...error.dispatchError,
+                      desgination: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={error.dispatchError?.desgination}
             />
             <Maininputfield
               label="Contact Number"
@@ -323,7 +484,17 @@ export const NestedAddSupplier = (props: any) => {
                     number: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    dispatchError: {
+                      ...error.dispatchError,
+                      number: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={error.dispatchError?.number}
             />
             <Maininputfield
               label="Dispatch Email"
@@ -337,7 +508,17 @@ export const NestedAddSupplier = (props: any) => {
                     dispatchEmail: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    dispatchError: {
+                      ...error.dispatchError,
+                      dispatchEmail: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={error.dispatchError?.dispatchEmail}
             />
           </div>
           <h3 className="text-black font-semibold text-sm my-4">
@@ -355,7 +536,14 @@ export const NestedAddSupplier = (props: any) => {
                   ...addSupplier,
                   invoicePreferences: e.target.value,
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    invoicePreferencesError: "",
+                  });
+                }
               }}
+              errorMessage={error.invoicePreferencesError}
             />
           </div>
           <h3 className="text-black font-semibold text-sm my-4">
@@ -373,7 +561,14 @@ export const NestedAddSupplier = (props: any) => {
                   ...addSupplier,
                   invoiceCommunicationPreferences: e.target.value,
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    invoiceCommunicationPreferencesError: "",
+                  });
+                }
               }}
+              errorMessage={error.invoiceCommunicationPreferencesError}
             />
           </div>
           <div className="flex justify-end py-2 px-4">
@@ -455,7 +650,17 @@ export const NestedAddSupplier = (props: any) => {
                     accountName: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    bankDetailsError: {
+                      ...error.bankDetailsError,
+                      accountName: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={error.bankDetailsError?.accountName}
             />
             <Maininputfield
               label="Bank Name"
@@ -469,7 +674,17 @@ export const NestedAddSupplier = (props: any) => {
                     bankName: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    bankDetailsError: {
+                      ...error.bankDetailsError,
+                      bankName: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={error.bankDetailsError?.bankName}
             />
             <Maininputfield
               label="BSB"
@@ -483,7 +698,17 @@ export const NestedAddSupplier = (props: any) => {
                     bsb: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    bankDetailsError: {
+                      ...error.bankDetailsError,
+                      bsb: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={error.bankDetailsError?.bsb}
             />
             <Maininputfield
               label="Account Number"
@@ -497,7 +722,17 @@ export const NestedAddSupplier = (props: any) => {
                     accountNumber: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    bankDetailsError: {
+                      ...error.bankDetailsError,
+                      accountNumber: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={error.bankDetailsError?.accountNumber}
             />
           </div>
           <h2 className="text-black font-semibold mt-8 mb-4">
@@ -518,7 +753,17 @@ export const NestedAddSupplier = (props: any) => {
                     areaCovered: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    businessCoverageError: {
+                      ...error.businessCoverageError,
+                      areaCovered: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={error.businessCoverageError?.areaCovered}
             />
             <DropDownMap
               label="Business Operations"
@@ -534,7 +779,17 @@ export const NestedAddSupplier = (props: any) => {
                     businessOpreations: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    businessCoverageError: {
+                      ...error.businessCoverageError,
+                      businessOpreations: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={error.businessCoverageError?.businessOpreations}
             />
           </div>
           <h2 className="text-black font-semibold mt-8 mb-4">
@@ -669,7 +924,19 @@ export const NestedAddSupplier = (props: any) => {
                     accreditationNumber: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    certificateOfAccreditationError: {
+                      ...error.certificateOfAccreditationError,
+                      accreditationNumber: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={
+                error.certificateOfAccreditationError?.accreditationNumber
+              }
             />
 
             <DateWithoutDropdown
@@ -686,7 +953,19 @@ export const NestedAddSupplier = (props: any) => {
                     massManagementExpiryDate: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    certificateOfAccreditationError: {
+                      ...error.certificateOfAccreditationError,
+                      massManagementExpiryDate: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={
+                error.certificateOfAccreditationError?.massManagementExpiryDate
+              }
             />
             <DateWithoutDropdown
               label="Basic Fatigue Management Expiry Date"
@@ -702,7 +981,19 @@ export const NestedAddSupplier = (props: any) => {
                     basicFatigueExpiryDate: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    certificateOfAccreditationError: {
+                      ...error.certificateOfAccreditationError,
+                      basicFatigueExpiryDate: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={
+                error.certificateOfAccreditationError?.basicFatigueExpiryDate
+              }
             />
             <DateWithoutDropdown
               label="Dangerous Goods Expiry Date"
@@ -718,7 +1009,19 @@ export const NestedAddSupplier = (props: any) => {
                     dangerousGoodsExpiryDate: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    certificateOfAccreditationError: {
+                      ...error.certificateOfAccreditationError,
+                      dangerousGoodsExpiryDate: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={
+                error.certificateOfAccreditationError?.dangerousGoodsExpiryDate
+              }
             />
             <DateWithoutDropdown
               label="NHVAS Expiry Date"
@@ -732,7 +1035,19 @@ export const NestedAddSupplier = (props: any) => {
                     nhvassExpiryDate: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    certificateOfAccreditationError: {
+                      ...error.certificateOfAccreditationError,
+                      nhvassExpiryDate: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={
+                error.certificateOfAccreditationError?.nhvassExpiryDate
+              }
             />
             <DateWithoutDropdown
               label="HACCP Expiry Date"
@@ -746,7 +1061,19 @@ export const NestedAddSupplier = (props: any) => {
                     haccpExpiryDate: e.target.value,
                   },
                 });
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    certificateOfAccreditationError: {
+                      ...error.certificateOfAccreditationError,
+                      haccpExpiryDate: "",
+                    },
+                  });
+                }
               }}
+              errorMessage={
+                error.certificateOfAccreditationError?.haccpExpiryDate
+              }
             />
           </div>
           <div className="w-fit my-4">
@@ -1198,7 +1525,6 @@ export const NestedAddSupplier = (props: any) => {
                 });
               }}
             />
-
             <Maininputfield
               label="Sum Assured"
               value={addSupplier.insuranceDetails?.coc?.sumAssured}

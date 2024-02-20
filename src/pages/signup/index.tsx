@@ -88,10 +88,10 @@ const SignUp = () => {
         <div className="grid grid-cols-2 items-center">
           <form onSubmit={handleSubmit}>
             <div className="max-w-[440px] ml-auto mr-auto text-center pt-10">
-              <h1 className="font-bold text-3xl tracking-wide">
+              <h1 className="font-bold text-3xl tracking-wide text-black">
                 Join the Journey
               </h1>
-              <p className="mt-2">
+              <p className="mt-2 text-black">
                 Your route to hassle-free logistics begins here.
               </p>
               <div className="flex flex-col mt-11">
@@ -102,7 +102,7 @@ const SignUp = () => {
                     width={16}
                     height={16}
                   />
-                  <h1 className="text-left font-semibold">
+                  <h1 className="text-left font-semibold text-black">
                     Personal Information
                   </h1>
                 </div>
@@ -110,7 +110,7 @@ const SignUp = () => {
                   <InputField
                     type="text"
                     placeholder="First Name"
-                    className="bg-cool-gray pl-0"
+                    className="bg-cool-gray pl-0 text-black"
                     name={"firstName"}
                     id={"firstName"}
                     required={"required"}
@@ -125,7 +125,7 @@ const SignUp = () => {
                   <InputField
                     type="text"
                     placeholder="Last Name"
-                    className="bg-cool-gray pl-0"
+                    className="bg-cool-gray pl-0 text-black"
                     name={"lastName"}
                     id={"lastName"}
                     onBlur={handleBlur}
@@ -143,7 +143,7 @@ const SignUp = () => {
                   required={"required"}
                   type="text"
                   placeholder="Email"
-                  className="bg-cool-gray pl-0"
+                  className="bg-cool-gray pl-0 text-black"
                   name={"email"}
                   id={"email"}
                   src=""
@@ -158,7 +158,7 @@ const SignUp = () => {
                 <InputField
                   type={"number"}
                   placeholder="Contact Number"
-                  className="bg-cool-gray pl-0"
+                  className="bg-cool-gray pl-0 text-black"
                   name={"number"}
                   id={"number"}
                   src=""
@@ -178,7 +178,7 @@ const SignUp = () => {
                     width={16}
                     height={16}
                   />
-                  <h1 className="text-left font-semibold">
+                  <h1 className="text-left font-semibold text-black">
                     Personal Information
                   </h1>
                 </div>
@@ -186,7 +186,7 @@ const SignUp = () => {
                   <InputField
                     type="text"
                     placeholder="Designation"
-                    className="bg-cool-gray pl-0"
+                    className="bg-cool-gray pl-0 text-black"
                     name={"designation"}
                     id={"designation"}
                     // required={"required"}
@@ -200,7 +200,7 @@ const SignUp = () => {
                   <InputField
                     type="text"
                     placeholder="Company Name"
-                    className="bg-cool-gray pl-0"
+                    className="bg-cool-gray pl-0 text-black"
                     name={"companyName"}
                     id={"companyName"}
                     // required={"required"}
@@ -217,7 +217,7 @@ const SignUp = () => {
                   // required={"required"}
                   type="text"
                   placeholder="Email"
-                  className="bg-cool-gray pl-0"
+                  className="bg-cool-gray pl-0 text-black"
                   name={"profEmail"}
                   id={"profEmail"}
                   src=""
@@ -231,7 +231,7 @@ const SignUp = () => {
                 <InputField
                   type={"text"}
                   placeholder="Address"
-                  className="bg-cool-gray pl-0"
+                  className="bg-cool-gray pl-0 text-black"
                   name={"address"}
                   id={"address"}
                   src=""
