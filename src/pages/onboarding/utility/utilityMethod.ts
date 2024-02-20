@@ -138,3 +138,23 @@ export const correctVehicleStateName = (stateName: string): string => {
 
   return nameMapping[stateName] || stateName;
 };
+
+export const correctUserStateName = (stateName: string): string => {
+  const nameMapping: { [key: string]: string } = {
+    firstName: "First Name",
+    lastName: "Last Name",
+    displayName: "Display Name",
+    email: "Email",
+    number: "Number",
+    username: "Username",
+    domains: "Domains",
+    employeeId: "Employee Id",
+    accessLevel: "Access Level",
+    designation: "Designation",
+    role: "Role",
+    password: "Password",
+    confirmPassword: "Confirm Password",
+  };
+
+  return nameMapping[stateName] || stateName;
+};

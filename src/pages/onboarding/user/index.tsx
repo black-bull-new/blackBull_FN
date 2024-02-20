@@ -8,6 +8,7 @@ import PasswordField from "../../../../components/password-field/PasswordFlied";
 import Button from "../../../../components/Button";
 import { createUser } from "@/network-request/user/createUser";
 import { getCookie } from "cookies-next";
+import { correctUserStateName } from "../utility/utilityMethod";
 
 const User = () => {
   const [selectedData, setSelectedData] = useState("");
@@ -81,7 +82,7 @@ const User = () => {
         key !== "temporaryPassword"
       ) {
         if (!user[key]) {
-          newErrors[key + "Error"] = `${key} is required`;
+          newErrors[key + "Error"] = `${correctUserStateName(key)} is required`;
           hasErrors = true;
         } else {
           newErrors[key + "Error"] = "";

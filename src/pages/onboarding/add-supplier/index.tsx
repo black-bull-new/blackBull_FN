@@ -20,7 +20,7 @@ const AddSupplier = () => {
   const step1Btn = "Proceed to Add Vehicle";
   const step2Btn = "Proceed to Add Driver";
   const step3Btn = "Submit";
-  const [buttonState, seButtonState] = useState(step1Btn);
+  const [buttonState, seButtonState] = useState(step2Btn);
 
   const [addSupplier, setAddSupplier] = useState<any>({
     companyName: "",
@@ -171,33 +171,61 @@ const AddSupplier = () => {
     },
   });
 
+  const [addVehicle, setAddVehicle] = useState({
+    registrationNumber: "",
+    registrationExpiry: "",
+    vinNumber: "",
+    vehicleManufacturer: "",
+    vehicleModel: "",
+    vehicleType: "",
+    typeOfTrailer: "",
+    stateOfRegistration: "",
+    engineNumber: "",
+    compliancePlate: "",
+    registrationStatus: "",
+    document: "",
+    insuranceCompanyName: "",
+    policyNumber: "",
+    vehicleInsuranceStartDate: "",
+    renewalDate: "",
+    dateValidUntil: "",
+    daysLeft: "",
+    insuranceCoverage: "",
+    insuranceStatus: "",
+    situation: "",
+    truckOdometer: "",
+  });
+
   const handleSubmit = async () => {
-    const response: any = await addSupplierIntoSupplier(addSupplier, token || "");
-    if (response?.status === 200) {
-      alert("Supplier Added Successfully");
-    } else {
-      alert("Something went Wrong! Please try again later.");
+    if (buttonState === step1Btn) {
+      const response: any = await addSupplierIntoSupplier(
+        addSupplier,
+        token || ""
+      );
+      if (response?.status === 200) {
+        alert("Supplier Added Successfully");
+        seButtonState(step2Btn);
+        // Auto scroll up for better user experience
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth", // for smooth scrolling
+        });
+      } else {
+        alert("Something went Wrong! Please try again later.");
+      }
+    } else if (buttonState === step2Btn) {
+      seButtonState(step3Btn);
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth", // for smooth scrolling
+      });
+    } else if (buttonState === step3Btn) {
+      seButtonState(step1Btn);
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth", // for smooth scrolling
+      });
     }
-    // buttonState === step1Btn
-    //   ? (seButtonState(step2Btn),
-    //     // Auto scroll up for better user experience
-    //     window.scrollTo({
-    //       top: 0,
-    //       behavior: "smooth", // for smooth scrolling
-    //     }))
-    //   : buttonState === step2Btn
-    //   ? (seButtonState(step3Btn),
-    //     window.scrollTo({
-    //       top: 0,
-    //       behavior: "smooth", // for smooth scrolling
-    //     }))
-    //   : buttonState === step3Btn
-    //   ? (seButtonState(step1Btn),
-    //     window.scrollTo({
-    //       top: 0,
-    //       behavior: "smooth", // for smooth scrolling
-    //     }))
-    //   : null;
   };
   return (
     <>
@@ -213,7 +241,10 @@ const AddSupplier = () => {
               setAddSupplier={setAddSupplier}
             />
           ) : buttonState === step2Btn ? (
-            <NestedAddVehicle />
+            <NestedAddVehicle
+              addVehicle={addVehicle}
+              setAddVehicle={setAddVehicle}
+            />
           ) : buttonState === step3Btn ? (
             <NestedAddDriver />
           ) : null}

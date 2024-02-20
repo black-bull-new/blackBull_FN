@@ -109,6 +109,7 @@ const CreateVehicle = () => {
     // Check validation and get error status
     const hasErrors = checkValidation();
     console.log("Vehicle State : ", vehicleDetails);
+    console.log("Error State", error);
     if (hasErrors) {
       alert("Please fix the validation errors before submitting.");
       return;
@@ -154,13 +155,26 @@ const CreateVehicle = () => {
           behavior: "smooth", // for smooth scrolling
         });
 
-        if (!vehicleDetails[key]) {
-          newErrors[key + "Error"] = `${correctVehicleStateName(
-            key
-          )} is required`;
-          hasErrors = true;
-        } else {
-          newErrors[key + "Error"] = "";
+        if (
+          key !== "rentedCompanyName" &&
+          key !== "dateOfHire" &&
+          key !== "contractValidTill" &&
+          key !== "term" &&
+          key !== "weeklyRent" &&
+          key !== "tax" &&
+          key !== "paymentMethod" &&
+          key !== "bankName" &&
+          key !== "accountNumber" &&
+          key !== "accountName"
+        ) {
+          if (!vehicleDetails[key]) {
+            newErrors[key + "Error"] = `${correctVehicleStateName(
+              key
+            )} is required`;
+            hasErrors = true;
+          } else {
+            newErrors[key + "Error"] = "";
+          }
         }
       }
     });
