@@ -7,6 +7,7 @@ import Header from "../../components/Header";
 import Sidebar from "../../components/Sidebar";
 import Footer from "../../components/Footer";
 import { useRouter } from "next/router";
+import RedirectUrl from "./redirect";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(
@@ -29,7 +30,6 @@ export default function App({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       {currentUrl === "/login" ||
         currentUrl === "/signup" ||
-        currentUrl === "/redirect" ||
         currentUrl === "/subscription-plan" ||
         currentUrl === "/" ||
         currentUrl === "/login/update-password" ||

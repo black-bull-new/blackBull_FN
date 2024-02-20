@@ -9,77 +9,78 @@ const DRIVER_BASE_URL = 'http://localhost:1800/api/d1'
 // }
 
 
-export const addDriver = async (data:any, token:string)=>{
-    try {     
-        const response = await axios.post(`${DRIVER_BASE_URL}/add-driver`,data, {
+export const addDriver = async (data: any, token: string) => {
+    try {
+        const response = await axios.post(`${DRIVER_BASE_URL}/add-driver`, data, {
             headers: {
-                'Content-Type': 'application/json', 
-                'Authorization': `Basic ${token}`  
+                'Content-Type': 'application/json',
+                'Authorization': `Basic ${token}`
             }
         })
+        console.log({ response })
         return response
     } catch (error) {
-        console.log('error', error) 
+        console.log('error', error)
     }
 }
 
 
 
-export const getAllDrives = async(token:string)=>{
+export const getAllDrives = async (token: string) => {
     try {
-        const response = await axios.get(`${DRIVER_BASE_URL}/drivers`,{
-            headers:{
+        const response = await axios.get(`${DRIVER_BASE_URL}/drivers`, {
+            headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Basic ${token}`
             }
         })
         return response.data
     } catch (error) {
-        console.log('error', error) 
+        console.log('error', error)
     }
 }
 
 
-export const getDriver = async(token:string, id:string)=>{
+export const getDriver = async (token: string, id: string) => {
     try {
-        const response = await axios.get(`${DRIVER_BASE_URL}/driver/${id}`,{
-            headers:{
+        const response = await axios.get(`${DRIVER_BASE_URL}/driver/${id}`, {
+            headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Basic ${token}`
             }
         })
         return response
     } catch (error) {
-        console.log('error', error) 
+        console.log('error', error)
     }
 }
 
-export const editDriver = async(token:string, id:string, data:any)=>{
+export const editDriver = async (token: string, id: string, data: any) => {
     try {
         const response = await axios.put(`${DRIVER_BASE_URL}/driver/${id}`, data, {
-            headers:{
+            headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Basic ${token}`
             }
         })
         return response
     } catch (error) {
-        console.log('error', error) 
+        console.log('error', error)
     }
 }
 
 
-export const deleteDriver = async(token:string, id:string)=>{
+export const deleteDriver = async (token: string, id: string) => {
     try {
-        const response = await axios.delete(`${DRIVER_BASE_URL}/driver/${id}`,{
-            headers:{
+        const response = await axios.delete(`${DRIVER_BASE_URL}/driver/${id}`, {
+            headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Basic ${token}`
             }
         })
         return response
     } catch (error) {
-        console.log('error', error) 
+        console.log('error', error)
     }
 }
 

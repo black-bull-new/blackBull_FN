@@ -8,8 +8,11 @@ import FileUpload from "../FileUpload";
 import Checkbox from "../Checkbox";
 import Button from "../Button";
 
-const NestedAddDriver = () => {
-    const [selectedData, setSelectedData] = useState();
+const NestedAddDriver = (props: any) => {
+  const [selectedData, setSelectedData] = useState();
+  const { addDriver, setAddDriver } = props;
+  console.log({ addDriver })
+
   return (
     <div>
       <div className="font-semibold text-xl mt-4 bg-white p-4 mr-4 rounded-md">
@@ -29,35 +32,78 @@ const NestedAddDriver = () => {
         <div className="grid grid-cols-3 gap-4 p-4">
           <Maininputfield
             label="First Name"
-            value={"Sanket"}
+            value={addDriver?.firstName}
             className="w-full"
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                firstName: e.target.value,
+              });
+            }}
           />
           <Maininputfield
             label="Middle Name"
-            value={"Raju"}
+            value={addDriver?.middleName}
             className="w-full"
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                middleName: e.target.value
+              })
+            }}
           />
           <Maininputfield
             label="Last Name"
-            value={"Salve"}
+            value={addDriver?.lastName}
             className="w-full"
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                lastName: e.target.value
+              })
+            }}
           />
 
-          <DateWithoutDropdown label="DOB" value="12/12/1984" />
+          <DateWithoutDropdown label="DOB" value={addDriver?.dateOfBirth}
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                dateOfBirth: e.target.value
+              })
+            }}
+          />
           <Maininputfield
             label="Email"
-            value={"sanket.r.salve@gmail.com"}
+            value={addDriver?.email}
             className="w-full"
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                email: e.target.value
+              })
+            }}
           />
           <Maininputfield
             label="Mobile"
-            value={"+91 9584586482"}
+            value={addDriver?.mobile}
             className="w-full"
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                mobile: e.target.value
+              })
+            }}
           />
           <Maininputfield
             label="Nationality"
-            value={"Indian"}
+            value={addDriver?.nationality}
             className="w-full"
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                nationality: e.target.value
+              })
+            }}
           />
         </div>
         <h2 className="text-black font-semibold p-4 mt-6">
@@ -69,18 +115,45 @@ const NestedAddDriver = () => {
         <div className="grid grid-cols-3 gap-4 p-4">
           <Maininputfield
             label="House Number"
-            value={"12/20"}
+            value={addDriver?.currentAddress?.houseNumber}
             className="w-full"
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                currentAddress: {
+                  ...addDriver.currentAddress,
+                  houseNumber: e.target.value
+                }
+              })
+            }}
           />
           <Maininputfield
             label="Street"
-            value={"Payne Street"}
+            value={addDriver?.currentAddress?.street}
             className="w-full"
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                currentAddress: {
+                  ...addDriver.currentAddress,
+                  street: e.target.value
+                }
+              })
+            }}
           />
           <Maininputfield
             label="Suburb"
-            value={"Caulfield"}
+            value={addDriver?.currentAddress?.suburb}
             className="w-full"
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                currentAddress: {
+                  ...addDriver.currentAddress,
+                  suburb: e.target.value
+                }
+              })
+            }}
           />
 
           <DropDownMap
@@ -88,14 +161,44 @@ const NestedAddDriver = () => {
             mapOption={stateCollection}
             selectedData={selectedData}
             setSelectedData={setSelectedData}
+            value={addDriver?.currentAddress?.state}
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                currentAddress: {
+                  ...addDriver.currentAddress,
+                  state: e.target.value
+                }
+              })
+            }}
           />
           <DropDownMap
             label="Country"
             mapOption={countryCollection}
             selectedData={selectedData}
             setSelectedData={setSelectedData}
+            value={addDriver?.currentAddress?.country}
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                currentAddress: {
+                  ...addDriver.currentAddress,
+                  country: e.target.value
+                }
+              })
+            }}
           />
-          <Maininputfield label="Post Code" value={"3161"} className="w-full" />
+          <Maininputfield label="Post Code" value={addDriver?.currentAddress?.pincode}
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                currentAddress: {
+                  ...addDriver.currentAddress,
+                  pincode: e.target.value
+                }
+              })
+            }}
+            className="w-full" />
         </div>
         <Checkbox
           className="!pl-4"
@@ -108,18 +211,45 @@ const NestedAddDriver = () => {
         <div className="grid grid-cols-3 gap-4 p-4">
           <Maininputfield
             label="House Number"
-            value={"10/15"}
+            value={addDriver?.permanentAddress?.houseNumber}
             className="w-full"
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                permanentAddress: {
+                  ...addDriver.permanentAddress,
+                  houseNumber: e.target.value
+                }
+              })
+            }}
           />
           <Maininputfield
             label="Street"
-            value={"57 Waverley Rd"}
             className="w-full"
+            value={addDriver?.permanentAddress?.street}
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                permanentAddress: {
+                  ...addDriver.permanentAddress,
+                  street: e.target.value
+                }
+              })
+            }}
           />
           <Maininputfield
             label="Suburb"
-            value={"Caulfield"}
             className="w-full"
+            value={addDriver?.permanentAddress?.suburb}
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                permanentAddress: {
+                  ...addDriver.permanentAddress,
+                  suburb: e.target.value
+                }
+              })
+            }}
           />
 
           <DropDownMap
@@ -127,14 +257,44 @@ const NestedAddDriver = () => {
             mapOption={stateCollection}
             selectedData={selectedData}
             setSelectedData={setSelectedData}
+            value={addDriver?.permanentAddress?.state}
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                permanentAddress: {
+                  ...addDriver.permanentAddress,
+                  state: e.target.value
+                }
+              })
+            }}
           />
           <DropDownMap
             label="Country"
             mapOption={countryCollection}
             selectedData={selectedData}
             setSelectedData={setSelectedData}
+            value={addDriver?.permanentAddress?.country}
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                permanentAddress: {
+                  ...addDriver.permanentAddress,
+                  country: e.target.value
+                }
+              })
+            }}
           />
-          <Maininputfield label="Post Code" value={"3145"} className="w-full" />
+          <Maininputfield label="Post Code" value={addDriver?.permanentAddress?.pincode}
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                permanentAddress: {
+                  ...addDriver.permanentAddress,
+                  pincode: e.target.value
+                }
+              })
+            }}
+            className="w-full" />
         </div>
         <h2 className="text-black font-semibold p-4 mt-6">
           Emergency Contact Information
@@ -142,18 +302,45 @@ const NestedAddDriver = () => {
         <div className="grid grid-cols-3 gap-4 p-4">
           <Maininputfield
             label="Contact Name"
-            value={"Jaxon Cashin"}
+            value={addDriver?.emergencyContactInformation?.contactName}
             className="w-full"
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                emergencyContactInformation: {
+                  ...addDriver.emergencyContactInformation,
+                  contactName: e.target.value
+                }
+              })
+            }}
           />
           <Maininputfield
             label="Contact Numbere"
-            value={"0491 570 156"}
+            value={addDriver?.emergencyContactInformation?.contactNumber}
             className="w-full"
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                emergencyContactInformation: {
+                  ...addDriver.emergencyContactInformation,
+                  contactNumber: e.target.value
+                }
+              })
+            }}
           />
           <Maininputfield
             label="Relationship"
-            value={"Brother"}
+            value={addDriver?.emergencyContactInformation?.relationship}
             className="w-full"
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                emergencyContactInformation: {
+                  ...addDriver.emergencyContactInformation,
+                  relationship: e.target.value
+                }
+              })
+            }}
           />
         </div>
         <h2 className="text-black font-semibold p-4 mt-6">
@@ -165,18 +352,45 @@ const NestedAddDriver = () => {
         <div className="grid grid-cols-3 gap-4 p-4">
           <Maininputfield
             label="Pervious Employer"
-            value={"Dominic Jensen"}
+            value={addDriver?.employmentHistory?.previousEmployer}
             className="w-full"
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                employmentHistory: {
+                  ...addDriver.employmentHistory,
+                  previousEmployer: e.target.value
+                }
+              })
+            }}
           />
           <Maininputfield
             label="Years Of Experience"
-            value={"2.5yrs"}
+            value={addDriver?.employmentHistory?.yearsOfExperience}
             className="w-full"
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                employmentHistory: {
+                  ...addDriver.employmentHistory,
+                  yearsOfExperience: e.target.value
+                }
+              })
+            }}
           />
           <Maininputfield
             label="Reason for leaving"
-            value={"NA"}
+            value={addDriver?.employmentHistory?.reasonOfLeaving}
             className="w-full"
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                employmentHistory: {
+                  ...addDriver.employmentHistory,
+                  reasonOfLeaving: e.target.value
+                }
+              })
+            }}
           />
         </div>
         <h3 className="text-black font-semibold text-sm pl-4 text-blueGrey-900">
@@ -185,23 +399,59 @@ const NestedAddDriver = () => {
         <div className="grid grid-cols-3 gap-4 p-4">
           <Maininputfield
             label="Company Name"
-            value={"Jasper Dyson Pvt. Ltd."}
             className="w-full"
+            value={addDriver?.employmentHistory?.companyName}
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                employmentHistory: {
+                  ...addDriver.employmentHistory,
+                  companyName: e.target.value
+                }
+              })
+            }}
           />
           <Maininputfield
             label="Reference (Contact Name)"
-            value={"Jasper Dyson"}
+            value={addDriver?.employmentHistory?.referenceContactName}
             className="w-full"
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                employmentHistory: {
+                  ...addDriver.employmentHistory,
+                  referenceContactName: e.target.value
+                }
+              })
+            }}
           />
           <Maininputfield
             label="Reference (Email ID)"
-            value={"jasper.dyson@outlook.com"}
+            value={addDriver?.employmentHistory?.referenceEmailId}
             className="w-full"
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                employmentHistory: {
+                  ...addDriver.employmentHistory,
+                  referenceEmailId: e.target.value
+                }
+              })
+            }}
           />
           <Maininputfield
             label="Reference (Contact Number)"
-            value={"0749519434"}
+            value={addDriver?.employmentHistory?.referenceContactNumber}
             className="w-full"
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                employmentHistory: {
+                  ...addDriver.employmentHistory,
+                  referenceContactNumber: e.target.value
+                }
+              })
+            }}
           />
         </div>
         <div className="flex justify-end py-2 px-4">
@@ -214,39 +464,106 @@ const NestedAddDriver = () => {
         <div className="grid grid-cols-3 gap-4 p-4">
           <Maininputfield
             label="Licence Numbere"
-            value={"504984"}
             className="w-full"
+            value={addDriver?.licenseDetails?.licenceNumber}
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                licenseDetails: {
+                  ...addDriver.licenseDetails,
+                  licenceNumber: e.target.value
+                }
+              })
+            }}
           />
           <Maininputfield
             label="Licence Card Number"
-            value={"A07G5N47"}
             className="w-full"
+            value={addDriver?.licenseDetails?.licenseCardNumber}
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                licenseDetails: {
+                  ...addDriver.licenseDetails,
+                  licenseCardNumber: e.target.value
+                }
+              })
+            }}
           />
           <DropDownMap
             label="Licence Type"
-            selectedData={selectedData}
-            setSelectedData={selectedData}
+            selectedData={addDriver}
+            setSelectedData={setSelectedData}
             mapOption={licenceTypes}
+            value={addDriver?.licenseDetails?.licenseType}
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                licenseDetails: {
+                  ...addDriver.licenseDetails,
+                  licenseType: e.target.value
+                }
+              })
+            }}
           />
           <DropDownMap
             label="State of Issue"
             selectedData={stateCollection}
-            setSelectedData={selectedData}
+            setSelectedData={setSelectedData}
             mapOption={licenceTypes}
+            value={addDriver?.licenseDetails?.state}
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                licenseDetails: {
+                  ...addDriver.licenseDetails,
+                  state: e.target.value
+                }
+              })
+            }}
           />
-          <DateWithoutDropdown label="Date Of Issue" value="12/12/2020" />
-          <DateWithoutDropdown label="Expiry Date" value="12/10/2025" />
+          <DateWithoutDropdown label="Date Of Issue" value={addDriver?.licenseDetails?.dateOfIssue}
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                licenseDetails: {
+                  ...addDriver.licenseDetails,
+                  dateOfIssue: e.target.value
+                }
+              })
+            }}
+          />
+          <DateWithoutDropdown label="Expiry Date" value={addDriver?.licenseDetails?.expiryDate}
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                licenseDetails: {
+                  ...addDriver.licenseDetails,
+                  expiryDate: e.target.value
+                }
+              })
+            }}
+          />
           <Maininputfield
             label="Days left for renewal"
-            value={"50"}
+            value={addDriver?.licenseDetails?.daysLeftForRenewal}
             className="w-full"
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                licenseDetails: {
+                  ...addDriver.licenseDetails,
+                  daysLeftForRenewal: e.target.value
+                }
+              })
+            }}
           />
           <FileUpload file="Choose License Document " />
         </div>
-        <h2 className="text-black font-semibold p-4 mt-4">
+        {/* <h2 className="text-black font-semibold p-4 mt-4">
           Employment History
-        </h2>
-        <div className="grid grid-cols-3 gap-4 p-4">
+        </h2> */}
+        {/* <div className="grid grid-cols-3 gap-4 p-4">
           <Maininputfield
             label="Pervious Employer"
             value={"Dominic Jensen"}
@@ -262,16 +579,23 @@ const NestedAddDriver = () => {
             value={"NA"}
             className="w-full"
           />
-        </div>
+        </div> */}
         <h2 className="text-black font-semibold p-4 mt-4">
           Special Driving Licence
         </h2>
         <div className="grid grid-cols-3 gap-4 p-4">
           <DropDownMap
             label="Special Driving Licence"
-            selectedData={selectedData}
-            setSelectedData={setSelectedData}
+            selectedData={addDriver}
+            setSelectedData={setAddDriver}
             mapOption={drivingLicenceCollection}
+            value={addDriver?.specialDrivingLicense}
+            onChange={(e: any) => {
+              setAddDriver({
+                ...addDriver,
+                specialDrivingLicense: e.target.value
+              })
+            }}
           />
         </div>
         <div className="mb-4 mt-8">
@@ -333,143 +657,143 @@ const NestedAddDriver = () => {
 export default NestedAddDriver;
 
 const documentCollectionDataDriver = [
-    {
-      documentType: "Visa Status",
-      uploadedDocument: "visa-status.pdf",
-      uploadDate: "20/12/2023",
-    },
-    {
-      documentType: "Driver License (Front) ",
-      uploadedDocument: "-",
-      uploadDate: "-",
-    },
-    {
-      documentType: "Driver License (Back) ",
-      uploadedDocument: "-",
-      uploadDate: "-",
-    },
-    {
-      documentType: "License History",
-      uploadedDocument: "-",
-      uploadDate: "-",
-    },
-    {
-      documentType: "Police Verification",
-      uploadedDocument: "police-verification.pdf",
-      uploadDate: "20/12/2023",
-    },
-    {
-      documentType: "Passport (Front)",
-      uploadedDocument: "-",
-      uploadDate: "-",
-    },
-    {
-      documentType: "Passport (Back)",
-      uploadedDocument: "-",
-      uploadDate: "-",
-    },
-    {
-      documentType: "Health Insurance",
-      uploadedDocument: "-",
-      uploadDate: "-",
-    },
-    {
-      documentType: "Driver Certificate",
-      uploadedDocument: "-",
-      uploadDate: "-",
-    },
-    {
-      documentType: "Fitness",
-      uploadedDocument: "-",
-      uploadDate: "-",
-    },
-    {
-      documentType: "Drug Test",
-      uploadedDocument: "-",
-      uploadDate: "-",
-    },
-  ];
+  {
+    documentType: "Visa Status",
+    uploadedDocument: "visa-status.pdf",
+    uploadDate: "20/12/2023",
+  },
+  {
+    documentType: "Driver License (Front) ",
+    uploadedDocument: "-",
+    uploadDate: "-",
+  },
+  {
+    documentType: "Driver License (Back) ",
+    uploadedDocument: "-",
+    uploadDate: "-",
+  },
+  {
+    documentType: "License History",
+    uploadedDocument: "-",
+    uploadDate: "-",
+  },
+  {
+    documentType: "Police Verification",
+    uploadedDocument: "police-verification.pdf",
+    uploadDate: "20/12/2023",
+  },
+  {
+    documentType: "Passport (Front)",
+    uploadedDocument: "-",
+    uploadDate: "-",
+  },
+  {
+    documentType: "Passport (Back)",
+    uploadedDocument: "-",
+    uploadDate: "-",
+  },
+  {
+    documentType: "Health Insurance",
+    uploadedDocument: "-",
+    uploadDate: "-",
+  },
+  {
+    documentType: "Driver Certificate",
+    uploadedDocument: "-",
+    uploadDate: "-",
+  },
+  {
+    documentType: "Fitness",
+    uploadedDocument: "-",
+    uploadDate: "-",
+  },
+  {
+    documentType: "Drug Test",
+    uploadedDocument: "-",
+    uploadDate: "-",
+  },
+];
 
 
 const documentCollectionHeadingDriver = [
-    {
-      heading: "Document type",
-    },
-    {
-      heading: "Attach files",
-    },
-    {
-      heading: "Uploaded Documents",
-    },
-    {
-      heading: "Date of upload",
-    },
-  ];
+  {
+    heading: "Document type",
+  },
+  {
+    heading: "Attach files",
+  },
+  {
+    heading: "Uploaded Documents",
+  },
+  {
+    heading: "Date of upload",
+  },
+];
 
 const drivingLicenceCollection = [
-    {
-      value: "Dangerous Goods",
-    },
-  
-    {
-      value: "item1",
-    },
-    {
-      value: "item2",
-    },
-  ];
+  {
+    value: "Dangerous Goods",
+  },
+
+  {
+    value: "item1",
+  },
+  {
+    value: "item2",
+  },
+];
 
 
 const countryCollection = [
-    {
-      value: "Australia",
-    },
-    {
-      value: "item1",
-    },
-    {
-      value: "item2",
-    },
-    {
-      value: "item3",
-    },
-    {
-      value: "item1",
-    },
-    {
-      value: "item1",
-    },
-  ];
+  {
+    value: "Australia",
+  },
+  {
+    value: "item1",
+  },
+  {
+    value: "item2",
+  },
+  {
+    value: "item3",
+  },
+  {
+    value: "item1",
+  },
+  {
+    value: "item1",
+  },
+];
 
 const licenceTypes = [
-    {
-      value: "HR (Heavy Rigid Licence)",
-    },
-    {
-      value: "item1",
-    },
-    {
-      value: "item2",
-    },
-  ];
+  {
+    value: "HR (Heavy Rigid Licence)",
+  },
+  {
+    value: "item1",
+  },
+  {
+    value: "item2",
+  },
+];
 
 const stateCollection = [
-    {
-      value: "Victoria",
-    },
-    {
-      value: "items1",
-    },
-    {
-      value: "items2",
-    },
-    {
-      value: "items3",
-    },
-    {
-      value: "items4",
-    },
-    {
-      value: "items5",
-    },
-  ];
+  {
+    value: "Victoria",
+  },
+  {
+    value: "items1",
+  },
+  {
+    value: "items2",
+  },
+  {
+    value: "items3",
+  },
+  {
+    value: "items4",
+  },
+  {
+    value: "items5",
+  },
+];

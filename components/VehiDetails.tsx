@@ -18,7 +18,7 @@ const VehiDetails = () => {
   const [vehicleList, setvehicleList] = React.useState([]);
 
   const fetchingVehicleList = async () => {
-   const token = getCookie("token", {httpOnly:true});
+    const token = getCookie("token", { httpOnly: true });
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_APP_API_URL_V1}/vehicle`,
@@ -30,7 +30,8 @@ const VehiDetails = () => {
         }
       );
       const data = await res.json();
-      setvehicleList(data);
+      const result = data?.data
+      setvehicleList(result);
     } catch (error) {
       console.log(error);
     }
@@ -39,7 +40,7 @@ const VehiDetails = () => {
   React.useEffect(() => {
     fetchingVehicleList();
   }, []);
-  console.log("vehicleList", vehicleList);
+  console.log("vehicleList", { vehicleList });
   return (
     <>
       <div className="mr-4">
@@ -102,29 +103,30 @@ const VehiDetails = () => {
                 })}
               </div>
               <div className="grid text-center grid-cols-[12%_16%_12%_12%_12%_12%_12%_12%] p-4 border">
-                {vehicleDetailsCollection.map((items, ind) => {
+                {vehicleList?.map((item: any, index: number) => {
+                  console.log({ item })
                   return (
                     <>
-                      <div key={ind} className="mb-4" style={{ color: "#000" }}>
-                        {items.regoNumber}
+                      <div key={index} className="mb-4" style={{ color: "#000" }}>
+                        {item?.registrationNumber}
                       </div>
-                      <div key={ind} className="mb-4" style={{ color: "#000" }}>
-                        {items.type}
+                      <div className="mb-4" style={{ color: "#000" }}>
+                        {item.vehicleType}
                       </div>
-                      <div key={ind} className="mb-4" style={{ color: "#000" }}>
-                        {items.category}
+                      <div className="mb-4" style={{ color: "#000" }}>
+                        {"None"}
                       </div>
-                      <div key={ind} className="mb-4" style={{ color: "#000" }}>
-                        {items.expiry}
+                      <div className="mb-4" style={{ color: "#000" }}>
+                        {item?.registrationExpiry}
                       </div>
-                      <div key={ind} className="mb-4" style={{ color: "#000" }}>
-                        {items.regoDoc}
+                      <div className="mb-4" style={{ color: "#000" }}>
+                        {item?.vehicleDocumentStatus}
                       </div>
-                      <div key={ind} className="mb-4" style={{ color: "#000" }}>
-                        {items.status}
+                      <div className="mb-4" style={{ color: "#000" }}>
+                        {item?.registrationStatus}
                       </div>
-                      <div key={ind} className="mb-4" style={{ color: "#000" }}>
-                        {items.complaints}
+                      <div className="mb-4" style={{ color: "#000" }}>
+                        {item?.compliancePlate}
                       </div>
                       <div
                         className="mb-6 flex gap-2 justify-center"
@@ -252,7 +254,7 @@ const VehiDetails = () => {
                 <Button
                   text="Download Template"
                   className="!bg-transparent border !text-[#000] !py-[6px] !px-4"
-                  // onClick={() => setLink(false)}
+                // onClick={() => setLink(false)}
                 />
                 <Button
                   text="Upload"

@@ -243,7 +243,7 @@ const CreateDriver = () => {
       return;
     }
     const response = await addDriver(driverDetails, token || "");
-    if (response?.status == 200) {
+    if (response?.data?.data) {
       router.push("/onboarding/driver-list");
       alert("Driver added successfully");
     } else {

@@ -14,13 +14,17 @@ import { NestedAddVehicle } from "../../../../components/supplier/NestedAddVehic
 import NestedAddDriver from "../../../../components/supplier/NestedAddDriver";
 import { getCookie } from "cookies-next";
 import { addSupplierIntoSupplier } from "@/network-request/supplier/supplier";
+import { addSupplierDriver } from "@/network-request/supplier/driver";
 const AddSupplier = () => {
   const token = getCookie("token");
   const [selectedData, setSelectedData] = useState();
   const step1Btn = "Proceed to Add Vehicle";
   const step2Btn = "Proceed to Add Driver";
   const step3Btn = "Submit";
-  const [buttonState, seButtonState] = useState(step2Btn);
+  const [buttonState, seButtonState] = useState(step3Btn);
+
+  const currentDate = new Date();
+  console.log({ currentDate });
 
   const [addSupplier, setAddSupplier] = useState<any>({
     companyName: "",
@@ -196,6 +200,105 @@ const AddSupplier = () => {
     truckOdometer: "",
   });
 
+  const [addDriver, setAddDriver] = useState<any>({
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    dateOfBirth: "",
+    avatar: "",
+    email: "",
+    mobile: "",
+    nationality: "",
+    currentAddress: {
+      houseNumber: "",
+      street: "",
+      suburb: "",
+      state: "",
+      country: "",
+      pincode: "",
+    },
+    permanentAddress: {
+      houseNumber: "",
+      street: "",
+      suburb: "",
+      state: "",
+      country: "",
+      pincode: "",
+    },
+    emergencyContactInformation: {
+      contactName: "",
+      contactNumber: "",
+      relationship: ""
+    },
+    employmentHistory: [{
+      previousEmployer: "",
+      yearsOfExperience: "",
+      reasonOfLeaving: "",
+      companyName: "",
+      referenceContactName: "",
+      referenceEmailId: "",
+      referenceContactNumber: ""
+    }],
+    licenseDetails: {
+      licenceNumber: "",
+      licenseCardNumber: "",
+      licenseType: "",
+      state: "",
+      dateOfIssue: "",
+      expiryDate: "",
+      daysLeftForRenewal: "",
+      documents: []
+    },
+    specialDrivingLicense: "",
+
+    visaStatus: {
+      type: "visa-status",
+      uploadDate: "20/02/2024"
+    },
+    driverLicenseFront: {
+      type: "visa-status",
+      uploadDate: "20/02/2024"
+    },
+    driverLicenseBack: {
+      type: "visa-status",
+      uploadDate: "20/02/2024"
+    },
+    licenseHistory: {
+      type: "visa-status",
+      uploadDate: "20/02/2024"
+    },
+    policeVerification: {
+      type: "visa-status",
+      uploadDate: "20/02/2024"
+    },
+    passportFront: {
+      type: "visa-status",
+      uploadDate: "20/02/2024"
+    },
+    passportBack: {
+      type: "visa-status",
+      uploadDate: "20/02/2024"
+    },
+    healthInsurance: {
+      type: "visa-status",
+      uploadDate: "20/02/2024"
+    },
+    driverCertificate: {
+      type: "visa-status",
+      uploadDate: "20/02/2024"
+    },
+    fitness: {
+      type: "visa-status",
+      uploadDate: "20/02/2024"
+    },
+    drugTest: {
+      type: "visa-status",
+      uploadDate: "20/02/2024"
+    },
+  })
+
+  console.log({ addDriver })
+
   const handleSubmit = async () => {
     if (buttonState === step1Btn) {
       const response: any = await addSupplierIntoSupplier(
@@ -220,11 +323,15 @@ const AddSupplier = () => {
         behavior: "smooth", // for smooth scrolling
       });
     } else if (buttonState === step3Btn) {
-      seButtonState(step1Btn);
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth", // for smooth scrolling
-      });
+      const response: any = await addSupplierDriver(addDriver, token || "");
+      console.log({ response })
+      if (response.state === 200) {
+        seButtonState(step1Btn);
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth", // for smooth scrolling
+        });
+      }
     }
   };
   return (
@@ -246,7 +353,10 @@ const AddSupplier = () => {
               setAddVehicle={setAddVehicle}
             />
           ) : buttonState === step3Btn ? (
-            <NestedAddDriver />
+            <NestedAddDriver
+              addDriver={addDriver}
+              setAddDriver={setAddDriver}
+            />
           ) : null}
 
           {/* create and save button */}

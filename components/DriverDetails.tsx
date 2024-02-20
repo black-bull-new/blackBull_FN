@@ -103,10 +103,10 @@ const DriverDetails = () => {
                       <p className="mb-4">{item?.firstName}</p>
                       <p className="mb-4">{item?.lastName}</p>
                       <p className="mb-4">
-                        {item?.licenseDetails?.licenseNumber}
+                        {item?.licenseDetails?.licenseCardNumber}
                       </p>
+                      <p className="mb-4">{item?.licenseHistory.type}</p>
                       <p className="mb-4">{item?.licenseDetails?.expiryDate}</p>
-                      <p className="mb-4">{item?.licenseDetails?.state}</p>
                       <p className="mb-4">{item?.licenseDetails?.state}</p>
                       <p className="mb-4">No Data</p>
                       <p className="mb-4">No Data</p>
@@ -118,7 +118,6 @@ const DriverDetails = () => {
                           width={18}
                           height={18}
                           onClick={() => {
-
                             router.push({
                               pathname: "/onboarding/edit-driver",
                               query: { id: item?._id },
