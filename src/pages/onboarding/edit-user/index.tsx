@@ -16,6 +16,7 @@ import { correctUserStateName } from "../utility/utilityMethod";
 import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
 import { uploadOnboardingPorfile } from "@/network-request/onboarding-user";
+import { regexOfEmail, regexOfPhoneNumber } from "../utility/commonRegex";
 const EditUser = () => {
   const [selectedData, setSelectedData] = useState("");
   const token = getCookie("token");
@@ -66,7 +67,7 @@ const EditUser = () => {
 
     if (response?.status == 200) {
       const data = response?.data;
-      console.log({ data })
+      console.log({ data });
 
       setUser({
         ...user,
@@ -111,19 +112,27 @@ const EditUser = () => {
       return;
     }
     const [profileUrl] = await Promise.all([
-      Promise.all(Object.values(selectedProfile)?.map(imageInfo => uploadOnboardingPorfile(imageInfo)))
-    ])
-    console.log({ profileUrl })
+      Promise.all(
+        Object.values(selectedProfile)?.map((imageInfo) =>
+          uploadOnboardingPorfile(imageInfo)
+        )
+      ),
+    ]);
+    console.log({ profileUrl });
 
     const customPayload = {
       ...user,
-      avatar: profileUrl[0]?.response
+      avatar: profileUrl[0]?.response,
     };
 
-    console.log({ customPayload })
+    console.log({ customPayload });
 
-    const response: any = await editUser(token as string, id as string, customPayload);
-    console.log("FINAL RESPONSE", { response })
+    const response: any = await editUser(
+      token as string,
+      id as string,
+      customPayload
+    );
+    console.log("FINAL RESPONSE", { response });
     if (response?.status === 200) {
       toast("User Updated Successfully", {
         icon: "👏",
@@ -207,9 +216,21 @@ const EditUser = () => {
     setRenderProfile
   );
 
-  console.log({ selectedProfile })
-  console.log(user?.avatar)
+  console.log({ selectedProfile });
+  console.log(user?.avatar);
+  function generateTemporaryPassword() {
+    const length = 6;
+    const charset =
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-+=<>?/{}";
+    let password = "";
 
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * charset.length);
+      password += charset.charAt(randomIndex);
+    }
+
+    return password;
+  }
   return (
     <>
       <div className="flex bg-[#E9EFFF]">
@@ -341,17 +362,23 @@ const EditUser = () => {
                   label="Email Address"
                   value={user.email}
                   className="w-full"
-                  onChange={(e: any) => {
-                    setUser({
-                      ...user,
-                      email: e.target.value,
-                    });
-                    if (e.target.value.length > 0) {
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    const inputValue = e.target.value;
+                    if (!regexOfEmail.test(inputValue)) {
                       setError({
                         ...error,
-                        emailError: "",
+                        emailError: "Please enter a valid email address",
+                      });
+                    } else {
+                      setError({
+                        ...error,
+                        emailError: "", // Clear the error when the input is valid
                       });
                     }
+                    setUser({
+                      ...user,
+                      email: inputValue,
+                    });
                   }}
                   errorMessage={error.emailError}
                 />
@@ -359,17 +386,23 @@ const EditUser = () => {
                   label="Contact Number"
                   value={user.number}
                   className="w-full"
-                  onChange={(e: any) => {
-                    setUser({
-                      ...user,
-                      number: e.target.value,
-                    });
-                    if (e.target.value.length > 0) {
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    const inputValue = e.target.value;
+                    if (!regexOfPhoneNumber.test(inputValue)) {
                       setError({
                         ...error,
-                        numberError: "",
+                        numberError: "Please enter a valid phone number",
+                      });
+                    } else {
+                      setError({
+                        ...error,
+                        numberError: "", // Clear the error when the input is valid
                       });
                     }
+                    setUser({
+                      ...user,
+                      number: inputValue,
+                    });
                   }}
                   errorMessage={error.numberError}
                 />
@@ -510,10 +543,20 @@ const EditUser = () => {
                 content="Auto create a temporary password"
                 checked={user.temporaryPassword}
                 className="w-full"
-                onChange={(e: any) => {
-                  setUser({
-                    ...user,
-                    temporaryPassword: e.target.checked,
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  const isChecked = e.target.checked;
+
+                  setUser((prevUser: any) => {
+                    let newPassword = isChecked
+                      ? generateTemporaryPassword()
+                      : "";
+
+                    return {
+                      ...prevUser,
+                      temporaryPassword: isChecked,
+                      password: newPassword,
+                      confirmPassword: newPassword,
+                    };
                   });
                 }}
               />
