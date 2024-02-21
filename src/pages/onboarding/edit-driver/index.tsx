@@ -20,9 +20,6 @@ const EditDriver = () => {
   const token = getCookie("token");
   const router = useRouter();
   const id = router.query.id;
- 
-  
-
 
   const [driverDetails, setDriverDetails] = useState({
     firstName: "",
@@ -205,8 +202,6 @@ useEffect(()=>{
 
   const handleSubmit = async () => {
 
-    
-
     const response = await editDriver(token as string, id as string, driverDetails);
     if (response?.status == 200) {
       console.log(response, "response");
@@ -216,7 +211,6 @@ useEffect(()=>{
       alert("Something went wrong");
     }
     
-
   };
 
   return (

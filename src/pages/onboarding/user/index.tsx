@@ -115,15 +115,14 @@ const User = () => {
   };
 
   const handleOnChangeProfile = (e: any) => {
-    // const file: File | undefined = e.target.files?.[0]; 
+    // const file: File | undefined = e.target.files?.[0];
     // setProfile(file);
 
     const file = e.target.files?.[0];
-      if (file) {
-        setProfile(file); // Update the profile state with the file name
-        // Perform any other actions you need with the file
-      }
-
+    if (file) {
+      setProfile(file); // Update the profile state with the file name
+      // Perform any other actions you need with the file
+    }
 
     // if (file && divRef.current) {
     //   const currentDivRef = divRef.current as HTMLInputElement;
@@ -162,7 +161,7 @@ const User = () => {
             </div>
             <div ref={divRef} className="relative w-fit">
               <Image
-                src= {profile!=='' ? `/${profile}` : "/driverImage.svg"}
+                src={profile !== "" ? `/${profile}` : "/driverImage.svg"}
                 alt="driver"
                 width={100}
                 height={100}
