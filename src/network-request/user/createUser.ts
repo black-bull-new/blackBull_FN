@@ -37,28 +37,52 @@ export const getAllUser = async (token: string) => {
 
 export const getUser = async (token: string, id: string) => {
   try {
-      const response = await axios.get(`${customerBaseUrl}/onboarding-list/${id}`, {
-          headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Basic ${token}`
-          }
-      })
-      return response
+    const response = await axios.get(
+      `${customerBaseUrl}/onboarding-list/${id}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ${token}`,
+        },
+      }
+    );
+    return response;
   } catch (error) {
-      console.log('error', error)
+    console.log("error", error);
   }
-}
+};
 
 export const editUser = async (token: string, id: string, data: any) => {
   try {
-      const response = await axios.put(`${customerBaseUrl}/onboarding-list/${id}`, data, {
-          headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Basic ${token}`
-          }
-      })
-      return response
+    const response = await axios.put(
+      `${customerBaseUrl}/onboarding-list/${id}`,
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ${token}`,
+        },
+      }
+    );
+    return response;
   } catch (error) {
-      console.log('error', error)
+    console.log("error", error);
   }
-}
+};
+
+export const deleteUser = async (token: string, id: string) => {
+  try {
+    const response = await axios.delete(
+      `${customerBaseUrl}/onboarding-list/${id}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ${token}`,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log("error", error);
+  }
+};

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { deleteDriver, getAllDrives } from "@/network-request/driver/driverApi";
 import { getCookie } from "cookies-next";
-import { getAllUser } from "@/network-request/user/createUser";
+import { deleteUser, getAllUser } from "@/network-request/user/createUser";
 import CommonUI from "@/pages/onboarding/utility/CommonUI";
 
 const UserDetails = () => {
@@ -27,7 +27,7 @@ const UserDetails = () => {
   }, []);
 
   const handleDelete = async () => {
-    const response = await deleteDriver(token || "", driveToDelete);
+    const response = await deleteUser(token || "", driveToDelete);
     if (response) {
       setDriverToDelete("");
       setDelete(false);

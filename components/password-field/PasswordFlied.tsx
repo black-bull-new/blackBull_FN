@@ -89,18 +89,27 @@ const PasswordField = ({
                 className="pl-[15px] text-black bg-[#EFF2F3] outline-none w-[300px] placeholder:text-[12px] text-[12px] font-medium leading-none"
                 placeholder={"Confirm Password"}
                 value={state.confirmPassword}
-                onChange={(e: any) => {
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  const confirmValue = e.target.value;
+              
                   setState({
                     ...state,
-                    confirmPassword: e.target.value,
+                    confirmPassword: confirmValue,
                   });
-                  if (e.target.value.length > 0) {
+              
+                  // Check if confirm password matches the password
+                  if (confirmValue !== state.password) {
+                    setError({
+                      ...error,
+                      confirmPasswordError: "Passwords do not match",
+                    });
+                  } else {
                     setError({
                       ...error,
                       confirmPasswordError: "",
                     });
                   }
-                }}
+                }} 
               />
               <Image
                 src={eyeIconConfirm}
