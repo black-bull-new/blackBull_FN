@@ -1351,7 +1351,7 @@ const CreateDriver = () => {
                 })}
               </div>
               <div className="grid grid-cols-5 p-4 rounded-md text-black text-center items-center">
-                {documentCollectionData.map((value, index) => {
+                {documentCollectionData?.map((value, index) => {
                   return (
                     <>
                       <div className="mb-6">{value.documentType}</div>

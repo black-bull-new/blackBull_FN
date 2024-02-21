@@ -602,7 +602,7 @@ const CreateVehicle = () => {
                     />
                   </>
                 )}
-                <FileUpload file="Choose Rego Document" />
+                <FileUpload file="Choose Multiple Document" />
 
                 {/* <Mainselectfield label="Registration Status" option="Active" /> */}
               </div>

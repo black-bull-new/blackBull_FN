@@ -2,38 +2,19 @@ import Image from "next/image";
 import Progressbar from "../../../../components/Progressbar";
 import Maininputfield from "../../../../components/Maininputfield";
 import DropDownMap from "../../../../components/DropDownMap";
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Checkbox from "../../../../components/Checkbox";
 import PasswordField from "../../../../components/password-field/PasswordFlied";
 import Button from "../../../../components/Button";
 import { createUser } from "@/network-request/user/createUser";
 import { getCookie } from "cookies-next";
 import { correctUserStateName } from "../utility/utilityMethod";
+import { uploadOnboardingPorfile } from "@/network-request/onboarding-user";
 
 const User = () => {
   const [selectedData, setSelectedData] = useState("");
   const token = getCookie("token");
-  const [profile, setProfile] = useState<any>("");
-  const divRef: any = useRef(null);
 
-  const [user, setUser] = useState<any>({
-    firstName: "",
-    lastName: "",
-    displayName: "",
-    email: "",
-    number: "",
-    username: "",
-    domains: "",
-    employeeId: "",
-    accessLevel: "",
-    designation: "",
-    role: "",
-    temporaryPassword: false,
-    password: "",
-    confirmPassword: "",
-    requirePassword: false,
-    sendPassword: false,
-  });
 
   const [error, setError] = useState<any>({
     firstNameError: "",
@@ -50,23 +31,6 @@ const User = () => {
     passwordError: "",
     confirmPasswordError: "",
   });
-  console.log("user", user);
-
-  const createUserHandler = async () => {
-    // Check validation and get error status
-    const hasErrors = checkValidation();
-    console.log("Errors", error);
-    if (hasErrors) {
-      alert("Please fix the validation errors before submitting.");
-      return;
-    }
-    const response: any = await createUser(user, token || "");
-    if (response?.status === 200) {
-      alert("User Added Successfully");
-    } else {
-      alert("Something went Wrong! Please try again later.");
-    }
-  };
 
   const checkValidation = () => {
     const newErrors = { ...error };
@@ -82,7 +46,8 @@ const User = () => {
       if (
         key !== "requirePassword" &&
         key !== "sendPassword" &&
-        key !== "temporaryPassword"
+        key !== "temporaryPassword" &&
+        key !== "avatar"
       ) {
         if (!user[key]) {
           newErrors[key + "Error"] = `${correctUserStateName(key)} is required`;
@@ -96,51 +61,84 @@ const User = () => {
     // Return the error status
     return hasErrors;
   };
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [profile, setProfile] = React.useState("");
+  const [selectedProfile, setSelectedProfile] = React.useState("");
 
-  const handleImageClick = () => {
-    // Trigger file input click when the image is clicked
-    const currentDivRef = divRef.current;
-    if (currentDivRef) {
-      const inputElement = document.createElement("input");
-      inputElement.type = "file";
-      inputElement.accept = "image/*"; // Add your desired file types
-      inputElement.style.display = "none";
-      inputElement.addEventListener("change", handleOnChangeProfile);
-
-      // Use type assertions to ensure TypeScript understands the type
-      (currentDivRef as HTMLDivElement).appendChild(inputElement);
-      inputElement.click();
-      (currentDivRef as HTMLDivElement).removeChild(inputElement); // Remove the input element after click
+  const handleUploadClick: any = () => {
+    if (fileInputRef.current) {
+      fileInputRef?.current?.click();
     }
   };
 
-  const handleOnChangeProfile = (e: any) => {
-    // const file: File | undefined = e.target.files?.[0]; 
-    // setProfile(file);
-
-    const file = e.target.files?.[0];
-      if (file) {
-        setProfile(file); // Update the profile state with the file name
-        // Perform any other actions you need with the file
-      }
-
-
-    // if (file && divRef.current) {
-    //   const currentDivRef = divRef.current as HTMLInputElement;
-    //   if (currentDivRef) {
-    //     currentDivRef.value = file.name;
-    //     console.log("File Path", file.name);
-    //   }
-    // }
+  const handleFileChange = (setSide: any, setPreview: any) => (event: any) => {
+    const selectedFile = event.target.files && event.target.files[0];
+    setSide({ file: selectedFile });
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader?.result! as any);
+      };
+      reader.readAsDataURL(selectedFile);
+    }
   };
 
-  console.log("profile", profile);
+  const handleProfileFileChange = handleFileChange(
+    setSelectedProfile,
+    setProfile
+  );
 
-  // const handleOnChangeProfile = (e: any) => {
-  //   const filePath = e.target.files[0]; // Access the file path
-  //   divRef.current.filePath = filePath;
-  //   console.log("File Path", filePath);
-  // };
+  console.log({ selectedProfile })
+
+  const [user, setUser] = useState<any>({
+    firstName: "",
+    lastName: "",
+    displayName: "",
+    email: "",
+    number: "",
+    username: "",
+    domains: "",
+    avatar: "",
+    employeeId: "",
+    accessLevel: "",
+    designation: "",
+    role: "",
+    temporaryPassword: false,
+    password: "",
+    confirmPassword: "",
+    requirePassword: false,
+    sendPassword: false,
+  });
+
+  console.log({ user })
+
+  const createUserHandler = async () => {
+    // Check validation and get error status
+    const hasErrors = checkValidation();
+    console.log("Errors", error);
+    if (hasErrors) {
+      alert("Please fix the validation errors before submitting.");
+      return;
+    }
+    const [profileUrl] = await Promise.all([
+      Promise.all(Object.values(selectedProfile)?.map(imageInfo => uploadOnboardingPorfile(imageInfo)))
+    ])
+    console.log({ profileUrl })
+
+    const customPayload = {
+      ...user,
+      avatar: profileUrl[0]?.response
+    };
+
+    console.log({ customPayload })
+
+    const response: any = await createUser(customPayload, token || "");
+    if (response?.status === 200) {
+      alert("User Added Successfully");
+    } else {
+      alert("Something went Wrong! Please try again later.");
+    }
+  };
 
   return (
     <>
@@ -160,16 +158,49 @@ const User = () => {
             <div className="mx-2">
               <Progressbar />
             </div>
-            <div ref={divRef} className="relative w-fit">
-              <Image
-                src= {profile!=='' ? `/${profile}` : "/driverImage.svg"}
-                alt="driver"
-                width={100}
-                height={100}
-                onClick={handleImageClick}
-              />
-              <span className="w-6 h-6 rounded-full bg-accent3 block text-white flex justify-center items-end text-xl absolute right-2 bottom-2">
-                +
+            <div className="relative w-fit">
+              <span className="flex flex-row justify-center my-4">
+                <span className="mb-4 text-center flex justify-center items-center">
+                  <label htmlFor="profilelabel">
+                    <div
+                      className="w-[100px]  rounded-full h-[100px] cursor-pointer"
+                      onChange={handleUploadClick}
+                    >
+                      {profile ? (
+                        <div className="w-full h-full">
+                          <Image
+                            src={profile}
+                            alt="driver"
+                            width={100}
+                            className="w-[100px] h-[100px] border rounded-full"
+                            height={100}
+                          />
+                        </div>
+                      ) : (
+                        <><Image
+                          src="/driverImage.svg"
+                          alt="driver"
+                          width={100}
+                          height={100}
+                          className="w-[100px] h-[100px]"
+                        />
+                          <span className="w-6 h-6 rounded-full bg-accent3 block text-white flex justify-center items-end text-xl absolute right-2 bottom-6">
+                            +
+                          </span></>
+                      )}
+                    </div>
+                  </label>
+                  <span className="text-sm">
+                    {" "}
+                    <input
+                      id="profilelabel"
+                      type="file"
+                      style={{ display: "none" }}
+                      ref={fileInputRef}
+                      onChange={(e) => handleProfileFileChange(e)}
+                    />
+                  </span>
+                </span>
               </span>
             </div>
             <div className="mt-4">
