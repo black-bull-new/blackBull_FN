@@ -2,7 +2,7 @@ import Image from "next/image";
 import Progressbar from "../../../../components/Progressbar";
 import Maininputfield from "../../../../components/Maininputfield";
 import DropDownMap from "../../../../components/DropDownMap";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Checkbox from "../../../../components/Checkbox";
 import PasswordField from "../../../../components/password-field/PasswordFlied";
 import Button from "../../../../components/Button";
@@ -15,6 +15,7 @@ import { getCookie } from "cookies-next";
 import { correctUserStateName } from "../utility/utilityMethod";
 import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
+import { uploadOnboardingPorfile } from "@/network-request/onboarding-user";
 const EditUser = () => {
   const [selectedData, setSelectedData] = useState("");
   const token = getCookie("token");
@@ -31,6 +32,7 @@ const EditUser = () => {
     number: "",
     username: "",
     domains: "",
+    avatar: "",
     employeeId: "",
     accessLevel: "",
     designation: "",
@@ -57,13 +59,14 @@ const EditUser = () => {
     passwordError: "",
     confirmPasswordError: "",
   });
-  console.log("user", user);
+  console.log("user", { user });
 
   const getUserAndSettoState = async () => {
     const response = await getUser(token as string, id as string);
 
     if (response?.status == 200) {
       const data = response?.data;
+      console.log({ data })
 
       setUser({
         ...user,
@@ -72,7 +75,8 @@ const EditUser = () => {
         displayName: data?.data?.displayName,
         email: data?.data?.email,
         number: data?.data?.number,
-        username: data?.data?.number,
+        avatar: data?.data?.avatar,
+        username: data?.data?.username,
         domains: data?.data?.domains,
         employeeId: data?.data?.employeeId,
         accessLevel: data?.data?.accessLevel,
@@ -106,7 +110,20 @@ const EditUser = () => {
       });
       return;
     }
-    const response: any = await editUser(token as string, id as string, user);
+    const [profileUrl] = await Promise.all([
+      Promise.all(Object.values(selectedProfile)?.map(imageInfo => uploadOnboardingPorfile(imageInfo)))
+    ])
+    console.log({ profileUrl })
+
+    const customPayload = {
+      ...user,
+      avatar: profileUrl[0]?.response
+    };
+
+    console.log({ customPayload })
+
+    const response: any = await editUser(token as string, id as string, customPayload);
+    console.log("FINAL RESPONSE", { response })
     if (response?.status === 200) {
       toast("User Updated Successfully", {
         icon: "👏",
@@ -145,7 +162,8 @@ const EditUser = () => {
       if (
         key !== "requirePassword" &&
         key !== "sendPassword" &&
-        key !== "temporaryPassword"
+        key !== "temporaryPassword" &&
+        key !== "avatar"
       ) {
         if (!user[key]) {
           newErrors[key + "Error"] = `${correctUserStateName(key)} is required`;
@@ -160,49 +178,37 @@ const EditUser = () => {
     return hasErrors;
   };
 
-  const handleImageClick = () => {
-    // Trigger file input click when the image is clicked
-    const currentDivRef = divRef.current;
-    if (currentDivRef) {
-      const inputElement = document.createElement("input");
-      inputElement.type = "file";
-      inputElement.accept = "image/*"; // Add your desired file types
-      inputElement.style.display = "none";
-      inputElement.addEventListener("change", handleOnChangeProfile);
+  console.log("profile", { profile });
 
-      // Use type assertions to ensure TypeScript understands the type
-      (currentDivRef as HTMLDivElement).appendChild(inputElement);
-      inputElement.click();
-      (currentDivRef as HTMLDivElement).removeChild(inputElement); // Remove the input element after click
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [renderProfile, setRenderProfile] = React.useState("");
+  const [selectedProfile, setSelectedProfile] = React.useState("");
+
+  const handleUploadClick: any = () => {
+    if (fileInputRef.current) {
+      fileInputRef?.current?.click();
     }
   };
 
-  const handleOnChangeProfile = (e: any) => {
-    // const file: File | undefined = e.target.files?.[0];
-    // setProfile(file);
-
-    const file = e.target.files?.[0];
-    if (file) {
-      setProfile(file); // Update the profile state with the file name
-      // Perform any other actions you need with the file
+  const handleFileChange = (setSide: any, setPreview: any) => (event: any) => {
+    const selectedFile = event.target.files && event.target.files[0];
+    setSide({ file: selectedFile });
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader?.result! as any);
+      };
+      reader.readAsDataURL(selectedFile);
     }
-
-    // if (file && divRef.current) {
-    //   const currentDivRef = divRef.current as HTMLInputElement;
-    //   if (currentDivRef) {
-    //     currentDivRef.value = file.name;
-    //     console.log("File Path", file.name);
-    //   }
-    // }
   };
 
-  console.log("profile", profile);
+  const handleProfileFileChange = handleFileChange(
+    setSelectedProfile,
+    setRenderProfile
+  );
 
-  // const handleOnChangeProfile = (e: any) => {
-  //   const filePath = e.target.files[0]; // Access the file path
-  //   divRef.current.filePath = filePath;
-  //   console.log("File Path", filePath);
-  // };
+  console.log({ selectedProfile })
+  console.log(user?.avatar)
 
   return (
     <>
@@ -213,7 +219,7 @@ const EditUser = () => {
         <div className="ml-[316px] w-full mt-4">
           <div className="bg-white mr-4 flex justify-between items-center rounded-md">
             <h2 className=" w-full p-4 rounded-md font-bold text-black">
-              Create User
+              Update User
             </h2>
             <div className="h-8 w-8 flex justify-center cursor-pointer text-2xl items-center bg-blueGrey-100 rounded-full mr-4">
               <span className="mt-[-2px] ml-[2px] text-[#292D32] rotate-45">
@@ -225,16 +231,51 @@ const EditUser = () => {
             <div className="mx-2">
               <Progressbar />
             </div>
-            <div ref={divRef} className="relative w-fit">
-              <Image
-                src={profile !== "" ? `/${profile}` : "/driverImage.svg"}
-                alt="driver"
-                width={100}
-                height={100}
-                onClick={handleImageClick}
-              />
-              <span className="w-6 h-6 rounded-full bg-accent3 block text-white flex justify-center items-end text-xl absolute right-2 bottom-2">
-                +
+            <div className="relative w-fit">
+              <span className="flex flex-row justify-center my-4">
+                <span className="mb-4 text-center flex justify-center items-center">
+                  <label htmlFor="profilelabel">
+                    <div
+                      className="w-[100px]  rounded-full h-[100px] cursor-pointer"
+                      onChange={handleUploadClick}
+                    >
+                      {renderProfile ? (
+                        <div className="w-full h-full">
+                          <Image
+                            src={renderProfile}
+                            alt="driver"
+                            width={100}
+                            className="w-[100px] h-[100px] border rounded-full"
+                            height={100}
+                          />
+                        </div>
+                      ) : (
+                        <>
+                          <img
+                            src={user?.avatar}
+                            alt="profile"
+                            width={100}
+                            height={100}
+                            className="w-[100px] h-[100px] border rounded-full"
+                          />
+                          {/* <span className="w-6 h-6 rounded-full bg-accent3 block text-white flex justify-center items-end text-xl absolute right-2 bottom-6">
+                            +
+                          </span> */}
+                        </>
+                      )}
+                    </div>
+                  </label>
+                  <span className="text-sm">
+                    {" "}
+                    <input
+                      id="profilelabel"
+                      type="file"
+                      style={{ display: "none" }}
+                      ref={fileInputRef}
+                      onChange={(e) => handleProfileFileChange(e)}
+                    />
+                  </span>
+                </span>
               </span>
             </div>
             <div className="mt-4">
@@ -420,7 +461,7 @@ const EditUser = () => {
                 />
                 <Maininputfield
                   label="Designation"
-                  value={user.designation}
+                  value={user?.designation}
                   className="w-full"
                   onChange={(e: any) => {
                     setUser({

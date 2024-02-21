@@ -137,6 +137,7 @@ const User = () => {
     console.log({ customPayload });
 
     const response: any = await createUser(customPayload, token || "");
+    console.log("FINAL RESPONSE", { response })
     if (response?.status === 200) {
       alert("User Added Successfully");
     } else {

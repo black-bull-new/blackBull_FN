@@ -1,4 +1,7 @@
 import axios from "axios";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const customerBaseUrl = "http://localhost:1800/api";
 
@@ -23,7 +26,8 @@ export const createUser = async (data: any, token: string) => {
 
 export const getAllUser = async (token: string) => {
   try {
-    const response = await axios.get(`${customerBaseUrl}/onboarding-list`, {
+    console.log(process.env.NEXT_PUBLIC_API_URL)
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/onboarding-list`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Basic ${token}`,
