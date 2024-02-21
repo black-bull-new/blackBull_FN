@@ -20,7 +20,7 @@ const Sidebar = () => {
     option === "Driver" ? router.push("/onboarding/driver-list") : "";
     option === "Customer" ? router.push("/onboarding/add-customer") : "";
     option === "Supplier" ? router.push("/onboarding/add-supplier") : "";
-    option === "User" ? router.push("/onboarding/user") : "";
+    option === "User" ? router.push("/onboarding/user-list") : "";
     option === "Onboarding" ? router.push("/onboarding") : "";
     setSubmenu(option);
   };

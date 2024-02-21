@@ -27,6 +27,7 @@ const config: Config = {
     "./src/pages/onboarding/driver-list/index.tsx",
     "./components/DriverDetails.tsx",
     "./components/imageUpload/ImageUpload.tsx",
+    "./components/UserDetails.tsx",
   ],
   theme: {
     extend: {
