@@ -2,7 +2,7 @@ import Image from "next/image";
 import Progressbar from "../../../../components/Progressbar";
 import Maininputfield from "../../../../components/Maininputfield";
 import DropDownMap from "../../../../components/DropDownMap";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Checkbox from "../../../../components/Checkbox";
 import PasswordField from "../../../../components/password-field/PasswordFlied";
 import Button from "../../../../components/Button";
@@ -13,6 +13,9 @@ import { correctUserStateName } from "../utility/utilityMethod";
 const User = () => {
   const [selectedData, setSelectedData] = useState("");
   const token = getCookie("token");
+  const [profile, setProfile] = useState<any>("");
+  const divRef: any = useRef(null);
+
   const [user, setUser] = useState<any>({
     firstName: "",
     lastName: "",
@@ -94,6 +97,51 @@ const User = () => {
     return hasErrors;
   };
 
+  const handleImageClick = () => {
+    // Trigger file input click when the image is clicked
+    const currentDivRef = divRef.current;
+    if (currentDivRef) {
+      const inputElement = document.createElement("input");
+      inputElement.type = "file";
+      inputElement.accept = "image/*"; // Add your desired file types
+      inputElement.style.display = "none";
+      inputElement.addEventListener("change", handleOnChangeProfile);
+
+      // Use type assertions to ensure TypeScript understands the type
+      (currentDivRef as HTMLDivElement).appendChild(inputElement);
+      inputElement.click();
+      (currentDivRef as HTMLDivElement).removeChild(inputElement); // Remove the input element after click
+    }
+  };
+
+  const handleOnChangeProfile = (e: any) => {
+    // const file: File | undefined = e.target.files?.[0]; 
+    // setProfile(file);
+
+    const file = e.target.files?.[0];
+      if (file) {
+        setProfile(file); // Update the profile state with the file name
+        // Perform any other actions you need with the file
+      }
+
+
+    // if (file && divRef.current) {
+    //   const currentDivRef = divRef.current as HTMLInputElement;
+    //   if (currentDivRef) {
+    //     currentDivRef.value = file.name;
+    //     console.log("File Path", file.name);
+    //   }
+    // }
+  };
+
+  console.log("profile", profile);
+
+  // const handleOnChangeProfile = (e: any) => {
+  //   const filePath = e.target.files[0]; // Access the file path
+  //   divRef.current.filePath = filePath;
+  //   console.log("File Path", filePath);
+  // };
+
   return (
     <>
       <div className="flex bg-[#E9EFFF]">
@@ -112,12 +160,13 @@ const User = () => {
             <div className="mx-2">
               <Progressbar />
             </div>
-            <div className="relative w-fit">
+            <div ref={divRef} className="relative w-fit">
               <Image
-                src="/driverImage.svg"
+                src= {profile!=='' ? `/${profile}` : "/driverImage.svg"}
                 alt="driver"
                 width={100}
                 height={100}
+                onClick={handleImageClick}
               />
               <span className="w-6 h-6 rounded-full bg-accent3 block text-white flex justify-center items-end text-xl absolute right-2 bottom-2">
                 +

@@ -16,6 +16,7 @@ import { getCookie } from "cookies-next";
 import { addSupplierIntoSupplier } from "@/network-request/supplier/supplier";
 import { addVehicleIntoSupplier } from "@/network-request/supplier/vehicle";
 import {
+  correctAddDriverStateName,
   correctAddSupplierStateName,
   correctAddVehicleStateName,
 } from "../utility/utilityMethod";
@@ -26,7 +27,7 @@ const AddSupplier = () => {
   const step1Btn = "Proceed to Add Vehicle";
   const step2Btn = "Proceed to Add Driver";
   const step3Btn = "Submit";
-  const [buttonState, seButtonState] = useState(step1Btn);
+  const [buttonState, seButtonState] = useState(step3Btn);
   /**
    * add supplier state and its error state
    */
@@ -283,7 +284,9 @@ const AddSupplier = () => {
     situationError: "",
     truckOdometerError: "",
   });
-
+  /**
+   * add driver state and its error state
+   */
   const [addDriver, setAddDriver] = useState<any>({
     firstName: "",
     middleName: "",
@@ -312,76 +315,119 @@ const AddSupplier = () => {
     emergencyContactInformation: {
       contactName: "",
       contactNumber: "",
-      relationship: ""
+      relationship: "",
     },
-    employmentHistory: [{
-      previousEmployer: "",
-      yearsOfExperience: "",
-      reasonOfLeaving: "",
-      companyName: "",
-      referenceContactName: "",
-      referenceEmailId: "",
-      referenceContactNumber: ""
-    }],
+    employmentHistory: [
+      {
+        previousEmployer: "",
+        yearsOfExperience: "",
+        reasonOfLeaving: "",
+        companyName: "",
+        referenceContactName: "",
+        referenceEmailId: "",
+        referenceContactNumber: "",
+      },
+    ],
     licenseDetails: {
-      licenceNumber: "",
+      licenseNumber: "",
       licenseCardNumber: "",
       licenseType: "",
       state: "",
       dateOfIssue: "",
       expiryDate: "",
       daysLeftForRenewal: "",
-      documents: []
+      documents: [],
     },
     specialDrivingLicense: "",
 
     visaStatus: {
       type: "visa-status",
-      uploadDate: "20/02/2024"
+      uploadDate: "20/02/2024",
     },
     driverLicenseFront: {
       type: "visa-status",
-      uploadDate: "20/02/2024"
+      uploadDate: "20/02/2024",
     },
     driverLicenseBack: {
       type: "visa-status",
-      uploadDate: "20/02/2024"
+      uploadDate: "20/02/2024",
     },
     licenseHistory: {
       type: "visa-status",
-      uploadDate: "20/02/2024"
+      uploadDate: "20/02/2024",
     },
     policeVerification: {
       type: "visa-status",
-      uploadDate: "20/02/2024"
+      uploadDate: "20/02/2024",
     },
     passportFront: {
       type: "visa-status",
-      uploadDate: "20/02/2024"
+      uploadDate: "20/02/2024",
     },
     passportBack: {
       type: "visa-status",
-      uploadDate: "20/02/2024"
+      uploadDate: "20/02/2024",
     },
     healthInsurance: {
       type: "visa-status",
-      uploadDate: "20/02/2024"
+      uploadDate: "20/02/2024",
     },
     driverCertificate: {
       type: "visa-status",
-      uploadDate: "20/02/2024"
+      uploadDate: "20/02/2024",
     },
     fitness: {
       type: "visa-status",
-      uploadDate: "20/02/2024"
+      uploadDate: "20/02/2024",
     },
     drugTest: {
       type: "visa-status",
-      uploadDate: "20/02/2024"
+      uploadDate: "20/02/2024",
     },
-  })
+  });
 
-  console.log({ addDriver })
+  const [addDriverError, setAddDriverError] = useState<any>({
+    firstNameError: "",
+    middleNameError: "",
+    lastNameError: "",
+    dateOfBirthError: "",
+    avatarError: "",
+    emailError: "",
+    mobileError: "",
+    nationalityError: "",
+    currentAddressError: {
+      houseNumber: "",
+      street: "",
+      suburb: "",
+      state: "",
+      country: "",
+      pincode: "",
+    },
+    permanentAddressError: {
+      houseNumber: "",
+      street: "",
+      suburb: "",
+      state: "",
+      country: "",
+      pincode: "",
+    },
+    emergencyContactInformationError: {
+      contactName: "",
+      contactNumber: "",
+      relationship: "",
+    },
+    // licenseDetailsError: {
+    //   licenseNumber: "",
+    //   licenseCardNumber: "",
+    //   licenseType: "",
+    //   state: "",
+    //   dateOfIssue: "",
+    //   expiryDate: "",
+    //   daysLeftForRenewal: "",
+    //   documents: [],
+    // },
+    specialDrivingLicenseError: "",
+  });
 
   const handleSubmit = async () => {
     if (buttonState === step1Btn) {
@@ -430,8 +476,14 @@ const AddSupplier = () => {
         behavior: "smooth", // for smooth scrolling
       });
     } else if (buttonState === step3Btn) {
+      // Check validation and get error status
+      const hasErrors = checkValidationForAddDriver();
+      if (hasErrors) {
+        alert("Please fix the validation errors before submitting.");
+        return;
+      }
       const response: any = await addSupplierDriver(addDriver, token || "");
-      console.log({ response })
+      console.log({ response });
       if (response.state === 200) {
         seButtonState(step1Btn);
         window.scrollTo({
@@ -441,6 +493,78 @@ const AddSupplier = () => {
       }
     }
   };
+
+  /**
+   *
+   * @returns true if error occurred in add driver state otherwise false
+   */
+  const checkValidationForAddDriver = () => {
+    const newErrors = { ...addDriverError };
+    let hasErrors = false;
+
+    Object.keys(addDriver).forEach((key) => {
+      if (
+        key !== "avatar" &&
+        key !== "employmentHistory" &&
+        key !== "visaStatus" &&
+        key !== "driverLicenseFront" &&
+        key !== "driverLicenseBack" &&
+        key !== "licenseHistory" &&
+        key !== "policeVerification" &&
+        key !== "passportFront" &&
+        key !== "passportBack" &&
+        key !== "healthInsurance" &&
+        key !== "driverCertificate" &&
+        key !== "fitness" &&
+        key !== "drugTest" 
+      ) {
+        if (typeof addDriver[key] === "object" && addDriver[key] !== null) {
+          // Ensure that nested error objects are initialized
+          newErrors[key + "Error"] = newErrors[key + "Error"] || {};
+
+          // Handle nested objects with a different logic
+          Object.keys(addDriver[key]).forEach((nestedKey) => {
+            const nestedKeyPath = `${key}Error.${nestedKey}`;
+
+            if (
+              !addDriver[key][nestedKey] ||
+              addDriver[key][nestedKey] === undefined
+            ) {
+              newErrors[key + "Error"][
+                nestedKey
+              ] = `${correctAddDriverStateName(
+                nestedKey
+              )} is required in ${correctAddDriverStateName(key)}`;
+              hasErrors = true;
+            } else {
+              newErrors[key + "Error"][nestedKey] = "";
+            }
+          });
+        } else {
+          // Handle non-nested fields
+          // Auto scroll up for better user experience
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth", // for smooth scrolling
+          });
+
+          if (!addDriver[key]) {
+            newErrors[key + "Error"] = `${correctAddDriverStateName(
+              key
+            )} is required`;
+            hasErrors = true;
+          } else {
+            newErrors[key + "Error"] = "";
+          }
+        }
+      }
+    });
+
+    setAddDriverError(newErrors);
+    // Return the error status
+    return hasErrors;
+  };
+
   /**
    *
    * @returns true if error occurred in add supplier state otherwise false
@@ -568,6 +692,8 @@ const AddSupplier = () => {
             <NestedAddDriver
               addDriver={addDriver}
               setAddDriver={setAddDriver}
+              error={addDriverError}
+              setError={setAddDriverError}
             />
           ) : null}
 

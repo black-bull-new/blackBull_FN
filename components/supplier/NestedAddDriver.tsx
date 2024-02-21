@@ -10,8 +10,9 @@ import Button from "../Button";
 
 const NestedAddDriver = (props: any) => {
   const [selectedData, setSelectedData] = useState();
-  const { addDriver, setAddDriver } = props;
-  console.log({ addDriver })
+  const { addDriver, setAddDriver, error, setError } = props;
+  console.log("AddDriver state", addDriver);
+  console.log("Error State", error);
 
   return (
     <div>
@@ -39,7 +40,11 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 firstName: e.target.value,
               });
+              if (e.target.value.length > 0) {
+                setError({ ...error, firstNameError: "" });
+              }
             }}
+            errorMessage={error.firstNameError}
           />
           <Maininputfield
             label="Middle Name"
@@ -48,9 +53,13 @@ const NestedAddDriver = (props: any) => {
             onChange={(e: any) => {
               setAddDriver({
                 ...addDriver,
-                middleName: e.target.value
-              })
+                middleName: e.target.value,
+              });
+              if (e.target.value.length > 0) {
+                setError({ ...error, middleNameError: "" });
+              }
             }}
+            errorMessage={error.middleNameError}
           />
           <Maininputfield
             label="Last Name"
@@ -59,18 +68,28 @@ const NestedAddDriver = (props: any) => {
             onChange={(e: any) => {
               setAddDriver({
                 ...addDriver,
-                lastName: e.target.value
-              })
+                lastName: e.target.value,
+              });
+              if (e.target.value.length > 0) {
+                setError({ ...error, lastNameError: "" });
+              }
             }}
+            errorMessage={error.lastNameError}
           />
 
-          <DateWithoutDropdown label="DOB" value={addDriver?.dateOfBirth}
+          <DateWithoutDropdown
+            label="DOB"
+            value={addDriver?.dateOfBirth}
             onChange={(e: any) => {
               setAddDriver({
                 ...addDriver,
-                dateOfBirth: e.target.value
-              })
+                dateOfBirth: e.target.value,
+              });
+              if (e.target.value.length > 0) {
+                setError({ ...error, dateOfBirthError: "" });
+              }
             }}
+            errorMessage={error.dateOfBirthError}
           />
           <Maininputfield
             label="Email"
@@ -79,9 +98,13 @@ const NestedAddDriver = (props: any) => {
             onChange={(e: any) => {
               setAddDriver({
                 ...addDriver,
-                email: e.target.value
-              })
+                email: e.target.value,
+              });
+              if (e.target.value.length > 0) {
+                setError({ ...error, emailError: "" });
+              }
             }}
+            errorMessage={error.emailError}
           />
           <Maininputfield
             label="Mobile"
@@ -90,9 +113,13 @@ const NestedAddDriver = (props: any) => {
             onChange={(e: any) => {
               setAddDriver({
                 ...addDriver,
-                mobile: e.target.value
-              })
+                mobile: e.target.value,
+              });
+              if (e.target.value.length > 0) {
+                setError({ ...error, mobileError: "" });
+              }
             }}
+            errorMessage={error.mobileError}
           />
           <Maininputfield
             label="Nationality"
@@ -101,9 +128,13 @@ const NestedAddDriver = (props: any) => {
             onChange={(e: any) => {
               setAddDriver({
                 ...addDriver,
-                nationality: e.target.value
-              })
+                nationality: e.target.value,
+              });
+              if (e.target.value.length > 0) {
+                setError({ ...error, nationalityError: "" });
+              }
             }}
+            errorMessage={error.nationalityError}
           />
         </div>
         <h2 className="text-black font-semibold p-4 mt-6">
@@ -122,10 +153,20 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 currentAddress: {
                   ...addDriver.currentAddress,
-                  houseNumber: e.target.value
-                }
-              })
+                  houseNumber: e.target.value,
+                },
+              });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  currentAddressError: {
+                    ...error.currentAddressError,
+                    houseNumber: "",
+                  },
+                });
+              }
             }}
+            errorMessage={error.currentAddressError?.houseNumber}
           />
           <Maininputfield
             label="Street"
@@ -136,10 +177,20 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 currentAddress: {
                   ...addDriver.currentAddress,
-                  street: e.target.value
-                }
-              })
+                  street: e.target.value,
+                },
+              });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  currentAddressError: {
+                    ...error.currentAddressError,
+                    street: "",
+                  },
+                });
+              }
             }}
+            errorMessage={error.currentAddressError?.street}
           />
           <Maininputfield
             label="Suburb"
@@ -150,10 +201,20 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 currentAddress: {
                   ...addDriver.currentAddress,
-                  suburb: e.target.value
-                }
-              })
+                  suburb: e.target.value,
+                },
+              });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  currentAddressError: {
+                    ...error.currentAddressError,
+                    suburb: "",
+                  },
+                });
+              }
             }}
+            errorMessage={error.currentAddressError?.suburb}
           />
 
           <DropDownMap
@@ -167,10 +228,20 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 currentAddress: {
                   ...addDriver.currentAddress,
-                  state: e.target.value
-                }
-              })
+                  state: e.target.value,
+                },
+              });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  currentAddressError: {
+                    ...error.currentAddressError,
+                    state: "",
+                  },
+                });
+              }
             }}
+            errorMessage={error.currentAddressError?.state}
           />
           <DropDownMap
             label="Country"
@@ -183,28 +254,51 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 currentAddress: {
                   ...addDriver.currentAddress,
-                  country: e.target.value
-                }
-              })
+                  country: e.target.value,
+                },
+              });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  currentAddressError: {
+                    ...error.currentAddressError,
+                    country: "",
+                  },
+                });
+              }
             }}
+            errorMessage={error.currentAddressError?.country}
           />
-          <Maininputfield label="Post Code" value={addDriver?.currentAddress?.pincode}
+          <Maininputfield
+            label="Post Code"
+            value={addDriver?.currentAddress?.pincode}
             onChange={(e: any) => {
               setAddDriver({
                 ...addDriver,
                 currentAddress: {
                   ...addDriver.currentAddress,
-                  pincode: e.target.value
-                }
-              })
+                  pincode: e.target.value,
+                },
+              });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  currentAddressError: {
+                    ...error.currentAddressError,
+                    pincode: "",
+                  },
+                });
+              }
             }}
-            className="w-full" />
+            className="w-full"
+            errorMessage={error.currentAddressError?.pincode}
+          />
         </div>
-        <Checkbox
+        {/* <Checkbox
           className="!pl-4"
           content="Same as above"
           color="text-blueGrey-900"
-        />
+        /> */}
         <h3 className="text-black font-semibold text-sm pl-4">
           Permanent Address
         </h3>
@@ -218,10 +312,20 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 permanentAddress: {
                   ...addDriver.permanentAddress,
-                  houseNumber: e.target.value
-                }
-              })
+                  houseNumber: e.target.value,
+                },
+              });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  permanentAddressError: {
+                    ...error.permanentAddressError,
+                    houseNumber: "",
+                  },
+                });
+              }
             }}
+            errorMessage={error.permanentAddressError?.houseNumber}
           />
           <Maininputfield
             label="Street"
@@ -232,10 +336,20 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 permanentAddress: {
                   ...addDriver.permanentAddress,
-                  street: e.target.value
-                }
-              })
+                  street: e.target.value,
+                },
+              });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  permanentAddressError: {
+                    ...error.permanentAddressError,
+                    street: "",
+                  },
+                });
+              }
             }}
+            errorMessage={error.permanentAddressError?.street}
           />
           <Maininputfield
             label="Suburb"
@@ -246,10 +360,20 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 permanentAddress: {
                   ...addDriver.permanentAddress,
-                  suburb: e.target.value
-                }
-              })
+                  suburb: e.target.value,
+                },
+              });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  permanentAddressError: {
+                    ...error.permanentAddressError,
+                    suburb: "",
+                  },
+                });
+              }
             }}
+            errorMessage={error.permanentAddressError?.suburb}
           />
 
           <DropDownMap
@@ -263,10 +387,20 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 permanentAddress: {
                   ...addDriver.permanentAddress,
-                  state: e.target.value
-                }
-              })
+                  state: e.target.value,
+                },
+              });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  permanentAddressError: {
+                    ...error.permanentAddressError,
+                    state: "",
+                  },
+                });
+              }
             }}
+            errorMessage={error.permanentAddressError?.state}
           />
           <DropDownMap
             label="Country"
@@ -279,22 +413,45 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 permanentAddress: {
                   ...addDriver.permanentAddress,
-                  country: e.target.value
-                }
-              })
+                  country: e.target.value,
+                },
+              });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  permanentAddressError: {
+                    ...error.permanentAddressError,
+                    country: "",
+                  },
+                });
+              }
             }}
+            errorMessage={error.permanentAddressError?.country}
           />
-          <Maininputfield label="Post Code" value={addDriver?.permanentAddress?.pincode}
+          <Maininputfield
+            label="Post Code"
+            value={addDriver?.permanentAddress?.pincode}
             onChange={(e: any) => {
               setAddDriver({
                 ...addDriver,
                 permanentAddress: {
                   ...addDriver.permanentAddress,
-                  pincode: e.target.value
-                }
-              })
+                  pincode: e.target.value,
+                },
+              });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  permanentAddressError: {
+                    ...error.permanentAddressError,
+                    pincode: "",
+                  },
+                });
+              }
             }}
-            className="w-full" />
+            className="w-full"
+            errorMessage={error.permanentAddressError?.pincode}
+          />
         </div>
         <h2 className="text-black font-semibold p-4 mt-6">
           Emergency Contact Information
@@ -309,10 +466,20 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 emergencyContactInformation: {
                   ...addDriver.emergencyContactInformation,
-                  contactName: e.target.value
-                }
-              })
+                  contactName: e.target.value,
+                },
+              });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  emergencyContactInformationError: {
+                    ...error.permanentAddressError,
+                    contactName: "",
+                  },
+                });
+              }
             }}
+            errorMessage={error.emergencyContactInformationError?.contactName}
           />
           <Maininputfield
             label="Contact Numbere"
@@ -323,10 +490,20 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 emergencyContactInformation: {
                   ...addDriver.emergencyContactInformation,
-                  contactNumber: e.target.value
-                }
-              })
+                  contactNumber: e.target.value,
+                },
+              });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  emergencyContactInformationError: {
+                    ...error.emergencyContactInformationError,
+                    contactNumber: "",
+                  },
+                });
+              }
             }}
+            errorMessage={error.emergencyContactInformationError?.contactNumber}
           />
           <Maininputfield
             label="Relationship"
@@ -337,10 +514,20 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 emergencyContactInformation: {
                   ...addDriver.emergencyContactInformation,
-                  relationship: e.target.value
-                }
-              })
+                  relationship: e.target.value,
+                },
+              });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  emergencyContactInformationError: {
+                    ...error.emergencyContactInformationError,
+                    relationship: "",
+                  },
+                });
+              }
             }}
+            errorMessage={error.emergencyContactInformationError?.relationship}
           />
         </div>
         <h2 className="text-black font-semibold p-4 mt-6">
@@ -359,9 +546,9 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 employmentHistory: {
                   ...addDriver.employmentHistory,
-                  previousEmployer: e.target.value
-                }
-              })
+                  previousEmployer: e.target.value,
+                },
+              });
             }}
           />
           <Maininputfield
@@ -373,9 +560,9 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 employmentHistory: {
                   ...addDriver.employmentHistory,
-                  yearsOfExperience: e.target.value
-                }
-              })
+                  yearsOfExperience: e.target.value,
+                },
+              });
             }}
           />
           <Maininputfield
@@ -387,9 +574,9 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 employmentHistory: {
                   ...addDriver.employmentHistory,
-                  reasonOfLeaving: e.target.value
-                }
-              })
+                  reasonOfLeaving: e.target.value,
+                },
+              });
             }}
           />
         </div>
@@ -406,9 +593,9 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 employmentHistory: {
                   ...addDriver.employmentHistory,
-                  companyName: e.target.value
-                }
-              })
+                  companyName: e.target.value,
+                },
+              });
             }}
           />
           <Maininputfield
@@ -420,9 +607,9 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 employmentHistory: {
                   ...addDriver.employmentHistory,
-                  referenceContactName: e.target.value
-                }
-              })
+                  referenceContactName: e.target.value,
+                },
+              });
             }}
           />
           <Maininputfield
@@ -434,9 +621,9 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 employmentHistory: {
                   ...addDriver.employmentHistory,
-                  referenceEmailId: e.target.value
-                }
-              })
+                  referenceEmailId: e.target.value,
+                },
+              });
             }}
           />
           <Maininputfield
@@ -448,9 +635,9 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 employmentHistory: {
                   ...addDriver.employmentHistory,
-                  referenceContactNumber: e.target.value
-                }
-              })
+                  referenceContactNumber: e.target.value,
+                },
+              });
             }}
           />
         </div>
@@ -465,15 +652,15 @@ const NestedAddDriver = (props: any) => {
           <Maininputfield
             label="Licence Numbere"
             className="w-full"
-            value={addDriver?.licenseDetails?.licenceNumber}
+            value={addDriver?.licenseDetails?.licenseNumber}
             onChange={(e: any) => {
               setAddDriver({
                 ...addDriver,
                 licenseDetails: {
                   ...addDriver.licenseDetails,
-                  licenceNumber: e.target.value
-                }
-              })
+                  licenseNumber: e.target.value,
+                },
+              });
             }}
           />
           <Maininputfield
@@ -485,9 +672,9 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 licenseDetails: {
                   ...addDriver.licenseDetails,
-                  licenseCardNumber: e.target.value
-                }
-              })
+                  licenseCardNumber: e.target.value,
+                },
+              });
             }}
           />
           <DropDownMap
@@ -501,9 +688,9 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 licenseDetails: {
                   ...addDriver.licenseDetails,
-                  licenseType: e.target.value
-                }
-              })
+                  licenseType: e.target.value,
+                },
+              });
             }}
           />
           <DropDownMap
@@ -517,31 +704,35 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 licenseDetails: {
                   ...addDriver.licenseDetails,
-                  state: e.target.value
-                }
-              })
+                  state: e.target.value,
+                },
+              });
             }}
           />
-          <DateWithoutDropdown label="Date Of Issue" value={addDriver?.licenseDetails?.dateOfIssue}
+          <DateWithoutDropdown
+            label="Date Of Issue"
+            value={addDriver?.licenseDetails?.dateOfIssue}
             onChange={(e: any) => {
               setAddDriver({
                 ...addDriver,
                 licenseDetails: {
                   ...addDriver.licenseDetails,
-                  dateOfIssue: e.target.value
-                }
-              })
+                  dateOfIssue: e.target.value,
+                },
+              });
             }}
           />
-          <DateWithoutDropdown label="Expiry Date" value={addDriver?.licenseDetails?.expiryDate}
+          <DateWithoutDropdown
+            label="Expiry Date"
+            value={addDriver?.licenseDetails?.expiryDate}
             onChange={(e: any) => {
               setAddDriver({
                 ...addDriver,
                 licenseDetails: {
                   ...addDriver.licenseDetails,
-                  expiryDate: e.target.value
-                }
-              })
+                  expiryDate: e.target.value,
+                },
+              });
             }}
           />
           <Maininputfield
@@ -553,9 +744,9 @@ const NestedAddDriver = (props: any) => {
                 ...addDriver,
                 licenseDetails: {
                   ...addDriver.licenseDetails,
-                  daysLeftForRenewal: e.target.value
-                }
-              })
+                  daysLeftForRenewal: e.target.value,
+                },
+              });
             }}
           />
           <FileUpload file="Choose License Document " />
@@ -593,9 +784,16 @@ const NestedAddDriver = (props: any) => {
             onChange={(e: any) => {
               setAddDriver({
                 ...addDriver,
-                specialDrivingLicense: e.target.value
-              })
+                specialDrivingLicense: e.target.value,
+              });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  specialDrivingLicenseError: "",
+                });
+              }
             }}
+            errorMessage={error.specialDrivingLicenseError}
           />
         </div>
         <div className="mb-4 mt-8">
@@ -714,7 +912,6 @@ const documentCollectionDataDriver = [
   },
 ];
 
-
 const documentCollectionHeadingDriver = [
   {
     heading: "Document type",
@@ -742,7 +939,6 @@ const drivingLicenceCollection = [
     value: "item2",
   },
 ];
-
 
 const countryCollection = [
   {

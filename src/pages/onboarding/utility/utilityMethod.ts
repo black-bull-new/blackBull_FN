@@ -230,3 +230,47 @@ export const correctAddSupplierStateName = (stateName: string): string => {
 
   return nameMapping[stateName] || stateName;
 };
+
+export const correctAddDriverStateName = (stateName: string): string => {
+  const nameMapping: { [key: string]: string } = {
+    firstName: "First Name",
+    middleName: "Middle Name",
+    lastName: "Last Name",
+    dateOfBirth: "Date Of Birth",
+    avatar: "Avatar",
+    email: "Email",
+    mobile: "Mobile",
+    nationality: "Nationality",
+    currentAddress: "Current Address",
+    houseNumber: "House Number",
+    street: "Street",
+    suburb: "Suburb",
+    state: "State",
+    country: "Country",
+    pincode: "Pincode",
+    permanentAddress: "Permanent Address",
+    emergencyContactInformation: "Emergency Contact Information",
+    contactName: "Contact Name",
+    contactNumber: "Contact Number",
+    relationship: "Relationship",
+    employmentHistory: "Employment History",
+    previousEmployer: "Previous Employer",
+    yearsOfExperience: "Years Of Experience",
+    reasonOfLeaving: "Reason Of Leaving",
+    companyName: "Company Name",
+    referenceContactName: "Reference Contact Name",
+    referenceEmailId: "Reference Email Id",
+    referenceContactNumber: "Reference Contact Number",
+    licenseDetails: "License Details",
+    licenceNumber: "Licence Number",
+    licenseCardNumber: "License Card Number",
+    licenseType: "License Type",
+    dateOfIssue: "Date Of Issue",
+    expiryDate: "Expiry Date",
+    daysLeftForRenewal: "DaysLeft For Renewal",
+    documents: "Documents",
+    specialDrivingLicense: "Special Driving License",
+  };
+
+  return nameMapping[stateName] || stateName;
+};
