@@ -274,7 +274,7 @@ const EditUser = () => {
                         <>
                           <img
                             src={user?.avatar}
-                            alt="profile"
+                            // alt="profile"
                             width={100}
                             height={100}
                             className="w-[100px] h-[100px] border rounded-full"
@@ -427,7 +427,7 @@ const EditUser = () => {
                     }}
                     errorMessage={error.usernameError}
                   />
-                  <span className="absolute right-[-15px] bottom-2">@</span>
+                  {/* <span className="absolute right-[-15px] bottom-2">@</span> */}
                 </div>
                 <DropDownMap
                   label="Domains"
