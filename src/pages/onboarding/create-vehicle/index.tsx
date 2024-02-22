@@ -11,7 +11,11 @@ import Progressbar from "../../../../components/Progressbar";
 import Sidebar from "../../../../components/Sidebar";
 import StatusChip from "../../../../components/StatusChip";
 import { correctVehicleStateName } from "../utility/utilityMethod";
-import { addVehicle, uploadMulitpleVehicleDocuments, uploadVehicleRegoDocuemnts } from "@/network-request/vehicle/vehicleApi";
+import {
+  addVehicle,
+  uploadMulitpleVehicleDocuments,
+  uploadVehicleRegoDocuemnts,
+} from "@/network-request/vehicle/vehicleApi";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
@@ -111,7 +115,6 @@ const CreateVehicle = () => {
     vehicleDocumentStatusError: "Complete",
   });
 
-
   const checkValidation = () => {
     const newErrors = { ...error };
     let hasErrors = false;
@@ -197,31 +200,42 @@ const CreateVehicle = () => {
   console.log({ selectedUploadRegoDocument });
 
   const handleViewDocuments = () => {
-    window.open("http://localhost:1800/onboarding-profile/dummy.pdf", "_blank");
+    window.open("http://localhost:1800/vehicle-documents/Resume.pdf", "_blank");
   };
 
-  const [selectedFiles, setSelectedFiles] = useState<{ id: number; file: File; currentDate: Date | null }[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<
+    { id: number; file: File; currentDate: Date | null }[]
+  >([]);
 
-  const handleFileChanges = (event: React.ChangeEvent<HTMLInputElement>, documentId: number) => {
+  const handleFileChanges = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    documentId: number
+  ) => {
     const file = event.target.files ? event.target.files[0] : null;
     const documentExists = documentDataCollection.find(
       (doc) => doc.id === documentId
     );
     if (file && documentExists) {
       const newSelectedFiles = [...selectedFiles];
-      const existingFileIndex = newSelectedFiles.findIndex(file => file.id === documentId);
+      const existingFileIndex = newSelectedFiles.findIndex(
+        (file) => file.id === documentId
+      );
       const currentDate = new Date();
       if (existingFileIndex !== -1) {
-        newSelectedFiles[existingFileIndex] = { id: documentId, file, currentDate };
+        newSelectedFiles[existingFileIndex] = {
+          id: documentId,
+          file,
+          currentDate,
+        };
       } else {
         newSelectedFiles.push({ id: documentId, file, currentDate });
       }
       setSelectedFiles(newSelectedFiles);
     }
   };
-  console.log({ selectedFiles })
-  const files = selectedFiles?.map(selectedFile => selectedFile.file);
-  console.log({ files })
+  console.log({ selectedFiles });
+  const files = selectedFiles?.map((selectedFile) => selectedFile.file);
+  console.log({ files });
 
   const [selectedStatusValues, setSelectedStatusValues] = useState<any[]>([]);
   const handleStatusChipColor = (value: any, index: number) => {
@@ -234,7 +248,6 @@ const CreateVehicle = () => {
   console.log({ selectedStatusValues })
 
   const handleSubmit = async () => {
-
     let urls;
     // Check validation and get error status
     const hasErrors = checkValidation();
@@ -257,7 +270,9 @@ const CreateVehicle = () => {
 
     try {
       const profileUrls = await Promise.all(
-        Object.values(files).map((imageInfo) => uploadMulitpleVehicleDocuments(imageInfo))
+        Object.values(files).map((imageInfo) =>
+          uploadMulitpleVehicleDocuments(imageInfo)
+        )
       );
       console.log({ profileUrls });
       urls = profileUrls.flatMap(entry => entry.response);
@@ -272,10 +287,10 @@ const CreateVehicle = () => {
       vehicleUploadDocument: uploadDocument[0]?.response,
       documents: urls?.map((url: any, index: number) => ({
         type: url,
-        uploadDate: formattedDate
+        uploadDate: formattedDate,
       })),
     };
-    console.log({ customVehiclePayload })
+    console.log({ customVehiclePayload });
 
     const response: any = await addVehicle(customVehiclePayload, token || "");
     if (response?.status == 200) {
@@ -302,7 +317,6 @@ const CreateVehicle = () => {
       });
     }
   };
-
 
   return (
     <>
@@ -994,7 +1008,10 @@ const CreateVehicle = () => {
 
                 <div>
                   {documentDataCollection?.map((data, index) => (
-                    <div className="text-black grid grid-cols-[16%_16%_16%_16%_16%_20%] py-4 flex text-center" key={index}>
+                    <div
+                      className="text-black grid grid-cols-[16%_16%_16%_16%_16%_20%] py-4 flex text-center"
+                      key={index}
+                    >
                       <div>{data.Vehicle}</div>
                       <div className="text-center">
                         <label className="cursor-pointer">
@@ -1010,19 +1027,36 @@ const CreateVehicle = () => {
                         </label>
                       </div>
                       <div>
-                        {selectedFiles.find(file => file.id === data?.id) ? (
+                        {selectedFiles.find((file) => file.id === data?.id) ? (
                           <div>
-                            <p>{selectedFiles.find(file => file.id === data?.id)?.currentDate ? formatDate(selectedFiles.find(file => file.id === data?.id)?.currentDate) : "No date available"}</p>
+                            <p>
+                              {selectedFiles.find(
+                                (file) => file.id === data?.id
+                              )?.currentDate
+                                ? formatDate(
+                                    selectedFiles.find(
+                                      (file) => file.id === data?.id
+                                    )?.currentDate
+                                  )
+                                : "No date available"}
+                            </p>
                           </div>
                         ) : (
                           <p>No date available</p>
                         )}
                       </div>
                       <div>
-                        {selectedFiles.find(file => file.id === data?.id)?.file
-                          ? <p>{selectedFiles.find(file => file.id === data?.id)?.file.name}</p>
-                          : <p>No file selected</p>
-                        }
+                        {selectedFiles.find((file) => file.id === data?.id)
+                          ?.file ? (
+                          <p>
+                            {
+                              selectedFiles.find((file) => file.id === data?.id)
+                                ?.file.name
+                            }
+                          </p>
+                        ) : (
+                          <p>No file selected</p>
+                        )}
                       </div>
                       <div className="text-center items-center justify-center m-auto">
                         <StatusChip chipColor={(e: any) => handleStatusChipColor(e, index)} />
@@ -1037,7 +1071,6 @@ const CreateVehicle = () => {
                       </div>
                     </div>
                   ))}
-
                 </div>
               </div>
             </div>
