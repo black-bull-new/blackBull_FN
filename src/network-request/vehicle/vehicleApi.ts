@@ -103,20 +103,40 @@ export const deleteVehicle = async (token: string, id: string) => {
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> UPLOAD REGO DOCUMENTS FOR VEHICLE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 
 
 export const uploadVehicleRegoDocuemnts = async (selectedFile: any) => {
-    const formData = new FormData();
-    formData.append("files", selectedFile)
-    return await axios
-        .post(`${process.env.NEXT_PUBLIC_API_URL}/onboarding-profile`,
-            formData,
-            {
-                withCredentials: false
-            }
-        ).
-        then((response) => {
-            console.log({ response })
-            return response?.data
-        }).catch((error) => {
-            console.log({ error })
-            return error
-        })
+  const formData = new FormData();
+  formData.append("files", selectedFile)
+  return await axios
+    .post(`${process.env.NEXT_PUBLIC_API_URL}/v1/upload`,
+      formData,
+      {
+        withCredentials: false
+      }
+    ).
+    then((response) => {
+      console.log({ response })
+      return response?.data
+    }).catch((error) => {
+      console.log({ error })
+      return error
+    })
+}
+
+
+export const uploadMulitpleVehicleDocuments = async (selectedFile: any) => {
+  const formData = new FormData();
+  formData.append("files", selectedFile)
+  return await axios
+    .post(`${process.env.NEXT_PUBLIC_API_URL}/v1/vehicle-documents`,
+      formData,
+      {
+        withCredentials: false
+      }
+    ).
+    then((response) => {
+      console.log({ response })
+      return response?.data
+    }).catch((error) => {
+      console.log({ error })
+      return error
+    })
 }

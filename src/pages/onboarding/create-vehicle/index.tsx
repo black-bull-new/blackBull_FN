@@ -11,13 +11,11 @@ import Progressbar from "../../../../components/Progressbar";
 import Sidebar from "../../../../components/Sidebar";
 import StatusChip from "../../../../components/StatusChip";
 import { correctVehicleStateName } from "../utility/utilityMethod";
-import {
-  addVehicle,
-  uploadVehicleRegoDocuemnts,
-} from "@/network-request/vehicle/vehicleApi";
+import { addVehicle, uploadMulitpleVehicleDocuments, uploadVehicleRegoDocuemnts } from "@/network-request/vehicle/vehicleApi";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
+import { formatDate } from "@/utils";
 interface SelectedFile {
   id: number;
   file: File | null;
@@ -116,60 +114,6 @@ const CreateVehicle = () => {
     vehicleDocumentStatusError: "Complete",
   });
 
-  const handleSubmit = async () => {
-    // Check validation and get error status
-    const hasErrors = checkValidation();
-    console.log("Vehicle State : ", vehicleDetails);
-    console.log("Error State", error);
-    if (hasErrors) {
-      toast("Please fix the validation errors before submitting.", {
-        icon: "⚠️",
-        style: {
-          borderRadius: "10px",
-          background: "#333",
-          color: "#fff",
-        },
-      });
-      return;
-    }
-    const uploadDocument = await Promise.all(
-      Object.values(selectedUploadRegoDocument)?.map((file) =>
-        uploadVehicleRegoDocuemnts(file)
-      )
-    );
-    console.log({ uploadDocument });
-
-    const customVehiclePayload = {
-      ...vehicleDetails,
-      vehicleUploadDocument: uploadDocument[0]?.response,
-    };
-    console.log({ customVehiclePayload });
-
-    const response: any = await addVehicle(customVehiclePayload, token || "");
-    if (response?.status == 200) {
-      toast("Vehicle Added Successfully", {
-        icon: "👏",
-        style: {
-          borderRadius: "10px",
-          background: "#333",
-          color: "#fff",
-        },
-      });
-      setTimeout(() => {
-        router.push("/onboarding/vehicle-list");
-      }, 3000);
-      console.log("response :", response);
-    } else {
-      toast("Something went wrong", {
-        icon: "⚠️",
-        style: {
-          borderRadius: "10px",
-          background: "#333",
-          color: "#fff",
-        },
-      });
-    }
-  };
 
   const checkValidation = () => {
     const newErrors = { ...error };
@@ -259,33 +203,105 @@ const CreateVehicle = () => {
     window.open("http://localhost:1800/onboarding-profile/dummy.pdf", "_blank");
   };
 
-  // const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  // const handleFileChanges = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setSelectedFile(event.target.files ? event.target.files[0] : null);
-  // };
-  // console.log({ selectedFile })
+  const [selectedFiles, setSelectedFiles] = useState<{ id: number; file: File; currentDate: Date | null }[]>([]);
 
-  const [selectedFile, setSelectedFile] = useState<{
-    id: number;
-    file: File;
-  } | null>(null);
-
-  const handleFileChanges = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    documentId: number
-  ) => {
+  const handleFileChanges = (event: React.ChangeEvent<HTMLInputElement>, documentId: number) => {
     const file = event.target.files ? event.target.files[0] : null;
     const documentExists = documentDataCollection.find(
       (doc) => doc.id === documentId
     );
     if (file && documentExists) {
-      setSelectedFile({ id: documentId, file });
-    } else {
-      setSelectedFile(null);
+      const newSelectedFiles = [...selectedFiles];
+      const existingFileIndex = newSelectedFiles.findIndex(file => file.id === documentId);
+      const currentDate = new Date();
+      if (existingFileIndex !== -1) {
+        newSelectedFiles[existingFileIndex] = { id: documentId, file, currentDate };
+      } else {
+        newSelectedFiles.push({ id: documentId, file, currentDate });
+      }
+      setSelectedFiles(newSelectedFiles);
     }
   };
-  console.log({ selectedFile });
+  console.log({ selectedFiles })
+  const files = selectedFiles?.map(selectedFile => selectedFile.file);
+  console.log({ files })
+
+  const handleSubmit = async () => {
+
+    let urls;
+    // Check validation and get error status
+    const hasErrors = checkValidation();
+    console.log("Vehicle State : ", vehicleDetails);
+    console.log("Error State", error);
+    if (hasErrors) {
+      toast("Please fix the validation errors before submitting.", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+      return;
+    }
+    const uploadDocument = await Promise.all(Object.values(selectedUploadRegoDocument)?.map((file) => uploadVehicleRegoDocuemnts(file)))
+    console.log({ uploadDocument })
+
+    try {
+      const profileUrls = await Promise.all(
+        Object.values(files).map((imageInfo) => uploadMulitpleVehicleDocuments(imageInfo))
+      );
+      console.log({ profileUrls });
+      urls = profileUrls.flatMap(entry => entry.response);
+
+      console.log({ urls });
+    } catch (error) {
+      console.error("Error uploading files:", error);
+    }
+
+    const currentDate = new Date();
+    const { getDate, getMonth, getFullYear } = currentDate;
+    const formattedDate = `${getDate.call(currentDate).toString().padStart(2, '0')}-${(getMonth.call(currentDate) + 1).toString().padStart(2, '0')}-${getFullYear.call(currentDate)}`;
+    console.log(formattedDate);
+
+
+    const customVehiclePayload = {
+      ...vehicleDetails,
+      vehicleUploadDocument: uploadDocument[0]?.response,
+      documents: urls?.map((url: any, index: number) => ({
+        type: url,
+        uploadDate: formattedDate
+      })),
+    };
+    console.log({ customVehiclePayload })
+
+    const response: any = await addVehicle(customVehiclePayload, token || "");
+    if (response?.status == 200) {
+      toast("Vehicle Added Successfully", {
+        icon: "👏",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+      setTimeout(() => {
+        router.push("/onboarding/vehicle-list");
+      }, 3000);
+      console.log("response :", response);
+    } else {
+      toast("Something went wrong", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+    }
+  };
+
 
   return (
     <>
@@ -976,11 +992,8 @@ const CreateVehicle = () => {
                 </div>
 
                 <div>
-                  {documentDataCollection.map((data, index) => (
-                    <div
-                      className="text-black grid grid-cols-[16%_16%_16%_16%_16%_20%] py-4 flex text-center"
-                      key={index}
-                    >
+                  {documentDataCollection?.map((data, index) => (
+                    <div className="text-black grid grid-cols-[16%_16%_16%_16%_16%_20%] py-4 flex text-center" key={index}>
                       <div>{data.Vehicle}</div>
                       <div className="text-center">
                         <label className="cursor-pointer">
@@ -989,22 +1002,26 @@ const CreateVehicle = () => {
                           </span>
                           <input
                             type="file"
-                            id={`uploadInput-${data.id}`}
                             className="hidden"
                             accept=".doc,.docx,.pdf"
-                            onChange={(event) =>
-                              handleFileChanges(event, data.id)
-                            }
+                            onChange={(e) => handleFileChanges(e, data?.id)}
                           />
                         </label>
                       </div>
-                      <div>{data.uploadDate}</div>
                       <div>
-                        {selectedFile?.id === data?.id ? (
-                          <p>{selectedFile.file.name}</p>
+                        {selectedFiles.find(file => file.id === data?.id) ? (
+                          <div>
+                            <p>{selectedFiles.find(file => file.id === data?.id)?.currentDate ? formatDate(selectedFiles.find(file => file.id === data?.id)?.currentDate) : "No date available"}</p>
+                          </div>
                         ) : (
-                          <span>None</span>
+                          <p>No date available</p>
                         )}
+                      </div>
+                      <div>
+                        {selectedFiles.find(file => file.id === data?.id)?.file
+                          ? <p>{selectedFiles.find(file => file.id === data?.id)?.file.name}</p>
+                          : <p>No file selected</p>
+                        }
                       </div>
                       <div className="text-center items-center justify-center m-auto">
                         {/* StatusChip component */}
@@ -1020,6 +1037,7 @@ const CreateVehicle = () => {
                       </div>
                     </div>
                   ))}
+
                 </div>
               </div>
             </div>
@@ -1071,24 +1089,24 @@ const documentDataCollection = [
     status: "Approved",
     viewDoc: "view",
   },
-  // {
-  //   id: 2,
-  //   Vehicle: "Placeholder",
-  //   rego: "Placeholder",
-  //   uploadDate: "14/12/2023",
-  //   UploadedDoc: "doc.pdf",
-  //   status: "Approved",
-  //   viewDoc: "view",
-  // },
-  // {
-  //   id: 3,
-  //   Vehicle: "Placeholder",
-  //   rego: "Placeholder",
-  //   uploadDate: "20/12/2023",
-  //   UploadedDoc: "doc.pdf",
-  //   status: "Approved",
-  //   viewDoc: "view",
-  // },
+  {
+    id: 2,
+    Vehicle: "Placeholder",
+    rego: "Placeholder",
+    uploadDate: "14/12/2023",
+    UploadedDoc: "doc.pdf",
+    status: "Approved",
+    viewDoc: "view",
+  },
+  {
+    id: 3,
+    Vehicle: "Placeholder",
+    rego: "Placeholder",
+    uploadDate: "20/12/2023",
+    UploadedDoc: "doc.pdf",
+    status: "Approved",
+    viewDoc: "view",
+  },
 ];
 const ownershipStatus = [
   {
