@@ -487,7 +487,7 @@ const CreateVehicle = () => {
                       className="w-full"
                       errorMessage={error.rentedCompanyNameError}
                     />
-                    <DateWithoutDropdown
+                    <Maindatefield
                       label="Date of Hire"
                       value={vehicleDetails.dateOfHire}
                       onChange={(e: any) => {
@@ -504,7 +504,7 @@ const CreateVehicle = () => {
                       }}
                       errorMessage={error.dateOfHireError}
                     />
-                    <DateWithoutDropdown
+                    <Maindatefield
                       label="Contract Valid Till"
                       value={vehicleDetails.contractValidTill}
                       onChange={(e: any) => {
@@ -728,7 +728,7 @@ const CreateVehicle = () => {
                     }}
                     errorMessage={error.vehicleInsuranceStartDateError}
                   />
-                  <DateWithoutDropdown
+                  <Maindatefield
                     label="Renewal Date"
                     value={vehicleDetails.renewalDate}
                     onChange={(e: any) => {
@@ -745,7 +745,7 @@ const CreateVehicle = () => {
                     }}
                     errorMessage={error.renewalDateError}
                   />
-                  <DateWithoutDropdown
+                  <Maindatefield
                     label="Date Valid Until"
                     value={vehicleDetails.dateValidUntil}
                     onChange={(e: any) => {
