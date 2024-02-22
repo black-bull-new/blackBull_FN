@@ -11,7 +11,7 @@ import Progressbar from "../../../../components/Progressbar";
 import Sidebar from "../../../../components/Sidebar";
 import StatusChip from "../../../../components/StatusChip";
 import { correctVehicleStateName } from "../utility/utilityMethod";
-import { addVehicle, uploadVehicleRegoDocuemnts } from "@/network-request/vehicle/vehicleApi";
+import { addVehicle, uploadMulitpleVehicleDocuments, uploadVehicleRegoDocuemnts } from "@/network-request/vehicle/vehicleApi";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
@@ -114,56 +114,7 @@ const CreateVehicle = () => {
     vehicleDocumentStatusError: "Complete",
   });
 
-  const handleSubmit = async () => {
-    // Check validation and get error status
-    const hasErrors = checkValidation();
-    console.log("Vehicle State : ", vehicleDetails);
-    console.log("Error State", error);
-    if (hasErrors) {
-      toast("Please fix the validation errors before submitting.", {
-        icon: "⚠️",
-        style: {
-          borderRadius: "10px",
-          background: "#333",
-          color: "#fff",
-        },
-      });
-      return;
-    }
-    const uploadDocument = await Promise.all(Object.values(selectedUploadRegoDocument)?.map((file) => uploadVehicleRegoDocuemnts(file)))
-    console.log({ uploadDocument })
 
-    const customVehiclePayload = {
-      ...vehicleDetails,
-      vehicleUploadDocument: uploadDocument[0]?.response
-    }
-    console.log({ customVehiclePayload })
-
-    const response: any = await addVehicle(customVehiclePayload, token || "");
-    if (response?.status == 200) {
-      toast("Vehicle Added Successfully", {
-        icon: "👏",
-        style: {
-          borderRadius: "10px",
-          background: "#333",
-          color: "#fff",
-        },
-      });
-      setTimeout(() => {
-        router.push("/onboarding/vehicle-list");
-      }, 3000);
-      console.log("response :", response);
-    } else {
-      toast("Something went wrong", {
-        icon: "⚠️",
-        style: {
-          borderRadius: "10px",
-          background: "#333",
-          color: "#fff",
-        },
-      });
-    }
-  };
 
   const checkValidation = () => {
     const newErrors = { ...error };
@@ -270,8 +221,85 @@ const CreateVehicle = () => {
       setSelectedFiles(newSelectedFiles);
     }
   };
-
   console.log({ selectedFiles })
+  const files = selectedFiles?.map(selectedFile => selectedFile.file);
+  console.log({ files })
+
+  const handleSubmit = async () => {
+
+    let urls;
+    // Check validation and get error status
+    const hasErrors = checkValidation();
+    console.log("Vehicle State : ", vehicleDetails);
+    console.log("Error State", error);
+    if (hasErrors) {
+      toast("Please fix the validation errors before submitting.", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+      return;
+    }
+    const uploadDocument = await Promise.all(Object.values(selectedUploadRegoDocument)?.map((file) => uploadVehicleRegoDocuemnts(file)))
+    console.log({ uploadDocument })
+
+    try {
+      const profileUrls = await Promise.all(
+        Object.values(files).map((imageInfo) => uploadMulitpleVehicleDocuments(imageInfo))
+      );
+      console.log({ profileUrls });
+      urls = profileUrls.flatMap(entry => entry.response);
+
+      console.log({ urls });
+    } catch (error) {
+      console.error("Error uploading files:", error);
+    }
+
+    const currentDate = new Date();
+    const { getDate, getMonth, getFullYear } = currentDate;
+    const formattedDate = `${getDate.call(currentDate).toString().padStart(2, '0')}-${(getMonth.call(currentDate) + 1).toString().padStart(2, '0')}-${getFullYear.call(currentDate)}`;
+    console.log(formattedDate);
+
+
+    const customVehiclePayload = {
+      ...vehicleDetails,
+      vehicleUploadDocument: uploadDocument[0]?.response,
+      documents: urls?.map((url: any, index: number) => ({
+        type: url,
+        uploadDate: formattedDate
+      })),
+    };
+    console.log({ customVehiclePayload })
+
+    const response: any = await addVehicle(customVehiclePayload, token || "");
+    if (response?.status == 200) {
+      toast("Vehicle Added Successfully", {
+        icon: "👏",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+      setTimeout(() => {
+        router.push("/onboarding/vehicle-list");
+      }, 3000);
+      console.log("response :", response);
+    } else {
+      toast("Something went wrong", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+    }
+  };
+
 
   return (
     <>
@@ -982,7 +1010,6 @@ const CreateVehicle = () => {
                       <div>
                         {selectedFiles.find(file => file.id === data?.id) ? (
                           <div>
-                            {/* <p>{selectedFiles.find(file => file.id === data?.id)?.file.name}</p> */}
                             <p>{selectedFiles.find(file => file.id === data?.id)?.currentDate ? formatDate(selectedFiles.find(file => file.id === data?.id)?.currentDate) : "No date available"}</p>
                           </div>
                         ) : (
