@@ -16,10 +16,12 @@ import {
   editVehicle,
   getVehicle,
   uploadVehicleRegoDocuemnts,
+  uploadMulitpleVehicleDocuments,
 } from "@/network-request/vehicle/vehicleApi";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
+import { formatDate, formattedDate } from "@/utils";
 interface SelectedFile {
   id: number;
   file: File | null;
@@ -60,10 +62,8 @@ const EditVehicle = () => {
     insuranceStatus: "",
     situation: "",
     truckOdometer: "",
-    documents: [
-      { type: "Registration Certificate", uploadDate: "2023-01-15" },
-      { type: "Insurance Policy", uploadDate: "2023-01-20" },
-    ],
+    vehicleUploadDocument: "",
+    documents: [],
     rentedCompanyName: "",
     dateOfHire: "",
     contractValidTill: "",
@@ -114,7 +114,6 @@ const EditVehicle = () => {
     bankNameError: "",
     accountNumberError: "",
     accountNameError: "",
-    vehicleDocumentStatusError: "Complete",
   });
 
   useEffect(() => {
@@ -172,6 +171,7 @@ const EditVehicle = () => {
   };
 
   const handleSubmit = async () => {
+    let urls;
     // Check validation and get error status
     const hasErrors = checkValidation();
     console.log("Vehicle State : ", vehicleDetails);
@@ -194,9 +194,27 @@ const EditVehicle = () => {
     );
     console.log({ uploadDocument });
 
+    try {
+      const profileUrls = await Promise.all(
+        Object.values(files).map((imageInfo) =>
+          uploadMulitpleVehicleDocuments(imageInfo)
+        )
+      );
+      console.log({ profileUrls });
+      urls = profileUrls.flatMap((entry) => entry.response);
+
+      console.log({ urls });
+    } catch (error) {
+      console.error("Error uploading files:", error);
+    }
+
     const customVehiclePayload = {
       ...vehicleDetails,
       vehicleUploadDocument: uploadDocument[0]?.response,
+      documents: urls?.map((url: any, index: number) => ({
+        type: url,
+        uploadDate: formattedDate,
+      })),
     };
     console.log({ customVehiclePayload });
 
@@ -275,7 +293,7 @@ const EditVehicle = () => {
           key !== "accountNumber" &&
           key !== "accountName" &&
           key !== "documents" &&
-          key !== "vehicleDocumentStatus"
+          key !== "vehicleUploadDocument"
         ) {
           if (!vehicleDetails[key]) {
             newErrors[key + "Error"] = `${correctVehicleStateName(
@@ -318,13 +336,12 @@ const EditVehicle = () => {
   console.log({ selectedUploadRegoDocument });
 
   const handleViewDocuments = () => {
-    window.open("http://localhost:1800/onboarding-profile/dummy.pdf", "_blank");
+    window.open("http://localhost:1800/vehicle-documents/Resume.pdf", "_blank");
   };
 
-  const [selectedFile, setSelectedFile] = useState<{
-    id: number;
-    file: File;
-  } | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<
+    { id: number; file: File; currentDate: Date | null }[]
+  >([]);
 
   const handleFileChanges = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -332,15 +349,29 @@ const EditVehicle = () => {
   ) => {
     const file = event.target.files ? event.target.files[0] : null;
     const documentExists = documentDataCollection.find(
-      (doc:any) => doc.id === documentId
+      (doc: any) => doc.id === documentId
     );
     if (file && documentExists) {
-      setSelectedFile({ id: documentId, file });
-    } else {
-      setSelectedFile(null);
+      const newSelectedFiles = [...selectedFiles];
+      const existingFileIndex = newSelectedFiles.findIndex(
+        (file) => file.id === documentId
+      );
+      const currentDate = new Date();
+      if (existingFileIndex !== -1) {
+        newSelectedFiles[existingFileIndex] = {
+          id: documentId,
+          file,
+          currentDate,
+        };
+      } else {
+        newSelectedFiles.push({ id: documentId, file, currentDate });
+      }
+      setSelectedFiles(newSelectedFiles);
     }
   };
-  console.log({ selectedFile });
+  console.log({ selectedFiles });
+  const files = selectedFiles?.map((selectedFile) => selectedFile.file);
+  console.log({ files });
 
   return (
     <>
@@ -351,7 +382,7 @@ const EditVehicle = () => {
         <div className="ml-[316px] w-full mt-4">
           <div className="bg-white mr-4 flex justify-between items-center rounded-md">
             <h2 className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">
-              Create Vehicle
+              Update Vehicle
             </h2>
             <div className="h-8 w-8 flex justify-center cursor-pointer text-2xl items-center bg-blueGrey-100 rounded-full mr-4">
               <span className="mt-[-2px] ml-[2px] text-[#292D32] rotate-45">
@@ -1031,7 +1062,7 @@ const EditVehicle = () => {
                 </div>
 
                 <div>
-                  {documentDataCollection.map((data : any, index) => (
+                  {documentDataCollection?.map((data: any, index: number) => (
                     <div
                       className="text-black grid grid-cols-[16%_16%_16%_16%_16%_20%] py-4 flex text-center"
                       key={index}
@@ -1044,25 +1075,45 @@ const EditVehicle = () => {
                           </span>
                           <input
                             type="file"
-                            id={`uploadInput-${data.id}`}
                             className="hidden"
                             accept=".doc,.docx,.pdf"
-                            onChange={(event) =>
-                              handleFileChanges(event, data.id)
-                            }
+                            onChange={(e) => handleFileChanges(e, data?.id)}
                           />
                         </label>
                       </div>
-                      <div>{data.uploadDate}</div>
                       <div>
-                        {selectedFile?.id === data?.id ? (
-                          <p>{selectedFile?.file?.name}</p>
+                        {selectedFiles.find((file) => file.id === data?.id) ? (
+                          <div>
+                            <p>
+                              {selectedFiles.find(
+                                (file) => file.id === data?.id
+                              )?.currentDate
+                                ? formatDate(
+                                    selectedFiles.find(
+                                      (file) => file.id === data?.id
+                                    )?.currentDate
+                                  )
+                                : "No date available"}
+                            </p>
+                          </div>
                         ) : (
-                          <span>None</span>
+                          <p>No date available</p>
+                        )}
+                      </div>
+                      <div>
+                        {selectedFiles.find((file) => file.id === data?.id)
+                          ?.file ? (
+                          <p>
+                            {
+                              selectedFiles.find((file) => file.id === data?.id)
+                                ?.file.name
+                            }
+                          </p>
+                        ) : (
+                          <p>No file selected</p>
                         )}
                       </div>
                       <div className="text-center items-center justify-center m-auto">
-                        {/* StatusChip component */}
                         <StatusChip />
                       </div>
                       <div className="underline decoration-[#2B36D9] text-center">
@@ -1070,7 +1121,7 @@ const EditVehicle = () => {
                           className="cursor-pointer text-primary"
                           onClick={handleViewDocuments}
                         >
-                          View
+                          Views
                         </span>
                       </div>
                     </div>
