@@ -8,10 +8,9 @@ const DRIVER_BASE_URL = 'http://localhost:1800/api/d1'
 //     const response = await axios.get('http://localhost:1800/api/d1/add-driver')
 // }
 
-
 export const addDriver = async (data: any, token: string) => {
     try {
-        const response = await axios.post(`${DRIVER_BASE_URL}/add-driver`, data, {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/d1/add-driver`, data, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Basic ${token}`
@@ -23,8 +22,6 @@ export const addDriver = async (data: any, token: string) => {
         console.log('error', error)
     }
 }
-
-
 
 export const getAllDrives = async (token: string) => {
     try {

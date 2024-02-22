@@ -18,15 +18,14 @@ const StatusChip = (props: any) => {
         <select
           name="status"
           id="status"
-          className={`focus:outline-none appearance-none pt-[5px] pb-[7px] text-center pl-4 pr-8 rounded-full text-white ${
-            color === "Approved"
+          className={`focus:outline-none appearance-none pt-[5px] pb-[7px] text-center pl-4 pr-8 rounded-full text-white ${color === "Approved"
               ? "bg-[#2DD36F]"
               : color === "Under Review"
-              ? "bg-[#3DC2FF]"
-              : color === "Rejected"
-              ? "bg-[#EB445A]"
-              : "!text-black border"
-          }`}
+                ? "bg-[#3DC2FF]"
+                : color === "Rejected"
+                  ? "bg-[#EB445A]"
+                  : "!text-black border"
+            }`}
           onChange={toggleColor}
         >
           {options?.map((value, index) => {

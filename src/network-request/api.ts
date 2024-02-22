@@ -1,8 +1,8 @@
-import axios from "./axios"
+import axios from "axios"
 import { Register } from "./types";
 export const loginUser = async (email: string, password: string) =>
   axios
-    .post("/login", { email, password })
+    .post(`${process.env.NEXT_PUBLIC_API_URL}/login`, { email, password })
     .then((response: any) => response.data)
     .catch((error: any) => {
       throw error;
@@ -11,7 +11,7 @@ export const loginUser = async (email: string, password: string) =>
 export const createUser = (payload: Register) => {
   const axiosConfig = {
     method: "post",
-    url: "/add-user",
+    url: `${process.env.NEXT_PUBLIC_API_URL}/add-user`,
     data: payload
   }
 
