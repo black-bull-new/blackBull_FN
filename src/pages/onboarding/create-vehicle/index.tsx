@@ -978,22 +978,22 @@ const documentDataCollection = [
     status: "Approved",
     viewDoc: "view",
   },
-  {
-    Vehicle: "Placeholder",
-    rego: "Placeholder",
-    uploadDate: "18/12/2023",
-    UploadedDoc: "doc.pdf",
-    status: "Under Review",
-    viewDoc: "view",
-  },
-  {
-    Vehicle: "Placeholder",
-    rego: "Placeholder",
-    uploadDate: "17/12/2023",
-    UploadedDoc: "doc.pdf",
-    status: "Rejected",
-    viewDoc: "view",
-  },
+  // {
+  //   Vehicle: "Placeholder",
+  //   rego: "Placeholder",
+  //   uploadDate: "18/12/2023",
+  //   UploadedDoc: "doc.pdf",
+  //   status: "Under Review",
+  //   viewDoc: "view",
+  // },
+  // {
+  //   Vehicle: "Placeholder",
+  //   rego: "Placeholder",
+  //   uploadDate: "17/12/2023",
+  //   UploadedDoc: "doc.pdf",
+  //   status: "Rejected",
+  //   viewDoc: "view",
+  // },
 ];
 const ownershipStatus = [
   {
