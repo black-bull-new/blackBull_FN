@@ -237,6 +237,17 @@ const CreateVehicle = () => {
   const files = selectedFiles?.map((selectedFile) => selectedFile.file);
   console.log({ files });
 
+  const [selectedStatusValues, setSelectedStatusValues] = useState<any[]>([]);
+
+  const handleStatusChipColor = (value: any, index: number) => {
+    setSelectedStatusValues(prevState => {
+      const updatedValues = [...prevState];
+      updatedValues[index] = value;
+      return updatedValues;
+    });
+  };
+  console.log({ selectedStatusValues })
+
   const handleSubmit = async () => {
     let urls;
     // Check validation and get error status
@@ -1052,15 +1063,14 @@ const CreateVehicle = () => {
                         )}
                       </div>
                       <div className="text-center items-center justify-center m-auto">
-                        {/* StatusChip component */}
-                        <StatusChip />
+                        <StatusChip chipColor={(e: any) => handleStatusChipColor(e, index)} />
                       </div>
                       <div className="underline decoration-[#2B36D9] text-center">
                         <span
                           className="cursor-pointer text-primary"
                           onClick={handleViewDocuments}
                         >
-                          View
+                          Views
                         </span>
                       </div>
                     </div>

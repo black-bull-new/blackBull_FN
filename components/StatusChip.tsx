@@ -1,11 +1,17 @@
 import Image from "next/image";
 import { useState } from "react";
-const StatusChip = (props: any) => {
+
+interface StatusChipProps {
+  chipColor: (value: any) => void
+  // props: any
+}
+
+const StatusChip = ({ chipColor }: StatusChipProps) => {
   const [color, setColor] = useState("");
   const toggleColor = (value: any) => {
     setColor(value.target.value);
+    chipColor(value?.target?.value)
   };
-  console.log(color);
   const options = [
     { option: "Select", value: "Select" },
     { option: "Approved", value: "Approved" },
@@ -14,17 +20,17 @@ const StatusChip = (props: any) => {
   ];
   return (
     <>
-      <div className={`relative ${props.className}`}>
+      <div className={"relative"}>
         <select
           name="status"
           id="status"
           className={`focus:outline-none appearance-none pt-[5px] pb-[7px] text-center pl-4 pr-8 rounded-full text-white ${color === "Approved"
-              ? "bg-[#2DD36F]"
-              : color === "Under Review"
-                ? "bg-[#3DC2FF]"
-                : color === "Rejected"
-                  ? "bg-[#EB445A]"
-                  : "!text-black border"
+            ? "bg-[#2DD36F]"
+            : color === "Under Review"
+              ? "bg-[#3DC2FF]"
+              : color === "Rejected"
+                ? "bg-[#EB445A]"
+                : "!text-black border"
             }`}
           onChange={toggleColor}
         >
