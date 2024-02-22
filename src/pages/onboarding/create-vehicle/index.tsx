@@ -224,7 +224,6 @@ const CreateVehicle = () => {
   console.log({ files })
 
   const [selectedStatusValues, setSelectedStatusValues] = useState<any[]>([]);
-
   const handleStatusChipColor = (value: any, index: number) => {
     setSelectedStatusValues(prevState => {
       const updatedValues = [...prevState];
@@ -252,6 +251,7 @@ const CreateVehicle = () => {
       });
       return;
     }
+    
     const uploadDocument = await Promise.all(Object.values(selectedUploadRegoDocument)?.map((file) => uploadVehicleRegoDocuemnts(file)))
     console.log({ uploadDocument })
 
@@ -261,8 +261,8 @@ const CreateVehicle = () => {
       );
       console.log({ profileUrls });
       urls = profileUrls.flatMap(entry => entry.response);
-
       console.log({ urls });
+
     } catch (error) {
       console.error("Error uploading files:", error);
     }
@@ -288,7 +288,7 @@ const CreateVehicle = () => {
         },
       });
       setTimeout(() => {
-        // router.push("/onboarding/vehicle-list");
+        router.push("/onboarding/vehicle-list");
       }, 3000);
       console.log("response :", response);
     } else {
