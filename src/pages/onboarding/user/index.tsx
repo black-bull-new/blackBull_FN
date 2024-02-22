@@ -11,11 +11,12 @@ import { getCookie } from "cookies-next";
 import { correctUserStateName } from "../utility/utilityMethod";
 import { uploadOnboardingPorfile } from "@/network-request/onboarding-user";
 import { regexOfEmail, regexOfPhoneNumber } from "../utility/commonRegex";
-
+import toast, { Toaster } from "react-hot-toast";
+import { useRouter } from "next/router";
 const User = () => {
   const [selectedData, setSelectedData] = useState("");
   const token = getCookie("token");
-
+  const router = useRouter();
   const [error, setError] = useState<any>({
     firstNameError: "",
     lastNameError: "",
@@ -117,7 +118,14 @@ const User = () => {
     const hasErrors = checkValidation();
     console.log("Errors", error);
     if (hasErrors) {
-      alert("Please fix the validation errors before submitting.");
+      toast("Please fix the validation errors before submitting.", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
       return;
     }
     const [profileUrl] = await Promise.all([
@@ -137,11 +145,28 @@ const User = () => {
     console.log({ customPayload });
 
     const response: any = await createUser(customPayload, token || "");
-    console.log("FINAL RESPONSE", { response })
+    console.log("FINAL RESPONSE", { response });
     if (response?.status === 200) {
-      alert("User Added Successfully");
+      toast("User Updated Successfully", {
+        icon: "👏",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+      setTimeout(() => {
+        router.push("/onboarding/user-list");
+      }, 3000);
     } else {
-      alert("Something went Wrong! Please try again later.");
+      toast("Something went wrong", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
     }
   };
 
@@ -162,6 +187,9 @@ const User = () => {
   return (
     <>
       <div className="flex bg-[#E9EFFF]">
+        <div>
+          <Toaster />
+        </div>
         <div className="ml-[316px] w-full mt-4">
           <div className="bg-white mr-4 flex justify-between items-center rounded-md">
             <h2 className=" w-full p-4 rounded-md font-bold text-black">
