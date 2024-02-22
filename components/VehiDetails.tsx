@@ -1,46 +1,49 @@
 import Image from "next/image";
 import Button from "./Button";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Maininputfield from "./Maininputfield";
 import MobileInput from "./mobile-input/MobileInput";
 import FileUpload from "./FileUpload";
 import { getCookie } from "cookies-next";
-
+import { deleteVehicle, getAllVehicle } from "@/network-request/vehicle/vehicleApi";
 
 const VehiDetails = () => {
+  const token = getCookie("token");
   const [action, setAction] = useState(false);
   const [addPopUp, setAddPop] = useState(false);
   const router = useRouter();
   const [link, setLink] = useState(false);
   const [bulkUpload, setBulkUpload] = useState(false);
+  const [vehicleToDelete, setVehicleToDelete] = useState("");
+  const [deletePopUp, setDelete] = useState(false);
   // fetching vechial list
   const [vehicleList, setvehicleList] = React.useState([]);
 
-  const fetchingVehicleList = async () => {
-    const token = getCookie("token", { httpOnly: true });
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_API_URL_V1}/vehicle`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const data = await res.json();
-      const result = data?.data
-      setvehicleList(result);
-    } catch (error) {
-      console.log(error);
+  const getVehicles = async () => {
+    const data = await getAllVehicle(token || "");
+    if (data) {
+      setvehicleList(data.data);
     }
   };
 
-  React.useEffect(() => {
-    fetchingVehicleList();
+  useEffect(() => {
+    getVehicles();
   }, []);
   console.log("vehicleList", { vehicleList });
+
+  const handleDelete = async () => {
+    const response = await deleteVehicle(token || "", vehicleToDelete);
+    if (response) {
+      setVehicleToDelete("");
+      setDelete(false);
+      getVehicles();
+    } else {
+      setDelete(false);
+      setVehicleToDelete("");
+    }
+  };
+
   return (
     <>
       <div className="mr-4">
@@ -104,10 +107,14 @@ const VehiDetails = () => {
               </div>
               <div className="grid text-center grid-cols-[12%_16%_12%_12%_12%_12%_12%_12%] p-4 border">
                 {vehicleList?.map((item: any, index: number) => {
-                  console.log({ item })
+                  console.log({ item });
                   return (
                     <>
-                      <div key={index} className="mb-4" style={{ color: "#000" }}>
+                      <div
+                        key={index}
+                        className="mb-4"
+                        style={{ color: "#000" }}
+                      >
                         {item?.registrationNumber}
                       </div>
                       <div className="mb-4" style={{ color: "#000" }}>
@@ -137,6 +144,12 @@ const VehiDetails = () => {
                           alt="svg"
                           width={24}
                           height={24}
+                          onClick={() => {
+                            router.push({
+                              pathname: "/onboarding/edit-vehicle",
+                              query: { id: item?._id },
+                            });
+                          }}
                           className="cursor-pointer"
                         />
                         <Image
@@ -145,12 +158,44 @@ const VehiDetails = () => {
                           width={24}
                           height={24}
                           className="cursor-pointer"
+                          onClick={() => {
+                            setDelete(true);
+                            setVehicleToDelete(item?._id);
+                          }}
                         />
                       </div>
                     </>
                   );
                 })}
               </div>
+              {deletePopUp === true ? (
+                <>
+                  <div className="w-screen h-screen  fixed top-0 left-0 backdrop-blur-md flex">
+                    <div className="w-[440px] h-[120px] bg-white m-auto rounded-xl relative border">
+                      <p className="text-center mt-4 mb-2">
+                        Are you sure you want to delete this vehicle details?
+                      </p>
+                      <div className="flex justify-end absolute bottom-4 right-4 gap-2">
+                        <Button
+                          text="Cancel"
+                          className="!bg-transparent border !text-[#000] !py-[4px] !px-[8px]"
+                          onClick={() => {
+                            setDelete(false);
+                            setVehicleToDelete("");
+                          }}
+                        />
+                        <Button
+                          text="Confirm"
+                          className=" !py-[4px] !px-[8px] !bg-red-500"
+                          onClick={() => handleDelete()}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                ""
+              )}
             </div>
             <div className="flex justify-between pt-4 bg-white  p-4">
               <div>Showing 1 to 7 of 56 entries</div>
@@ -254,7 +299,7 @@ const VehiDetails = () => {
                 <Button
                   text="Download Template"
                   className="!bg-transparent border !text-[#000] !py-[6px] !px-4"
-                // onClick={() => setLink(false)}
+                  // onClick={() => setLink(false)}
                 />
                 <Button
                   text="Upload"

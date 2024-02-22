@@ -11,7 +11,7 @@ const UserDetails = () => {
   const [deletePopUp, setDelete] = useState(false);
   const router = useRouter();
   const token = getCookie("token");
-  const [driveToDelete, setDriverToDelete] = useState("");
+  const [userToDelete, setUserToDelete] = useState("");
 
   const [users, setUsers] = useState([]);
 
@@ -27,14 +27,14 @@ const UserDetails = () => {
   }, []);
 
   const handleDelete = async () => {
-    const response = await deleteUser(token || "", driveToDelete);
+    const response = await deleteUser(token || "", userToDelete);
     if (response) {
-      setDriverToDelete("");
+      setUserToDelete("");
       setDelete(false);
       getUsers();
     } else {
       setDelete(false);
-      setDriverToDelete("");
+      setUserToDelete("");
     }
   };
 
@@ -94,10 +94,6 @@ const UserDetails = () => {
                       <p className="mb-4">
                         <CommonUI status="Active" />
                       </p>
-                      {/* <p className="bg-[#D9F2DD] text-[#359742] w-fit px-4 py-[5px] rounded-full m-auto mb-4 flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-[#359742] block"></span>{" "}
-                        Active
-                      </p> */}
                       <div className="flex justify-center gap-2 mb-4">
                         <Image
                           src={"/edit.svg"}
@@ -120,17 +116,10 @@ const UserDetails = () => {
                           className="cursor-pointer"
                           onClick={() => {
                             setDelete(true);
-                            setDriverToDelete(item?._id);
+                            setUserToDelete(item?._id);
                           }}
                         />
                       </div>
-
-                      {/* <div className="mb-4">{item?.licenseDetails?.licenseType}</div>
-                      <div className="mb-4">{item?.licenseDetails?.expiryDate}</div>
-                      <div className="mb-4">{item?.licenseDetails?.state}</div>
-                      <div className="mb-4">{item?.licenceDoc}</div>
-                      <div className="mb-4">{item?.visaStatus}</div>
-                      <div className="mb-4">{item?.complaint}</div> */}
                     </React.Fragment>
                   );
                 })}
@@ -140,7 +129,7 @@ const UserDetails = () => {
                   <div className="w-screen h-screen  fixed top-0 left-0 backdrop-blur-md flex">
                     <div className="w-[440px] h-[120px] bg-white m-auto rounded-xl relative border">
                       <p className="text-center mt-4 mb-2">
-                        Are you sure you want to delete this driver details?
+                        Are you sure you want to delete this user details?
                       </p>
                       <div className="flex justify-end absolute bottom-4 right-4 gap-2">
                         <Button
@@ -148,7 +137,7 @@ const UserDetails = () => {
                           className="!bg-transparent border !text-[#000] !py-[4px] !px-[8px]"
                           onClick={() => {
                             setDelete(false);
-                            setDriverToDelete("");
+                            setUserToDelete("");
                           }}
                         />
                         <Button
