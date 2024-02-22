@@ -15,6 +15,7 @@ import { addVehicle, uploadVehicleRegoDocuemnts } from "@/network-request/vehicl
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
+import { formatDate } from "@/utils";
 interface SelectedFile {
   id: number;
   file: File | null;
@@ -251,26 +252,26 @@ const CreateVehicle = () => {
     window.open("http://localhost:1800/onboarding-profile/dummy.pdf", "_blank");
   };
 
-  // const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  // const handleFileChanges = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setSelectedFile(event.target.files ? event.target.files[0] : null);
-  // };
-  // console.log({ selectedFile })
-
-
-  const [selectedFile, setSelectedFile] = useState<{ id: number; file: File } | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<{ id: number; file: File; currentDate: Date | null }[]>([]);
 
   const handleFileChanges = (event: React.ChangeEvent<HTMLInputElement>, documentId: number) => {
     const file = event.target.files ? event.target.files[0] : null;
     const documentExists = documentDataCollection.find(doc => doc.id === documentId);
     if (file && documentExists) {
-      setSelectedFile({ id: documentId, file });
-    } else {
-      setSelectedFile(null);
+      const newSelectedFiles = [...selectedFiles];
+      const existingFileIndex = newSelectedFiles.findIndex(file => file.id === documentId);
+      const currentDate = new Date();
+      if (existingFileIndex !== -1) {
+        newSelectedFiles[existingFileIndex] = { id: documentId, file, currentDate };
+      } else {
+        newSelectedFiles.push({ id: documentId, file, currentDate });
+      }
+      setSelectedFiles(newSelectedFiles);
     }
   };
-  console.log({ selectedFile })
+
+  console.log({ selectedFiles })
 
   return (
     <>
@@ -962,7 +963,7 @@ const CreateVehicle = () => {
                 </div>
 
                 <div>
-                  {documentDataCollection.map((data, index) => (
+                  {documentDataCollection?.map((data, index) => (
                     <div className="text-black grid grid-cols-[16%_16%_16%_16%_16%_20%] py-4 flex text-center" key={index}>
                       <div>{data.Vehicle}</div>
                       <div className="text-center">
@@ -972,22 +973,28 @@ const CreateVehicle = () => {
                           </span>
                           <input
                             type="file"
-                            id={`uploadInput-${data.id}`}
                             className="hidden"
                             accept=".doc,.docx,.pdf"
-                            onChange={(event) => handleFileChanges(event, data.id)}
+                            onChange={(e) => handleFileChanges(e, data?.id)}
                           />
                         </label>
                       </div>
-                      <div>{data.uploadDate}</div>
                       <div>
-
-                        {selectedFile?.id === data?.id ? (
-                          <p>{selectedFile.file.name}</p>
+                        {selectedFiles.find(file => file.id === data?.id) ? (
+                          <div>
+                            {/* <p>{selectedFiles.find(file => file.id === data?.id)?.file.name}</p> */}
+                            <p>{selectedFiles.find(file => file.id === data?.id)?.currentDate ? formatDate(selectedFiles.find(file => file.id === data?.id)?.currentDate) : "No date available"}</p>
+                          </div>
                         ) : (
-                          <span>None</span>
+                          <p>No date available</p>
                         )}
 
+                      </div>
+                      <div>
+                        {selectedFiles.find(file => file.id === data?.id)?.file
+                          ? <p>{selectedFiles.find(file => file.id === data?.id)?.file.name}</p>
+                          : <p>No file selected</p>
+                        }
                       </div>
                       <div className="text-center items-center justify-center m-auto">
                         {/* StatusChip component */}
@@ -998,6 +1005,7 @@ const CreateVehicle = () => {
                       </div>
                     </div>
                   ))}
+
                 </div>
               </div>
             </div>
@@ -1049,24 +1057,24 @@ const documentDataCollection = [
     status: "Approved",
     viewDoc: "view",
   },
-  // {
-  //   id: 2,
-  //   Vehicle: "Placeholder",
-  //   rego: "Placeholder",
-  //   uploadDate: "14/12/2023",
-  //   UploadedDoc: "doc.pdf",
-  //   status: "Approved",
-  //   viewDoc: "view",
-  // },
-  // {
-  //   id: 3,
-  //   Vehicle: "Placeholder",
-  //   rego: "Placeholder",
-  //   uploadDate: "20/12/2023",
-  //   UploadedDoc: "doc.pdf",
-  //   status: "Approved",
-  //   viewDoc: "view",
-  // },
+  {
+    id: 2,
+    Vehicle: "Placeholder",
+    rego: "Placeholder",
+    uploadDate: "14/12/2023",
+    UploadedDoc: "doc.pdf",
+    status: "Approved",
+    viewDoc: "view",
+  },
+  {
+    id: 3,
+    Vehicle: "Placeholder",
+    rego: "Placeholder",
+    uploadDate: "20/12/2023",
+    UploadedDoc: "doc.pdf",
+    status: "Approved",
+    viewDoc: "view",
+  },
 ];
 const ownershipStatus = [
   {
