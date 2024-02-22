@@ -514,7 +514,6 @@ const EditUser = () => {
             </div>
             <div className="mt-4">
               <h2 className="font-semibold mb-4 text-black">User Role</h2>
-
               <div className="grid grid-cols-3 gap-4">
                 <DropDownMap
                   label="Role Selected"

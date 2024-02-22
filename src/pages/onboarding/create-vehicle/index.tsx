@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import Button from "../../../../components/Button";
 import DateWithoutDropdown from "../../../../components/DateWithoutDropdown";
 import DropDownMap from "../../../../components/DropDownMap";
@@ -11,10 +11,15 @@ import Progressbar from "../../../../components/Progressbar";
 import Sidebar from "../../../../components/Sidebar";
 import StatusChip from "../../../../components/StatusChip";
 import { correctVehicleStateName } from "../utility/utilityMethod";
-import { addVehicle } from "@/network-request/vehicle/vehicleApi";
+import { addVehicle, uploadVehicleRegoDocuemnts } from "@/network-request/vehicle/vehicleApi";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
+interface SelectedFile {
+  id: number;
+  file: File | null;
+}
+
 const CreateVehicle = () => {
   const token = getCookie("token");
   const router = useRouter();
@@ -50,6 +55,7 @@ const CreateVehicle = () => {
     insuranceStatus: "",
     situation: "",
     truckOdometer: "",
+    vehicleUploadDocument: "",
     documents: [
       { type: "Registration Certificate", uploadDate: "2023-01-15" },
       { type: "Insurance Policy", uploadDate: "2023-01-20" },
@@ -123,8 +129,16 @@ const CreateVehicle = () => {
       });
       return;
     }
+    const uploadDocument = await Promise.all(Object.values(selectedUploadRegoDocument)?.map((file) => uploadVehicleRegoDocuemnts(file)))
+    console.log({ uploadDocument })
 
-    const response: any = await addVehicle(vehicleDetails, token || "");
+    const customVehiclePayload = {
+      ...vehicleDetails,
+      vehicleUploadDocument: uploadDocument[0]?.response
+    }
+    console.log({ customVehiclePayload })
+
+    const response: any = await addVehicle(customVehiclePayload, token || "");
     if (response?.status == 200) {
       toast("Vehicle Added Successfully", {
         icon: "👏",
@@ -191,7 +205,8 @@ const CreateVehicle = () => {
           key !== "paymentMethod" &&
           key !== "bankName" &&
           key !== "accountNumber" &&
-          key !== "accountName"
+          key !== "accountName" &&
+          key !== "vehicleUploadDocument"
         ) {
           if (!vehicleDetails[key]) {
             newErrors[key + "Error"] = `${correctVehicleStateName(
@@ -208,6 +223,54 @@ const CreateVehicle = () => {
     // Return the error status
     return hasErrors;
   };
+
+  const [documentRender, setDocumentRender] = React.useState("");
+  const [selectedUploadRegoDocument, setSelectedUploadRegoDocument] = React.useState("");
+
+  const handleFileChange = (setSide: any, setPreview: any) => (event: any) => {
+    const selectedFile = event.target.files && event.target.files[0];
+    console.log({ selectedFile })
+    setSide({ file: selectedFile });
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader?.result! as any);
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+  };
+
+  const handleProfileFileChange = handleFileChange(
+    setSelectedUploadRegoDocument,
+    setDocumentRender
+  );
+
+  console.log({ selectedUploadRegoDocument });
+
+  const handleViewDocuments = () => {
+    window.open("http://localhost:1800/onboarding-profile/dummy.pdf", "_blank");
+  };
+
+  // const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  // const handleFileChanges = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setSelectedFile(event.target.files ? event.target.files[0] : null);
+  // };
+  // console.log({ selectedFile })
+
+
+  const [selectedFile, setSelectedFile] = useState<{ id: number; file: File } | null>(null);
+
+  const handleFileChanges = (event: React.ChangeEvent<HTMLInputElement>, documentId: number) => {
+    const file = event.target.files ? event.target.files[0] : null;
+    const documentExists = documentDataCollection.find(doc => doc.id === documentId);
+    if (file && documentExists) {
+      setSelectedFile({ id: documentId, file });
+    } else {
+      setSelectedFile(null);
+    }
+  };
+  console.log({ selectedFile })
 
   return (
     <>
@@ -602,7 +665,13 @@ const CreateVehicle = () => {
                     />
                   </>
                 )}
-                <FileUpload file="Choose Multiple Document" />
+                <FileUpload
+                  file="Upload Rego Document"
+                  onChange={handleProfileFileChange}
+                  //@ts-expect-error 
+                  fileName={selectedUploadRegoDocument?.file?.name || ""}
+                />
+
 
                 {/* <Mainselectfield label="Registration Status" option="Active" /> */}
               </div>
@@ -892,43 +961,44 @@ const CreateVehicle = () => {
                   })}
                 </div>
 
-                {documentDataCollection?.map((data, ind) => {
-                  return (
-                    <>
-                      <div
-                        className="text-black grid grid-cols-[16%_16%_16%_16%_16%_20%] py-4 flex text-center"
-                        key={ind}
-                      >
-                        <div>{data.Vehicle}</div>
-                        <div>{data.rego}</div>
-                        <div>{data.uploadDate}</div>
-                        <div>{data.UploadedDoc}</div>
-                        <div className="text-center items-center justify-center m-auto">
-                          {/* <span
-                            className={` ${
-                              data.status === "Approved"
-                                ? "bg-[#2DD36F]"
-                                : data.status === "Under Review"
-                                ? "bg-[#3DC2FF]"
-                                : data.status === "Rejected"
-                                ? "bg-[#EB445A]"
-                                : ""
-                            } px-4 pt-[3px] pb-[7px] text-white rounded-full`}
-                          >
-                            {data.status}
-                          </span> */}
-                          <StatusChip className="w-fit" />
-                        </div>
-                        <div className="underline decoration-[#2B36D9] text-center">
-                          <span className="cursor-pointer text-primary">
-                            {" "}
-                            {data.viewDoc}
+                <div>
+                  {documentDataCollection.map((data, index) => (
+                    <div className="text-black grid grid-cols-[16%_16%_16%_16%_16%_20%] py-4 flex text-center" key={index}>
+                      <div>{data.Vehicle}</div>
+                      <div className="text-center">
+                        <label className="cursor-pointer">
+                          <span className="!w-fit m-auto bg-accent3 text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">
+                            Upload
                           </span>
-                        </div>
+                          <input
+                            type="file"
+                            id={`uploadInput-${data.id}`}
+                            className="hidden"
+                            accept=".doc,.docx,.pdf"
+                            onChange={(event) => handleFileChanges(event, data.id)}
+                          />
+                        </label>
                       </div>
-                    </>
-                  );
-                })}
+                      <div>{data.uploadDate}</div>
+                      <div>
+
+                        {selectedFile?.id === data?.id ? (
+                          <p>{selectedFile.file.name}</p>
+                        ) : (
+                          <span>None</span>
+                        )}
+
+                      </div>
+                      <div className="text-center items-center justify-center m-auto">
+                        {/* StatusChip component */}
+                        <StatusChip />
+                      </div>
+                      <div className="underline decoration-[#2B36D9] text-center">
+                        <span className="cursor-pointer text-primary" onClick={handleViewDocuments}>View</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -971,6 +1041,7 @@ const vehicleDocumentCollection = [
 ];
 const documentDataCollection = [
   {
+    id: 1,
     Vehicle: "Placeholder",
     rego: "Placeholder",
     uploadDate: "19/12/2023",
@@ -978,22 +1049,24 @@ const documentDataCollection = [
     status: "Approved",
     viewDoc: "view",
   },
-  {
-    Vehicle: "Placeholder",
-    rego: "Placeholder",
-    uploadDate: "18/12/2023",
-    UploadedDoc: "doc.pdf",
-    status: "Under Review",
-    viewDoc: "view",
-  },
-  {
-    Vehicle: "Placeholder",
-    rego: "Placeholder",
-    uploadDate: "17/12/2023",
-    UploadedDoc: "doc.pdf",
-    status: "Rejected",
-    viewDoc: "view",
-  },
+  // {
+  //   id: 2,
+  //   Vehicle: "Placeholder",
+  //   rego: "Placeholder",
+  //   uploadDate: "14/12/2023",
+  //   UploadedDoc: "doc.pdf",
+  //   status: "Approved",
+  //   viewDoc: "view",
+  // },
+  // {
+  //   id: 3,
+  //   Vehicle: "Placeholder",
+  //   rego: "Placeholder",
+  //   uploadDate: "20/12/2023",
+  //   UploadedDoc: "doc.pdf",
+  //   status: "Approved",
+  //   viewDoc: "view",
+  // },
 ];
 const ownershipStatus = [
   {

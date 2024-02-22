@@ -6,7 +6,7 @@ export const uploadOnboardingPorfile = async (selectedFile: any) => {
     const formData = new FormData();
     formData.append("files", selectedFile)
     return await axios
-        .post(`${process.env.NEXT_PUBLIC_API_URL}/onboarding-profile`,
+        .post(`${process.env.NEXT_PUBLIC_API_URL}/v1/upload`,
             formData,
             {
                 withCredentials: false

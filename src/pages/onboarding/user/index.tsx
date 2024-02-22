@@ -140,14 +140,13 @@ const User = () => {
     const customPayload = {
       ...user,
       avatar: profileUrl[0]?.response,
-    };
-
+    }
     console.log({ customPayload });
 
     const response: any = await createUser(customPayload, token || "");
     console.log("FINAL RESPONSE", { response });
     if (response?.status === 200) {
-      toast("User Updated Successfully", {
+      toast("User has", {
         icon: "👏",
         style: {
           borderRadius: "10px",

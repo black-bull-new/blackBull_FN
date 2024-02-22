@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { Login } from "@/network-request/types";
 import { loginUser } from "@/network-request/api";
 import toast, { Toaster } from "react-hot-toast";
+import { setCookie } from 'nookies';
 
 const Login = () => {
   const router = useRouter();
@@ -40,11 +41,15 @@ const Login = () => {
   console.log({ values });
 
   const onLogin = React.useCallback(async (values: any) => {
-    console.log("values>>>>>>",values);
+    console.log("values>>>>>>", values);
     try {
       const response = await loginUser(values?.email, values?.password);
       console.log({ response });
       if (response?.token) {
+        setCookie(null, 'token', response?.token, {
+          maxAge: 7 * 24 * 60 * 60,
+          path: '/',
+        });
         toast('Welcome back! You are now signed in.',
           {
             icon: '👏',
@@ -72,7 +77,7 @@ const Login = () => {
     <React.Fragment>
       <div>
         <div className=" pt-6 pl-8 absolute">
-          <Image src="/logoOzi.svg" alt="logo" width={130} height={50} priority quality={100}/>
+          <Image src="/logoOzi.svg" alt="logo" width={130} height={50} priority quality={100} />
         </div>
         <div><Toaster /></div>
         <div className="grid grid-cols-2 items-center">
