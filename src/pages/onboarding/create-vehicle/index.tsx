@@ -11,7 +11,10 @@ import Progressbar from "../../../../components/Progressbar";
 import Sidebar from "../../../../components/Sidebar";
 import StatusChip from "../../../../components/StatusChip";
 import { correctVehicleStateName } from "../utility/utilityMethod";
-import { addVehicle, uploadVehicleRegoDocuemnts } from "@/network-request/vehicle/vehicleApi";
+import {
+  addVehicle,
+  uploadVehicleRegoDocuemnts,
+} from "@/network-request/vehicle/vehicleApi";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
@@ -96,10 +99,10 @@ const CreateVehicle = () => {
     insuranceStatusError: "",
     situationError: "",
     truckOdometerError: "",
-    documents: [
-      { type: "Registration Certificate", uploadDate: "2023-01-15" },
-      { type: "Insurance Policy", uploadDate: "2023-01-20" },
-    ],
+    // documents: [
+    //   { type: "Registration Certificate", uploadDate: "2023-01-15" },
+    //   { type: "Insurance Policy", uploadDate: "2023-01-20" },
+    // ],
     rentedCompanyNameError: "",
     dateOfHireError: "",
     contractValidTillError: "",
@@ -129,14 +132,18 @@ const CreateVehicle = () => {
       });
       return;
     }
-    const uploadDocument = await Promise.all(Object.values(selectedUploadRegoDocument)?.map((file) => uploadVehicleRegoDocuemnts(file)))
-    console.log({ uploadDocument })
+    const uploadDocument = await Promise.all(
+      Object.values(selectedUploadRegoDocument)?.map((file) =>
+        uploadVehicleRegoDocuemnts(file)
+      )
+    );
+    console.log({ uploadDocument });
 
     const customVehiclePayload = {
       ...vehicleDetails,
-      vehicleUploadDocument: uploadDocument[0]?.response
-    }
-    console.log({ customVehiclePayload })
+      vehicleUploadDocument: uploadDocument[0]?.response,
+    };
+    console.log({ customVehiclePayload });
 
     const response: any = await addVehicle(customVehiclePayload, token || "");
     if (response?.status == 200) {
@@ -225,11 +232,12 @@ const CreateVehicle = () => {
   };
 
   const [documentRender, setDocumentRender] = React.useState("");
-  const [selectedUploadRegoDocument, setSelectedUploadRegoDocument] = React.useState("");
+  const [selectedUploadRegoDocument, setSelectedUploadRegoDocument] =
+    React.useState("");
 
   const handleFileChange = (setSide: any, setPreview: any) => (event: any) => {
     const selectedFile = event.target.files && event.target.files[0];
-    console.log({ selectedFile })
+    console.log({ selectedFile });
     setSide({ file: selectedFile });
     if (selectedFile) {
       const reader = new FileReader();
@@ -258,19 +266,26 @@ const CreateVehicle = () => {
   // };
   // console.log({ selectedFile })
 
+  const [selectedFile, setSelectedFile] = useState<{
+    id: number;
+    file: File;
+  } | null>(null);
 
-  const [selectedFile, setSelectedFile] = useState<{ id: number; file: File } | null>(null);
-
-  const handleFileChanges = (event: React.ChangeEvent<HTMLInputElement>, documentId: number) => {
+  const handleFileChanges = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    documentId: number
+  ) => {
     const file = event.target.files ? event.target.files[0] : null;
-    const documentExists = documentDataCollection.find(doc => doc.id === documentId);
+    const documentExists = documentDataCollection.find(
+      (doc) => doc.id === documentId
+    );
     if (file && documentExists) {
       setSelectedFile({ id: documentId, file });
     } else {
       setSelectedFile(null);
     }
   };
-  console.log({ selectedFile })
+  console.log({ selectedFile });
 
   return (
     <>
@@ -668,10 +683,9 @@ const CreateVehicle = () => {
                 <FileUpload
                   file="Upload Rego Document"
                   onChange={handleProfileFileChange}
-                  //@ts-expect-error 
+                  //@ts-expect-error
                   fileName={selectedUploadRegoDocument?.file?.name || ""}
                 />
-
 
                 {/* <Mainselectfield label="Registration Status" option="Active" /> */}
               </div>
@@ -780,7 +794,7 @@ const CreateVehicle = () => {
                     }}
                     errorMessage={error.policyNumberError}
                   />
-                  <DateWithoutDropdown
+                  <Maindatefield
                     label="Vehicle Insurance Start Date"
                     value={vehicleDetails.vehicleInsuranceStartDate}
                     onChange={(e: any) => {
@@ -963,7 +977,10 @@ const CreateVehicle = () => {
 
                 <div>
                   {documentDataCollection.map((data, index) => (
-                    <div className="text-black grid grid-cols-[16%_16%_16%_16%_16%_20%] py-4 flex text-center" key={index}>
+                    <div
+                      className="text-black grid grid-cols-[16%_16%_16%_16%_16%_20%] py-4 flex text-center"
+                      key={index}
+                    >
                       <div>{data.Vehicle}</div>
                       <div className="text-center">
                         <label className="cursor-pointer">
@@ -975,26 +992,31 @@ const CreateVehicle = () => {
                             id={`uploadInput-${data.id}`}
                             className="hidden"
                             accept=".doc,.docx,.pdf"
-                            onChange={(event) => handleFileChanges(event, data.id)}
+                            onChange={(event) =>
+                              handleFileChanges(event, data.id)
+                            }
                           />
                         </label>
                       </div>
                       <div>{data.uploadDate}</div>
                       <div>
-
                         {selectedFile?.id === data?.id ? (
                           <p>{selectedFile.file.name}</p>
                         ) : (
                           <span>None</span>
                         )}
-
                       </div>
                       <div className="text-center items-center justify-center m-auto">
                         {/* StatusChip component */}
                         <StatusChip />
                       </div>
                       <div className="underline decoration-[#2B36D9] text-center">
-                        <span className="cursor-pointer text-primary" onClick={handleViewDocuments}>View</span>
+                        <span
+                          className="cursor-pointer text-primary"
+                          onClick={handleViewDocuments}
+                        >
+                          View
+                        </span>
                       </div>
                     </div>
                   ))}
