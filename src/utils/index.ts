@@ -5,3 +5,8 @@ export const formatDate = (dateString: any) => {
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
 };
+
+const currentDate = new Date();
+const { getDate, getMonth, getFullYear } = currentDate;
+export const formattedDate = `${getDate.call(currentDate).toString().padStart(2, '0')}-${(getMonth.call(currentDate) + 1).toString().padStart(2, '0')}-${getFullYear.call(currentDate)}`;
+console.log(formattedDate);

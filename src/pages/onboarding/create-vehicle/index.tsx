@@ -15,7 +15,7 @@ import { addVehicle, uploadMulitpleVehicleDocuments, uploadVehicleRegoDocuemnts 
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
-import { formatDate } from "@/utils";
+import { formatDate, formattedDate } from "@/utils";
 interface SelectedFile {
   id: number;
   file: File | null;
@@ -57,10 +57,7 @@ const CreateVehicle = () => {
     situation: "",
     truckOdometer: "",
     vehicleUploadDocument: "",
-    documents: [
-      { type: "Registration Certificate", uploadDate: "2023-01-15" },
-      { type: "Insurance Policy", uploadDate: "2023-01-20" },
-    ],
+    documents: [],
     rentedCompanyName: "",
     dateOfHire: "",
     contractValidTill: "",
@@ -203,7 +200,6 @@ const CreateVehicle = () => {
     window.open("http://localhost:1800/onboarding-profile/dummy.pdf", "_blank");
   };
 
-
   const [selectedFiles, setSelectedFiles] = useState<{ id: number; file: File; currentDate: Date | null }[]>([]);
 
   const handleFileChanges = (event: React.ChangeEvent<HTMLInputElement>, documentId: number) => {
@@ -258,12 +254,6 @@ const CreateVehicle = () => {
       console.error("Error uploading files:", error);
     }
 
-    const currentDate = new Date();
-    const { getDate, getMonth, getFullYear } = currentDate;
-    const formattedDate = `${getDate.call(currentDate).toString().padStart(2, '0')}-${(getMonth.call(currentDate) + 1).toString().padStart(2, '0')}-${getFullYear.call(currentDate)}`;
-    console.log(formattedDate);
-
-
     const customVehiclePayload = {
       ...vehicleDetails,
       vehicleUploadDocument: uploadDocument[0]?.response,
@@ -285,7 +275,7 @@ const CreateVehicle = () => {
         },
       });
       setTimeout(() => {
-        router.push("/onboarding/vehicle-list");
+        // router.push("/onboarding/vehicle-list");
       }, 3000);
       console.log("response :", response);
     } else {
