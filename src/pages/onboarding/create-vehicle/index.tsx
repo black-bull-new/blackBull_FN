@@ -1018,9 +1018,25 @@ const CreateVehicle = () => {
                       <div>{data.Vehicle}</div>
                       <div className="text-center">
                         <label className="cursor-pointer">
-                          <span className="!w-fit m-auto bg-accent3 text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">
-                            Upload
-                          </span>
+                          <React.Fragment>
+                            {selectedFiles.find((file) => file.id === data?.id)
+                              ?.file ? (
+                              <div>
+                                <p>
+                                  {
+                                    selectedFiles.find(
+                                      (file) => file.id === data?.id
+                                    )?.file.name
+                                  }
+                                </p>
+                              </div>
+                            ) : (
+                              <span className="!w-fit m-auto bg-accent3 text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">
+                                Select
+                              </span>
+                            )}
+                          </React.Fragment>
+
                           <input
                             type="file"
                             className="hidden"
@@ -1049,20 +1065,24 @@ const CreateVehicle = () => {
                         )}
                       </div>
                       <div>
-                        <>
+                        <span className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">
+                          Upload
+                        </span>
+                        {/* <React.Fragment>
                           {selectedFiles.find((file) => file.id === data?.id)
                             ?.file ? (
-                            <p>
-                              {
-                                selectedFiles.find(
-                                  (file) => file.id === data?.id
-                                )?.file.name
-                              }
-                            </p>
+                            <div>
+                              <p>
+                                {
+                                  selectedFiles.find((file) => file.id === data?.id)
+                                    ?.file.name
+                                }
+                              </p>
+                            </div>
                           ) : (
                             <p>No file selected</p>
                           )}
-                        </>
+                        </React.Fragment> */}
                       </div>
                       <div className="text-center items-center justify-center m-auto">
                         <StatusChip

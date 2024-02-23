@@ -15,6 +15,9 @@ import { addDriver } from "@/network-request/driver/driverApi";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { correctDriverStateName } from "../utility/utilityMethod";
+import React from "react";
+import { formatDate } from "@/utils";
+import { regexOfEmail, regexOfPhoneNumber } from "../utility/commonRegex";
 
 const CreateDriver = () => {
   const [selectedData, setSelectedData] = useState("");
@@ -235,6 +238,40 @@ const CreateDriver = () => {
     },
   });
 
+  const [selectedFiles, setSelectedFiles] = useState<
+    { id: number; file: File; currentDate: Date | null }[]
+  >([]);
+
+  const handleFileChanges = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    documentId: number
+  ) => {
+    const file = event.target.files ? event.target.files[0] : null;
+    const documentExists = documentCollectionData.find(
+      (doc) => doc.id === documentId
+    );
+    if (file && documentExists) {
+      const newSelectedFiles = [...selectedFiles];
+      const existingFileIndex = newSelectedFiles.findIndex(
+        (file) => file.id === documentId
+      );
+      const currentDate = new Date();
+      if (existingFileIndex !== -1) {
+        newSelectedFiles[existingFileIndex] = {
+          id: documentId,
+          file,
+          currentDate,
+        };
+      } else {
+        newSelectedFiles.push({ id: documentId, file, currentDate });
+      }
+      setSelectedFiles(newSelectedFiles);
+    }
+  };
+  console.log({ selectedFiles });
+  const files = selectedFiles?.map((selectedFile) => selectedFile.file);
+  console.log({ files });
+
   const handleSubmit = async () => {
     // Check validation and get error status
     const hasErrors = checkValidation();
@@ -412,17 +449,23 @@ const CreateDriver = () => {
                 <Maininputfield
                   label="Email"
                   value={driverDetails.email}
-                  onChange={(e: any) => {
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    const inputValue = e.target.value;
+                    if (!regexOfEmail.test(inputValue)) {
+                      setError({
+                        ...error,
+                        emailError: "Please enter a valid email address",
+                      });
+                    } else {
+                      setError({
+                        ...error,
+                        emailError: "", // Clear the error when the input is valid
+                      });
+                    }
                     setDriverDetails({
                       ...driverDetails,
                       email: e.target.value,
                     });
-                    if (e.target.value.length > 0) {
-                      setError({
-                        ...error,
-                        emailError: "",
-                      });
-                    }
                   }}
                   className="w-full"
                   errorMessage={error.emailError}
@@ -430,17 +473,23 @@ const CreateDriver = () => {
                 <Maininputfield
                   label="Mobile"
                   value={driverDetails.mobile}
-                  onChange={(e: any) => {
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    const inputValue = e.target.value;
+                    if (!regexOfPhoneNumber.test(inputValue)) {
+                      setError({
+                        ...error,
+                        mobileError: "Please enter a valid phone number",
+                      });
+                    } else {
+                      setError({
+                        ...error,
+                        mobileError: "", // Clear the error when the input is valid
+                      });
+                    }
                     setDriverDetails({
                       ...driverDetails,
                       mobile: e.target.value,
                     });
-                    if (e.target.value.length > 0) {
-                      setError({
-                        ...error,
-                        mobileError: "",
-                      });
-                    }
                   }}
                   className="w-full"
                   errorMessage={error.mobileError}
@@ -798,6 +847,35 @@ const CreateDriver = () => {
                 <Maininputfield
                   label="Contact Name"
                   value={driverDetails.emergencyContactInformation.contactName}
+                  // onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  //   const inputValue = e.target.value;
+
+                  //   if (!regexOfPhoneNumber.test(inputValue)) {
+                  //     setError({
+                  //       ...error,
+                  //       emergencyContactInformationError: {
+                  //         ...error.emergencyContactInformationError,
+                  //         contactName: "Please enter a valid phone number",
+                  //       },
+                  //     });
+                  //   } else {
+                  //     setError({
+                  //       ...error,
+                  //       emergencyContactInformationError: {
+                  //         ...error.emergencyContactInformationError,
+                  //         contactName: "",
+                  //       },
+                  //     });
+                  //   }
+
+                  //   setDriverDetails({
+                  //     ...driverDetails,
+                  //     emergencyContactInformation: {
+                  //       ...driverDetails.emergencyContactInformation,
+                  //       contactName: inputValue,
+                  //     },
+                  //   });
+                  // }}
                   onChange={(e: any) => {
                     setDriverDetails({
                       ...driverDetails,
@@ -826,15 +904,36 @@ const CreateDriver = () => {
                   value={
                     driverDetails.emergencyContactInformation.contactNumber
                   }
-                  onChange={(e: any) => {
-                    setDriverDetails({
-                      ...driverDetails,
-                      emergencyContactInformation: {
-                        ...driverDetails.emergencyContactInformation,
-                        contactNumber: e.target.value,
-                      },
-                    });
-                    if (e.target.value.length > 0) {
+                  // onChange={(e: any) => {
+                  //   setDriverDetails({
+                  //     ...driverDetails,
+                  //     emergencyContactInformation: {
+                  //       ...driverDetails.emergencyContactInformation,
+                  //       contactNumber: e.target.value,
+                  //     },
+                  //   });
+                  //   if (e.target.value.length > 0) {
+                  //     setError({
+                  //       ...error,
+                  //       emergencyContactInformationError: {
+                  //         ...error.emergencyContactInformationError,
+                  //         contactNumber: "",
+                  //       },
+                  //     });
+                  //   }
+                  // }}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    const inputValue = e.target.value;
+
+                    if (!regexOfPhoneNumber.test(inputValue)) {
+                      setError({
+                        ...error,
+                        emergencyContactInformationError: {
+                          ...error.emergencyContactInformationError,
+                          contactNumber: "Please enter a valid phone number",
+                        },
+                      });
+                    } else {
                       setError({
                         ...error,
                         emergencyContactInformationError: {
@@ -843,6 +942,14 @@ const CreateDriver = () => {
                         },
                       });
                     }
+
+                    setDriverDetails({
+                      ...driverDetails,
+                      emergencyContactInformation: {
+                        ...driverDetails.emergencyContactInformation,
+                        contactNumber: inputValue,
+                      },
+                    });
                   }}
                   className="w-full"
                   errorMessage={
@@ -1020,15 +1127,18 @@ const CreateDriver = () => {
                   <Maininputfield
                     label="Reference (Email ID)"
                     value={driverDetails.employmentHistory.referenceEmailId}
-                    onChange={(e: any) => {
-                      setDriverDetails({
-                        ...driverDetails,
-                        employmentHistory: {
-                          ...driverDetails.employmentHistory,
-                          referenceEmailId: e.target.value,
-                        },
-                      });
-                      if (e.target.value.length > 0) {
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      const inputValue = e.target.value;
+                      if (!regexOfEmail.test(inputValue)) {
+                        setError({
+                          ...error,
+                          employmentHistoryError: {
+                            ...error.employmentHistoryError,
+                            referenceEmailId:
+                              "Please enter a valid email address",
+                          },
+                        });
+                      } else {
                         setError({
                           ...error,
                           employmentHistoryError: {
@@ -1037,6 +1147,13 @@ const CreateDriver = () => {
                           },
                         });
                       }
+                      setDriverDetails({
+                        ...driverDetails,
+                        employmentHistory: {
+                          ...driverDetails.employmentHistory,
+                          referenceEmailId: e.target.value,
+                        },
+                      });
                     }}
                     className="w-full"
                     errorMessage={
@@ -1048,15 +1165,18 @@ const CreateDriver = () => {
                     value={
                       driverDetails.employmentHistory.referenceContactNumber
                     }
-                    onChange={(e: any) => {
-                      setDriverDetails({
-                        ...driverDetails,
-                        employmentHistory: {
-                          ...driverDetails.employmentHistory,
-                          referenceContactNumber: e.target.value,
-                        },
-                      });
-                      if (e.target.value.length > 0) {
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      const inputValue = e.target.value;
+                      if (!regexOfPhoneNumber.test(inputValue)) {
+                        setError({
+                          ...error,
+                          employmentHistoryError: {
+                            ...error.employmentHistoryError,
+                            referenceContactNumber:
+                              "Please enter a valid phone number",
+                          },
+                        });
+                      } else {
                         setError({
                           ...error,
                           employmentHistoryError: {
@@ -1065,7 +1185,32 @@ const CreateDriver = () => {
                           },
                         });
                       }
+                      setDriverDetails({
+                        ...driverDetails,
+                        employmentHistory: {
+                          ...driverDetails.employmentHistory,
+                          referenceContactNumber: e.target.value,
+                        },
+                      });
                     }}
+                    // onChange={(e: any) => {
+                    //   setDriverDetails({
+                    //     ...driverDetails,
+                    //     employmentHistory: {
+                    //       ...driverDetails.employmentHistory,
+                    //       referenceContactNumber: e.target.value,
+                    //     },
+                    //   });
+                    //   if (e.target.value.length > 0) {
+                    //     setError({
+                    //       ...error,
+                    //       employmentHistoryError: {
+                    //         ...error.employmentHistoryError,
+                    //         referenceContactNumber: "",
+                    //       },
+                    //     });
+                    //   }
+                    // }}
                     className="w-full"
                     errorMessage={
                       error.employmentHistoryError?.referenceContactNumber
@@ -1187,7 +1332,7 @@ const CreateDriver = () => {
                   }}
                   errorMessage={error.licenseDetailsError?.state}
                 />
-                <DateWithoutDropdown
+                <Maindatefield
                   label="Date Of Issue "
                   value={driverDetails.licenseDetails.dateOfIssue}
                   onChange={(e: any) => {
@@ -1211,7 +1356,7 @@ const CreateDriver = () => {
                   errorMessage={error.licenseDetailsError?.dateOfIssue}
                 />
 
-                <DateWithoutDropdown
+                <Maindatefield
                   label="Expiry Date "
                   value={driverDetails.licenseDetails.expiryDate}
                   onChange={(e: any) => {
@@ -1351,18 +1496,83 @@ const CreateDriver = () => {
                 })}
               </div>
               <div className="grid grid-cols-5 p-4 rounded-md text-black text-center items-center">
-                {documentCollectionData?.map((value, index) => {
+                {documentCollectionData?.map((data, index) => {
                   return (
                     <>
-                      <div className="mb-6">{value.documentType}</div>
-                      <div className="text-center ">
-                        <Button
-                          text="Upload"
-                          className="!w-fit m-auto bg-accent3 px-6 rounded-md mb-6 py-[4px]"
-                        />
+                      <div className="mb-6 align-middle">
+                        {data.documentType}
                       </div>
-                      <div className="mb-6">{value.uploadedDocument}</div>
-                      <div className="mb-6">{value.uploadDate}</div>
+                      <div className="text-center mb-6">
+                        <label className="cursor-pointer">
+                          <React.Fragment>
+                            {selectedFiles.find((file) => file.id === data?.id)
+                              ?.file ? (
+                              <div>
+                                <p>
+                                  {
+                                    selectedFiles.find(
+                                      (file) => file.id === data?.id
+                                    )?.file.name
+                                  }
+                                </p>
+                              </div>
+                            ) : (
+                              <span className="!w-fit m-auto bg-accent3 text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">
+                                Select
+                              </span>
+                            )}
+                          </React.Fragment>
+                          <input
+                            type="file"
+                            className="hidden"
+                            accept=".doc,.docx,.pdf"
+                            onChange={(e) => handleFileChanges(e, data?.id)}
+                          />
+                        </label>
+                      </div>
+                      <div className="mb-6 align-middle mt-3">
+                        {/* {data.uploadedDocument} */}
+                        <React.Fragment>
+                          {selectedFiles.find((file) => file.id === data?.id)
+                            ?.file ? (
+                            <div>
+                              <p className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">
+                                <span>Upload&nbsp;</span>
+                                {
+                                  selectedFiles.find(
+                                    (file) => file.id === data?.id
+                                  )?.file.name
+                                }
+                              </p>
+                            </div>
+                          ) : (
+                            <p>No file Uploaded</p>
+                          )}
+                        </React.Fragment>
+                      </div>
+                      <div className="mb-6">
+                        <div>
+                          {selectedFiles.find(
+                            (file) => file.id === data?.id
+                          ) ? (
+                            <div>
+                              <p>
+                                {selectedFiles.find(
+                                  (file) => file.id === data?.id
+                                )?.currentDate
+                                  ? formatDate(
+                                      selectedFiles.find(
+                                        (file) => file.id === data?.id
+                                      )?.currentDate
+                                    )
+                                  : "No date available"}
+                              </p>
+                            </div>
+                          ) : (
+                            <p>No date available</p>
+                          )}
+                        </div>
+                      </div>
                       <div className="mb-6 flex gap-2 justify-center">
                         <Image
                           src={"/edit.svg"}
@@ -1471,56 +1681,67 @@ const documentCollectionHeading = [
 ];
 const documentCollectionData = [
   {
+    id: 1,
     documentType: "Visa Status",
     uploadedDocument: "visa-status.pdf",
     uploadDate: "20/12/2023",
   },
   {
+    id: 2,
     documentType: "Driver License (Front) ",
     uploadedDocument: "-",
     uploadDate: "-",
   },
   {
+    id: 3,
     documentType: "Driver License (Back) ",
     uploadedDocument: "-",
     uploadDate: "-",
   },
   {
+    id: 4,
     documentType: "License History",
     uploadedDocument: "-",
     uploadDate: "-",
   },
   {
+    id: 5,
     documentType: "Police Verification",
     uploadedDocument: "police-verification.pdf",
     uploadDate: "20/12/2023",
   },
   {
+    id: 6,
     documentType: "Passport (Front)",
     uploadedDocument: "-",
     uploadDate: "-",
   },
   {
+    id: 7,
     documentType: "Passport (Back)",
     uploadedDocument: "-",
     uploadDate: "-",
   },
   {
+    id: 8,
     documentType: "Health Insurance",
     uploadedDocument: "-",
     uploadDate: "-",
   },
   {
+    id: 9,
     documentType: "Driver Certificate",
     uploadedDocument: "-",
     uploadDate: "-",
   },
   {
+    id: 10,
     documentType: "Fitness",
     uploadedDocument: "-",
     uploadDate: "-",
   },
   {
+    id: 11,
     documentType: "Drug Test",
     uploadedDocument: "-",
     uploadDate: "-",

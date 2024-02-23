@@ -8,7 +8,7 @@ const customerBaseUrl = "http://localhost:1800/api";
 export const createUser = async (data: any, token: string) => {
   try {
     const response = await axios.post(
-      `${customerBaseUrl}/onboarding-user`,
+      `${process.env.NEXT_PUBLIC_API_URL}/onboarding-user`,
       data,
       {
         headers: {
@@ -42,7 +42,7 @@ export const getAllUser = async (token: string) => {
 export const getUser = async (token: string, id: string) => {
   try {
     const response = await axios.get(
-      `${customerBaseUrl}/onboarding-list/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/onboarding-list/${id}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -59,7 +59,7 @@ export const getUser = async (token: string, id: string) => {
 export const editUser = async (token: string, id: string, data: any) => {
   try {
     const response = await axios.put(
-      `${customerBaseUrl}/onboarding-list/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/onboarding-list/${id}`,
       data,
       {
         headers: {
@@ -77,7 +77,7 @@ export const editUser = async (token: string, id: string, data: any) => {
 export const deleteUser = async (token: string, id: string) => {
   try {
     const response = await axios.delete(
-      `${customerBaseUrl}/onboarding-list/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/onboarding-list/${id}`,
       {
         headers: {
           "Content-Type": "application/json",
