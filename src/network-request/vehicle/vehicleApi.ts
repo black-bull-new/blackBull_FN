@@ -126,3 +126,7 @@ export const uploadSingleSingleVehicleDocuments = async (selectedFile: any) => {
       return error
     })
 }
+
+
+
+

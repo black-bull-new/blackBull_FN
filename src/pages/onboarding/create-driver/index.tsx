@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DropDownMap from "../../../../components/DropDownMap";
 
 import Maindatefield from "../../../../components/Maindatefield";
@@ -13,14 +13,17 @@ import FileUpload from "../../../../components/FileUpload";
 import ImageUpload from "../../../../components/imageUpload/ImageUpload";
 import {
   addDriver,
+  uploadDriverLicenseDocuments,
+  uploadDriverProfile,
   uploadSingleSingleDriverOnboardingDocuments,
 } from "@/network-request/driver/driverApi";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { correctDriverStateName } from "../utility/utilityMethod";
 import React from "react";
-import { formatDate } from "@/utils";
+import { formatDate, formattedDate } from "@/utils";
 import { regexOfEmail, regexOfPhoneNumber } from "../utility/commonRegex";
+import toast, { Toaster } from "react-hot-toast";
 
 const CreateDriver = () => {
   const [selectedData, setSelectedData] = useState("");
@@ -33,6 +36,7 @@ const CreateDriver = () => {
     middleName: "",
     lastName: "",
     dateOfBirth: "",
+    avatar: "",
     email: "",
     mobile: "",
     nationality: "",
@@ -144,6 +148,7 @@ const CreateDriver = () => {
     },
     onboardingDocumentsError: [],
   });
+  console.log({ error })
 
   const [uploadStatus, setUploadStatus] = useState<{ [id: number]: boolean }>(
     {}
@@ -229,22 +234,6 @@ const CreateDriver = () => {
   const files = selectedFiles?.map((selectedFile) => selectedFile.file);
   console.log({ files });
 
-  const handleSubmit = async () => {
-    // Check validation and get error status
-    const hasErrors = checkValidation();
-    if (hasErrors) {
-      alert("Please fix the validation errors before submitting.");
-      return;
-    }
-    const response = await addDriver(driverDetails, token || "");
-    if (response?.data?.data) {
-      router.push("/onboarding/driver-list");
-      alert("Driver added successfully");
-    } else {
-      alert("Something went wrong");
-    }
-  };
-
   const handleViewDocuments = (id: number) => {
     const index = id;
     console.log("ID :", id);
@@ -257,55 +246,150 @@ const CreateDriver = () => {
     }
   };
 
-  const checkValidation = () => {
-    const newErrors = { ...error };
-    let hasErrors = false;
-    Object.keys(driverDetails).forEach((key) => {
-      if (
-        typeof driverDetails[key] === "object" &&
-        driverDetails[key] !== null
-      ) {
-        // Handle nested objects with a different logic
-        Object.keys(driverDetails[key]).forEach((nestedKey) => {
-          const nestedKeyPath = `${key}Error.${nestedKey}`;
-          if (
-            !driverDetails[key][nestedKey] ||
-            driverDetails[key][nestedKey] === undefined
-          ) {
-            newErrors[key + "Error"][nestedKey] = `${correctDriverStateName(
-              nestedKey
-            )} is required in ${correctDriverStateName(key)}`;
-            hasErrors = true;
-          } else {
-            newErrors[nestedKeyPath] = "";
-          }
-        });
-      } else {
-        // Handle non-nested fields
-        // Auto scroll up for better user experience
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth", // for smooth scrolling
-        });
+  // const checkValidation = () => {
+  //   const newErrors = { ...error };
+  //   let hasErrors = false;
+  //   Object.keys(driverDetails).forEach((key) => {
+  //     if (
+  //       typeof driverDetails[key] === "object" &&
+  //       driverDetails[key] !== null
+  //     ) {
+  //       // Handle nested objects with a different logic
+  //       Object.keys(driverDetails[key]).forEach((nestedKey) => {
+  //         const nestedKeyPath = `${key}Error.${nestedKey}`;
+  //         if (
+  //           !driverDetails[key][nestedKey] ||
+  //           driverDetails[key][nestedKey] === undefined
+  //         ) {
+  //           newErrors[key + "Error"][nestedKey] = `${correctDriverStateName(
+  //             nestedKey
+  //           )} is required in ${correctDriverStateName(key)}`;
+  //           hasErrors = true;
+  //         } else {
+  //           newErrors[nestedKeyPath] = "";
+  //         }
+  //       });
+  //     } else {
+  //       // Handle non-nested fields
+  //       // Auto scroll up for better user experience
+  //       window.scrollTo({
+  //         top: 0,
+  //         behavior: "smooth", // for smooth scrolling
+  //       });
+  //       if (!driverDetails[key]) {
+  //         newErrors[key + "Error"] = `${correctDriverStateName(
+  //           key
+  //         )} is required`;
+  //         hasErrors = true;
+  //       } else {
+  //         newErrors[key + "Error"] = "";
+  //       }
+  //     }
+  //   });
+  //   setError(newErrors);
+  //   // Return the error status
+  //   return hasErrors;
+  // };
 
-        if (!driverDetails[key]) {
-          newErrors[key + "Error"] = `${correctDriverStateName(
-            key
-          )} is required`;
-          hasErrors = true;
-        } else {
-          newErrors[key + "Error"] = "";
-        }
-      }
-    });
-    setError(newErrors);
-    // Return the error status
-    return hasErrors;
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [profile, setProfile] = React.useState("");
+  const [selectedProfile, setSelectedProfile] = React.useState("");
+
+  const handleUploadClick: any = () => {
+    if (fileInputRef.current) {
+      fileInputRef?.current?.click();
+    }
+  };
+
+  const [documentRender, setDocumentRender] = React.useState("");
+  const [selectedUploadRegoDocument, setSelectedUploadRegoDocument] =
+    React.useState("");
+
+  const handleFileChange = (setSide: any, setPreview: any) => (event: any) => {
+    const selectedFile = event.target.files && event.target.files[0];
+    setSide({ file: selectedFile });
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader?.result! as any);
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+  };
+
+  const handleProfileFileChange = handleFileChange(
+    setSelectedProfile,
+    setProfile
+  );
+
+  const handleDocumentUpload = handleFileChange(
+    setSelectedUploadRegoDocument,
+    setDocumentRender
+  );
+
+  console.log({ selectedUploadRegoDocument });
+
+  const handleSubmit = async () => {
+    // const hasErrors = checkValidation();
+    // if (hasErrors) {
+    //   alert("Please fix the validation errors before submitting.");
+    //   return;
+    // }
+
+    // Uploading driver profile ... 
+    const [profileUrl] = await Promise.all([Promise.all(Object.values(selectedProfile)?.map((imageInfo) => uploadDriverProfile(imageInfo))),]);
+    console.log({ profileUrl });
+
+    // Uploading driver license documents ... 
+    const [driverLicense] = await Promise.all([Promise.all(Object.values(selectedUploadRegoDocument)?.map((imageInfo) => uploadDriverLicenseDocuments(imageInfo))),]);
+    console.log({ driverLicense });
+
+    const newDriverDetails = {
+      ...driverDetails,
+      avatar: profileUrl[0]?.response,
+      licenseDetails: {
+        ...driverDetails.licenseDetails,
+        documents: driverLicense[0]?.response,
+      },
+      onboardingDocuments: urls?.map((url: any, index: number) => ({
+        type: url,
+        uploadDate: formattedDate,
+      })),
+    };
+    console.log({ newDriverDetails })
+
+    const response = await addDriver(newDriverDetails, token || "");
+    if (response?.data?.data) {
+      toast("Driver has been successfully created..", {
+        icon: "👏",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+      setTimeout(() => {
+        // router.push("/onboarding/vehicle-list");
+      }, 3000);
+      console.log("response :", response);
+    } else {
+      toast("Something went wrong", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+    }
   };
 
   return (
     <>
       <div className="flex bg-[#E9EFFF]">
+        <div>
+          <Toaster />
+        </div>
         <div className="ml-[316px] w-full mt-4">
           <div className="bg-white mr-4 flex justify-between items-center rounded-md">
             <h2 className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">
@@ -322,14 +406,50 @@ const CreateDriver = () => {
               <Progressbar />
             </div>
             <div className="relative w-fit">
-              <Image
-                src="/driverImage.svg"
-                alt="driver"
-                width={100}
-                height={100}
-              />
-              <span className="w-6 h-6 rounded-full bg-accent3 block text-black flex justify-center items-end text-xl absolute right-2 bottom-2">
-                +
+              <span className="flex flex-row justify-center my-4">
+                <span className="mb-4 text-center flex justify-center items-center">
+                  <label htmlFor="profilelabel">
+                    <div
+                      className="w-[100px]  rounded-full h-[100px] cursor-pointer"
+                      onChange={handleUploadClick}
+                    >
+                      {profile ? (
+                        <div className="w-full h-full">
+                          <Image
+                            src={profile}
+                            alt="driver"
+                            width={100}
+                            className="w-[100px] h-[100px] border rounded-full"
+                            height={100}
+                          />
+                        </div>
+                      ) : (
+                        <>
+                          <Image
+                            src="/driverImage.svg"
+                            alt="driver"
+                            width={100}
+                            height={100}
+                            className="w-[100px] h-[100px]"
+                          />
+                          <span className="w-6 h-6 rounded-full bg-accent3 block text-white flex justify-center items-end text-xl absolute right-2 bottom-6">
+                            +
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  </label>
+                  <span className="text-sm">
+                    {" "}
+                    <input
+                      id="profilelabel"
+                      type="file"
+                      style={{ display: "none" }}
+                      ref={fileInputRef}
+                      onChange={(e) => handleProfileFileChange(e)}
+                    />
+                  </span>
+                </span>
               </span>
             </div>
             <div>
@@ -1370,7 +1490,12 @@ const CreateDriver = () => {
                   className="w-full"
                   errorMessage={error.licenseDetailsError?.daysLeftForRenewal}
                 />
-                <FileUpload file="Choose License Document " />
+                <FileUpload
+                  file="Choose License Document"
+                  onChange={handleDocumentUpload}
+                  //@ts-expect-error
+                  fileName={selectedUploadRegoDocument?.file?.name || ""}
+                />
               </div>
             </div>
 
@@ -1577,10 +1702,10 @@ const CreateDriver = () => {
                                   (file) => file.id === data?.id
                                 )?.currentDate
                                   ? formatDate(
-                                      selectedFiles.find(
-                                        (file) => file.id === data?.id
-                                      )?.currentDate
-                                    )
+                                    selectedFiles.find(
+                                      (file) => file.id === data?.id
+                                    )?.currentDate
+                                  )
                                   : "No date available"}
                               </p>
                             </div>
