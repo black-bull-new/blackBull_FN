@@ -1,14 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import DropDownMap from "../../../../components/DropDownMap";
-
 import Maindatefield from "../../../../components/Maindatefield";
 import Maininputfield from "../../../../components/Maininputfield";
 import Progressbar from "../../../../components/Progressbar";
-
 import Image from "next/image";
-import Checkbox from "../../../../components/Checkbox";
 import Button from "../../../../components/Button";
-import DateWithoutDropdown from "../../../../components/DateWithoutDropdown";
 import FileUpload from "../../../../components/FileUpload";
 import ImageUpload from "../../../../components/imageUpload/ImageUpload";
 import {
@@ -19,14 +15,13 @@ import {
 } from "@/network-request/driver/driverApi";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
-import { correctDriverStateName } from "../utility/utilityMethod";
 import React from "react";
 import { formatDate, formattedDate } from "@/utils";
 import { regexOfEmail, regexOfPhoneNumber } from "../utility/commonRegex";
 import toast, { Toaster } from "react-hot-toast";
+import { correctDriverStateName } from "../utility/utilityMethod";
 
 const CreateDriver = () => {
-  const [selectedData, setSelectedData] = useState("");
   const token = getCookie("token");
   const router = useRouter();
   console.log("token check", { token });
@@ -251,38 +246,44 @@ const CreateDriver = () => {
   //   let hasErrors = false;
   //   Object.keys(driverDetails).forEach((key) => {
   //     if (
-  //       typeof driverDetails[key] === "object" &&
-  //       driverDetails[key] !== null
+  //       key !== "avatar" &&
+  //       key !== "onboardingDocuments" &&
+  //       key !== "licenseDetails.documents"
   //     ) {
-  //       // Handle nested objects with a different logic
-  //       Object.keys(driverDetails[key]).forEach((nestedKey) => {
-  //         const nestedKeyPath = `${key}Error.${nestedKey}`;
-  //         if (
-  //           !driverDetails[key][nestedKey] ||
-  //           driverDetails[key][nestedKey] === undefined
-  //         ) {
-  //           newErrors[key + "Error"][nestedKey] = `${correctDriverStateName(
-  //             nestedKey
-  //           )} is required in ${correctDriverStateName(key)}`;
+  //       if (
+  //         typeof driverDetails[key] === "object" &&
+  //         driverDetails[key] !== null
+  //       ) {
+  //         // Handle nested objects with a different logic
+  //         Object.keys(driverDetails[key]).forEach((nestedKey) => {
+  //           if (
+  //             !driverDetails[key][nestedKey] ||
+  //             driverDetails[key][nestedKey] === undefined
+  //           ) {
+  //             newErrors[key + "Error"][nestedKey] = `${correctDriverStateName(
+  //               nestedKey
+  //             )} is required in ${correctDriverStateName(key)}`;
+  //             hasErrors = true;
+  //           } else {
+  //             newErrors[nestedKey] = "";
+  //           }
+  //         });
+  //       } else {
+  //         // Handle non-nested fields
+  //         // Auto scroll up for better user experience
+  //         window.scrollTo({
+  //           top: 0,
+  //           behavior: "smooth", // for smooth scrolling
+  //         });
+
+  //         if (!driverDetails[key]) {
+  //           newErrors[key + "Error"] = `${correctDriverStateName(
+  //             key
+  //           )} is required`;
   //           hasErrors = true;
   //         } else {
-  //           newErrors[nestedKeyPath] = "";
+  //           newErrors[key + "Error"] = "";
   //         }
-  //       });
-  //     } else {
-  //       // Handle non-nested fields
-  //       // Auto scroll up for better user experience
-  //       window.scrollTo({
-  //         top: 0,
-  //         behavior: "smooth", // for smooth scrolling
-  //       });
-  //       if (!driverDetails[key]) {
-  //         newErrors[key + "Error"] = `${correctDriverStateName(
-  //           key
-  //         )} is required`;
-  //         hasErrors = true;
-  //       } else {
-  //         newErrors[key + "Error"] = "";
   //       }
   //     }
   //   });
@@ -369,7 +370,7 @@ const CreateDriver = () => {
         },
       });
       setTimeout(() => {
-        // router.push("/onboarding/vehicle-list");
+        router.push("/onboarding/driver-list");
       }, 3000);
       console.log("response :", response);
     } else {

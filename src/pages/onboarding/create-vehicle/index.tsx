@@ -289,7 +289,7 @@ const CreateVehicle = () => {
     acc[index] = url;
     return acc;
   }, []);
-  
+
   const handleSubmit = async () => {
     const hasErrors = checkValidation();
     if (hasErrors) {
@@ -324,7 +324,7 @@ const CreateVehicle = () => {
 
     const response: any = await addVehicle(customVehiclePayload, token || "");
     if (response?.status == 200) {
-      toast("Vehicle Added Successfully", {
+      toast("Vehicle has been successfully created..", {
         icon: "👏",
         style: {
           borderRadius: "10px",
