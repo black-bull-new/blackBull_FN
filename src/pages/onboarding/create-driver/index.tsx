@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DropDownMap from "../../../../components/DropDownMap";
 
 import Maindatefield from "../../../../components/Maindatefield";
@@ -21,6 +21,7 @@ import { correctDriverStateName } from "../utility/utilityMethod";
 import React from "react";
 import { formatDate } from "@/utils";
 import { regexOfEmail, regexOfPhoneNumber } from "../utility/commonRegex";
+import { uploadOnboardingPorfile } from "@/network-request/onboarding-user";
 
 const CreateDriver = () => {
   const [selectedData, setSelectedData] = useState("");
@@ -36,7 +37,7 @@ const CreateDriver = () => {
     email: "",
     mobile: "",
     nationality: "",
-
+    avatar: "",
     currentAddress: {
       houseNumber: undefined,
       street: "",
@@ -251,6 +252,33 @@ const CreateDriver = () => {
     { id: number; file: File; currentDate: Date | null }[]
   >([]);
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [profile, setProfile] = React.useState("");
+  const [selectedProfile, setSelectedProfile] = React.useState("");
+
+  const handleFileChange = (setSide: any, setPreview: any) => (event: any) => {
+    const selectedFile = event.target.files && event.target.files[0];
+    setSide({ file: selectedFile });
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader?.result! as any);
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+  };
+
+  const handleProfileFileChange = handleFileChange(
+    setSelectedProfile,
+    setProfile
+  );
+
+  const handleUploadClick: any = () => {
+    if (fileInputRef.current) {
+      fileInputRef?.current?.click();
+    }
+  };
+
   const combinedObject = selectedFiles.reduce(
     (accumulator: any, currentItem: any) => {
       accumulator[currentItem.id] = {
@@ -332,7 +360,23 @@ const CreateDriver = () => {
       alert("Please fix the validation errors before submitting.");
       return;
     }
-    const response = await addDriver(driverDetails, token || "");
+
+    const [profileUrl] = await Promise.all([
+      Promise.all(
+        Object.values(selectedProfile)?.map((imageInfo) =>
+          uploadOnboardingPorfile(imageInfo)
+        )
+      ),
+    ]);
+    console.log({ profileUrl });
+
+    const customPayload = {
+      ...driverDetails,
+      avatar: profileUrl[0]?.response,
+    };
+    console.log({ customPayload });
+
+    const response = await addDriver(customPayload, token || "");
     if (response?.data?.data) {
       router.push("/onboarding/driver-list");
       alert("Driver added successfully");
@@ -358,39 +402,55 @@ const CreateDriver = () => {
     let hasErrors = false;
     Object.keys(driverDetails).forEach((key) => {
       if (
-        typeof driverDetails[key] === "object" &&
-        driverDetails[key] !== null
+        key !== "avatar" &&
+        key !== "driverCertificate" &&
+        key !== "driverLicenseBack" &&
+        key !== "driverLicenseFront" &&
+        key !== "drugTest" &&
+        key !== "fitness" &&
+        key !== "healthInsurance" &&
+        key !== "licenseHistory" &&
+        key !== "onboardingDocuments" &&
+        key !== "passportBack" &&
+        key !== "passportFront" &&
+        key !== "policeVerification" &&
+        key !== "visaStatus"
       ) {
-        // Handle nested objects with a different logic
-        Object.keys(driverDetails[key]).forEach((nestedKey) => {
-          const nestedKeyPath = `${key}Error.${nestedKey}`;
-          if (
-            !driverDetails[key][nestedKey] ||
-            driverDetails[key][nestedKey] === undefined
-          ) {
-            newErrors[key + "Error"][nestedKey] = `${correctDriverStateName(
-              nestedKey
-            )} is required in ${correctDriverStateName(key)}`;
+        if (
+          typeof driverDetails[key] === "object" &&
+          driverDetails[key] !== null
+        ) {
+          // Handle nested objects with a different logic
+          Object.keys(driverDetails[key]).forEach((nestedKey) => {
+            const nestedKeyPath = `${key}Error.${nestedKey}`;
+            if (
+              !driverDetails[key][nestedKey] ||
+              driverDetails[key][nestedKey] === undefined
+            ) {
+              newErrors[key + "Error"][nestedKey] = `${correctDriverStateName(
+                nestedKey
+              )} is required in ${correctDriverStateName(key)}`;
+              hasErrors = true;
+            } else {
+              newErrors[nestedKeyPath] = "";
+            }
+          });
+        } else {
+          // Handle non-nested fields
+          // Auto scroll up for better user experience
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth", // for smooth scrolling
+          });
+
+          if (!driverDetails[key]) {
+            newErrors[key + "Error"] = `${correctDriverStateName(
+              key
+            )} is required`;
             hasErrors = true;
           } else {
-            newErrors[nestedKeyPath] = "";
+            newErrors[key + "Error"] = "";
           }
-        });
-      } else {
-        // Handle non-nested fields
-        // Auto scroll up for better user experience
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth", // for smooth scrolling
-        });
-
-        if (!driverDetails[key]) {
-          newErrors[key + "Error"] = `${correctDriverStateName(
-            key
-          )} is required`;
-          hasErrors = true;
-        } else {
-          newErrors[key + "Error"] = "";
         }
       }
     });
@@ -421,14 +481,50 @@ const CreateDriver = () => {
               <Progressbar />
             </div>
             <div className="relative w-fit">
-              <Image
-                src="/driverImage.svg"
-                alt="driver"
-                width={100}
-                height={100}
-              />
-              <span className="w-6 h-6 rounded-full bg-accent3 block text-black flex justify-center items-end text-xl absolute right-2 bottom-2">
-                +
+              <span className="flex flex-row justify-center my-4">
+                <span className="mb-4 text-center flex justify-center items-center">
+                  <label htmlFor="profilelabel">
+                    <div
+                      className="w-[100px]  rounded-full h-[100px] cursor-pointer"
+                      onChange={handleUploadClick}
+                    >
+                      {profile ? (
+                        <div className="w-full h-full">
+                          <Image
+                            src={profile}
+                            alt="driver"
+                            width={100}
+                            className="w-[100px] h-[100px] border rounded-full"
+                            height={100}
+                          />
+                        </div>
+                      ) : (
+                        <>
+                          <Image
+                            src="/driverImage.svg"
+                            alt="driver"
+                            width={100}
+                            height={100}
+                            className="w-[100px] h-[100px]"
+                          />
+                          <span className="w-6 h-6 rounded-full bg-accent3 block text-white flex justify-center items-end text-xl absolute right-2 bottom-6">
+                            +
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  </label>
+                  <span className="text-sm">
+                    {" "}
+                    <input
+                      id="profilelabel"
+                      type="file"
+                      style={{ display: "none" }}
+                      ref={fileInputRef}
+                      onChange={(e) => handleProfileFileChange(e)}
+                    />
+                  </span>
+                </span>
               </span>
             </div>
             <div>
@@ -1469,7 +1565,7 @@ const CreateDriver = () => {
                   className="w-full"
                   errorMessage={error.licenseDetailsError?.daysLeftForRenewal}
                 />
-                <FileUpload file="Choose License Document " />
+                <FileUpload file="Choose License Document" />
               </div>
             </div>
 
