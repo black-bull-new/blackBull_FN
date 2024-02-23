@@ -203,14 +203,9 @@ const CreateVehicle = () => {
     window.open("http://localhost:1800/vehicle-documents/Resume.pdf", "_blank");
   };
 
-  const [selectedFiles, setSelectedFiles] = useState<
-    { id: number; file: File; currentDate: Date | null }[]
-  >([]);
+  const [selectedFiles, setSelectedFiles] = useState<{ id: number; file: File; currentDate: Date | null }[]>([]);
 
-  const handleFileChanges = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    documentId: number
-  ) => {
+  const handleFileChanges = (event: React.ChangeEvent<HTMLInputElement>, documentId: number) => {
     const file = event.target.files ? event.target.files[0] : null;
     const documentExists = documentDataCollection.find(
       (doc) => doc.id === documentId
@@ -264,7 +259,7 @@ const CreateVehicle = () => {
       });
       return;
     }
-    
+
     const uploadDocument = await Promise.all(Object.values(selectedUploadRegoDocument)?.map((file) => uploadVehicleRegoDocuemnts(file)))
     console.log({ uploadDocument })
 
@@ -1015,9 +1010,25 @@ const CreateVehicle = () => {
                       <div>{data.Vehicle}</div>
                       <div className="text-center">
                         <label className="cursor-pointer">
-                          <span className="!w-fit m-auto bg-accent3 text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">
-                            Upload
-                          </span>
+
+                          <React.Fragment>
+                            {selectedFiles.find((file) => file.id === data?.id)
+                              ?.file ? (
+                              <div>
+                                <p>
+                                  {
+                                    selectedFiles.find((file) => file.id === data?.id)
+                                      ?.file.name
+                                  }
+                                </p>
+                              </div>
+                            ) : (
+                              <span className="!w-fit m-auto bg-accent3 text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">
+                                Select
+                              </span>
+                            )}
+                          </React.Fragment>
+
                           <input
                             type="file"
                             className="hidden"
@@ -1034,10 +1045,10 @@ const CreateVehicle = () => {
                                 (file) => file.id === data?.id
                               )?.currentDate
                                 ? formatDate(
-                                    selectedFiles.find(
-                                      (file) => file.id === data?.id
-                                    )?.currentDate
-                                  )
+                                  selectedFiles.find(
+                                    (file) => file.id === data?.id
+                                  )?.currentDate
+                                )
                                 : "No date available"}
                             </p>
                           </div>
@@ -1046,17 +1057,24 @@ const CreateVehicle = () => {
                         )}
                       </div>
                       <div>
-                        {selectedFiles.find((file) => file.id === data?.id)
-                          ?.file ? (
-                          <p>
-                            {
-                              selectedFiles.find((file) => file.id === data?.id)
-                                ?.file.name
-                            }
-                          </p>
-                        ) : (
-                          <p>No file selected</p>
-                        )}
+                        <span className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">
+                          Upload
+                        </span>
+                        {/* <React.Fragment>
+                          {selectedFiles.find((file) => file.id === data?.id)
+                            ?.file ? (
+                            <div>
+                              <p>
+                                {
+                                  selectedFiles.find((file) => file.id === data?.id)
+                                    ?.file.name
+                                }
+                              </p>
+                            </div>
+                          ) : (
+                            <p>No file selected</p>
+                          )}
+                        </React.Fragment> */}
                       </div>
                       <div className="text-center items-center justify-center m-auto">
                         <StatusChip chipColor={(e: any) => handleStatusChipColor(e, index)} />

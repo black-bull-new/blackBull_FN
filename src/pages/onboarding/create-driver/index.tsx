@@ -1471,6 +1471,7 @@ const documentCollectionHeading = [
 ];
 const documentCollectionData = [
   {
+    id: 1,
     documentType: "Visa Status",
     uploadedDocument: "visa-status.pdf",
     uploadDate: "20/12/2023",

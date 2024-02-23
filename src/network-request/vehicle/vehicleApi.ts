@@ -4,7 +4,7 @@ const customerBaseUrl = "http://localhost:1800/api/v1";
 
 export const addVehicle = async (data: any, token: string) => {
   try {
-    const response = await axios.post(`${customerBaseUrl}/add-vehicle`, data, {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/v1/add-vehicle`, data, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Basic ${token}`,
@@ -20,7 +20,7 @@ export const addVehicle = async (data: any, token: string) => {
 export const getAllVehicle = async (token: string) => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_APP_API_URL_V1}/vehicle`,
+      `${process.env.NEXT_PUBLIC_API_URL}/v1/vehicle`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -37,7 +37,7 @@ export const getAllVehicle = async (token: string) => {
 export const getVehicle = async (token: string, id: string) => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_APP_API_URL_V1}/vehicle/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/v1/vehicle/${id}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -54,7 +54,7 @@ export const getVehicle = async (token: string, id: string) => {
 export const editVehicle = async (token: string, id: string, data: any) => {
   try {
     const response = await axios.put(
-      `${process.env.NEXT_PUBLIC_APP_API_URL_V1}/vehicle/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/v1/vehicle/${id}`,
       data,
       {
         headers: {
@@ -72,7 +72,7 @@ export const editVehicle = async (token: string, id: string, data: any) => {
 export const deleteVehicle = async (token: string, id: string) => {
   try {
     const response = await axios.delete(
-      `${process.env.NEXT_PUBLIC_APP_API_URL_V1}/vehicle/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/v1/vehicle/${id}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -85,20 +85,6 @@ export const deleteVehicle = async (token: string, id: string) => {
     console.log("error", error);
   }
 };
-// export const addVehicle = async (data: any, token: string) => {
-//     try {
-//         const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/v1/add-vehicle`, data, {
-//             headers: {
-//                 'Content-Type': 'application/json',
-//                 'Authorization': `Basic ${token}`
-//             }
-//         })
-//         return response
-//     } catch (error) {
-//         console.log('error', error)
-//         return error
-//     }
-// }
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> UPLOAD REGO DOCUMENTS FOR VEHICLE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 
 

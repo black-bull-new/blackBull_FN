@@ -5,7 +5,7 @@ const vehicleBaseUrl = "http://localhost:1800/api/s1/v1";
 export const addVehicleIntoSupplier = async (data: any, token: string) => {
   try {
     const response = await axios.post(
-      `${vehicleBaseUrl}/supplier-vehicle`,
+      `${process.env.NEXT_PUBLIC_API_URL}/s1/v1/supplier-vehicle`,
       data,
       {
         headers: {

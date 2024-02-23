@@ -1,8 +1,5 @@
 import axios from "axios"
 
-
-
-
 const DRIVER_BASE_URL = 'http://localhost:1800/api/d1'
 // export const getAlldriversList = async()=>{
 //     const response = await axios.get('http://localhost:1800/api/d1/add-driver')
@@ -25,7 +22,7 @@ export const addDriver = async (data: any, token: string) => {
 
 export const getAllDrives = async (token: string) => {
     try {
-        const response = await axios.get(`${DRIVER_BASE_URL}/drivers`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/d1/drivers`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Basic ${token}`
@@ -40,7 +37,7 @@ export const getAllDrives = async (token: string) => {
 
 export const getDriver = async (token: string, id: string) => {
     try {
-        const response = await axios.get(`${DRIVER_BASE_URL}/driver/${id}`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/d1//driver/${id}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Basic ${token}`
@@ -54,7 +51,7 @@ export const getDriver = async (token: string, id: string) => {
 
 export const editDriver = async (token: string, id: string, data: any) => {
     try {
-        const response = await axios.put(`${DRIVER_BASE_URL}/driver/${id}`, data, {
+        const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/d1/driver/${id}`, data, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Basic ${token}`
@@ -69,7 +66,7 @@ export const editDriver = async (token: string, id: string, data: any) => {
 
 export const deleteDriver = async (token: string, id: string) => {
     try {
-        const response = await axios.delete(`${DRIVER_BASE_URL}/driver/${id}`, {
+        const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/d1/driver/${id}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Basic ${token}`
