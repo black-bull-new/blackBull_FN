@@ -108,7 +108,7 @@ export const uploadVehicleRegoDocuemnts = async (selectedFile: any) => {
 }
 
 
-export const uploadMulitpleVehicleDocuments = async (selectedFile: any) => {
+export const uploadSingleSingleVehicleDocuments = async (selectedFile: any) => {
   const formData = new FormData();
   formData.append("files", selectedFile)
   return await axios

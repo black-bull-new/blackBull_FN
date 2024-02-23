@@ -13,29 +13,19 @@ import StatusChip from "../../../../components/StatusChip";
 import { correctVehicleStateName } from "../utility/utilityMethod";
 import {
   addVehicle,
-  uploadMulitpleVehicleDocuments,
+  uploadSingleSingleVehicleDocuments,
   uploadVehicleRegoDocuemnts,
 } from "@/network-request/vehicle/vehicleApi";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
 import { formatDate, formattedDate } from "@/utils";
-interface SelectedFile {
-  id: number;
-  file: File | null;
-}
+import useLoading from "../../../../hooks/useLoading";
+import SpinnerView from "../../../../constants/spinner";
 
 const CreateVehicle = () => {
   const token = getCookie("token");
   const router = useRouter();
-  const xyz = ownershipStatus?.map((item) => {
-    return item;
-  });
-
-  const [ownerStatus, setOwnerStatus] = useState("");
-  console.log("owner status on select", ownerStatus);
-  const [selectedData, setSelectedData] = useState("");
-  const [state, setState] = useState("");
 
   const [vehicleDetails, setVehicleDetails] = useState<any>({
     registrationNumber: "",
@@ -197,11 +187,15 @@ const CreateVehicle = () => {
     setDocumentRender
   );
 
-  console.log({ selectedUploadRegoDocument });
-
-  const handleViewDocuments = () => {
-    window.open("http://localhost:1800/vehicle-documents/Resume.pdf", "_blank");
-  };
+  const handleViewDocuments = (id: number) => {
+    const index = id;
+    if (index >= 1 && index < modifiedUrls.length) {
+      const url = modifiedUrls[index];
+      window.open(url, '_blank');
+    } else {
+      console.error('URL not found for id:', id);
+    }
+  }
 
   const [selectedFiles, setSelectedFiles] = useState<{ id: number; file: File; currentDate: Date | null }[]>([]);
 
@@ -228,10 +222,11 @@ const CreateVehicle = () => {
       setSelectedFiles(newSelectedFiles);
     }
   };
-  console.log({ selectedFiles });
+  // console.log({ selectedFiles });
   const files = selectedFiles?.map((selectedFile) => selectedFile.file);
-  console.log({ files });
+  // console.log({ files });
 
+  // ======================================== Handle status chip color on vehicle documents list ========================================
   const [selectedStatusValues, setSelectedStatusValues] = useState<any[]>([]);
   const handleStatusChipColor = (value: any, index: number) => {
     setSelectedStatusValues(prevState => {
@@ -242,12 +237,56 @@ const CreateVehicle = () => {
   };
   console.log({ selectedStatusValues })
 
+  // ======================================== Meeting on 23-Feb-2024 ========================================
+  // Changes array to objects by using accumulator ... 
+  const combinedObject = selectedFiles.reduce((accumulator: any, currentItem: any) => {
+    accumulator[currentItem.id] = {
+      id: currentItem.id,
+      file: currentItem.file,
+      currentDate: currentItem.currentDate
+    };
+    return accumulator;
+  }, {});
+
+  const { loading, setLoading } = useLoading();
+  const [project, setProject] = useState<number | null>(null);
+  const [uploadStatus, setUploadStatus] = useState<{ [id: number]: boolean }>({});
+  const [urls, setUrls] = useState<string[]>([]);
+
+  const [showUploadMessage, setShowUploadMessage] = useState(false);
+
+  const handleUploadFileWithId = async (id: number, combinedObject: any) => {
+    try {
+      const project = combinedObject[id];
+      setProject(project?.id);
+      setLoading(true);
+      if (id && project?.id) {
+        console.log("Project", { project });
+        const file = [project?.file];
+        const uploadDocumentResponses = await Promise.all(Object.values(file)?.map((file) => uploadSingleSingleVehicleDocuments(file)));
+        console.log({ uploadDocumentResponses });
+        const newUrls = uploadDocumentResponses?.map(response => response?.response).filter(Boolean);
+        setUrls(prevUrls => [...prevUrls, ...newUrls]);
+        setUploadStatus(prevStatus => ({ ...prevStatus, [id]: true }));
+        setTimeout(() => {
+          setShowUploadMessage(true);
+        }, 4000);
+      }
+    } catch (error) {
+      console.error('Error occurred:', error);
+    }
+  };
+  console.log({ urls });
+  const modifiedUrls = urls.reduce((acc: any, url, index) => {
+    acc[index + 1] = url;
+    return acc;
+  }, []);
+
   const handleSubmit = async () => {
-    let urls;
-    // Check validation and get error status
+    // / Check validation and get error status
     const hasErrors = checkValidation();
-    console.log("Vehicle State : ", vehicleDetails);
-    console.log("Error State", error);
+    // console.log("Vehicle State : ", vehicleDetails);
+    // console.log("Error State", error);
     if (hasErrors) {
       toast("Please fix the validation errors before submitting.", {
         icon: "⚠️",
@@ -263,26 +302,13 @@ const CreateVehicle = () => {
     const uploadDocument = await Promise.all(Object.values(selectedUploadRegoDocument)?.map((file) => uploadVehicleRegoDocuemnts(file)))
     console.log({ uploadDocument })
 
-    try {
-      const profileUrls = await Promise.all(
-        Object.values(files).map((imageInfo) =>
-          uploadMulitpleVehicleDocuments(imageInfo)
-        )
-      );
-      console.log({ profileUrls });
-      urls = profileUrls.flatMap(entry => entry.response);
-      console.log({ urls });
-
-    } catch (error) {
-      console.error("Error uploading files:", error);
-    }
-
     const customVehiclePayload = {
       ...vehicleDetails,
       vehicleUploadDocument: uploadDocument[0]?.response,
       documents: urls?.map((url: any, index: number) => ({
         type: url,
         uploadDate: formattedDate,
+        status: selectedStatusValues[index % selectedStatusValues.length]
       })),
     };
     console.log({ customVehiclePayload });
@@ -298,7 +324,7 @@ const CreateVehicle = () => {
         },
       });
       setTimeout(() => {
-        router.push("/onboarding/vehicle-list");
+        // router.push("/onboarding/vehicle-list");
       }, 3000);
       console.log("response :", response);
     } else {
@@ -311,7 +337,7 @@ const CreateVehicle = () => {
         },
       });
     }
-  };
+  }
 
   return (
     <>
@@ -1002,93 +1028,67 @@ const CreateVehicle = () => {
                 </div>
 
                 <div>
-                  {documentDataCollection?.map((data, index) => (
-                    <div
-                      className="text-black grid grid-cols-[16%_16%_16%_16%_16%_20%] py-4 flex text-center"
-                      key={index}
-                    >
-                      <div>{data.Vehicle}</div>
-                      <div className="text-center">
-                        <label className="cursor-pointer">
-
-                          <React.Fragment>
-                            {selectedFiles.find((file) => file.id === data?.id)
-                              ?.file ? (
-                              <div>
-                                <p>
-                                  {
-                                    selectedFiles.find((file) => file.id === data?.id)
-                                      ?.file.name
-                                  }
-                                </p>
-                              </div>
-                            ) : (
-                              <span className="!w-fit m-auto bg-accent3 text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">
-                                Select
-                              </span>
-                            )}
-                          </React.Fragment>
-
-                          <input
-                            type="file"
-                            className="hidden"
-                            accept=".doc,.docx,.pdf"
-                            onChange={(e) => handleFileChanges(e, data?.id)}
-                          />
-                        </label>
-                      </div>
-                      <div>
-                        {selectedFiles.find((file) => file.id === data?.id) ? (
-                          <div>
-                            <p>
-                              {selectedFiles.find(
-                                (file) => file.id === data?.id
-                              )?.currentDate
-                                ? formatDate(
-                                  selectedFiles.find(
-                                    (file) => file.id === data?.id
-                                  )?.currentDate
-                                )
-                                : "No date available"}
-                            </p>
-                          </div>
-                        ) : (
-                          <p>No date available</p>
-                        )}
-                      </div>
-                      <div>
-                        <span className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">
-                          Upload
-                        </span>
-                        {/* <React.Fragment>
-                          {selectedFiles.find((file) => file.id === data?.id)
-                            ?.file ? (
+                  <div>
+                    {documentDataCollection?.map((data, index) => (
+                      <div className="text-black grid grid-cols-[16%_16%_16%_16%_16%_20%] py-4 flex text-center" key={index}>
+                        <div>{data.Vehicle}</div>
+                        <div className="text-center">
+                          <label className="cursor-pointer">
+                            <React.Fragment>
+                              {selectedFiles.find((file) => file.id === data?.id)?.file ? (
+                                <div>
+                                  <p>{selectedFiles.find((file) => file.id === data?.id)?.file.name}</p>
+                                </div>
+                              ) : (
+                                <span className="!w-fit m-auto bg-accent3 text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">Select</span>
+                              )}
+                            </React.Fragment>
+                            <input type="file" className="hidden" accept=".doc,.docx,.pdf" onChange={(e) => handleFileChanges(e, data?.id)} />
+                          </label>
+                        </div>
+                        <div>
+                          {selectedFiles.find((file) => file.id === data?.id) ? (
                             <div>
-                              <p>
-                                {
-                                  selectedFiles.find((file) => file.id === data?.id)
-                                    ?.file.name
-                                }
-                              </p>
+                              <p>{selectedFiles.find((file) => file.id === data?.id)?.currentDate ? formatDate(selectedFiles.find((file) => file.id === data?.id)?.currentDate) : "No date available"}</p>
                             </div>
                           ) : (
-                            <p>No file selected</p>
+                            <p>No date available</p>
                           )}
-                        </React.Fragment> */}
+                        </div>
+                        <div>
+                          {uploadStatus[data?.id] ? (
+                            <p style={{ color: 'green' }}>{showUploadMessage ? (
+                              <span
+                                className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white"
+                              >
+                                Uploaded
+                              </span>
+                            ) : (
+                              <span
+                                className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white"
+                              >
+                                Uploading...
+                              </span>
+                            )}</p>
+                          ) : (
+                            <span
+                              className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white"
+                              onClick={() => handleUploadFileWithId(data?.id, combinedObject)}>
+                              Upload
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-center items-center justify-center m-auto">
+                          <StatusChip chipColor={(e) => handleStatusChipColor(e, index)} />
+                        </div>
+                        <div className="underline decoration-[#2B36D9] text-center">
+                          <span className="cursor-pointer text-primary" onClick={() => handleViewDocuments(data?.id)}>
+                            Views
+                          </span>
+                        </div>
                       </div>
-                      <div className="text-center items-center justify-center m-auto">
-                        <StatusChip chipColor={(e: any) => handleStatusChipColor(e, index)} />
-                      </div>
-                      <div className="underline decoration-[#2B36D9] text-center">
-                        <span
-                          className="cursor-pointer text-primary"
-                          onClick={handleViewDocuments}
-                        >
-                          Views
-                        </span>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -1105,7 +1105,7 @@ const CreateVehicle = () => {
             />
           </div>
         </div>
-      </div>
+      </div >
     </>
   );
 };
