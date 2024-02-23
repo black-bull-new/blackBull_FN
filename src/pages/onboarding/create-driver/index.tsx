@@ -62,6 +62,7 @@ const CreateDriver = () => {
       dateOfIssue: "",
       expiryDate: "",
       daysLeftForRenewal: "",
+      documents: "",
     },
     employmentHistory: {
       perviousEmployer: "",
@@ -76,56 +77,7 @@ const CreateDriver = () => {
     specialDrivingLicence: {
       specialDrivingLicence: "",
     },
-    onboardingDocuments: {
-      documentType: "ggweg",
-      attachFiles: "gwegweg",
-      uploadedDocuments: "ewgwegw",
-      dateOfUpload: "gwegwg",
-    },
-    visaStatus: {
-      type: "Work",
-      uploadDate: "2023-01-15",
-    },
-    driverLicenseFront: {
-      type: "Front",
-      uploadDate: "2023-02-01",
-    },
-    driverLicenseBack: {
-      type: "Back",
-      uploadDate: "2023-02-05",
-    },
-    licenseHistory: {
-      type: "History",
-      uploadDate: "2023-03-01",
-    },
-    policeVerification: {
-      type: "Verification",
-      uploadDate: "2023-03-15",
-    },
-    passportFront: {
-      type: "Front",
-      uploadDate: "2023-04-01",
-    },
-    passportBack: {
-      type: "Back",
-      uploadDate: "2023-04-05",
-    },
-    healthInsurance: {
-      type: "Insurance",
-      uploadDate: "2023-05-01",
-    },
-    driverCertificate: {
-      type: "Certificate",
-      uploadDate: "2023-05-15",
-    },
-    fitness: {
-      type: "Fitness",
-      uploadDate: "2023-06-01",
-    },
-    drugTest: {
-      type: "Drug Test",
-      uploadDate: "2023-06-15",
-    },
+    onboardingDocuments: [],
   });
 
   const [error, setError] = useState<any>({
@@ -169,6 +121,7 @@ const CreateDriver = () => {
       dateOfIssue: "",
       expiryDate: "",
       daysLeftForRenewal: "",
+      documents: "",
     },
     employmentHistoryError: {
       perviousEmployer: "",
@@ -183,56 +136,7 @@ const CreateDriver = () => {
     specialDrivingLicenceError: {
       specialDrivingLicence: "",
     },
-    onboardingDocumentsError: {
-      documentType: "ggweg",
-      attachFiles: "gwegweg",
-      uploadedDocuments: "ewgwegw",
-      dateOfUpload: "gwegwg",
-    },
-    visaStatusError: {
-      type: "Work",
-      uploadDate: "2023-01-15",
-    },
-    driverLicenseFrontError: {
-      type: "Front",
-      uploadDate: "2023-02-01",
-    },
-    driverLicenseBackError: {
-      type: "Back",
-      uploadDate: "2023-02-05",
-    },
-    licenseHistoryError: {
-      type: "History",
-      uploadDate: "2023-03-01",
-    },
-    policeVerificationError: {
-      type: "Verification",
-      uploadDate: "2023-03-15",
-    },
-    passportFrontError: {
-      type: "Front",
-      uploadDate: "2023-04-01",
-    },
-    passportBackError: {
-      type: "Back",
-      uploadDate: "2023-04-05",
-    },
-    healthInsuranceError: {
-      type: "Insurance",
-      uploadDate: "2023-05-01",
-    },
-    driverCertificateError: {
-      type: "Certificate",
-      uploadDate: "2023-05-15",
-    },
-    fitnessError: {
-      type: "Fitness",
-      uploadDate: "2023-06-01",
-    },
-    drugTestError: {
-      type: "Drug Test",
-      uploadDate: "2023-06-15",
-    },
+    onboardingDocumentsError: [],
   });
 
   const handleSubmit = async () => {
@@ -296,9 +200,6 @@ const CreateDriver = () => {
     // Return the error status
     return hasErrors;
   };
-
-  console.log("State : ", driverDetails);
-  console.log("Error", error);
 
   return (
     <>

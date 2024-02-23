@@ -277,12 +277,10 @@ const CreateVehicle = () => {
     acc[index + 1] = url;
     return acc;
   }, []);
+  console.log({ modifiedUrls })
 
   const handleSubmit = async () => {
-    // / Check validation and get error status
     const hasErrors = checkValidation();
-    // console.log("Vehicle State : ", vehicleDetails);
-    // console.log("Error State", error);
     if (hasErrors) {
       toast("Please fix the validation errors before submitting.", {
         icon: "⚠️",
