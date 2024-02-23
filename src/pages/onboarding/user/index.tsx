@@ -140,7 +140,7 @@ const User = () => {
     const customPayload = {
       ...user,
       avatar: profileUrl[0]?.response,
-    }
+    };
     console.log({ customPayload });
 
     const response: any = await createUser(customPayload, token || "");
