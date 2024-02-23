@@ -11,7 +11,10 @@ import Button from "../../../../components/Button";
 import DateWithoutDropdown from "../../../../components/DateWithoutDropdown";
 import FileUpload from "../../../../components/FileUpload";
 import ImageUpload from "../../../../components/imageUpload/ImageUpload";
-import { addDriver } from "@/network-request/driver/driverApi";
+import {
+  addDriver,
+  uploadSingleSingleDriverOnboardingDocuments,
+} from "@/network-request/driver/driverApi";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { correctDriverStateName } from "../utility/utilityMethod";
@@ -238,9 +241,27 @@ const CreateDriver = () => {
     },
   });
 
+  const [uploadStatus, setUploadStatus] = useState<{ [id: number]: boolean }>(
+    {}
+  );
+  const [urls, setUrls] = useState<string[]>([]);
+  const [showUploadMessage, setShowUploadMessage] = useState(false);
+
   const [selectedFiles, setSelectedFiles] = useState<
     { id: number; file: File; currentDate: Date | null }[]
   >([]);
+
+  const combinedObject = selectedFiles.reduce(
+    (accumulator: any, currentItem: any) => {
+      accumulator[currentItem.id] = {
+        id: currentItem.id,
+        file: currentItem.file,
+        currentDate: currentItem.currentDate,
+      };
+      return accumulator;
+    },
+    {}
+  );
 
   const handleFileChanges = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -268,6 +289,38 @@ const CreateDriver = () => {
       setSelectedFiles(newSelectedFiles);
     }
   };
+
+  const handleUploadFileWithId = async (id: number, combinedObject: any) => {
+    try {
+      const project = combinedObject[id];
+      if (id && project?.id) {
+        console.log("Project", { project });
+        const file = [project?.file];
+        const uploadDocumentResponses = await Promise.all(
+          Object.values(file)?.map((file) =>
+            uploadSingleSingleDriverOnboardingDocuments(file)
+          )
+        );
+        console.log({ uploadDocumentResponses });
+        const newUrls = uploadDocumentResponses
+          ?.map((response) => response?.response)
+          .filter(Boolean);
+        setUrls((prevUrls) => [...prevUrls, ...newUrls]);
+        setUploadStatus((prevStatus) => ({ ...prevStatus, [id]: true }));
+        setTimeout(() => {
+          setShowUploadMessage(true);
+        }, 4000);
+      }
+    } catch (error) {
+      console.error("Error occurred:", error);
+    }
+  };
+  console.log({ urls });
+  const modifiedUrls = urls.reduce((acc: any, url, index) => {
+    acc[index + 1] = url;
+    return acc;
+  }, []);
+
   console.log({ selectedFiles });
   const files = selectedFiles?.map((selectedFile) => selectedFile.file);
   console.log({ files });
@@ -285,6 +338,18 @@ const CreateDriver = () => {
       alert("Driver added successfully");
     } else {
       alert("Something went wrong");
+    }
+  };
+
+  const handleViewDocuments = (id: number) => {
+    const index = id;
+    console.log("ID :", id);
+    console.log("modifiedUrls", modifiedUrls);
+    if (index >= 1 && index < modifiedUrls.length) {
+      const url = modifiedUrls[index];
+      window.open(url, "_blank");
+    } else {
+      console.error("URL not found for id:", id);
     }
   };
 
@@ -1530,8 +1595,58 @@ const CreateDriver = () => {
                           />
                         </label>
                       </div>
-                      <div className="mb-6 align-middle mt-3">
-                        {/* {data.uploadedDocument} */}
+                      <div>
+                        {uploadStatus[data?.id] ? (
+                          <p style={{ color: "green" }}>
+                            {showUploadMessage ? (
+                              <div className="mb-6 underline decoration-[#2B36D9] text-center">
+                                <span
+                                  className="cursor-pointer text-primary"
+                                  onClick={() => handleViewDocuments(data?.id)}
+                                >
+                                  View
+                                </span>
+                              </div>
+                            ) : (
+                              <span className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">
+                                Uploading...
+                              </span>
+                            )}
+                          </p>
+                        ) : (
+                          <React.Fragment>
+                            {selectedFiles.find((file) => file.id === data?.id)
+                              ?.file ? (
+                              <div>
+                                <p className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">
+                                  <span
+                                    className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white"
+                                    onClick={() =>
+                                      handleUploadFileWithId(
+                                        data?.id,
+                                        combinedObject
+                                      )
+                                    }
+                                  >
+                                    Upload
+                                  </span>
+                                </p>
+                              </div>
+                            ) : (
+                              <p className="mb-6">No file Uploaded</p>
+                            )}
+                          </React.Fragment>
+                          // <span
+                          //   className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white"
+                          //   onClick={() =>
+                          //     handleUploadFileWithId(data?.id, combinedObject)
+                          //   }
+                          // >
+                          //   Upload
+                          // </span>
+                        )}
+                      </div>
+                      {/* <div className="mb-6 align-middle mt-3">
                         <React.Fragment>
                           {selectedFiles.find((file) => file.id === data?.id)
                             ?.file ? (
@@ -1549,7 +1664,7 @@ const CreateDriver = () => {
                             <p>No file Uploaded</p>
                           )}
                         </React.Fragment>
-                      </div>
+                      </div> */}
                       <div className="mb-6">
                         <div>
                           {selectedFiles.find(

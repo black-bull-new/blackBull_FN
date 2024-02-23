@@ -79,3 +79,21 @@ export const deleteDriver = async (token: string, id: string) => {
 }
 
 
+export const uploadSingleSingleDriverOnboardingDocuments = async (selectedFile: any) => {
+    const formData = new FormData();
+    formData.append("files", selectedFile)
+    return await axios
+        .post(`${process.env.NEXT_PUBLIC_API_URL}/d1/driver-onboarding-documents`,
+            formData,
+            {
+                withCredentials: false
+            }
+        ).
+        then((response) => {
+            console.log({ response })
+            return response?.data
+        }).catch((error) => {
+            console.log({ error })
+            return error
+        })
+}
