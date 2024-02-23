@@ -1114,7 +1114,7 @@ const EditVehicle = () => {
                         )}
                       </div>
                       <div className="text-center items-center justify-center m-auto">
-                        <StatusChip />
+                        {/* <StatusChip /> */}
                       </div>
                       <div className="underline decoration-[#2B36D9] text-center">
                         <span

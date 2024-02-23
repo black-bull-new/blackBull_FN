@@ -229,13 +229,13 @@ const CreateVehicle = () => {
   // ======================================== Handle status chip color on vehicle documents list ========================================
   const [selectedStatusValues, setSelectedStatusValues] = useState<any[]>([]);
   const handleStatusChipColor = (value: any, index: number) => {
-    setSelectedStatusValues(prevState => {
+    setSelectedStatusValues((prevState) => {
       const updatedValues = [...prevState];
       updatedValues[index] = value;
       return updatedValues;
     });
   };
-  console.log({ selectedStatusValues })
+  console.log({ selectedStatusValues });
 
   // ======================================== Meeting on 23-Feb-2024 ========================================
   // Changes array to objects by using accumulator ... 
