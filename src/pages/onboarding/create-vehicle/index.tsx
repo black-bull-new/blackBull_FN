@@ -264,9 +264,13 @@ const CreateVehicle = () => {
       });
       return;
     }
-    
-    const uploadDocument = await Promise.all(Object.values(selectedUploadRegoDocument)?.map((file) => uploadVehicleRegoDocuemnts(file)))
-    console.log({ uploadDocument })
+
+    const uploadDocument = await Promise.all(
+      Object.values(selectedUploadRegoDocument)?.map((file) =>
+        uploadVehicleRegoDocuemnts(file)
+      )
+    );
+    console.log({ uploadDocument });
 
     try {
       const profileUrls = await Promise.all(
@@ -275,9 +279,8 @@ const CreateVehicle = () => {
         )
       );
       console.log({ profileUrls });
-      urls = profileUrls.flatMap(entry => entry.response);
+      urls = profileUrls.flatMap((entry) => entry.response);
       console.log({ urls });
-
     } catch (error) {
       console.error("Error uploading files:", error);
     }
