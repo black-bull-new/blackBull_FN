@@ -240,13 +240,13 @@ const CreateVehicle = () => {
   const [selectedStatusValues, setSelectedStatusValues] = useState<any[]>([]);
 
   const handleStatusChipColor = (value: any, index: number) => {
-    setSelectedStatusValues(prevState => {
+    setSelectedStatusValues((prevState) => {
       const updatedValues = [...prevState];
       updatedValues[index] = value;
       return updatedValues;
     });
   };
-  console.log({ selectedStatusValues })
+  console.log({ selectedStatusValues });
 
   const handleSubmit = async () => {
     let urls;
@@ -1050,20 +1050,27 @@ const CreateVehicle = () => {
                         )}
                       </div>
                       <div>
-                        {selectedFiles.find((file) => file.id === data?.id)
-                          ?.file ? (
-                          <p>
-                            {
-                              selectedFiles.find((file) => file.id === data?.id)
-                                ?.file.name
-                            }
-                          </p>
-                        ) : (
-                          <p>No file selected</p>
-                        )}
+                        <>
+                          {selectedFiles.find((file) => file.id === data?.id)
+                            ?.file ? (
+                            <p>
+                              {
+                                selectedFiles.find(
+                                  (file) => file.id === data?.id
+                                )?.file.name
+                              }
+                            </p>
+                          ) : (
+                            <p>No file selected</p>
+                          )}
+                        </>
                       </div>
                       <div className="text-center items-center justify-center m-auto">
-                        <StatusChip chipColor={(e: any) => handleStatusChipColor(e, index)} />
+                        <StatusChip
+                          chipColor={(e: any) =>
+                            handleStatusChipColor(e, index)
+                          }
+                        />
                       </div>
                       <div className="underline decoration-[#2B36D9] text-center">
                         <span
