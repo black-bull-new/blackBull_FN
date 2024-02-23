@@ -248,18 +248,14 @@ const CreateVehicle = () => {
     return accumulator;
   }, {});
 
-  const { loading, setLoading } = useLoading();
-  const [project, setProject] = useState<number | null>(null);
+
   const [uploadStatus, setUploadStatus] = useState<{ [id: number]: boolean }>({});
   const [urls, setUrls] = useState<string[]>([]);
-
   const [showUploadMessage, setShowUploadMessage] = useState(false);
 
   const handleUploadFileWithId = async (id: number, combinedObject: any) => {
     try {
       const project = combinedObject[id];
-      setProject(project?.id);
-      setLoading(true);
       if (id && project?.id) {
         console.log("Project", { project });
         const file = [project?.file];
