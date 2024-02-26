@@ -104,7 +104,7 @@ const DriverDetails = () => {
                       <p className="mb-4">
                         {item?.licenseDetails?.licenseCardNumber}
                       </p>
-                      <p className="mb-4">{item?.licenseHistory.type}</p>
+                      <p className="mb-4">{item?.licenseHistory?.type}</p>
                       <p className="mb-4">{item?.licenseDetails?.expiryDate}</p>
                       <p className="mb-4">{item?.licenseDetails?.state}</p>
                       <p className="mb-4">No Data</p>

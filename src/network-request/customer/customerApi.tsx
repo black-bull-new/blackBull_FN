@@ -17,3 +17,41 @@ export const addCustomer = async (data: any, token: string) => {
         return error
     }
 }
+
+export const uploadCustomerProfile = async (selectedFile: any) => {
+    const formData = new FormData();
+    formData.append("files", selectedFile)
+    return await axios
+        .post(`${process.env.NEXT_PUBLIC_API_URL}/c1/customer-profile`,
+            formData,
+            {
+                withCredentials: false
+            }
+        ).
+        then((response) => {
+            console.log({ response })
+            return response?.data
+        }).catch((error) => {
+            console.log({ error })
+            return error
+        })
+}
+
+export const uploadCustomerContractDocuments = async (selectedFile: any) => {
+    const formData = new FormData();
+    formData.append("files", selectedFile)
+    return await axios
+        .post(`${process.env.NEXT_PUBLIC_API_URL}/c1/customer-contractual-documents`,
+            formData,
+            {
+                withCredentials: false
+            }
+        ).
+        then((response) => {
+            console.log({ response })
+            return response?.data
+        }).catch((error) => {
+            console.log({ error })
+            return error
+        })
+}
