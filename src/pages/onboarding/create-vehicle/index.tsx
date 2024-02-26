@@ -183,15 +183,8 @@ const CreateVehicle = () => {
     setDocumentRender
   );
 
-  const handleViewDocuments = (id: number) => {
-    const index = id;
-    if (index >= 1 && index < modifiedUrls.length) {
-      const url = modifiedUrls[index];
-      window.open(url, "_blank");
-    } else {
-      console.error("URL not found for id:", id);
-    }
-  };
+
+
 
   const [selectedFiles, setSelectedFiles] = useState<
     { id: number; file: File; currentDate: Date | null }[]
@@ -258,6 +251,32 @@ const CreateVehicle = () => {
   const [urls, setUrls] = useState<string[]>([]);
   const [showUploadMessage, setShowUploadMessage] = useState(false);
 
+  // const handleUploadFileWithId = async (id: number, combinedObject: any) => {
+  //   try {
+  //     const project = combinedObject[id];
+  //     if (id && project?.id) {
+  //       console.log("Project", { project });
+  //       const file = [project?.file];
+  //       const uploadDocumentResponses = await Promise.all(
+  //         Object.values(file)?.map((file) =>
+  //           uploadSingleSingleVehicleDocuments(file)
+  //         )
+  //       );
+  //       console.log({ uploadDocumentResponses });
+  //       const newUrls = uploadDocumentResponses
+  //         ?.map((response) => response?.response)
+  //         .filter(Boolean);
+  //       setUrls((prevUrls) => [...prevUrls, ...newUrls]);
+  //       setUploadStatus((prevStatus) => ({ ...prevStatus, [id]: true }));
+  //       setTimeout(() => {
+  //         setShowUploadMessage(true);
+  //       }, 4000);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error occurred:", error);
+  //   }
+  // };
+
   const handleUploadFileWithId = async (id: number, combinedObject: any) => {
     try {
       const project = combinedObject[id];
@@ -265,15 +284,17 @@ const CreateVehicle = () => {
         console.log("Project", { project });
         const file = [project?.file];
         const uploadDocumentResponses = await Promise.all(
-          Object.values(file)?.map((file) =>
-            uploadSingleSingleVehicleDocuments(file)
-          )
+          Object.values(file)?.map((file) => uploadSingleSingleVehicleDocuments(file))
         );
         console.log({ uploadDocumentResponses });
         const newUrls = uploadDocumentResponses
           ?.map((response) => response?.response)
           .filter(Boolean);
-        setUrls((prevUrls) => [...prevUrls, ...newUrls]);
+        setUrls((prevUrls) => {
+          const updatedUrls = [...prevUrls];
+          updatedUrls[id - 1] = newUrls[0]; // Update the URL at the correct index
+          return updatedUrls;
+        });
         setUploadStatus((prevStatus) => ({ ...prevStatus, [id]: true }));
         setTimeout(() => {
           setShowUploadMessage(true);
@@ -289,6 +310,29 @@ const CreateVehicle = () => {
     acc[index] = url;
     return acc;
   }, []);
+
+
+  const handleViewDocuments = (id: number) => {
+    console.log("modifiedUrls",modifiedUrls)
+      const index = id;
+      if (index >= 1 && index < modifiedUrls.length) {
+        const url = modifiedUrls[index];
+        window.open(url, "_blank");
+      } else {
+        console.error("URL not found for id:", id);
+      }
+    };
+
+  // const handleViewDocuments = (id: number) => {
+  //   console.log("modifiedUrls", modifiedUrls);
+  //   const index = id;
+  //   if (index >= 1 && index <= modifiedUrls.length) {
+  //     const url = modifiedUrls[index];
+  //     window.open(url, "_blank");
+  //   } else {
+  //     console.error("URL not found for id:", id);
+  //   }
+  // };
 
   const handleSubmit = async () => {
     const hasErrors = checkValidation();
