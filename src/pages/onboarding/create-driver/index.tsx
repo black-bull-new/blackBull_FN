@@ -24,7 +24,6 @@ import { correctDriverStateName } from "../utility/utilityMethod";
 const CreateDriver = () => {
   const token = getCookie("token");
   const router = useRouter();
-  console.log("token check", { token });
 
   const [driverDetails, setDriverDetails] = useState<any>({
     firstName: "",
@@ -126,7 +125,6 @@ const CreateDriver = () => {
       dateOfIssue: "",
       expiryDate: "",
       daysLeftForRenewal: "",
-      documents: "",
     },
     employmentHistoryError: {
       perviousEmployer: "",
@@ -141,7 +139,6 @@ const CreateDriver = () => {
     specialDrivingLicenceError: {
       specialDrivingLicence: "",
     },
-    onboardingDocumentsError: [],
   });
   console.log({ error });
 
@@ -198,14 +195,12 @@ const CreateDriver = () => {
     try {
       const project = combinedObject[id];
       if (id && project?.id) {
-        console.log("Project", { project });
         const file = [project?.file];
         const uploadDocumentResponses = await Promise.all(
           Object.values(file)?.map((file) =>
             uploadSingleSingleDriverOnboardingDocuments(file)
           )
         );
-        console.log({ uploadDocumentResponses });
         const newUrls = uploadDocumentResponses
           ?.map((response) => response?.response)
           .filter(Boolean);
@@ -223,20 +218,15 @@ const CreateDriver = () => {
       console.error("Error occurred:", error);
     }
   };
-  console.log({ urls });
   const modifiedUrls = urls.reduce((acc: any, url, index) => {
     acc[index + 1] = url;
     return acc;
   }, []);
 
-  console.log({ selectedFiles });
   const files = selectedFiles?.map((selectedFile) => selectedFile.file);
-  console.log({ files });
 
   const handleViewDocuments = (id: number) => {
     const index = id;
-    console.log("ID :", id);
-    console.log("modifiedUrls", modifiedUrls);
     if (index >= 1 && index < modifiedUrls.length) {
       const url = modifiedUrls[index];
       window.open(url, "_blank");
@@ -249,27 +239,25 @@ const CreateDriver = () => {
     const newErrors = { ...error };
     let hasErrors = false;
     Object.keys(driverDetails).forEach((key) => {
-      if (
-        key !== "avatar" &&
-        key !== "onboardingDocuments" &&
-        key !== "licenseDetails.documents"
-      ) {
+      if (key !== "avatar" && key !== "onboardingDocuments") {
         if (
           typeof driverDetails[key] === "object" &&
           driverDetails[key] !== null
         ) {
           // Handle nested objects with a different logic
           Object.keys(driverDetails[key]).forEach((nestedKey) => {
-            if (
-              !driverDetails[key][nestedKey] ||
-              driverDetails[key][nestedKey] === undefined
-            ) {
-              newErrors[key + "Error"][nestedKey] = `${correctDriverStateName(
-                nestedKey
-              )} is required in ${correctDriverStateName(key)}`;
-              hasErrors = true;
-            } else {
-              newErrors[nestedKey] = "";
+            if (nestedKey !== "documents") {
+              if (
+                !driverDetails[key][nestedKey] ||
+                driverDetails[key][nestedKey] === undefined
+              ) {
+                newErrors[key + "Error"][nestedKey] = `${correctDriverStateName(
+                  nestedKey
+                )} is required in ${correctDriverStateName(key)}`;
+                hasErrors = true;
+              } else {
+                newErrors[nestedKey] = "";
+              }
             }
           });
         } else {
@@ -332,8 +320,6 @@ const CreateDriver = () => {
     setDocumentRender
   );
 
-  console.log({ selectedUploadRegoDocument });
-
   const handleSubmit = async () => {
     const hasErrors = checkValidation();
     if (hasErrors) {
@@ -356,7 +342,6 @@ const CreateDriver = () => {
         )
       ),
     ]);
-    console.log({ profileUrl });
 
     // Uploading driver license documents ...
     const [driverLicense] = await Promise.all([
@@ -366,7 +351,6 @@ const CreateDriver = () => {
         )
       ),
     ]);
-    console.log({ driverLicense });
 
     const newDriverDetails = {
       ...driverDetails,
@@ -380,7 +364,6 @@ const CreateDriver = () => {
         uploadDate: formattedDate,
       })),
     };
-    console.log({ newDriverDetails });
 
     const response = await addDriver(newDriverDetails, token || "");
     if (response?.data?.data) {

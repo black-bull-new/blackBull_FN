@@ -3,20 +3,26 @@ import Image from "next/image";
 import Progressbar from "../../../../components/Progressbar";
 import Maininputfield from "../../../../components/Maininputfield";
 import DropDownMap from "../../../../components/DropDownMap";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Button from "../../../../components/Button";
 import FileUpload from "../../../../components/FileUpload";
-import { addCustomer } from "@/network-request/customer/customerApi";
+import {
+  addCustomer,
+  uploadCustomerContractDocuments,
+  uploadCustomerProfile,
+} from "@/network-request/customer/customerApi";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { correctCustomerStateName } from "../utility/utilityMethod";
-import { regexOfPhoneNumber } from "../utility/commonRegex";
+import { regexOfEmail, regexOfPhoneNumber, regexOfWebsite } from "../utility/commonRegex";
+import toast, { Toaster } from "react-hot-toast";
 const AddCustomer = () => {
   const [selectedData, setSelectedData] = useState("");
   const token = getCookie("token");
   const router = useRouter();
 
   const [customer, setCustomer] = useState<any>({
+    avatar: "",
     companyName: "",
     tradingName: "",
     abnNumber: "",
@@ -163,21 +169,103 @@ const AddCustomer = () => {
       country: "",
       postCode: "",
     },
-    documentError: "",
   });
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [profile, setProfile] = useState("");
+  const [selectedProfile, setSelectedProfile] = useState("");
+
+  const handleUploadClick: any = () => {
+    if (fileInputRef.current) {
+      fileInputRef?.current?.click();
+    }
+  };
+  const [documentRender, setDocumentRender] = useState("");
+  const [selectedUploadContractDocument, setSelectedUploadContractDocument] =
+    useState("");
+
+  const handleFileChange = (setSide: any, setPreview: any) => (event: any) => {
+    const selectedFile = event.target.files && event.target.files[0];
+    setSide({ file: selectedFile });
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader?.result! as any);
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+  };
+
+  const handleProfileFileChange = handleFileChange(
+    setSelectedProfile,
+    setProfile
+  );
+
+  const handleDocumentUpload = handleFileChange(
+    setSelectedUploadContractDocument,
+    setDocumentRender
+  );
 
   const handleSubmit = async () => {
     const hasErrors = checkValidation();
     if (hasErrors) {
-      alert("Please fix the validation errors before submitting.");
+      toast("Please fix the validation errors before submitting.", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
       return;
     }
-    const response: any = await addCustomer(customer, token || "");
+
+    // Uploading customer profile ...
+    const [profileUrl] = await Promise.all([
+      Promise.all(
+        Object.values(selectedProfile)?.map((imageInfo) =>
+          uploadCustomerProfile(imageInfo)
+        )
+      ),
+    ]);
+
+    // Uploading customer contract documents ...
+    const [customerContract] = await Promise.all([
+      Promise.all(
+        Object.values(selectedUploadContractDocument)?.map((imageInfo) =>
+          uploadCustomerContractDocuments(imageInfo)
+        )
+      ),
+    ]);
+
+    console.log("Avatar", profileUrl[0]?.response);
+
+    const newCustomer = {
+      ...customer,
+      avatar: profileUrl[0]?.response,
+      document: customerContract[0]?.response,
+    };
+
+    const response: any = await addCustomer(newCustomer, token || "");
 
     if (response?.status === 200) {
-      alert("Customer Added Successfully");
+      toast("Customer has been successfully created..", {
+        icon: "👏",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
     } else {
-      alert("Something went Wrong! Please try again later.");
+      toast("Something went wrong", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
     }
   };
 
@@ -185,37 +273,39 @@ const AddCustomer = () => {
     const newErrors = { ...error };
     let hasErrors = false;
     Object.keys(customer).forEach((key) => {
-      if (typeof customer[key] === "object" && customer[key] !== null) {
-        // Handle nested objects with a different logic
-        Object.keys(customer[key]).forEach((nestedKey) => {
-          const nestedKeyPath = `${key}Error.${nestedKey}`;
-          if (
-            !customer[key][nestedKey] ||
-            customer[key][nestedKey] === undefined
-          ) {
-            newErrors[key + "Error"][nestedKey] = `${correctCustomerStateName(
-              nestedKey
-            )} is required in ${correctCustomerStateName(key)}`;
+      if (key !== "document" && key !== "avatar") {
+        if (typeof customer[key] === "object" && customer[key] !== null) {
+          // Handle nested objects with a different logic
+          Object.keys(customer[key]).forEach((nestedKey) => {
+            const nestedKeyPath = `${key}Error.${nestedKey}`;
+            if (
+              !customer[key][nestedKey] ||
+              customer[key][nestedKey] === undefined
+            ) {
+              newErrors[key + "Error"][nestedKey] = `${correctCustomerStateName(
+                nestedKey
+              )} is required in ${correctCustomerStateName(key)}`;
+              hasErrors = true;
+            } else {
+              newErrors[nestedKeyPath] = "";
+            }
+          });
+        } else {
+          // Handle non-nested fields
+          // Auto scroll up for better user experience
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth", // for smooth scrolling
+          });
+
+          if (!customer[key]) {
+            newErrors[key + "Error"] = `${correctCustomerStateName(
+              key
+            )} is required`;
             hasErrors = true;
           } else {
-            newErrors[nestedKeyPath] = "";
+            newErrors[key + "Error"] = "";
           }
-        });
-      } else {
-        // Handle non-nested fields
-        // Auto scroll up for better user experience
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth", // for smooth scrolling
-        });
-
-        if (!customer[key]) {
-          newErrors[key + "Error"] = `${correctCustomerStateName(
-            key
-          )} is required`;
-          hasErrors = true;
-        } else {
-          newErrors[key + "Error"] = "";
         }
       }
     });
@@ -231,6 +321,9 @@ const AddCustomer = () => {
     <>
       {/* <Header /> */}
       <div className="flex bg-[#E9EFFF]">
+        <div>
+          <Toaster />
+        </div>
         {/* <div className="sticky top-0">
           <Sidebar />
         </div> */}
@@ -250,14 +343,50 @@ const AddCustomer = () => {
               <Progressbar />
             </div>
             <div className="relative w-fit">
-              <Image
-                src="/driverImage.svg"
-                alt="driver"
-                width={100}
-                height={100}
-              />
-              <span className="w-6 h-6 rounded-full bg-accent3  text-white flex justify-center items-end text-xl absolute right-2 bottom-2">
-                +
+              <span className="flex flex-row justify-center my-4">
+                <span className="mb-4 text-center flex justify-center items-center">
+                  <label htmlFor="profilelabel">
+                    <div
+                      className="w-[100px]  rounded-full h-[100px] cursor-pointer"
+                      onChange={handleUploadClick}
+                    >
+                      {profile ? (
+                        <div className="w-full h-full">
+                          <Image
+                            src={profile}
+                            alt="driver"
+                            width={100}
+                            className="w-[100px] h-[100px] border rounded-full"
+                            height={100}
+                          />
+                        </div>
+                      ) : (
+                        <>
+                          <Image
+                            src="/driverImage.svg"
+                            alt="driver"
+                            width={100}
+                            height={100}
+                            className="w-[100px] h-[100px]"
+                          />
+                          <span className="w-6 h-6 rounded-full bg-accent3 block text-white flex justify-center items-end text-xl absolute right-2 bottom-6">
+                            +
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  </label>
+                  <span className="text-sm">
+                    {" "}
+                    <input
+                      id="profilelabel"
+                      type="file"
+                      style={{ display: "none" }}
+                      ref={fileInputRef}
+                      onChange={(e) => handleProfileFileChange(e)}
+                    />
+                  </span>
+                </span>
               </span>
             </div>
           </div>
@@ -336,10 +465,17 @@ const AddCustomer = () => {
                 label="Website Address"
                 value={customer.websiteAddress}
                 onChange={(e: any) => {
-                  setCustomer({ ...customer, websiteAddress: e.target.value });
-                  if (e.target.value.length > 0) {
+                  const inputValue = e.target.value;
+                  if (!regexOfWebsite.test(inputValue)) {
+                    setError({
+                      ...error,
+                      websiteAddressError:
+                        "Please enter a valid webiste address",
+                    });
+                  } else {
                     setError({ ...error, websiteAddressError: "" });
                   }
+                  setCustomer({ ...customer, websiteAddress: e.target.value });
                 }}
                 className="w-full"
                 errorMessage={error.websiteAddressError}
@@ -487,8 +623,8 @@ const AddCustomer = () => {
                   }
                 }}
                 errorMessage={error.companyAddressError?.state}
-              // selectedData={selectedData}
-              // setSelectedData={setSelectedData}
+                // selectedData={selectedData}
+                // setSelectedData={setSelectedData}
               />
               <Maininputfield
                 label="Country"
@@ -513,8 +649,8 @@ const AddCustomer = () => {
                   }
                 }}
                 errorMessage={error.companyAddressError?.country}
-              // selectedData={selectedData}
-              // setSelectedData={setSelectedData}
+                // selectedData={selectedData}
+                // setSelectedData={setSelectedData}
               />
               <Maininputfield
                 label="Post Code"
@@ -555,16 +691,6 @@ const AddCustomer = () => {
                 label="Contact Person"
                 value={customer.accountPayble.contactPerson}
                 onChange={(e: any) => {
-                  if (!regexOfPhoneNumber.test(e.target.value)) {
-                    setError({
-                      ...error,
-                      accountPaybleError: {
-                        ...error.accountPaybleError,
-                        contactPerson:
-                          "Please enter your 10 digit phone number",
-                      },
-                    });
-                  }
                   setCustomer({
                     ...customer,
                     accountPayble: {
@@ -649,14 +775,17 @@ const AddCustomer = () => {
                 label="Accounts Payable Email"
                 value={customer.accountPayble.accountsPaybleEmail}
                 onChange={(e: any) => {
-                  setCustomer({
-                    ...customer,
-                    accountPayble: {
-                      ...customer.accountPayble,
-                      accountsPaybleEmail: e.target.value,
-                    },
-                  });
-                  if (e.target.value.length > 0) {
+                  const inputValue = e.target.value;
+                  if (!regexOfEmail.test(inputValue)) {
+                    setError({
+                      ...error,
+                      accountPaybleError: {
+                        ...error.accountPaybleError,
+                        accountsPaybleEmail:
+                          "Please enter a valid email address",
+                      },
+                    });
+                  } else {
                     setError({
                       ...error,
                       accountPaybleError: {
@@ -665,6 +794,13 @@ const AddCustomer = () => {
                       },
                     });
                   }
+                  setCustomer({
+                    ...customer,
+                    accountPayble: {
+                      ...customer.accountPayble,
+                      accountsPaybleEmail: e.target.value,
+                    },
+                  });
                 }}
                 className="w-full"
                 errorMessage={error.accountPaybleError?.accountsPaybleEmail}
@@ -762,14 +898,17 @@ const AddCustomer = () => {
                 label="Accounts Receivable Email"
                 value={customer.accountReceivable.accountsReceivableEmail}
                 onChange={(e: any) => {
-                  setCustomer({
-                    ...customer,
-                    accountReceivable: {
-                      ...customer.accountReceivable,
-                      accountsReceivableEmail: e.target.value,
-                    },
-                  });
-                  if (e.target.value.length > 0) {
+                  const inputValue = e.target.value;
+                  if (!regexOfEmail.test(inputValue)) {
+                    setError({
+                      ...error,
+                      accountReceivableError: {
+                        ...error.accountReceivableError,
+                        accountsReceivableEmail:
+                          "Please enter a valid email address",
+                      },
+                    });
+                  } else {
                     setError({
                       ...error,
                       accountReceivableError: {
@@ -778,6 +917,13 @@ const AddCustomer = () => {
                       },
                     });
                   }
+                  setCustomer({
+                    ...customer,
+                    accountReceivable: {
+                      ...customer.accountReceivable,
+                      accountsReceivableEmail: e.target.value,
+                    },
+                  });
                 }}
                 className="w-full"
                 errorMessage={
@@ -877,14 +1023,16 @@ const AddCustomer = () => {
                 label="Operations Email"
                 value={customer.opreations.opreationsEmail}
                 onChange={(e: any) => {
-                  setCustomer({
-                    ...customer,
-                    opreations: {
-                      ...customer.opreations,
-                      opreationsEmail: e.target.value,
-                    },
-                  });
-                  if (e.target.value.length > 0) {
+                  const inputValue = e.target.value;
+                  if (!regexOfEmail.test(inputValue)) {
+                    setError({
+                      ...error,
+                      opreationsError: {
+                        ...error.opreationsError,
+                        opreationsEmail: "Please enter a valid email address",
+                      },
+                    });
+                  } else {
                     setError({
                       ...error,
                       opreationsError: {
@@ -893,6 +1041,13 @@ const AddCustomer = () => {
                       },
                     });
                   }
+                  setCustomer({
+                    ...customer,
+                    opreations: {
+                      ...customer.opreations,
+                      opreationsEmail: e.target.value,
+                    },
+                  });
                 }}
                 className="w-full"
                 errorMessage={error.opreationsError?.opreationsEmail}
@@ -990,14 +1145,16 @@ const AddCustomer = () => {
                 label="Compliance Email"
                 value={customer.compliance.complianceEmail}
                 onChange={(e: any) => {
-                  setCustomer({
-                    ...customer,
-                    compliance: {
-                      ...customer.compliance,
-                      complianceEmail: e.target.value,
-                    },
-                  });
-                  if (e.target.value.length > 0) {
+                  const inputValue = e.target.value;
+                  if (!regexOfEmail.test(inputValue)) {
+                    setError({
+                      ...error,
+                      complianceError: {
+                        ...error.complianceError,
+                        complianceEmail: "Please enter a valid email address",
+                      },
+                    });
+                  } else {
                     setError({
                       ...error,
                       complianceError: {
@@ -1006,6 +1163,13 @@ const AddCustomer = () => {
                       },
                     });
                   }
+                  setCustomer({
+                    ...customer,
+                    compliance: {
+                      ...customer.compliance,
+                      complianceEmail: e.target.value,
+                    },
+                  });
                 }}
                 className="w-full"
                 errorMessage={error.complianceError?.complianceEmail}
@@ -1097,11 +1261,16 @@ const AddCustomer = () => {
                 label="Admin Email"
                 value={customer.admin.adminEmail}
                 onChange={(e: any) => {
-                  setCustomer({
-                    ...customer,
-                    admin: { ...customer.admin, adminEmail: e.target.value },
-                  });
-                  if (e.target.value.length > 0) {
+                  const inputValue = e.target.value;
+                  if (!regexOfEmail.test(inputValue)) {
+                    setError({
+                      ...error,
+                      adminError: {
+                        ...error.adminError,
+                        adminEmail: "Please enter a valid email address",
+                      },
+                    });
+                  } else {
                     setError({
                       ...error,
                       adminError: {
@@ -1110,6 +1279,10 @@ const AddCustomer = () => {
                       },
                     });
                   }
+                  setCustomer({
+                    ...customer,
+                    admin: { ...customer.admin, adminEmail: e.target.value },
+                  });
                 }}
                 className="w-full"
                 errorMessage={error.adminError?.adminEmail}
@@ -1195,14 +1368,17 @@ const AddCustomer = () => {
                 label="Director Email Address"
                 value={customer.companySuiteDetails.directorEmailAddress}
                 onChange={(e: any) => {
-                  setCustomer({
-                    ...customer,
-                    companySuiteDetails: {
-                      ...customer.companySuiteDetails,
-                      directorEmailAddress: e.target.value,
-                    },
-                  });
-                  if (e.target.value.length > 0) {
+                  const inputValue = e.target.value;
+                  if (!regexOfEmail.test(inputValue)) {
+                    setError({
+                      ...error,
+                      companySuiteDetailsError: {
+                        ...error.companySuiteDetailsError,
+                        directorEmailAddress:
+                          "Please enter a valid email address",
+                      },
+                    });
+                  } else {
                     setError({
                       ...error,
                       companySuiteDetailsError: {
@@ -1211,6 +1387,13 @@ const AddCustomer = () => {
                       },
                     });
                   }
+                  setCustomer({
+                    ...customer,
+                    companySuiteDetails: {
+                      ...customer.companySuiteDetails,
+                      directorEmailAddress: e.target.value,
+                    },
+                  });
                 }}
                 className="w-full"
                 errorMessage={
@@ -1566,17 +1749,9 @@ const AddCustomer = () => {
             <div className="grid grid-cols-3 gap-4 p-4">
               <FileUpload
                 file="Choose Contract Document"
-                value={customer.document}
-                onChange={(e: any) => {
-                  setCustomer({ ...customer, document: e.target.value });
-                  if (e.target.value.length > 0) {
-                    setError({
-                      ...error,
-                      documentError: "",
-                    });
-                  }
-                }}
-                errorMessage={error.documentError}
+                onChange={handleDocumentUpload}
+                //@ts-expect-error
+                fileName={selectedUploadContractDocument?.file?.name || ""}
               />
             </div>
           </div>
