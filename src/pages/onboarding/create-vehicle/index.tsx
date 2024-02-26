@@ -88,10 +88,6 @@ const CreateVehicle = () => {
     insuranceStatusError: "",
     situationError: "",
     truckOdometerError: "",
-    // documents: [
-    //   { type: "Registration Certificate", uploadDate: "2023-01-15" },
-    //   { type: "Insurance Policy", uploadDate: "2023-01-20" },
-    // ],
     rentedCompanyNameError: "",
     dateOfHireError: "",
     contractValidTillError: "",
@@ -311,7 +307,7 @@ const CreateVehicle = () => {
   console.log({ urls });
 
   const modifiedUrls = urls.reduce((acc: any, url, index) => {
-    acc[index + 1] = url;
+    acc[index] = url;
     return acc;
   }, []);
 
@@ -339,10 +335,7 @@ const CreateVehicle = () => {
   // };
 
   const handleSubmit = async () => {
-    // / Check validation and get error status
     const hasErrors = checkValidation();
-    // console.log("Vehicle State : ", vehicleDetails);
-    // console.log("Error State", error);
     if (hasErrors) {
       toast("Please fix the validation errors before submitting.", {
         icon: "⚠️",
@@ -375,7 +368,7 @@ const CreateVehicle = () => {
 
     const response: any = await addVehicle(customVehiclePayload, token || "");
     if (response?.status == 200) {
-      toast("Vehicle Added Successfully", {
+      toast("Vehicle has been successfully created..", {
         icon: "👏",
         style: {
           borderRadius: "10px",
@@ -384,7 +377,7 @@ const CreateVehicle = () => {
         },
       });
       setTimeout(() => {
-        // router.push("/onboarding/vehicle-list");
+        router.push("/onboarding/vehicle-list");
       }, 3000);
       console.log("response :", response);
     } else {
@@ -1134,10 +1127,10 @@ const CreateVehicle = () => {
                                   (file) => file.id === data?.id
                                 )?.currentDate
                                   ? formatDate(
-                                      selectedFiles.find(
-                                        (file) => file.id === data?.id
-                                      )?.currentDate
-                                    )
+                                    selectedFiles.find(
+                                      (file) => file.id === data?.id
+                                    )?.currentDate
+                                  )
                                   : "No date available"}
                               </p>
                             </div>

@@ -97,3 +97,42 @@ export const uploadSingleSingleDriverOnboardingDocuments = async (selectedFile: 
             return error
         })
 }
+
+
+export const uploadDriverProfile = async (selectedFile: any) => {
+    const formData = new FormData();
+    formData.append("files", selectedFile)
+    return await axios
+        .post(`${process.env.NEXT_PUBLIC_API_URL}/d1/driver-profile`,
+            formData,
+            {
+                withCredentials: false
+            }
+        ).
+        then((response) => {
+            console.log({ response })
+            return response?.data
+        }).catch((error) => {
+            console.log({ error })
+            return error
+        })
+}
+
+export const uploadDriverLicenseDocuments = async (selectedFile: any) => {
+    const formData = new FormData();
+    formData.append("files", selectedFile)
+    return await axios
+        .post(`${process.env.NEXT_PUBLIC_API_URL}/d1/driver-license-documents`,
+            formData,
+            {
+                withCredentials: false
+            }
+        ).
+        then((response) => {
+            console.log({ response })
+            return response?.data
+        }).catch((error) => {
+            console.log({ error })
+            return error
+        })
+}

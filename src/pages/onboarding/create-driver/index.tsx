@@ -1,30 +1,27 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import DropDownMap from "../../../../components/DropDownMap";
-
 import Maindatefield from "../../../../components/Maindatefield";
 import Maininputfield from "../../../../components/Maininputfield";
 import Progressbar from "../../../../components/Progressbar";
-
 import Image from "next/image";
-import Checkbox from "../../../../components/Checkbox";
 import Button from "../../../../components/Button";
-import DateWithoutDropdown from "../../../../components/DateWithoutDropdown";
 import FileUpload from "../../../../components/FileUpload";
 import ImageUpload from "../../../../components/imageUpload/ImageUpload";
 import {
   addDriver,
+  uploadDriverLicenseDocuments,
+  uploadDriverProfile,
   uploadSingleSingleDriverOnboardingDocuments,
 } from "@/network-request/driver/driverApi";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
-import { correctDriverStateName } from "../utility/utilityMethod";
 import React from "react";
-import { formatDate } from "@/utils";
+import { formatDate, formattedDate } from "@/utils";
 import { regexOfEmail, regexOfPhoneNumber } from "../utility/commonRegex";
-import { uploadOnboardingPorfile } from "@/network-request/onboarding-user";
+import toast, { Toaster } from "react-hot-toast";
+import { correctDriverStateName } from "../utility/utilityMethod";
 
 const CreateDriver = () => {
-  const [selectedData, setSelectedData] = useState("");
   const token = getCookie("token");
   const router = useRouter();
   console.log("token check", { token });
@@ -34,10 +31,11 @@ const CreateDriver = () => {
     middleName: "",
     lastName: "",
     dateOfBirth: "",
+    avatar: "",
     email: "",
     mobile: "",
     nationality: "",
-    avatar: "",
+
     currentAddress: {
       houseNumber: undefined,
       street: "",
@@ -69,6 +67,7 @@ const CreateDriver = () => {
       dateOfIssue: "",
       expiryDate: "",
       daysLeftForRenewal: "",
+      documents: "",
     },
     employmentHistory: {
       perviousEmployer: "",
@@ -83,56 +82,7 @@ const CreateDriver = () => {
     specialDrivingLicence: {
       specialDrivingLicence: "",
     },
-    onboardingDocuments: {
-      documentType: "ggweg",
-      attachFiles: "gwegweg",
-      uploadedDocuments: "ewgwegw",
-      dateOfUpload: "gwegwg",
-    },
-    visaStatus: {
-      type: "Work",
-      uploadDate: "2023-01-15",
-    },
-    driverLicenseFront: {
-      type: "Front",
-      uploadDate: "2023-02-01",
-    },
-    driverLicenseBack: {
-      type: "Back",
-      uploadDate: "2023-02-05",
-    },
-    licenseHistory: {
-      type: "History",
-      uploadDate: "2023-03-01",
-    },
-    policeVerification: {
-      type: "Verification",
-      uploadDate: "2023-03-15",
-    },
-    passportFront: {
-      type: "Front",
-      uploadDate: "2023-04-01",
-    },
-    passportBack: {
-      type: "Back",
-      uploadDate: "2023-04-05",
-    },
-    healthInsurance: {
-      type: "Insurance",
-      uploadDate: "2023-05-01",
-    },
-    driverCertificate: {
-      type: "Certificate",
-      uploadDate: "2023-05-15",
-    },
-    fitness: {
-      type: "Fitness",
-      uploadDate: "2023-06-01",
-    },
-    drugTest: {
-      type: "Drug Test",
-      uploadDate: "2023-06-15",
-    },
+    onboardingDocuments: [],
   });
 
   const [error, setError] = useState<any>({
@@ -176,6 +126,7 @@ const CreateDriver = () => {
       dateOfIssue: "",
       expiryDate: "",
       daysLeftForRenewal: "",
+      documents: "",
     },
     employmentHistoryError: {
       perviousEmployer: "",
@@ -190,57 +141,9 @@ const CreateDriver = () => {
     specialDrivingLicenceError: {
       specialDrivingLicence: "",
     },
-    onboardingDocumentsError: {
-      documentType: "ggweg",
-      attachFiles: "gwegweg",
-      uploadedDocuments: "ewgwegw",
-      dateOfUpload: "gwegwg",
-    },
-    visaStatusError: {
-      type: "Work",
-      uploadDate: "2023-01-15",
-    },
-    driverLicenseFrontError: {
-      type: "Front",
-      uploadDate: "2023-02-01",
-    },
-    driverLicenseBackError: {
-      type: "Back",
-      uploadDate: "2023-02-05",
-    },
-    licenseHistoryError: {
-      type: "History",
-      uploadDate: "2023-03-01",
-    },
-    policeVerificationError: {
-      type: "Verification",
-      uploadDate: "2023-03-15",
-    },
-    passportFrontError: {
-      type: "Front",
-      uploadDate: "2023-04-01",
-    },
-    passportBackError: {
-      type: "Back",
-      uploadDate: "2023-04-05",
-    },
-    healthInsuranceError: {
-      type: "Insurance",
-      uploadDate: "2023-05-01",
-    },
-    driverCertificateError: {
-      type: "Certificate",
-      uploadDate: "2023-05-15",
-    },
-    fitnessError: {
-      type: "Fitness",
-      uploadDate: "2023-06-01",
-    },
-    drugTestError: {
-      type: "Drug Test",
-      uploadDate: "2023-06-15",
-    },
+    onboardingDocumentsError: [],
   });
+  console.log({ error });
 
   const [uploadStatus, setUploadStatus] = useState<{ [id: number]: boolean }>(
     {}
@@ -251,33 +154,6 @@ const CreateDriver = () => {
   const [selectedFiles, setSelectedFiles] = useState<
     { id: number; file: File; currentDate: Date | null }[]
   >([]);
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [profile, setProfile] = React.useState("");
-  const [selectedProfile, setSelectedProfile] = React.useState("");
-
-  const handleFileChange = (setSide: any, setPreview: any) => (event: any) => {
-    const selectedFile = event.target.files && event.target.files[0];
-    setSide({ file: selectedFile });
-    if (selectedFile) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreview(reader?.result! as any);
-      };
-      reader.readAsDataURL(selectedFile);
-    }
-  };
-
-  const handleProfileFileChange = handleFileChange(
-    setSelectedProfile,
-    setProfile
-  );
-
-  const handleUploadClick: any = () => {
-    if (fileInputRef.current) {
-      fileInputRef?.current?.click();
-    }
-  };
 
   const combinedObject = selectedFiles.reduce(
     (accumulator: any, currentItem: any) => {
@@ -318,32 +194,6 @@ const CreateDriver = () => {
     }
   };
 
-  // const handleUploadFileWithId = async (id: number, combinedObject: any) => {
-  //   try {
-  //     const project = combinedObject[id];
-  //     if (id && project?.id) {
-  //       console.log("Project", { project });
-  //       const file = [project?.file];
-  //       const uploadDocumentResponses = await Promise.all(
-  //         Object.values(file)?.map((file) =>
-  //           uploadSingleSingleDriverOnboardingDocuments(file)
-  //         )
-  //       );
-  //       console.log({ uploadDocumentResponses });
-  //       const newUrls = uploadDocumentResponses
-  //         ?.map((response) => response?.response)
-  //         .filter(Boolean);
-  //       setUrls((prevUrls) => [...prevUrls, ...newUrls]);
-  //       setUploadStatus((prevStatus) => ({ ...prevStatus, [id]: true }));
-  //       setTimeout(() => {
-  //         setShowUploadMessage(true);
-  //       }, 4000);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error occurred:", error);
-  //   }
-  // };
-
   const handleUploadFileWithId = async (id: number, combinedObject: any) => {
     try {
       const project = combinedObject[id];
@@ -351,7 +201,9 @@ const CreateDriver = () => {
         console.log("Project", { project });
         const file = [project?.file];
         const uploadDocumentResponses = await Promise.all(
-          Object.values(file)?.map((file) => uploadSingleSingleDriverOnboardingDocuments(file))
+          Object.values(file)?.map((file) =>
+            uploadSingleSingleDriverOnboardingDocuments(file)
+          )
         );
         console.log({ uploadDocumentResponses });
         const newUrls = uploadDocumentResponses
@@ -381,38 +233,6 @@ const CreateDriver = () => {
   const files = selectedFiles?.map((selectedFile) => selectedFile.file);
   console.log({ files });
 
-  const handleSubmit = async () => {
-    // Check validation and get error status
-    const hasErrors = checkValidation();
-    if (hasErrors) {
-      alert("Please fix the validation errors before submitting.");
-      return;
-    }
-
-    const [profileUrl] = await Promise.all([
-      Promise.all(
-        Object.values(selectedProfile)?.map((imageInfo) =>
-          uploadOnboardingPorfile(imageInfo)
-        )
-      ),
-    ]);
-    console.log({ profileUrl });
-
-    const customPayload = {
-      ...driverDetails,
-      avatar: profileUrl[0]?.response,
-    };
-    console.log({ customPayload });
-
-    const response = await addDriver(customPayload, token || "");
-    if (response?.data?.data) {
-      router.push("/onboarding/driver-list");
-      alert("Driver added successfully");
-    } else {
-      alert("Something went wrong");
-    }
-  };
-
   const handleViewDocuments = (id: number) => {
     const index = id;
     console.log("ID :", id);
@@ -431,18 +251,8 @@ const CreateDriver = () => {
     Object.keys(driverDetails).forEach((key) => {
       if (
         key !== "avatar" &&
-        key !== "driverCertificate" &&
-        key !== "driverLicenseBack" &&
-        key !== "driverLicenseFront" &&
-        key !== "drugTest" &&
-        key !== "fitness" &&
-        key !== "healthInsurance" &&
-        key !== "licenseHistory" &&
         key !== "onboardingDocuments" &&
-        key !== "passportBack" &&
-        key !== "passportFront" &&
-        key !== "policeVerification" &&
-        key !== "visaStatus"
+        key !== "licenseDetails.documents"
       ) {
         if (
           typeof driverDetails[key] === "object" &&
@@ -450,18 +260,16 @@ const CreateDriver = () => {
         ) {
           // Handle nested objects with a different logic
           Object.keys(driverDetails[key]).forEach((nestedKey) => {
-            const nestedKeyPath = `${key}Error.${nestedKey}`;
             if (
               !driverDetails[key][nestedKey] ||
               driverDetails[key][nestedKey] === undefined
-              // driverDetails['licenseDetails']['documents']
             ) {
               newErrors[key + "Error"][nestedKey] = `${correctDriverStateName(
                 nestedKey
               )} is required in ${correctDriverStateName(key)}`;
               hasErrors = true;
             } else {
-              newErrors[nestedKeyPath] = "";
+              newErrors[nestedKey] = "";
             }
           });
         } else {
@@ -488,12 +296,124 @@ const CreateDriver = () => {
     return hasErrors;
   };
 
-  console.log("State : ", driverDetails);
-  console.log("Error", error);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [profile, setProfile] = React.useState("");
+  const [selectedProfile, setSelectedProfile] = React.useState("");
+
+  const handleUploadClick: any = () => {
+    if (fileInputRef.current) {
+      fileInputRef?.current?.click();
+    }
+  };
+
+  const [documentRender, setDocumentRender] = React.useState("");
+  const [selectedUploadRegoDocument, setSelectedUploadRegoDocument] =
+    React.useState("");
+
+  const handleFileChange = (setSide: any, setPreview: any) => (event: any) => {
+    const selectedFile = event.target.files && event.target.files[0];
+    setSide({ file: selectedFile });
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader?.result! as any);
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+  };
+
+  const handleProfileFileChange = handleFileChange(
+    setSelectedProfile,
+    setProfile
+  );
+
+  const handleDocumentUpload = handleFileChange(
+    setSelectedUploadRegoDocument,
+    setDocumentRender
+  );
+
+  console.log({ selectedUploadRegoDocument });
+
+  const handleSubmit = async () => {
+    const hasErrors = checkValidation();
+    if (hasErrors) {
+      toast("Please fix the validation errors before submitting.", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+      return;
+    }
+
+    // Uploading driver profile ...
+    const [profileUrl] = await Promise.all([
+      Promise.all(
+        Object.values(selectedProfile)?.map((imageInfo) =>
+          uploadDriverProfile(imageInfo)
+        )
+      ),
+    ]);
+    console.log({ profileUrl });
+
+    // Uploading driver license documents ...
+    const [driverLicense] = await Promise.all([
+      Promise.all(
+        Object.values(selectedUploadRegoDocument)?.map((imageInfo) =>
+          uploadDriverLicenseDocuments(imageInfo)
+        )
+      ),
+    ]);
+    console.log({ driverLicense });
+
+    const newDriverDetails = {
+      ...driverDetails,
+      avatar: profileUrl[0]?.response,
+      licenseDetails: {
+        ...driverDetails.licenseDetails,
+        documents: driverLicense[0]?.response,
+      },
+      onboardingDocuments: urls?.map((url: any, index: number) => ({
+        type: url,
+        uploadDate: formattedDate,
+      })),
+    };
+    console.log({ newDriverDetails });
+
+    const response = await addDriver(newDriverDetails, token || "");
+    if (response?.data?.data) {
+      toast("Driver has been successfully created..", {
+        icon: "👏",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+      setTimeout(() => {
+        router.push("/onboarding/driver-list");
+      }, 3000);
+      console.log("response :", response);
+    } else {
+      toast("Something went wrong", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+    }
+  };
 
   return (
     <>
       <div className="flex bg-[#E9EFFF]">
+        <div>
+          <Toaster />
+        </div>
         <div className="ml-[316px] w-full mt-4">
           <div className="bg-white mr-4 flex justify-between items-center rounded-md">
             <h2 className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">
@@ -1594,7 +1514,12 @@ const CreateDriver = () => {
                   className="w-full"
                   errorMessage={error.licenseDetailsError?.daysLeftForRenewal}
                 />
-                <FileUpload file="Choose License Document" />
+                <FileUpload
+                  file="Choose License Document"
+                  onChange={handleDocumentUpload}
+                  //@ts-expect-error
+                  fileName={selectedUploadRegoDocument?.file?.name || ""}
+                />
               </div>
             </div>
 
