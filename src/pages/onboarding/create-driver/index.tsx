@@ -318,6 +318,32 @@ const CreateDriver = () => {
     }
   };
 
+  // const handleUploadFileWithId = async (id: number, combinedObject: any) => {
+  //   try {
+  //     const project = combinedObject[id];
+  //     if (id && project?.id) {
+  //       console.log("Project", { project });
+  //       const file = [project?.file];
+  //       const uploadDocumentResponses = await Promise.all(
+  //         Object.values(file)?.map((file) =>
+  //           uploadSingleSingleDriverOnboardingDocuments(file)
+  //         )
+  //       );
+  //       console.log({ uploadDocumentResponses });
+  //       const newUrls = uploadDocumentResponses
+  //         ?.map((response) => response?.response)
+  //         .filter(Boolean);
+  //       setUrls((prevUrls) => [...prevUrls, ...newUrls]);
+  //       setUploadStatus((prevStatus) => ({ ...prevStatus, [id]: true }));
+  //       setTimeout(() => {
+  //         setShowUploadMessage(true);
+  //       }, 4000);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error occurred:", error);
+  //   }
+  // };
+
   const handleUploadFileWithId = async (id: number, combinedObject: any) => {
     try {
       const project = combinedObject[id];
@@ -325,15 +351,17 @@ const CreateDriver = () => {
         console.log("Project", { project });
         const file = [project?.file];
         const uploadDocumentResponses = await Promise.all(
-          Object.values(file)?.map((file) =>
-            uploadSingleSingleDriverOnboardingDocuments(file)
-          )
+          Object.values(file)?.map((file) => uploadSingleSingleDriverOnboardingDocuments(file))
         );
         console.log({ uploadDocumentResponses });
         const newUrls = uploadDocumentResponses
           ?.map((response) => response?.response)
           .filter(Boolean);
-        setUrls((prevUrls) => [...prevUrls, ...newUrls]);
+        setUrls((prevUrls) => {
+          const updatedUrls = [...prevUrls];
+          updatedUrls[id - 1] = newUrls[0]; // Update the URL at the correct index
+          return updatedUrls;
+        });
         setUploadStatus((prevStatus) => ({ ...prevStatus, [id]: true }));
         setTimeout(() => {
           setShowUploadMessage(true);
@@ -426,6 +454,7 @@ const CreateDriver = () => {
             if (
               !driverDetails[key][nestedKey] ||
               driverDetails[key][nestedKey] === undefined
+              // driverDetails['licenseDetails']['documents']
             ) {
               newErrors[key + "Error"][nestedKey] = `${correctDriverStateName(
                 nestedKey
