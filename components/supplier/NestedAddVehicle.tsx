@@ -6,10 +6,155 @@ import Maindatefield from "../Maindatefield";
 import FileUpload from "../FileUpload";
 import DropDownMap from "../DropDownMap";
 import StatusChip from "../StatusChip";
+import { formatDate, formattedDate } from "@/utils";
+import {
+  uploadSupplierVehicleRegoDocuments,
+  uploadSuppliervehicleDocuments,
+} from "@/network-request/supplier/vehicle";
 
 export const NestedAddVehicle = (props: any) => {
-  const { addVehicle, setAddVehicle, error, setError } = props;
+  const {
+    addVehicle,
+    setAddVehicle,
+    error,
+    setError,
+    selectedUploadRegoDocument,
+    setSelectedUploadRegoDocument,
+    urls,
+    setUrls,
+    modifiedUrls,
+    selectedStatusValues,
+    setSelectedStatusValues,
+  } = props;
   console.log("AddVehicle", addVehicle);
+  const [documentRender, setDocumentRender] = React.useState("");
+  // const [selectedUploadRegoDocument, setSelectedUploadRegoDocument] =
+  //   React.useState("");
+
+  const [selectedFiles, setSelectedFiles] = useState<
+    { id: number; file: File; currentDate: Date | null }[]
+  >([]);
+
+  const handleFileChanges = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    documentId: number
+  ) => {
+    const file = event.target.files ? event.target.files[0] : null;
+    const documentExists = documentDataCollection.find(
+      (doc: any) => doc.id === documentId
+    );
+    if (file && documentExists) {
+      const newSelectedFiles = [...selectedFiles];
+      const existingFileIndex = newSelectedFiles.findIndex(
+        (file) => file.id === documentId
+      );
+      const currentDate = new Date();
+      if (existingFileIndex !== -1) {
+        newSelectedFiles[existingFileIndex] = {
+          id: documentId,
+          file,
+          currentDate,
+        };
+      } else {
+        newSelectedFiles.push({ id: documentId, file, currentDate });
+      }
+      setSelectedFiles(newSelectedFiles);
+    }
+  };
+  console.log("selectedFiles", selectedFiles);
+  console.log("urls", urls);
+
+  const handleFileChange = (setSide: any, setPreview: any) => (event: any) => {
+    const selectedFile = event.target.files && event.target.files[0];
+    console.log({ selectedFile });
+    setSide({ file: selectedFile });
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader?.result! as any);
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+  };
+
+  const handleProfileFileChange = handleFileChange(
+    setSelectedUploadRegoDocument,
+    setDocumentRender
+  );
+
+  const [uploadStatus, setUploadStatus] = useState<{ [id: number]: boolean }>(
+    {}
+  );
+  // const [urls, setUrls] = useState<string[]>([]);
+  const [showUploadMessage, setShowUploadMessage] = useState(false);
+  // const [selectedStatusValues, setSelectedStatusValues] = useState<any[]>([]);
+
+  // const modifiedUrls = urls.reduce((acc: any, url, index) => {
+  //   acc[index] = url;
+  //   return acc;
+  // }, []);
+
+  const handleViewDocuments = (id: number) => {
+    console.log("CHECK", id, modifiedUrls);
+    const index = id - 1;  // Adjust index to start from 0
+    if (index >= 0 && index < modifiedUrls.length) {
+      const url = modifiedUrls[index];
+      window.open(url, "_blank");
+    } else {
+      console.error("URL not found for id:", id);
+    }
+  };
+  
+  const handleUploadFileWithId = async (id: number, combinedObject: any) => {
+    try {
+      const project = combinedObject[id];
+      if (id && project?.id) {
+        console.log("Project", { project });
+        const file = [project?.file];
+        const uploadDocumentResponses = await Promise.all(
+          Object.values(file)?.map((file) =>
+            uploadSupplierVehicleRegoDocuments(file)
+          )
+        );
+        console.log({ uploadDocumentResponses });
+        const newUrls = uploadDocumentResponses
+          ?.map((response) => response?.response)
+          .filter(Boolean);
+        setUrls((prevUrls: any) => {
+          const updatedUrls = [...prevUrls];
+          updatedUrls[id - 1] = newUrls[0]; // Update the URL at the correct index
+          return updatedUrls;
+        });
+        setUploadStatus((prevStatus) => ({ ...prevStatus, [id]: true }));
+        setTimeout(() => {
+          setShowUploadMessage(true);
+        }, 4000);
+      }
+    } catch (error) {
+      console.error("Error occurred:", error);
+    }
+  };
+
+  const combinedObject = selectedFiles.reduce(
+    (accumulator: any, currentItem: any) => {
+      accumulator[currentItem.id] = {
+        id: currentItem.id,
+        file: currentItem.file,
+        currentDate: currentItem.currentDate,
+      };
+      return accumulator;
+    },
+    {}
+  );
+
+  const handleStatusChipColor = (value: any, index: number) => {
+    // clg
+    setSelectedStatusValues((prevState: any) => {
+      const updatedValues = [...prevState];
+      updatedValues[index] = value;
+      return updatedValues;
+    });
+  };
 
   return (
     <div>
@@ -43,7 +188,7 @@ export const NestedAddVehicle = (props: any) => {
             }}
             errorMessage={error.registrationNumberError}
           />
-          <DateWithoutDropdown
+          <Maindatefield
             label="Registration Expiry"
             value={addVehicle.registrationExpiry}
             className="w-full"
@@ -226,15 +371,9 @@ export const NestedAddVehicle = (props: any) => {
         </div>
         <div className="mt-4 w-fit">
           <FileUpload
-            file="Choose Rego Document"
-            value={addVehicle.document}
-            className="w-full"
-            onChange={(e: any) => {
-              setAddVehicle({
-                ...addVehicle,
-                document: e.target.value,
-              });
-            }}
+            file="Upload Rego Document"
+            onChange={handleProfileFileChange}
+            fileName={selectedUploadRegoDocument?.file?.name || ""}
           />
         </div>
         <h4 className="text-black font-semibold text-sm my-4">
@@ -277,7 +416,7 @@ export const NestedAddVehicle = (props: any) => {
             }}
             errorMessage={error.policyNumberError}
           />
-          <DateWithoutDropdown
+          <Maindatefield
             label="Vehicle Insurance Start Date"
             value={addVehicle.vehicleInsuranceStartDate}
             className="w-full"
@@ -295,7 +434,7 @@ export const NestedAddVehicle = (props: any) => {
             }}
             errorMessage={error.vehicleInsuranceStartDateError}
           />
-          <DateWithoutDropdown
+          <Maindatefield
             label="Renewal Date"
             value={addVehicle.renewalDate}
             className="w-full"
@@ -313,7 +452,7 @@ export const NestedAddVehicle = (props: any) => {
             }}
             errorMessage={error.renewalDateError}
           />
-          <DateWithoutDropdown
+          <Maindatefield
             label="Date Valid Until"
             value={addVehicle.dateValidUntil}
             className="w-full"
@@ -436,61 +575,121 @@ export const NestedAddVehicle = (props: any) => {
             errorMessage={error.truckOdometerError}
           />
         </div>
-        <h3 className="text-black w-full mb-4 font-semibold mt-8">
-          Vehicle Documents
-        </h3>
-        <div className="text-black grid grid-cols-[16%_16%_16%_16%_16%_20%] bg-[#EFF2F3] py-4 rounded-md flex text-center">
-          {vehicleDocumentCollection?.map((value, index) => {
-            return (
-              <>
+        <div className="mt-8">
+          <h3 className="text-black w-full mb-4 font-semibold">
+            Vehicle Documents
+          </h3>
+          <div className="grid grid-cols-[16%_16%_16%_16%_16%_20%] text-black bg-[#EFF2F3] py-4 rounded-md flex text-center">
+            {vehicleDocumentCollection?.map((value, index) => {
+              return (
+                <>
+                  <div
+                    className="font-semibold text-sm text-[#151515]"
+                    key={index}
+                  >
+                    {value.heading}
+                  </div>
+                </>
+              );
+            })}
+          </div>
+
+          <div>
+            <div>
+              {documentDataCollection?.map((data: any, index) => (
                 <div
-                  className="font-semibold text-sm text-[#151515]"
+                  className="text-black grid grid-cols-[16%_16%_16%_16%_16%_20%] py-4 flex text-center"
                   key={index}
                 >
-                  {value.heading}
+                  <div>{data.Vehicle}</div>
+                  <div className="text-center">
+                    <label className="cursor-pointer">
+                      <React.Fragment>
+                        {selectedFiles.find((file) => file.id === data?.id)
+                          ?.file ? (
+                          <div>
+                            <p>
+                              {
+                                selectedFiles.find(
+                                  (file) => file.id === data?.id
+                                )?.file.name
+                              }
+                            </p>
+                          </div>
+                        ) : (
+                          <span className="!w-fit m-auto bg-accent3 text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">
+                            Select
+                          </span>
+                        )}
+                      </React.Fragment>
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept=".doc,.docx,.pdf"
+                        onChange={(e) => handleFileChanges(e, data?.id)}
+                      />
+                    </label>
+                  </div>
+                  <div>
+                    {selectedFiles.find((file) => file.id === data?.id) ? (
+                      <div>
+                        <p>
+                          {selectedFiles.find((file) => file.id === data?.id)
+                            ?.currentDate
+                            ? formatDate(
+                                selectedFiles.find(
+                                  (file) => file.id === data?.id
+                                )?.currentDate
+                              )
+                            : "No date available"}
+                        </p>
+                      </div>
+                    ) : (
+                      <p>No date available</p>
+                    )}
+                  </div>
+                  <div>
+                    {uploadStatus[data?.id] ? (
+                      <p style={{ color: "green" }}>
+                        {showUploadMessage ? (
+                          <span className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">
+                            Uploaded
+                          </span>
+                        ) : (
+                          <span className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">
+                            Uploading...
+                          </span>
+                        )}
+                      </p>
+                    ) : (
+                      <span
+                        className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white"
+                        onClick={() =>
+                          handleUploadFileWithId(data?.id, combinedObject)
+                        }
+                      >
+                        Upload
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-center items-center justify-center m-auto">
+                    <StatusChip
+                      chipColor={(e) => handleStatusChipColor(e, index)}
+                    />
+                  </div>
+                  <div className="underline decoration-[#2B36D9] text-center">
+                    <span
+                      className="cursor-pointer text-primary"
+                      onClick={() => handleViewDocuments(data?.id)}
+                    >
+                      Views
+                    </span>
+                  </div>
                 </div>
-              </>
-            );
-          })}
+              ))}
+            </div>
+          </div>
         </div>
-
-        {documentDataCollection?.map((data, ind) => {
-          return (
-            <>
-              <div
-                className="text-black grid grid-cols-[16%_16%_16%_16%_16%_20%] py-4 flex text-center"
-                key={ind}
-              >
-                <div>{data.Vehicle}</div>
-                <div>{data.rego}</div>
-                <div>{data.uploadDate}</div>
-                <div>{data.UploadedDoc}</div>
-                <div className="text-center items-center justify-center m-auto">
-                  {/* <span
-                            className={` ${
-                              data.status === "Approved"
-                                ? "bg-[#2DD36F]"
-                                : data.status === "Under Review"
-                                ? "bg-[#3DC2FF]"
-                                : data.status === "Rejected"
-                                ? "bg-[#EB445A]"
-                                : ""
-                            } px-4 pt-[3px] pb-[7px] text-white rounded-full`}
-                          >
-                            {data.status}
-                          </span> */}
-                  <StatusChip className="w-fit" />
-                </div>
-                <div className="underline decoration-[#2B36D9] text-center">
-                  <span className="cursor-pointer text-primary">
-                    {" "}
-                    {data.viewDoc}
-                  </span>
-                </div>
-              </div>
-            </>
-          );
-        })}
       </div>
     </div>
   );
@@ -498,6 +697,7 @@ export const NestedAddVehicle = (props: any) => {
 
 const documentDataCollection = [
   {
+    id: 1,
     Vehicle: "Placeholder",
     rego: "Placeholder",
     uploadDate: "19/12/2023",
@@ -506,6 +706,7 @@ const documentDataCollection = [
     viewDoc: "view",
   },
   {
+    id: 2,
     Vehicle: "Placeholder",
     rego: "Placeholder",
     uploadDate: "18/12/2023",
@@ -514,6 +715,7 @@ const documentDataCollection = [
     viewDoc: "view",
   },
   {
+    id: 3,
     Vehicle: "Placeholder",
     rego: "Placeholder",
     uploadDate: "17/12/2023",

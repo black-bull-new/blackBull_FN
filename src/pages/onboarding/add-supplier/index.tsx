@@ -14,13 +14,19 @@ import { NestedAddVehicle } from "../../../../components/supplier/NestedAddVehic
 import NestedAddDriver from "../../../../components/supplier/NestedAddDriver";
 import { getCookie } from "cookies-next";
 import { addSupplierIntoSupplier } from "@/network-request/supplier/supplier";
-import { addVehicleIntoSupplier } from "@/network-request/supplier/vehicle";
+import {
+  addVehicleIntoSupplier,
+  uploadSupplierVehicleRegoDocuments,
+  uploadSuppliervehicleDocuments,
+} from "@/network-request/supplier/vehicle";
 import {
   correctAddDriverStateName,
   correctAddSupplierStateName,
   correctAddVehicleStateName,
 } from "../utility/utilityMethod";
 import { addSupplierDriver } from "@/network-request/supplier/driver";
+import { formattedDate } from "@/utils";
+import toast, { Toaster } from "react-hot-toast";
 const AddSupplier = () => {
   const token = getCookie("token");
   const [selectedData, setSelectedData] = useState();
@@ -249,6 +255,7 @@ const AddSupplier = () => {
     engineNumber: "",
     compliancePlate: "",
     registrationStatus: "",
+    vehicleDocuments: "",
     document: "",
     insuranceCompanyName: "",
     policyNumber: "",
@@ -284,6 +291,15 @@ const AddSupplier = () => {
     situationError: "",
     truckOdometerError: "",
   });
+  const [selectedUploadRegoDocument, setSelectedUploadRegoDocument] =
+    useState("");
+  const [urls, setUrls] = useState<string[]>([]);
+  const modifiedUrls = urls.reduce((acc: any, url, index) => {
+    acc[index] = url;
+    return acc;
+  }, []);
+  const [selectedStatusValues, setSelectedStatusValues] = useState<any[]>([]);
+
   /**
    * add driver state and its error state
    */
@@ -428,7 +444,8 @@ const AddSupplier = () => {
     // },
     specialDrivingLicenseError: "",
   });
-
+  console.log("addVehicleError", addVehicleError);
+  console.log("selectedStatusValues", selectedStatusValues);
   const handleSubmit = async () => {
     if (buttonState === step1Btn) {
       // Check validation and get error status
@@ -457,17 +474,54 @@ const AddSupplier = () => {
       // Check validation and get error status
       const hasErrors = checkValidationForAddVehicle();
       if (hasErrors) {
-        alert("Please fix the validation errors before submitting.");
+        toast("Please fix the validation errors before submitting.", {
+          icon: "⚠️",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
         return;
       }
+      const uploadDocument = await Promise.all(
+        Object.values(selectedUploadRegoDocument)?.map((file) =>
+          uploadSuppliervehicleDocuments(file)
+        )
+      );
+      console.log({ uploadDocument });
+      const customVehiclePayload = {
+        ...addVehicle,
+        document: uploadDocument[0]?.response,
+        vehicleDocuments: urls?.map((url: any, index: number) => ({
+          type: url,
+          uploadDate: formattedDate,
+          status: selectedStatusValues[index % selectedStatusValues.length],
+        })),
+      };
+
       const response: any = await addVehicleIntoSupplier(
-        addVehicle,
+        customVehiclePayload,
         token || ""
       );
       if (response?.status === 200) {
-        alert("Vehicle Added Successfully");
+        toast("Vehicle has been successfully added..", {
+          icon: "👏",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
       } else {
-        alert("Something went Wrong! Please try again later.");
+        toast("Something went wrong", {
+          icon: "⚠️",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
       }
       // Uncomment the following line when whole code of add vehicle is finished
       // seButtonState(step3Btn);
@@ -650,7 +704,7 @@ const AddSupplier = () => {
         behavior: "smooth", // for smooth scrolling
       });
 
-      if (key !== "document") {
+      if (key !== "document" && key !== "vehicleDocuments") {
         if (!addVehicle[key]) {
           newErrors[key + "Error"] = `${correctAddVehicleStateName(
             key
@@ -670,6 +724,9 @@ const AddSupplier = () => {
     <>
       {/* <Header /> */}
       <div className="flex bg-[#E9EFFF]">
+        <div>
+          <Toaster />
+        </div>
         {/* <div className="sticky top-0">
           <Sidebar />
         </div> */}
@@ -687,6 +744,13 @@ const AddSupplier = () => {
               setAddVehicle={setAddVehicle}
               error={addVehicleError}
               setError={setAddVehicleError}
+              selectedUploadRegoDocument={selectedUploadRegoDocument}
+              setSelectedUploadRegoDocument={setSelectedUploadRegoDocument}
+              urls={urls}
+              setUrls={setUrls}
+              modifiedUrls={modifiedUrls}
+              selectedStatusValues={selectedStatusValues}
+              setSelectedStatusValues={setSelectedStatusValues}
             />
           ) : buttonState === step3Btn ? (
             <NestedAddDriver
