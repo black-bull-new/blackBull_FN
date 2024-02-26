@@ -644,7 +644,7 @@ const NestedAddDriver = (props: any) => {
         <div className="flex justify-end py-2 px-4">
           <Button
             text="Add More Experiences"
-            className="!w-fit bg-accent3 !px-4"
+            className="!w-fit bg-[#2B36D9] !px-4"
           />
         </div>
         <h2 className="text-black font-semibold p-4 mt-6">License Details</h2>
@@ -821,7 +821,7 @@ const NestedAddDriver = (props: any) => {
                   <div className="text-center ">
                     <Button
                       text="Upload"
-                      className="!w-fit m-auto bg-accent3 px-6 rounded-md mb-6 py-[4px]"
+                      className="!w-fit m-auto bg-[#2B36D9] px-6 rounded-full mb-6 py-[4px]"
                     />
                   </div>
                   <div className="mb-6">{value.uploadedDocument}</div>

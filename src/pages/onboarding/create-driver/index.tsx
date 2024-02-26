@@ -1315,7 +1315,7 @@ const CreateDriver = () => {
             <div className="mb-8 mt-8 flex justify-end">
               <Button
                 text="Add More Experiences"
-                className="bg-accent3 px-4 !w-fit"
+                className="bg-[#2B36D9] px-4 !w-fit"
               />
             </div>
             <div className="mb-4 mt-8">
@@ -1615,7 +1615,7 @@ const CreateDriver = () => {
                                 </p>
                               </div>
                             ) : (
-                              <span className="!w-fit m-auto bg-accent3 text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">
+                              <span className="!w-fit m-auto bg-[#2B36D9] py-2 rounded-full text-sm px-6 mb-6 font-semibold  text-white">
                                 Select
                               </span>
                             )}
@@ -1641,7 +1641,7 @@ const CreateDriver = () => {
                                 </span>
                               </div>
                             ) : (
-                              <span className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">
+                              <span className="!w-fit m-auto bg-[#2B36D9] py-2 rounded-full cursor-pointer text-sm px-6 mb-6 font-semibold text-white">
                                 Uploading...
                               </span>
                             )}
@@ -1651,9 +1651,9 @@ const CreateDriver = () => {
                             {selectedFiles.find((file) => file.id === data?.id)
                               ?.file ? (
                               <div>
-                                <p className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">
+                                <p className="!w-fit m-auto  cursor-pointer text-sm px-6  mb-6 font-semibold py-[4px] text-white">
                                   <span
-                                    className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white"
+                                    className="!w-fit m-auto bg-[#2B36D9] py-2 rounded-full cursor-pointer text-sm px-6 mb-6 font-semibold  text-white"
                                     onClick={() =>
                                       handleUploadFileWithId(
                                         data?.id,

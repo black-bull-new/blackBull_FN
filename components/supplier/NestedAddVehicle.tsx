@@ -617,7 +617,7 @@ export const NestedAddVehicle = (props: any) => {
                             </p>
                           </div>
                         ) : (
-                          <span className="!w-fit m-auto bg-accent3 text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">
+                          <span className="!w-fit m-auto bg-[#2B36D9] text-sm px-6 rounded-full mb-6 font-semibold py-2 text-white">
                             Select
                           </span>
                         )}
@@ -652,18 +652,18 @@ export const NestedAddVehicle = (props: any) => {
                     {uploadStatus[data?.id] ? (
                       <p style={{ color: "green" }}>
                         {showUploadMessage ? (
-                          <span className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">
+                          <span className="!w-fit m-auto bg-[#2B36D9] cursor-pointer text-sm px-6 rounded-full mb-6 font-semibold  py-2 text-white">
                             Uploaded
                           </span>
                         ) : (
-                          <span className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">
+                          <span className="!w-fit m-auto bg-[#2B36D9] cursor-pointer text-sm px-6 rounded-full mb-6 font-semibold py-2 text-white">
                             Uploading...
                           </span>
                         )}
                       </p>
                     ) : (
                       <span
-                        className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white"
+                        className="!w-fit m-auto bg-[#2B36D9] cursor-pointer text-sm px-6 rounded-full mb-6 font-semibold  py-2 text-white"
                         onClick={() =>
                           handleUploadFileWithId(data?.id, combinedObject)
                         }

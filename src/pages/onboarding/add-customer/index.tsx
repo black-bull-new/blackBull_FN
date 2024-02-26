@@ -1458,7 +1458,7 @@ const AddCustomer = () => {
             <div className="flex justify-end py-2 px-4">
               <Button
                 text="Add More Director"
-                className="!w-fit bg-accent3 !px-4"
+                className="!w-fit bg-[#2B36D9] !px-4"
               />
             </div>
             <h2 className="font-semibold p-4 text-[#151515] text-[18px]">
@@ -1738,7 +1738,7 @@ const AddCustomer = () => {
             <div className="flex justify-end py-2 px-4">
               <Button
                 text="Add More Addresses"
-                className="!w-fit bg-accent3 !px-4"
+                className="!w-fit bg-[#2B36D9] !px-4"
               />
             </div>
             <h2 className="font-semibold p-4 text-[#151515] text-[18px]">

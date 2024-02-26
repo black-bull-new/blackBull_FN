@@ -9,7 +9,7 @@ const FileUpload = (props: any) => {
           <div className="bg-[#EFF2F3] px-4 py-[12px] text-sm text-blueGrey-400 rounded-md w-full">
             {props?.fileName !== "" ? props?.fileName : props.file}
           </div>
-          <div className="bg-accent3 text-white px-10 py-[12px] text-sm font-semibold rounded-md">
+          <div className="bg-[#2B36D9] text-white px-10 py-[12px] text-sm font-semibold rounded-full">
             Browse
           </div>
         </label>

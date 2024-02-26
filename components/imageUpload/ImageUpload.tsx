@@ -38,7 +38,7 @@ const ImageUpload = ({handleSubmit}:any) => {
       <div className="relative">
         <label
           htmlFor="file-upload"
-          className="flex gap-2 bg-accent3 w-fit text-white items-center py-2 px-4 rounded-md absolute right-0"
+          className="flex gap-2 bg-[#2B36D9] w-fit text-white items-center py-2 px-4 rounded-md absolute right-0"
         >
           <Image src={"/signature.svg"} alt="signature" width={25} height={8} />
           <span>Upload Signature</span>

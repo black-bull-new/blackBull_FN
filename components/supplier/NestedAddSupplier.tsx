@@ -574,7 +574,7 @@ export const NestedAddSupplier = (props: any) => {
           <div className="flex justify-end py-2 px-4">
             <Button
               text="Add More Fields"
-              className="!w-fit bg-accent3 !px-4"
+              className="!w-fit bg-[#2B36D9] !px-4"
             />
           </div>
           <h2 className="text-black font-semibold mt-8 mb-4">
@@ -633,7 +633,7 @@ export const NestedAddSupplier = (props: any) => {
           <div className="flex justify-end py-2 px-4">
             <Button
               text="Add More Director"
-              className="!w-fit bg-accent3 !px-4"
+              className="!w-fit bg-[#2B36D9] !px-4"
             />
           </div>
           <h2 className="text-black font-semibold mt-8 mb-4">Bank Details</h2>
@@ -901,7 +901,7 @@ export const NestedAddSupplier = (props: any) => {
           <div className="flex justify-end py-2 px-4">
             <Button
               text="Add More Addresses"
-              className="!w-fit bg-accent3 !px-4"
+              className="!w-fit bg-[#2B36D9] !px-4"
             />
           </div>
 
@@ -1572,7 +1572,7 @@ export const NestedAddSupplier = (props: any) => {
                   <div className="text-center ">
                     <Button
                       text="Upload"
-                      className="!w-fit m-auto bg-accent3 px-6 rounded-md mb-6 py-[4px]"
+                      className="!w-fit m-auto bg-[#2B36D9] px-6 rounded-full mb-6 py-[4px]"
                     />
                   </div>
                   <div className="mb-6">{value.uploadedDocument}</div>
