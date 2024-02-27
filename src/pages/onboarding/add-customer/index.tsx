@@ -13,8 +13,57 @@ import {
 } from "@/network-request/customer/customerApi";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
-import { correctCustomerStateName } from "../utility/utilityMethod";
+// import { correctCustomerStateName } from "../utility/utilityMethod";
+// import { regexOfEmail, regexOfPhoneNumber, regexOfWebsite } from "../utility/commonRegex";
 import toast, { Toaster } from "react-hot-toast";
+
+const correctCustomerStateName = (stateName: string): string => {
+  const nameMapping: { [key: string]: string } = {
+    companyName: "Company Name",
+    tradingName: "Trading Name",
+    abnNumber: "ABN Number",
+    legalName: "Legal Name",
+    websiteAddress: "Website Address",
+    firstName: "First Name",
+    lastName: "Last Name",
+    designation: "Designation",
+    companyAddress: "Company Address",
+    street1: "Street 1",
+    street2: "Street 2",
+    suburb: "Suburb",
+    state: "State",
+    country: "Country",
+    postCode: "Post Code",
+    accountPayble: "Account Payble",
+    contactPerson: "Contact Person",
+    contactNumber: "Contact Number",
+    accountsPaybleEmail: "Accounts Payable Email",
+    accountReceivable: "Account Receivable",
+    accountsReceivableEmail: "Accounts Receivable Email",
+    opreations: "Opreations",
+    opreationsEmail: "Operations Email",
+    compliance: "Compliance",
+    complianceEmail: "Compliance Email",
+    admin: "Admin",
+    adminEmail: "Admin Email",
+    invoicePrefrences: "Invoice Preferences",
+    invoiceCommunicationPrefrences: "Invoice Communication Preferences",
+    companySuiteDetails: "Company Suite Details",
+    directorEmailAddress: "Director Email Address",
+    directorContactNumber: "Director Contact Number",
+    payment: "Payment",
+    accountName: "Account Name",
+    bankName: "Bank Name",
+    bsb: "BSB",
+    accountNumber: "Account Number",
+    paymentTerm: "Payment Term",
+    warehouseLocation: "Warehouse Location",
+    document: "Document",
+  };
+
+  return nameMapping[stateName] || stateName;
+};
+
 const AddCustomer = () => {
   const [selectedData, setSelectedData] = useState("");
   const token = getCookie("token");
