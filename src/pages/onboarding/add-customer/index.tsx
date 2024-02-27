@@ -14,7 +14,6 @@ import {
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { correctCustomerStateName } from "../utility/utilityMethod";
-import { regexOfEmail, regexOfPhoneNumber, regexOfWebsite } from "../utility/commonRegex";
 import toast, { Toaster } from "react-hot-toast";
 const AddCustomer = () => {
   const [selectedData, setSelectedData] = useState("");
@@ -316,6 +315,11 @@ const AddCustomer = () => {
 
   console.log("State", customer);
   console.log("Error", error);
+
+  const regexOfPhoneNumber = /^(?:\+61|0)[2-478](?:[ -]?[0-9]){8}$/;
+  const regexOfEmail =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.+([a-zA-Z0-9-]+)2*$/;
+  const regexOfWebsite = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
 
   return (
     <>
@@ -623,8 +627,8 @@ const AddCustomer = () => {
                   }
                 }}
                 errorMessage={error.companyAddressError?.state}
-                // selectedData={selectedData}
-                // setSelectedData={setSelectedData}
+              // selectedData={selectedData}
+              // setSelectedData={setSelectedData}
               />
               <Maininputfield
                 label="Country"
@@ -649,8 +653,8 @@ const AddCustomer = () => {
                   }
                 }}
                 errorMessage={error.companyAddressError?.country}
-                // selectedData={selectedData}
-                // setSelectedData={setSelectedData}
+              // selectedData={selectedData}
+              // setSelectedData={setSelectedData}
               />
               <Maininputfield
                 label="Post Code"

@@ -6,7 +6,7 @@ import Checkbox from "../../../components/Checkbox";
 import InputField from "../../../components/InputField";
 import Image from "next/image";
 import Button from "../../../components/Button";
-import { useRegister } from "@/network-request/mutation";
+// import { useRegister } from "@/network-request/mutation";
 import { SignupvalidationSchema } from "../../../components/fomsValidation";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
@@ -14,7 +14,7 @@ import { Register } from "@/network-request/types";
 import { createUser } from "@/network-request/api";
 import toast, { Toaster } from "react-hot-toast";
 const SignUp = () => {
-  const { mutate } = useRegister();
+  // const { mutate } = useRegister();
   const router = useRouter();
 
   const formik = useFormik({

@@ -10,9 +10,10 @@ import { createUser } from "@/network-request/user/createUser";
 import { getCookie } from "cookies-next";
 import { correctUserStateName } from "../utility/utilityMethod";
 import { uploadOnboardingPorfile } from "@/network-request/onboarding-user";
-import { regexOfEmail, regexOfPhoneNumber } from "../utility/commonRegex";
+// import { regexOfEmail, regexOfPhoneNumber } from "../utility/commonRegex";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
+// import { regexOfEmail, regexOfPhoneNumber } from "@/utils";
 const User = () => {
   const [selectedData, setSelectedData] = useState("");
   const token = getCookie("token");
@@ -182,6 +183,11 @@ const User = () => {
 
     return password;
   }
+
+  const regexOfPhoneNumber = /^(?:\+61|0)[2-478](?:[ -]?[0-9]){8}$/;
+  const regexOfEmail =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.+([a-zA-Z0-9-]+)2*$/;
+  const regexOfWebsite = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
 
   return (
     <>

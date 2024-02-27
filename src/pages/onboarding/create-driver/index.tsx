@@ -16,10 +16,9 @@ import {
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { formatDate, formattedDate } from "@/utils";
-import { regexOfEmail, regexOfPhoneNumber } from "../utility/commonRegex";
 import toast, { Toaster } from "react-hot-toast";
 import { correctDriverStateName } from "../utility/utilityMethod";
+import { formatDate, formattedDate } from "@/utils";
 
 const CreateDriver = () => {
   const token = getCookie("token");
@@ -390,6 +389,11 @@ const CreateDriver = () => {
       });
     }
   };
+
+  const regexOfPhoneNumber = /^(?:\+61|0)[2-478](?:[ -]?[0-9]){8}$/;
+  const regexOfEmail =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.+([a-zA-Z0-9-]+)2*$/;
+  const regexOfWebsite = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
 
   return (
     <>
@@ -1709,10 +1713,10 @@ const CreateDriver = () => {
                                   (file) => file.id === data?.id
                                 )?.currentDate
                                   ? formatDate(
-                                      selectedFiles.find(
-                                        (file) => file.id === data?.id
-                                      )?.currentDate
-                                    )
+                                    selectedFiles.find(
+                                      (file) => file.id === data?.id
+                                    )?.currentDate
+                                  )
                                   : "No date available"}
                               </p>
                             </div>

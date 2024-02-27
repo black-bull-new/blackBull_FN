@@ -16,7 +16,7 @@ import {
   editVehicle,
   getVehicle,
   uploadVehicleRegoDocuemnts,
-  uploadMulitpleVehicleDocuments,
+  // uploadMulitpleVehicleDocuments,
 } from "@/network-request/vehicle/vehicleApi";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/router";
@@ -194,27 +194,27 @@ const EditVehicle = () => {
     );
     console.log({ uploadDocument });
 
-    try {
-      const profileUrls = await Promise.all(
-        Object.values(files).map((imageInfo) =>
-          uploadMulitpleVehicleDocuments(imageInfo)
-        )
-      );
-      console.log({ profileUrls });
-      urls = profileUrls.flatMap((entry) => entry.response);
+    // try {
+    //   const profileUrls = await Promise.all(
+    //     Object.values(files).map((imageInfo) =>
+    //       uploadMulitpleVehicleDocuments(imageInfo)
+    //     )
+    //   );
+    //   console.log({ profileUrls });
+    //   urls = profileUrls.flatMap((entry) => entry.response);
 
-      console.log({ urls });
-    } catch (error) {
-      console.error("Error uploading files:", error);
-    }
+    //   console.log({ urls });
+    // } catch (error) {
+    //   console.error("Error uploading files:", error);
+    // }
 
     const customVehiclePayload = {
       ...vehicleDetails,
       vehicleUploadDocument: uploadDocument[0]?.response,
-      documents: urls?.map((url: any, index: number) => ({
-        type: url,
-        uploadDate: formattedDate,
-      })),
+      // documents: urls?.map((url: any, index: number) => ({
+      //   type: url,
+      //   uploadDate: formattedDate,
+      // })),
     };
     console.log({ customVehiclePayload });
 
@@ -1089,10 +1089,10 @@ const EditVehicle = () => {
                                 (file) => file.id === data?.id
                               )?.currentDate
                                 ? formatDate(
-                                    selectedFiles.find(
-                                      (file) => file.id === data?.id
-                                    )?.currentDate
-                                  )
+                                  selectedFiles.find(
+                                    (file) => file.id === data?.id
+                                  )?.currentDate
+                                )
                                 : "No date available"}
                             </p>
                           </div>

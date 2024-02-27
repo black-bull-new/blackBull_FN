@@ -1,5 +1,6 @@
 import axios from "axios"
 import { Register } from "./types";
+
 export const loginUser = async (email: string, password: string) =>
   axios
     .post(`${process.env.NEXT_PUBLIC_API_URL}/login`, { email, password })
