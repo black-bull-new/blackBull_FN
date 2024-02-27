@@ -150,7 +150,7 @@ const AddSupplier = () => {
   const step1Btn = "Proceed to Add Vehicle";
   const step2Btn = "Proceed to Add Driver";
   const step3Btn = "Submit";
-  const [buttonState, seButtonState] = useState(step1Btn);
+  const [buttonState, seButtonState] = useState(step2Btn);
   /**
    * add supplier state and its error state
    */

@@ -65,13 +65,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 .dropdown select option {
   background-color: white;
-  color: black !important;
+  color: black ;
   text-align: left;
   font-size: 14px;
   height: 20px !important;
 }
 .dropdown select {
-  color: black !important;
+  color: black ;
   font-weight: 500;
 }
 input::-webkit-inner-spin-button {

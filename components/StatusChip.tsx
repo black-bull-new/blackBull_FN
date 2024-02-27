@@ -3,7 +3,6 @@ import { useState } from "react";
 
 interface StatusChipProps {
   chipColor: (value: any) => void;
-  // props: any
 }
 
 const StatusChip = ({ chipColor }: StatusChipProps) => {
@@ -22,7 +21,7 @@ const StatusChip = ({ chipColor }: StatusChipProps) => {
     <>
       <div className={"relative"}>
         <select
-          name="status"
+          name="status" 
           id="status"
           className={`focus:outline-none appearance-none pt-[5px] pb-[7px] text-center pl-4 pr-8 rounded-full text-white ${
             color === "Approved"
@@ -57,9 +56,9 @@ const StatusChip = ({ chipColor }: StatusChipProps) => {
             color === "Approved"
               ? "!text-[#359742]"
               : color === "Under Review"
-              ? "text-[#359742]"
+              ? "text-[#5872DA]"
               : color === "Rejected"
-              ? "text-[#359742]"
+              ? "text-[#FF6666]"
               : "text-black"
           }`}
         />
@@ -68,3 +67,5 @@ const StatusChip = ({ chipColor }: StatusChipProps) => {
   );
 };
 export default StatusChip;
+
+
