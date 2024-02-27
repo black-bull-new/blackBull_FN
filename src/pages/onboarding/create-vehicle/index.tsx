@@ -10,18 +10,61 @@ import Mainselectfield from "../../../../components/Mainselectfield";
 import Progressbar from "../../../../components/Progressbar";
 import Sidebar from "../../../../components/Sidebar";
 import StatusChip from "../../../../components/StatusChip";
-import { correctVehicleStateName } from "../utility/utilityMethod";
+// import { correctVehicleStateName } from "../utility/utilityMethod";
 import {
   addVehicle,
   uploadSingleSingleVehicleDocuments,
   uploadVehicleRegoDocuemnts,
 } from "@/network-request/vehicle/vehicleApi";
+
+
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
 import { formatDate, formattedDate } from "@/utils";
 import useLoading from "../../../../hooks/useLoading";
 import SpinnerView from "../../../../constants/spinner";
+
+const correctVehicleStateName = (stateName: string): string => {
+  const nameMapping: { [key: string]: string } = {
+    registrationNumber: "Registration Number",
+    registrationExpiry: "Registration Expiry",
+    vinNumber: "VIN Number",
+    vehicleManufacturer: "Vehicle Manufacturer",
+    vehicleModel: "Vehicle Model",
+    vehicleType: "Vehicle Type",
+    typeOfTrailer: "Type Of Trailer",
+    stateOfRegistration: "State Of Registration",
+    engineNumber: "Engine Number",
+    compliancePlate: "Compliance Plate",
+    ownershipStatus: "Ownership Status",
+    registrationStatus: "Registration Status",
+    insuranceCompanyName: "Insurance Company Name",
+    policyNumber: "Policy Number",
+    vehicleInsuranceStartDate: "Vehicle Insurance Start Date",
+    renewalDate: "Renewal Date",
+    dateValidUntil: "DateValid Until",
+    daysLeft: "Days Left",
+    insuranceCoverage: "Insurance Coverage",
+    insuranceStatus: "Insurance Status",
+    situation: "Situation",
+    truckOdometer: "Truck Odometer",
+    rentedCompanyName: "Rented Company Name",
+    dateOfHire: "Date Of Hire",
+    contractValidTill: "Contract Valid Till",
+    term: "Term",
+    weeklyRent: "Weekly Rent",
+    tax: "Tax",
+    paymentMethod: "Payment Method",
+    bankName: "Bank Name",
+    accountNumber: "Account Number",
+    accountName: "Account Name",
+    vehicleDocumentStatus: "Vehicle Document Status",
+  };
+
+  return nameMapping[stateName] || stateName;
+};
+
 
 const CreateVehicle = () => {
   const token = getCookie("token");

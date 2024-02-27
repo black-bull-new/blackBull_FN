@@ -20,13 +20,130 @@ import {
   uploadSuppliervehicleDocuments,
 } from "@/network-request/supplier/vehicle";
 import {
-  correctAddDriverStateName,
-  correctAddSupplierStateName,
-  correctAddVehicleStateName,
+  // correctAddDriverStateName,
+  // correctAddSupplierStateName,
+  // correctAddVehicleStateName,
 } from "../utility/utilityMethod";
 import { addSupplierDriver } from "@/network-request/supplier/driver";
 import { formattedDate } from "@/utils";
 import toast, { Toaster } from "react-hot-toast";
+
+const correctAddDriverStateName = (stateName: string): string => {
+  const nameMapping: { [key: string]: string } = {
+    firstName: "First Name",
+    middleName: "Middle Name",
+    lastName: "Last Name",
+    dateOfBirth: "Date Of Birth",
+    avatar: "Avatar",
+    email: "Email",
+    mobile: "Mobile",
+    nationality: "Nationality",
+    currentAddress: "Current Address",
+    houseNumber: "House Number",
+    street: "Street",
+    suburb: "Suburb",
+    state: "State",
+    country: "Country",
+    pincode: "Pincode",
+    permanentAddress: "Permanent Address",
+    emergencyContactInformation: "Emergency Contact Information",
+    contactName: "Contact Name",
+    contactNumber: "Contact Number",
+    relationship: "Relationship",
+    employmentHistory: "Employment History",
+    previousEmployer: "Previous Employer",
+    yearsOfExperience: "Years Of Experience",
+    reasonOfLeaving: "Reason Of Leaving",
+    companyName: "Company Name",
+    referenceContactName: "Reference Contact Name",
+    referenceEmailId: "Reference Email Id",
+    referenceContactNumber: "Reference Contact Number",
+    licenseDetails: "License Details",
+    licenceNumber: "Licence Number",
+    licenseCardNumber: "License Card Number",
+    licenseType: "License Type",
+    dateOfIssue: "Date Of Issue",
+    expiryDate: "Expiry Date",
+    daysLeftForRenewal: "DaysLeft For Renewal",
+    documents: "Documents",
+    specialDrivingLicense: "Special Driving License",
+  };
+
+  return nameMapping[stateName] || stateName;
+};
+
+const correctAddSupplierStateName = (stateName: string): string => {
+  const nameMapping: { [key: string]: string } = {
+    companyName: "Company Name",
+    tradingName: "Trading Name",
+    abn: "ABN",
+    legalName: "Legal Name",
+    website: "Website",
+    profile: "Profile",
+    opreations: "opreations",
+    contactPerson: "Contact Person",
+    desgination: "Desgination",
+    number: "Number",
+    opreationEmail: "Opreation Email",
+    compliance: "compliance",
+    complianceEmail: "",
+    admin: "Admin",
+    adminEmail: "Admin Email",
+    dispatch: "Dispatch",
+    dispatchEmail: "Dispatch Email",
+    invoicePreferences: "Invoice Preferences",
+    invoiceCommunicationPreferences: "Invoice Communication Preferences",
+    bankDetails: "Bank Details",
+    accountName: "Account Name",
+    bankName: "Bank Name",
+    bsb: "BSB",
+    accountNumber: "Account Number",
+    businessCoverage: "Business Coverage",
+    areaCovered: "Area Covered",
+    businessOpreations: "Business Opreations",
+    certificateOfAccreditation: "Certificate Of Accreditation",
+    accreditationNumber: "Accreditation Number",
+    massManagementExpiryDate: "Mass Management Expiry Date",
+    basicFatigueExpiryDate: "Basic Fatigue Expiry Date",
+    dangerousGoodsExpiryDate: "Dangerous Goods Expiry Date",
+    nhvassExpiryDate: "Nhvass Expiry Date",
+    haccpExpiryDate: "Haccp Expiry Date",
+    uploadAccreditationDocuments: "Upload Accreditation Documents",
+    accreditationDocument: "Accreditation Document",
+  };
+
+  return nameMapping[stateName] || stateName;
+};
+
+const correctAddVehicleStateName = (stateName: string): string => {
+  const nameMapping: { [key: string]: string } = {
+    registrationNumber: "Registration Number",
+    registrationExpiry: "Registration Expiry",
+    vinNumber: "VIN Number",
+    vehicleManufacturer: "Vehicle Manufacturer",
+    vehicleModel: "Vehicle Model",
+    vehicleType: "Vehicle Type",
+    typeOfTrailer: "Type Of Trailer",
+    stateOfRegistration: "State Of Registration",
+    engineNumber: "Engine Number",
+    compliancePlate: "Compliance Plate",
+    registrationStatus: "Registration Status",
+    document: "Document",
+    insuranceCompanyName: "Insurance Company Name",
+    policyNumber: "Policy Number",
+    vehicleInsuranceStartDate: "Vehicle Insurance Start Date",
+    renewalDate: "Renewal Date",
+    dateValidUntil: "Date Valid Until",
+    daysLeft: "Days Left",
+    insuranceCoverage: "Insurance Coverage",
+    insuranceStatus: "Insurance Status",
+    situation: "Situation",
+    truckOdometer: "Truck Odometer",
+  };
+
+  return nameMapping[stateName] || stateName;
+};
+
 const AddSupplier = () => {
   const token = getCookie("token");
   const [selectedData, setSelectedData] = useState();

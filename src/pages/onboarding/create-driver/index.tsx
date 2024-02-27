@@ -19,7 +19,61 @@ import React from "react";
 import { formatDate, formattedDate } from "@/utils";
 import { regexOfEmail, regexOfPhoneNumber } from "../utility/commonRegex";
 import toast, { Toaster } from "react-hot-toast";
-import { correctDriverStateName } from "../utility/utilityMethod";
+// import { correctDriverStateName } from "../utility/utilityMethod";
+
+const correctDriverStateName = (stateName: string): string => {
+  const nameMapping: { [key: string]: string } = {
+    firstName: "First Name",
+    middleName: "Middle Name",
+    lastName: "Last Name",
+    dateOfBirth: "Date of Birth",
+    email: "Email",
+    mobile: "Mobile",
+    nationality: "Nationality",
+    currentAddress: "Current Address",
+    permanentAddress: "Permanent Address",
+    emergencyContactInformation: "Emergency Contact Information",
+    licenseDetails: "License Details",
+    employmentHistory: "Employment History",
+    specialDrivingLicence: "Special Driving Licence",
+    onboardingDocuments: "Onboarding Documents",
+    visaStatus: "Visa Status",
+    driverLicenseFront: "Driver License Front",
+    driverLicenseBack: "Driver License Back",
+    licenseHistory: "License History",
+    policeVerification: "Police Verification",
+    passportFront: "Passport Front",
+    passportBack: "Passport Back",
+    healthInsurance: "Health Insurance",
+    driverCertificate: "Driver Certificate",
+    fitness: "Fitness",
+    drugTest: "Drug Test",
+    houseNumber: "House Number",
+    street: "Street",
+    suburb: "Suburb",
+    state: "State",
+    country: "Country",
+    pincode: "Pincode",
+    contactName: "Contact Name",
+    contactNumber: "Contact Number",
+    relationship: "Relationship",
+    licenseNumber: "License Number",
+    licenseCardNumber: "License Card Number",
+    licenceType: "Licence Type",
+    dateOfIssue: "Date Of Issue",
+    expiryDate: "Expiry Date",
+    daysLeftForRenewal: "Days Left For Renewal",
+    perviousEmployer: "Pervious Employer",
+    yearsOfExperience: "Years Of Experience",
+    reasonForLeaving: "Reason For Leaving",
+    companyName: "Company Name",
+    referenceContactName: "Reference Contact Name",
+    referenceEmailId: "Reference Email Id",
+    referenceContactNumber: "Reference Contact Number",
+  };
+
+  return nameMapping[stateName] || stateName;
+};
 
 const CreateDriver = () => {
   const token = getCookie("token");
