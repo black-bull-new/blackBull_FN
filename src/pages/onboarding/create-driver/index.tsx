@@ -454,7 +454,7 @@ const CreateDriver = () => {
         <div className="ml-[316px] w-full mt-4">
           <div className="bg-white mr-4 flex justify-between items-center rounded-md">
             <h2 className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">
-              Create Driver
+              Add Driver
             </h2>
             <div className="h-8 w-8 flex justify-center cursor-pointer text-2xl items-center bg-blueGrey-100 rounded-full mr-4">
               <span className="mt-[-2px] ml-[2px] text-[#292D32] rotate-45">
@@ -1552,7 +1552,7 @@ const CreateDriver = () => {
                   errorMessage={error.licenseDetailsError?.daysLeftForRenewal}
                 />
                 <FileUpload
-                  file="Choose License Document"
+                  file="Upload Rego Document"
                   onChange={handleDocumentUpload}
                   //@ts-expect-error
                   fileName={selectedUploadRegoDocument?.file?.name || ""}

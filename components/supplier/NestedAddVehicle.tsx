@@ -159,7 +159,7 @@ export const NestedAddVehicle = (props: any) => {
   return (
     <div>
       <div>
-        <h3 className="text-black font-semibold p-4 bg-white mr-4 mt-4 rounded-md">
+        <h3 className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">
           Add Vehicle
         </h3>
       </div>

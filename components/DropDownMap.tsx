@@ -37,16 +37,15 @@ const DropDownMap = ({
           {label}
         </label>
         <select
-          className="pl-[10px] bg-[#EFF2F3] outline-none w-[97%] h-[70%] text-[12px] text-[#8097A2]"
+          className="pl-[10px] pt-[6px] bg-[#EFF2F3] outline-none w-[97%] h-[70%]  text-[#35454C] leading-[24px] text-[16px]"
           onChange={onChange}
           value={value}
           defaultValue="India"
         >
           {mapOption?.map((items: any, index: number) => {
             return (
-              <>
                 <option
-                  className="text-[Placeholder]"
+                  className="text-[#35454C] leading-[24px] text-[16px]"
                   key={index}
                   value={items.value}
                   // onClick={() => selectValue(items.value)}
@@ -54,7 +53,6 @@ const DropDownMap = ({
                 >
                   {items.value}
                 </option>
-              </>
             );
           })}
         </select>

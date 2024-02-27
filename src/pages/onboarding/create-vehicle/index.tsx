@@ -356,15 +356,16 @@ const CreateVehicle = () => {
 
 
   const handleViewDocuments = (id: number) => {
-    console.log("modifiedUrls",modifiedUrls)
-      const index = id;
-      if (index >= 1 && index < modifiedUrls.length) {
-        const url = modifiedUrls[index];
-        window.open(url, "_blank");
-      } else {
-        console.error("URL not found for id:", id);
-      }
-    };
+    console.log("CHECK", id, modifiedUrls);
+    const index = id - 1;  // Adjust index to start from 0
+    if (index >= 0 && index < modifiedUrls.length) {
+      const url = modifiedUrls[index];
+      window.open(url, "_blank");
+    } else {
+      console.error("URL not found for id:", id);
+    }
+  };
+  
 
   // const handleViewDocuments = (id: number) => {
   //   console.log("modifiedUrls", modifiedUrls);
@@ -444,7 +445,7 @@ const CreateVehicle = () => {
         <div className="ml-[316px] w-full mt-4">
           <div className="bg-white mr-4 flex justify-between items-center rounded-md">
             <h2 className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">
-              Create Vehicle
+              Add Vehicle
             </h2>
             <div className="h-8 w-8 flex justify-center cursor-pointer text-2xl items-center bg-blueGrey-100 rounded-full mr-4">
               <span className="mt-[-2px] ml-[2px] text-[#292D32] rotate-45">
