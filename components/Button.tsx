@@ -6,7 +6,7 @@ const Button = (props: any) => {
     <div>
       <button
         type="submit"
-        className={`flex items-center gap-2 text-white rounded-md p-2 w-full bg-primary-color ${props.className}`}
+        className={`flex items-center rounded-full gap-2 text-white p-2 w-full bg-primary-color ${props.className}`}
         onClick={props.onClick}
         disabled={props.disabled}
       >

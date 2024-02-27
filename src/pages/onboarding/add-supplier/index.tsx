@@ -888,7 +888,7 @@ const AddSupplier = () => {
             <Button
               onClick={handleSubmit}
               text={buttonState}
-              className="px-8 !rounded-xl text-sm"
+              className="px-8 rounded-full text-sm"
             />
           </div>
         </div>

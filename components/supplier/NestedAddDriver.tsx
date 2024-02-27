@@ -16,7 +16,7 @@ const NestedAddDriver = (props: any) => {
 
   return (
     <div>
-      <div className="font-semibold text-xl mt-4 bg-white p-4 mr-4 rounded-md">
+      <div className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">
         <h2 className="text-black">Add Driver</h2>
       </div>
       <div className="font-semibold text-xl mt-4 bg-white p-4 mr-4 rounded-md mb-20">

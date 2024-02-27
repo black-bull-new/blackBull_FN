@@ -97,6 +97,15 @@ const Sidebar = () => {
               );
             })}
           </ul>
+          <div>
+            <Image
+              src="/unlockFeatures.svg"
+              alt="logo"
+              width={150}
+              height={100}
+              className="m-auto"
+            />
+          </div>
         </nav>
       </div>
     </>

@@ -1801,7 +1801,7 @@ const AddCustomer = () => {
 
             <div className="grid grid-cols-3 gap-4 p-4">
               <FileUpload
-                file="Choose Contract Document"
+                file="Upload Contractual Document"
                 onChange={handleDocumentUpload}
                 //@ts-expect-error
                 fileName={selectedUploadContractDocument?.file?.name || ""}

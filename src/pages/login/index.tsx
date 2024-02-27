@@ -90,10 +90,10 @@ const Login = () => {
             method="POST"
           >
             <div className="max-w-[440px] ml-auto mr-auto text-center pt-10">
-              <h1 className="font-bold text-3xl tracking-wide">
+              <h1 className="text-black font-bold text-3xl tracking-wide">
                 Welcome Back!
               </h1>
-              <p className="mt-2">
+              <p className="mt-2 text-black">
                 Log in to BlackBull for instant access to your dashboard.
               </p>
               <div className="flex flex-col mt-11">

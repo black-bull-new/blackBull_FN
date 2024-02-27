@@ -15,7 +15,7 @@ export const NestedAddSupplier = (props: any) => {
   return (
     <div className="">
       <div className="bg-white mr-4 flex justify-between items-center rounded-md">
-        <h2 className="text-black w-full p-4 rounded-md font-bold">
+        <h2 className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">
           Add Supplier
         </h2>
         <div className="h-8 w-8 flex justify-center cursor-pointer text-2xl items-center bg-blueGrey-100 rounded-full mr-4">
