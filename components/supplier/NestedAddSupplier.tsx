@@ -116,12 +116,12 @@ export const NestedAddSupplier = (props: any) => {
               label="Supplier ID"
               // value={addSupplier.website}
               className="w-full"
-              // onChange={(e: any) => {
-              //   setAddSupplier({
-              //     ...addSupplier,
-              //     website: e.target.value,
-              //   });
-              // }}
+            // onChange={(e: any) => {
+            //   setAddSupplier({
+            //     ...addSupplier,
+            //     website: e.target.value,
+            //   });
+            // }}
             />
           </div>
           <h2 className="text-black font-semibold mt-8">Contact Information</h2>
@@ -1674,19 +1674,25 @@ const stateCollection = [
     value: "Victoria",
   },
   {
-    value: "items1",
+    value: "Australian Capital Territory",
   },
   {
-    value: "items2",
+    value: "New South Wales",
   },
   {
-    value: "items3",
+    value: "Northern Territory",
   },
   {
-    value: "items4",
+    value: "Queensland",
   },
   {
-    value: "items5",
+    value: "South Australia",
+  },
+  {
+    value: "Tasmania",
+  },
+  {
+    value: "Western Australia",
   },
 ];
 
@@ -1708,17 +1714,7 @@ const businessOperationCollection = [
 
 const areaCollection = [
   {
-    value:
-      "Australian Capital Territory, Northern Territory, Tasmania, Victoria",
-  },
-  {
-    value: "item1",
-  },
-  {
-    value: "item2",
-  },
-  {
-    value: "item3",
+    value: "Australian Capital Territory, Northern Territory, Tasmania, Victoria",
   },
 ];
 
@@ -1727,13 +1723,7 @@ const invoiceColletion = [
     value: "Mail",
   },
   {
-    value: "item1",
-  },
-  {
-    value: "item2",
-  },
-  {
-    value: "item3",
+    value: "None",
   },
 ];
 
@@ -1742,12 +1732,18 @@ const invoiceComuColletion = [
     value: "Accounts Payable Email, Operations Email",
   },
   {
-    value: "item1",
+    value: "Accounts Payable Email",
   },
   {
-    value: "item2",
+    value: "Accounts Receivable Email",
   },
   {
-    value: "item3",
+    value: "Opreations Email",
+  },
+  {
+    value: "Compliance Email",
+  },
+  {
+    value: "Admin Email",
   },
 ];

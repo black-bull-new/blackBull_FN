@@ -139,7 +139,7 @@ const AddCustomer = () => {
       street2: "",
       suburb: "",
       state: "",
-      country: "",
+      country: "Australia",
       postCode: "",
     },
     document: "",
@@ -1739,7 +1739,7 @@ const AddCustomer = () => {
                 }}
                 errorMessage={error.warehouseLocationError?.state}
               />
-              <DropDownMap
+              <Maininputfield
                 label="Country"
                 mapOption={countryCollection}
                 value={customer.warehouseLocation.country}
@@ -1831,19 +1831,25 @@ const stateCollection = [
     value: "Victoria",
   },
   {
-    value: "items1",
+    value: "Australian Capital Territory",
   },
   {
-    value: "items2",
+    value: "New South Wales",
   },
   {
-    value: "items3",
+    value: "Northern Territory",
   },
   {
-    value: "items4",
+    value: "Queensland",
   },
   {
-    value: "items5",
+    value: "South Australia",
+  },
+  {
+    value: "Tasmania",
+  },
+  {
+    value: "Western Australia",
   },
 ];
 const countryCollection = [
@@ -1871,13 +1877,7 @@ const invoiceColletion = [
     value: "Mail",
   },
   {
-    value: "item1",
-  },
-  {
-    value: "item2",
-  },
-  {
-    value: "item3",
+    value: "None",
   },
 ];
 const invoiceComuColletion = [
@@ -1885,13 +1885,19 @@ const invoiceComuColletion = [
     value: "Accounts Payable Email, Operations Email",
   },
   {
-    value: "item1",
+    value: "Accounts Payable Email",
   },
   {
-    value: "item2",
+    value: "Accounts Receivable Email",
   },
   {
-    value: "item3",
+    value: "Opreations Email",
+  },
+  {
+    value: "Compliance Email",
+  },
+  {
+    value: "Admin Email",
   },
 ];
 const paymentTermsCollection = [
@@ -1899,15 +1905,30 @@ const paymentTermsCollection = [
     value: "Net 30",
   },
   {
-    value: "item1",
+    value: "Net 15",
   },
   {
-    value: "item2",
+    value: "Net 14",
   },
   {
-    value: "item3",
+    value: "Net 7",
   },
   {
-    value: "item4",
+    value: "Due on Receipt",
+  },
+  {
+    value: "Net 45",
+  },
+  {
+    value: "End of the Month",
+  },
+  {
+    value: "Net Monthly Account",
+  },
+  {
+    value: "Cash in Advance",
+  },
+  {
+    value: "Cash on Delivery",
   },
 ];

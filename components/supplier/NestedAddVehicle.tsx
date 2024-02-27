@@ -104,7 +104,7 @@ export const NestedAddVehicle = (props: any) => {
       console.error("URL not found for id:", id);
     }
   };
-  
+
   const handleUploadFileWithId = async (id: number, combinedObject: any) => {
     try {
       const project = combinedObject[id];
@@ -637,10 +637,10 @@ export const NestedAddVehicle = (props: any) => {
                           {selectedFiles.find((file) => file.id === data?.id)
                             ?.currentDate
                             ? formatDate(
-                                selectedFiles.find(
-                                  (file) => file.id === data?.id
-                                )?.currentDate
-                              )
+                              selectedFiles.find(
+                                (file) => file.id === data?.id
+                              )?.currentDate
+                            )
                             : "No date available"}
                         </p>
                       </div>
@@ -751,10 +751,7 @@ const situationCollection = [
     value: "Anywhere",
   },
   {
-    value: "item1",
-  },
-  {
-    value: "item2",
+    value: "Limited",
   },
 ];
 
@@ -772,12 +769,15 @@ const insuranceCoverageCollection = [
     value: "$1 Million Coverage",
   },
   {
-    value: "item1",
+    value: "$2 Million Coverage",
   },
   {
-    value: "item2",
+    value: "$3 Million Coverage",
   },
   {
-    value: "item3",
+    value: "$5 Million Coverage",
+  },
+  {
+    value: "$10 Million Coverage",
   },
 ];

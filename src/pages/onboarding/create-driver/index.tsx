@@ -93,7 +93,7 @@ const CreateDriver = () => {
       street: "",
       suburb: "",
       state: "",
-      country: "",
+      country: "Australia",
       pincode: "",
     },
     permanentAddress: {
@@ -101,7 +101,7 @@ const CreateDriver = () => {
       street: "",
       suburb: "",
       state: "",
-      country: "",
+      country: "Australia",
       pincode: "",
     },
 
@@ -772,9 +772,9 @@ const CreateDriver = () => {
                   value={driverDetails.currentAddress.state}
                   errorMessage={error.currentAddressError?.state}
                 />
-                <DropDownMap
+                <Maininputfield
                   label="Country"
-                  mapOption={countryCollection}
+                  // mapOption={countryCollection}
                   value={driverDetails.currentAddress.country}
                   onChange={(e: any) => {
                     setDriverDetails({
@@ -936,9 +936,9 @@ const CreateDriver = () => {
                   }}
                   errorMessage={error.permanentAddressError?.state}
                 />
-                <DropDownMap
+                <Maininputfield
                   label="Country"
-                  mapOption={countryCollection}
+                  // mapOption={countryCollection}
                   // selectedData={selectedData}
                   // setSelectedData={setSelectedData}
                   value={driverDetails.permanentAddress.country}
@@ -1813,19 +1813,25 @@ const stateCollection = [
     value: "Victoria",
   },
   {
-    value: "items1",
+    value: "Australian Capital Territory",
   },
   {
-    value: "items2",
+    value: "New South Wales",
   },
   {
-    value: "items3",
+    value: "Northern Territory",
   },
   {
-    value: "items4",
+    value: "Queensland",
   },
   {
-    value: "items5",
+    value: "South Australia",
+  },
+  {
+    value: "Tasmania",
+  },
+  {
+    value: "Western Australia",
   },
 ];
 const countryCollection = [
@@ -1853,22 +1859,24 @@ const licenceTypes = [
     value: "HR (Heavy Rigid Licence)",
   },
   {
-    value: "item1",
+    value: "LR (Light Rigid Licence)",
   },
   {
-    value: "item2",
+    value: "MR (Medium Rigid Licence)",
+  },
+  {
+    value: "HR (Heavy Rigid Licence)",
+  },
+  {
+    value: "HR (Heavy Combination Licence)",
   },
 ];
 const drivingLicenceCollection = [
   {
+    value: "Special Driving Licence",
+  },
+  {
     value: "Dangerous Goods",
-  },
-
-  {
-    value: "item1",
-  },
-  {
-    value: "item2",
   },
 ];
 const documentCollectionHeading = [
