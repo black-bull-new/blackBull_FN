@@ -8,12 +8,32 @@ import PasswordField from "../../../../components/password-field/PasswordFlied";
 import Button from "../../../../components/Button";
 import { createUser } from "@/network-request/user/createUser";
 import { getCookie } from "cookies-next";
-import { correctUserStateName } from "../utility/utilityMethod";
+// import { correctUserStateName } from "../utility/utilityMethod";
 import { uploadOnboardingPorfile } from "@/network-request/onboarding-user";
 // import { regexOfEmail, regexOfPhoneNumber } from "../utility/commonRegex";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 // import { regexOfEmail, regexOfPhoneNumber } from "@/utils";
+
+const correctUserStateName = (stateName: string): string => {
+  const nameMapping: { [key: string]: string } = {
+    firstName: "First Name",
+    lastName: "Last Name",
+    displayName: "Display Name",
+    email: "Email",
+    number: "Number",
+    username: "Username",
+    domains: "Domains",
+    employeeId: "Employee Id",
+    accessLevel: "Access Level",
+    designation: "Designation",
+    role: "Role",
+    password: "Password",
+    confirmPassword: "Confirm Password",
+  };
+
+  return nameMapping[stateName] || stateName;
+};
 const User = () => {
   const [selectedData, setSelectedData] = useState("");
   const token = getCookie("token");

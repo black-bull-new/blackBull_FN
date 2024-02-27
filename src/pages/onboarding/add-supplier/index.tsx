@@ -19,11 +19,11 @@ import {
   uploadSupplierVehicleRegoDocuments,
   uploadSuppliervehicleDocuments,
 } from "@/network-request/supplier/vehicle";
-import {
-  // correctAddDriverStateName,
-  // correctAddSupplierStateName,
-  // correctAddVehicleStateName,
-} from "../utility/utilityMethod";
+// import {
+//   // correctAddDriverStateName,
+//   // correctAddSupplierStateName,
+//   // correctAddVehicleStateName,
+// } from "../utility/utilityMethod";
 import { addSupplierDriver } from "@/network-request/supplier/driver";
 import { formattedDate } from "@/utils";
 import toast, { Toaster } from "react-hot-toast";
