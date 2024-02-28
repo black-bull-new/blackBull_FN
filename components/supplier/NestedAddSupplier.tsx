@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Progressbar from "../Progressbar";
 import Image from "next/image";
 import Maininputfield from "../Maininputfield";
@@ -19,9 +19,12 @@ export const NestedAddSupplier = (props: any) => {
     modifiedUrls,
     urls,
     setUrls,
+
+    selectedProfileSupplier,
+    setSelectedProfileSupplier
   } = props;
-  console.log("addSupplier", addSupplier);
-  console.log("error in add supplier", error);
+  // console.log("addSupplier", addSupplier);
+  // console.log("error in add supplier", error);
 
   const [selectedFiles, setSelectedFiles] = useState<
     { id: number; file: File; currentDate: Date | null }[]
@@ -114,6 +117,40 @@ export const NestedAddSupplier = (props: any) => {
     }
   };
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [profile, setProfile] = React.useState("");
+  const [selectedProfile, setSelectedProfile] = React.useState("");
+
+  const handleUploadClick: any = () => {
+    if (fileInputRef.current) {
+      fileInputRef?.current?.click();
+    }
+  };
+  const [documentRender, setDocumentRender] = React.useState("");
+  const [selectedUploadRegoDocument, setSelectedUploadRegoDocument] =
+    React.useState("");
+
+  const handleFileChange = (setSide: any, setPreview: any) => (event: any) => {
+    const selectedFile = event.target.files && event.target.files[0];
+    setSide({ file: selectedFile });
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader?.result! as any);
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+  };
+
+  const handleProfileFileChange = handleFileChange(
+    setSelectedProfileSupplier,
+    setProfile
+  );
+
+  const handleDocumentUpload = handleFileChange(
+    setSelectedUploadRegoDocument,
+    setDocumentRender
+  );
   return (
     <div className="">
       <div className="bg-white mr-4 flex justify-between items-center rounded-md">
@@ -134,6 +171,54 @@ export const NestedAddSupplier = (props: any) => {
             +
           </span>
         </div> */}
+
+        <div className="relative w-fit">
+          <span className="flex flex-row justify-center my-4">
+            <span className="mb-4 text-center flex justify-center items-center">
+              <label htmlFor="profilelabel">
+                <div
+                  className="w-[100px]  rounded-full h-[100px] cursor-pointer"
+                  onChange={handleUploadClick}
+                >
+                  {profile ? (
+                    <div className="w-full h-full">
+                      <Image
+                        src={profile}
+                        alt="driver"
+                        width={100}
+                        className="w-[100px] h-[100px] border rounded-full"
+                        height={100}
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <Image
+                        src="/driverImage.svg"
+                        alt="driver"
+                        width={100}
+                        height={100}
+                        className="w-[100px] h-[100px]"
+                      />
+                      <span className="w-6 h-6 rounded-full bg-accent3 block text-white flex justify-center items-end text-xl absolute right-2 bottom-6">
+                        +
+                      </span>
+                    </>
+                  )}
+                </div>
+              </label>
+              <span className="text-sm">
+                {" "}
+                <input
+                  id="profilelabel"
+                  type="file"
+                  style={{ display: "none" }}
+                  ref={fileInputRef}
+                  onChange={(e) => handleProfileFileChange(e)}
+                />
+              </span>
+            </span>
+          </span>
+        </div>
         <div className="bg-white mr-4 mt-4 rounded-md">
           <h2 className="text-black font-semibold mt-8">
             Supplier Information
@@ -218,12 +303,12 @@ export const NestedAddSupplier = (props: any) => {
               label="Supplier ID"
               // value={addSupplier.website}
               className="w-full"
-              // onChange={(e: any) => {
-              //   setAddSupplier({
-              //     ...addSupplier,
-              //     website: e.target.value,
-              //   });
-              // }}
+            // onChange={(e: any) => {
+            //   setAddSupplier({
+            //     ...addSupplier,
+            //     website: e.target.value,
+            //   });
+            // }}
             />
           </div>
           <h2 className="text-black font-semibold mt-8">Contact Information</h2>
@@ -1777,10 +1862,10 @@ export const NestedAddSupplier = (props: any) => {
                             {selectedFiles.find((file) => file.id === data?.id)
                               ?.currentDate
                               ? formatDate(
-                                  selectedFiles.find(
-                                    (file) => file.id === data?.id
-                                  )?.currentDate
-                                )
+                                selectedFiles.find(
+                                  (file) => file.id === data?.id
+                                )?.currentDate
+                              )
                               : "No date available"}
                           </p>
                         </div>
