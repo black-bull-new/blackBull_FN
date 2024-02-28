@@ -361,7 +361,6 @@ const AddSupplier = () => {
     // accreditationDocument: "",
   });
   const [selectedProfileForSupplier, setSelectedProfileForSupplier] = useState("");
-  const [selectedUploadRegoDocumentForSupplier, setSelectedUploadRegoDocumentForSupplier] = useState("");
   const [urlsForSupplier, setUrlsForSupplier] = useState<string[]>([]);
   const modifiedUrlsForSupplier = urlsForSupplier.reduce(
     (acc: any, url, index) => {
@@ -371,6 +370,13 @@ const AddSupplier = () => {
     []
   );
   console.log({ selectedProfileForSupplier })
+
+  // ================================================== Uploading documents ==================================================
+  const [selectedAccreditationDocumentForSupplier, setSelectedAccreditationDocumentForSupplier] = useState("");
+  const [selectedProductLiabilityDocumentForSupplier, setSelectedProductLiabilityDocumentForSupplier] = useState("");
+  console.log({ selectedAccreditationDocumentForSupplier })
+  console.log({ selectedProductLiabilityDocumentForSupplier })
+
 
   /**
    * add vehicle state and its error state
@@ -997,6 +1003,12 @@ const AddSupplier = () => {
               setSelectedProfileSupplier={setSelectedProfileForSupplier}
               setUrls={setUrlsForSupplier}
               modifiedUrls={modifiedUrlsForSupplier}
+
+              accreditationDocument={selectedAccreditationDocumentForSupplier}
+              setAccreditationDocument={setSelectedAccreditationDocumentForSupplier}
+
+              productDocument={selectedProductLiabilityDocumentForSupplier}
+              setProductDocument={setSelectedProductLiabilityDocumentForSupplier}
             />
           ) : buttonState === step2Btn ? (
             <NestedAddVehicle

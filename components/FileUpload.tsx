@@ -10,8 +10,7 @@ const FileUpload = (props: any) => {
             {props?.fileName !== "" ? props?.fileName : props.file}
           </div> */}
           <div className="bg-[#2B36D9] text-white px-10 py-[12px] flex justify-center text-sm font-semibold rounded-full whitespace-nowrap ">
-         {props?.fileName !== "" ? props.fileName : (props?.file !== "" ? props.file : "Browse")}
-
+            {props?.fileName !== "" ? props.fileName : (props?.file !== "" ? props.file : "Browse")}
           </div>
         </label>
         <input
