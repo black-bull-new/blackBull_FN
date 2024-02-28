@@ -24,7 +24,11 @@ import {
 //   // correctAddSupplierStateName,
 //   // correctAddVehicleStateName,
 // } from "../utility/utilityMethod";
-import { addSupplierDriver } from "@/network-request/supplier/driver";
+import {
+  addSupplierDriver,
+  uploadSupplierDriverProfile,
+  uploadSupplierDriverlicenseDocuments,
+} from "@/network-request/supplier/driver";
 import { formattedDate } from "@/utils";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -150,7 +154,7 @@ const AddSupplier = () => {
   const step1Btn = "Proceed to Add Vehicle";
   const step2Btn = "Proceed to Add Driver";
   const step3Btn = "Submit";
-  const [buttonState, seButtonState] = useState(step3Btn);
+  const [buttonState, seButtonState] = useState(step1Btn);
   /**
    * add supplier state and its error state
    */
@@ -473,50 +477,51 @@ const AddSupplier = () => {
     },
     specialDrivingLicense: "",
 
-    visaStatus: {
-      type: "visa-status",
-      uploadDate: "20/02/2024",
-    },
-    driverLicenseFront: {
-      type: "visa-status",
-      uploadDate: "20/02/2024",
-    },
-    driverLicenseBack: {
-      type: "visa-status",
-      uploadDate: "20/02/2024",
-    },
-    licenseHistory: {
-      type: "visa-status",
-      uploadDate: "20/02/2024",
-    },
-    policeVerification: {
-      type: "visa-status",
-      uploadDate: "20/02/2024",
-    },
-    passportFront: {
-      type: "visa-status",
-      uploadDate: "20/02/2024",
-    },
-    passportBack: {
-      type: "visa-status",
-      uploadDate: "20/02/2024",
-    },
-    healthInsurance: {
-      type: "visa-status",
-      uploadDate: "20/02/2024",
-    },
-    driverCertificate: {
-      type: "visa-status",
-      uploadDate: "20/02/2024",
-    },
-    fitness: {
-      type: "visa-status",
-      uploadDate: "20/02/2024",
-    },
-    drugTest: {
-      type: "visa-status",
-      uploadDate: "20/02/2024",
-    },
+    // visaStatus: {
+    //   type: "visa-status",
+    //   uploadDate: "20/02/2024",
+    // },
+    // driverLicenseFront: {
+    //   type: "visa-status",
+    //   uploadDate: "20/02/2024",
+    // },
+    // driverLicenseBack: {
+    //   type: "visa-status",
+    //   uploadDate: "20/02/2024",
+    // },
+    // licenseHistory: {
+    //   type: "visa-status",
+    //   uploadDate: "20/02/2024",
+    // },
+    // policeVerification: {
+    //   type: "visa-status",
+    //   uploadDate: "20/02/2024",
+    // },
+    // passportFront: {
+    //   type: "visa-status",
+    //   uploadDate: "20/02/2024",
+    // },
+    // passportBack: {
+    //   type: "visa-status",
+    //   uploadDate: "20/02/2024",
+    // },
+    // healthInsurance: {
+    //   type: "visa-status",
+    //   uploadDate: "20/02/2024",
+    // },
+    // driverCertificate: {
+    //   type: "visa-status",
+    //   uploadDate: "20/02/2024",
+    // },
+    // fitness: {
+    //   type: "visa-status",
+    //   uploadDate: "20/02/2024",
+    // },
+    // drugTest: {
+    //   type: "visa-status",
+    //   uploadDate: "20/02/2024",
+    // },
+    onboardingDocuments: [],
   });
 
   const [addDriverError, setAddDriverError] = useState<any>({
@@ -561,8 +566,17 @@ const AddSupplier = () => {
     // },
     specialDrivingLicenseError: "",
   });
-  console.log("addVehicleError", addVehicleError);
-  console.log("selectedStatusValues", selectedStatusValues);
+  const [selectedProfileForDriver, setSelectedProfileForDriver] = useState("");
+  const [
+    selectedUploadRegoDocumentForDriver,
+    setSelectedUploadRegoDocumentForDriver,
+  ] = useState("");
+  const [urlsForDriver, setUrlsForDriver] = useState<string[]>([]);
+  const modifiedUrlsForDriver = urls.reduce((acc: any, url, index) => {
+    acc[index + 1] = url;
+    return acc;
+  }, []);
+
   const handleSubmit = async () => {
     if (buttonState === step1Btn) {
       // Check validation and get error status
@@ -650,16 +664,76 @@ const AddSupplier = () => {
       // Check validation and get error status
       const hasErrors = checkValidationForAddDriver();
       if (hasErrors) {
-        alert("Please fix the validation errors before submitting.");
+        toast("Please fix the validation errors before submitting.", {
+          icon: "⚠️",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
         return;
       }
-      const response: any = await addSupplierDriver(addDriver, token || "");
+
+      // Uploading driver profile ...
+      const [profileUrl] = await Promise.all([
+        Promise.all(
+          Object.values(selectedProfileForDriver)?.map((imageInfo) =>
+            uploadSupplierDriverProfile(imageInfo)
+          )
+        ),
+      ]);
+      // Uploading driver license documents ...
+      const [driverLicense] = await Promise.all([
+        Promise.all(
+          Object.values(selectedUploadRegoDocumentForDriver)?.map((imageInfo) =>
+            uploadSupplierDriverlicenseDocuments(imageInfo)
+          )
+        ),
+      ]);
+
+      const newDriverDetails = {
+        ...addDriver,
+        avatar: profileUrl[0]?.response,
+        licenseDetails: {
+          ...addDriver.licenseDetails,
+          documents: driverLicense[0]?.response,
+        },
+        onboardingDocuments: urlsForDriver?.map((url: any, index: number) => ({
+          type: url[0],
+          uploadDate: formattedDate,
+        })),
+      };
+      console.log("urlsForDriver",urlsForDriver)
+      console.log("newDriverDetails",newDriverDetails)
+
+      const response: any = await addSupplierDriver(
+        newDriverDetails,
+        token || ""
+      );
       console.log({ response });
-      if (response.state === 200) {
-        seButtonState(step1Btn);
+      if (response.data) {
+        // seButtonState(step1Btn);
+        toast("Driver has been successfully created..", {
+          icon: "👏",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
         window.scrollTo({
           top: 0,
           behavior: "smooth", // for smooth scrolling
+        });
+      } else {
+        toast("Something went wrong", {
+          icon: "⚠️",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
         });
       }
     }
@@ -687,7 +761,8 @@ const AddSupplier = () => {
         key !== "healthInsurance" &&
         key !== "driverCertificate" &&
         key !== "fitness" &&
-        key !== "drugTest"
+        key !== "drugTest" &&
+        key !== "specialDrivingLicense"
       ) {
         if (typeof addDriver[key] === "object" && addDriver[key] !== null) {
           // Ensure that nested error objects are initialized
@@ -875,6 +950,15 @@ const AddSupplier = () => {
               setAddDriver={setAddDriver}
               error={addDriverError}
               setError={setAddDriverError}
+              selectedProfile={selectedProfileForDriver}
+              setSelectedProfile={setSelectedProfileForDriver}
+              selectedUploadRegoDocument={selectedUploadRegoDocumentForDriver}
+              setSelectedUploadRegoDocument={
+                setSelectedUploadRegoDocumentForDriver
+              }
+              urls={urlsForDriver}
+              setUrls={setUrlsForDriver}
+              modifiedUrls={modifiedUrlsForDriver}
             />
           ) : null}
 

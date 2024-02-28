@@ -7,32 +7,59 @@ import DropDownMap from "../DropDownMap";
 import FileUpload from "../FileUpload";
 import Checkbox from "../Checkbox";
 import Button from "../Button";
+import { uploadSupplierDriverOnboardingDocuments } from "@/network-request/supplier/driver";
+import { formatDate } from "@/utils";
+import Maindatefield from "../Maindatefield";
 
 const NestedAddDriver = (props: any) => {
   const [selectedData, setSelectedData] = useState();
-  const { addDriver, setAddDriver, error, setError } = props;
+  const {
+    addDriver,
+    setAddDriver,
+    error,
+    setError,
+    selectedProfile,
+    setSelectedProfile,
+    selectedUploadRegoDocument,
+    setSelectedUploadRegoDocument,
+    urls,
+    setUrls,
+    modifiedUrls,
+  } = props;
   console.log("AddDriver state", addDriver);
   console.log("Error State", error);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [profile, setProfile] = React.useState("");
-  const [selectedProfile, setSelectedProfile] = React.useState("");
-  const [selectedUploadRegoDocument, setSelectedUploadRegoDocument] =
-    React.useState("");
+  // const [selectedProfile, setSelectedProfile] = React.useState("");
+  // const [selectedUploadRegoDocument, setSelectedUploadRegoDocument] =
+  //   React.useState("");
   const [documentRender, setDocumentRender] = React.useState("");
-  const [urls, setUrls] = useState<string[]>([]);
+  // const [urls, setUrls] = useState<string[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<
-  { id: number; file: File; currentDate: Date | null }[]
->([]);
+    { id: number; file: File; currentDate: Date | null }[]
+  >([]);
 
-const [uploadStatus, setUploadStatus] = useState<{ [id: number]: boolean }>(
-  {}
-);
-const [showUploadMessage, setShowUploadMessage] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState<{ [id: number]: boolean }>(
+    {}
+  );
+  const [showUploadMessage, setShowUploadMessage] = useState(false);
 
-const modifiedUrls = urls.reduce((acc: any, url, index) => {
-  acc[index + 1] = url;
-  return acc;
-}, []);
+  const combinedObject = selectedFiles.reduce(
+    (accumulator: any, currentItem: any) => {
+      accumulator[currentItem.id] = {
+        id: currentItem.id,
+        file: currentItem.file,
+        currentDate: currentItem.currentDate,
+      };
+      return accumulator;
+    },
+    {}
+  );
+
+  // const modifiedUrls = urls.reduce((acc: any, url, index) => {
+  //   acc[index + 1] = url;
+  //   return acc;
+  // }, []);
 
   const handleUploadClick: any = () => {
     if (fileInputRef.current) {
@@ -94,15 +121,16 @@ const modifiedUrls = urls.reduce((acc: any, url, index) => {
       const project = combinedObject[id];
       if (id && project?.id) {
         const file = [project?.file];
+        console.log("file", file);
         const uploadDocumentResponses = await Promise.all(
           Object.values(file)?.map((file) =>
-            uploadSingleSingleDriverOnboardingDocuments(file)
+            uploadSupplierDriverOnboardingDocuments(file)
           )
         );
         const newUrls = uploadDocumentResponses
           ?.map((response) => response?.response)
           .filter(Boolean);
-        setUrls((prevUrls) => {
+        setUrls((prevUrls: any) => {
           const updatedUrls = [...prevUrls];
           updatedUrls[id - 1] = newUrls[0]; // Update the URL at the correct index
           return updatedUrls;
@@ -118,8 +146,9 @@ const modifiedUrls = urls.reduce((acc: any, url, index) => {
   };
 
   const handleViewDocuments = (id: number) => {
-    const index = id;
-    if (index >= 1 && index < modifiedUrls.length) {
+    console.log("CHECK", id, modifiedUrls);
+    const index = id - 1; // Adjust index to start from 0
+    if (index >= 0 && index < modifiedUrls.length) {
       const url = modifiedUrls[index];
       window.open(url, "_blank");
     } else {
@@ -231,7 +260,7 @@ const modifiedUrls = urls.reduce((acc: any, url, index) => {
             errorMessage={error.lastNameError}
           />
 
-          <DateWithoutDropdown
+          <Maindatefield
             label="DOB"
             value={addDriver?.dateOfBirth}
             onChange={(e: any) => {
@@ -863,7 +892,7 @@ const modifiedUrls = urls.reduce((acc: any, url, index) => {
               });
             }}
           />
-          <DateWithoutDropdown
+          <Maindatefield
             label="Date Of Issue"
             value={addDriver?.licenseDetails?.dateOfIssue}
             onChange={(e: any) => {
@@ -876,7 +905,7 @@ const modifiedUrls = urls.reduce((acc: any, url, index) => {
               });
             }}
           />
-          <DateWithoutDropdown
+          <Maindatefield
             label="Expiry Date"
             value={addDriver?.licenseDetails?.expiryDate}
             onChange={(e: any) => {
@@ -906,7 +935,6 @@ const modifiedUrls = urls.reduce((acc: any, url, index) => {
           <FileUpload
             file="Upload Rego Document"
             onChange={handleDocumentUpload}
-            // @ts-expect-error
             fileName={selectedUploadRegoDocument?.file?.name || ""}
           />
         </div>
@@ -955,7 +983,7 @@ const modifiedUrls = urls.reduce((acc: any, url, index) => {
             errorMessage={error.specialDrivingLicenseError}
           />
         </div>
-        <div className="bg-white mr-4 px-4 rounded-md mt-4 p-4">
+        <div className="bg-white mr-4 font-light px-4 rounded-md mt-4 p-4">
           <div className="mb-4 mt-8">
             <h3 className="w-full mb-4 rounded-md font-semibold text-black">
               {" "}
@@ -1010,16 +1038,19 @@ const modifiedUrls = urls.reduce((acc: any, url, index) => {
                       {uploadStatus[data?.id] ? (
                         <p style={{ color: "green" }}>
                           {showUploadMessage ? (
-                            <div className="mb-6 underline decoration-[#2B36D9] text-center">
-                              <span
-                                className="cursor-pointer text-primary"
-                                onClick={() => handleViewDocuments(data?.id)}
-                              >
-                                View
-                              </span>
-                            </div>
+                            // <div className="mb-6 underline decoration-[#2B36D9] text-center">
+                            //   <span
+                            //     className="cursor-pointer text-primary"
+                            //     onClick={() => handleViewDocuments(data?.id)}
+                            //   >
+                            //     View
+                            //   </span>
+                            // </div>
+                            <span className="!w-fit m-auto inline-block mb-3 bg-[#2B36D9] py-2 rounded-full cursor-pointer text-sm px-6 mb-6 font-semibold text-white">
+                              Uploaded
+                            </span>
                           ) : (
-                            <span className="!w-fit m-auto bg-[#2B36D9] py-2 rounded-full cursor-pointer text-sm px-6 mb-6 font-semibold text-white">
+                            <span className="!w-fit m-auto inline-block mb-3 bg-[#2B36D9] py-2 rounded-full cursor-pointer text-sm px-6 mb-6 font-semibold text-white">
                               Uploading...
                             </span>
                           )}
@@ -1029,7 +1060,7 @@ const modifiedUrls = urls.reduce((acc: any, url, index) => {
                           {selectedFiles.find((file) => file.id === data?.id)
                             ?.file ? (
                             <div>
-                              <p className="!w-fit m-auto  cursor-pointer text-sm px-6  mb-6 font-semibold py-[4px] text-white">
+                              <p className="!w-fit m-auto  cursor-pointer text-sm px-6  mb-6  py-[4px] text-white">
                                 <span
                                   className="!w-fit m-auto bg-[#2B36D9] py-2 rounded-full cursor-pointer text-sm px-6 mb-6 font-semibold  text-white"
                                   onClick={() =>

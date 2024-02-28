@@ -16,3 +16,60 @@ export const addSupplierDriver = async (data: any, token: string) => {
         return error;
     }
 }
+
+export const uploadSupplierDriverProfile = async (selectedFile: any) => {
+    const formData = new FormData();
+    formData.append("files", selectedFile)
+    return await axios
+        .post(`${process.env.NEXT_PUBLIC_API_URL}/s1/d1/supplier-driver-profile`,
+            formData,
+            {
+                withCredentials: false
+            }
+        ).
+        then((response) => {
+            console.log({ response })
+            return response?.data
+        }).catch((error) => {
+            console.log({ error })
+            return error
+        })
+}
+
+export const uploadSupplierDriverlicenseDocuments = async (selectedFile: any) => {
+    const formData = new FormData();
+    formData.append("files", selectedFile)
+    return await axios
+        .post(`${process.env.NEXT_PUBLIC_API_URL}/s1/d1/supplier-driver-license-documents`,
+            formData,
+            {
+                withCredentials: false
+            }
+        ).
+        then((response) => {
+            console.log({ response })
+            return response?.data
+        }).catch((error) => {
+            console.log({ error })
+            return error
+        })
+}
+
+export const uploadSupplierDriverOnboardingDocuments = async (selectedFile: any) => {
+    const formData = new FormData();
+    formData.append("files", selectedFile)
+    return await axios
+        .post(`${process.env.NEXT_PUBLIC_API_URL}/s1/d1/supplier-driver-onboarding-documents`,
+            formData,
+            {
+                withCredentials: false
+            }
+        ).
+        then((response) => {
+            console.log({ response })
+            return response?.data
+        }).catch((error) => {
+            console.log({ error })
+            return error
+        })
+}
