@@ -665,7 +665,7 @@ const NestedAddDriver = (props: any) => {
             errorMessage={error.emergencyContactInformationError?.contactName}
           />
           <Maininputfield
-            label="Contact Numbere"
+            label="Contact Number"
             value={addDriver?.emergencyContactInformation?.contactNumber}
             className="w-full"
             onChange={(e: any) => {
@@ -833,7 +833,7 @@ const NestedAddDriver = (props: any) => {
         <h2 className="text-black font-semibold p-4 mt-6">License Details</h2>
         <div className="grid grid-cols-3 gap-4 p-4">
           <Maininputfield
-            label="Licence Numbere"
+            label="Licence Number"
             className="w-full"
             value={addDriver?.licenseDetails?.licenseNumber}
             onChange={(e: any) => {

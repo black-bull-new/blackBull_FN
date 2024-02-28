@@ -660,6 +660,7 @@ const AddSupplier = () => {
           top: 0,
           behavior: "smooth", // for smooth scrolling
         });
+        seButtonState(step2Btn) 
       } else {
         toast("Something went wrong", {
           icon: "⚠️",
@@ -713,6 +714,7 @@ const AddSupplier = () => {
             color: "#fff",
           },
         });
+        seButtonState(step3Btn) 
       } else {
         toast("Something went wrong", {
           icon: "⚠️",

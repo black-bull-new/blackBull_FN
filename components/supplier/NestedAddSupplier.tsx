@@ -8,6 +8,7 @@ import DateWithoutDropdown from "../DateWithoutDropdown";
 import FileUpload from "../FileUpload";
 import { uploadSupplierComplianceDocuments } from "@/network-request/supplier/supplier";
 import { formatDate } from "@/utils";
+import Maindatefield from "../Maindatefield";
 
 export const NestedAddSupplier = (props: any) => {
   const [selectedData, setSelectedData] = useState();
@@ -1119,7 +1120,7 @@ export const NestedAddSupplier = (props: any) => {
               }
             />
 
-            <DateWithoutDropdown
+            <Maindatefield
               label="Mass Management Expiry Date"
               value={
                 addSupplier.certificateOfAccreditation?.massManagementExpiryDate
@@ -1147,7 +1148,7 @@ export const NestedAddSupplier = (props: any) => {
                 error.certificateOfAccreditationError?.massManagementExpiryDate
               }
             />
-            <DateWithoutDropdown
+            <Maindatefield
               label="Basic Fatigue Management Expiry Date"
               value={
                 addSupplier.certificateOfAccreditation?.basicFatigueExpiryDate
@@ -1175,7 +1176,7 @@ export const NestedAddSupplier = (props: any) => {
                 error.certificateOfAccreditationError?.basicFatigueExpiryDate
               }
             />
-            <DateWithoutDropdown
+            <Maindatefield
               label="Dangerous Goods Expiry Date"
               value={
                 addSupplier.certificateOfAccreditation?.dangerousGoodsExpiryDate
@@ -1203,7 +1204,7 @@ export const NestedAddSupplier = (props: any) => {
                 error.certificateOfAccreditationError?.dangerousGoodsExpiryDate
               }
             />
-            <DateWithoutDropdown
+            <Maindatefield
               label="NHVAS Expiry Date"
               value={addSupplier.certificateOfAccreditation?.nhvassExpiryDate}
               className="w-full"
@@ -1229,7 +1230,7 @@ export const NestedAddSupplier = (props: any) => {
                 error.certificateOfAccreditationError?.nhvassExpiryDate
               }
             />
-            <DateWithoutDropdown
+            <Maindatefield
               label="HACCP Expiry Date"
               value={addSupplier.certificateOfAccreditation?.haccpExpiryDate}
               className="w-full"
@@ -1335,7 +1336,7 @@ export const NestedAddSupplier = (props: any) => {
               }}
             />
 
-            <DateWithoutDropdown
+            <Maindatefield
               label="Expiry Date"
               value={addSupplier.insuranceDetails?.productLiability?.expiryDate}
               className="w-full"
@@ -1443,7 +1444,7 @@ export const NestedAddSupplier = (props: any) => {
               }}
             />
 
-            <DateWithoutDropdown
+            <Maindatefield
               label="Expiry Date"
               value={addSupplier.insuranceDetails?.publicLiability?.expiryDate}
               className="w-full"
@@ -1501,7 +1502,7 @@ export const NestedAddSupplier = (props: any) => {
               }}
             />
 
-            <DateWithoutDropdown
+            <Maindatefield
               label="Vaild From"
               value={addSupplier.insuranceDetails?.workCover?.valid}
               className="w-full"
@@ -1519,7 +1520,7 @@ export const NestedAddSupplier = (props: any) => {
               }}
             />
 
-            <DateWithoutDropdown
+            <Maindatefield
               label="Vaild Till"
               value={addSupplier.insuranceDetails?.workCover?.validTill}
               className="w-full"
@@ -1596,7 +1597,7 @@ export const NestedAddSupplier = (props: any) => {
               }}
             />
 
-            <DateWithoutDropdown
+            <Maindatefield
               label="Expiry Date"
               value={addSupplier.insuranceDetails?.marineGeneral?.expiryDate}
               className="w-full"
@@ -1673,7 +1674,7 @@ export const NestedAddSupplier = (props: any) => {
               }}
             />
 
-            <DateWithoutDropdown
+            <Maindatefield
               label="Expiry Date"
               value={addSupplier.insuranceDetails?.marineAlcohol?.expiryDate}
               className="w-full"
@@ -1748,7 +1749,7 @@ export const NestedAddSupplier = (props: any) => {
               }}
             />
 
-            <DateWithoutDropdown
+            <Maindatefield
               label="Expiry Date"
               value={addSupplier.insuranceDetails?.coc?.expiryDate}
               className="w-full"
