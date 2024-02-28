@@ -589,18 +589,18 @@ const AddSupplier = () => {
   const handleSubmit = async () => {
     if (buttonState === step1Btn) {
       // Check validation and get error status
-      // const hasErrors = checkValidationForAddSupplier();
-      // if (hasErrors) {
-      //   toast("Please fix the validation errors before submitting.", {
-      //     icon: "⚠️",
-      //     style: {
-      //       borderRadius: "10px",
-      //       background: "#333",
-      //       color: "#fff",
-      //     },
-      //   });
-      //   return;
-      // }
+      const hasErrors = checkValidationForAddSupplier();
+      if (hasErrors) {
+        toast("Please fix the validation errors before submitting.", {
+          icon: "⚠️",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+        return;
+      }
 
       // Uploading driver profile ...
       // const [profileUrl] = await Promise.all([
@@ -655,6 +655,7 @@ const AddSupplier = () => {
           top: 0,
           behavior: "smooth", // for smooth scrolling
         });
+        seButtonState(step2Btn) 
       } else {
         toast("Something went wrong", {
           icon: "⚠️",
@@ -708,6 +709,7 @@ const AddSupplier = () => {
             color: "#fff",
           },
         });
+        seButtonState(step3Btn) 
       } else {
         toast("Something went wrong", {
           icon: "⚠️",
