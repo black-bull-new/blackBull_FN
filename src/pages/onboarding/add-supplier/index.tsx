@@ -305,6 +305,7 @@ const AddSupplier = () => {
       type: "",
       uploadDate: "",
     },
+    onboardingDocuments:[]
   });
   const [addSupplierError, setAddSupplierError] = useState<any>({
     companyNameError: "",
@@ -360,6 +361,14 @@ const AddSupplier = () => {
     },
     // accreditationDocument: "",
   });
+  const [urlsForSupplier, setUrlsForSupplier] = useState<string[]>([]);
+  const modifiedUrlsForSupplier = urlsForSupplier.reduce(
+    (acc: any, url, index) => {
+      acc[index + 1] = url;
+      return acc;
+    },
+    []
+  );
 
   /**
    * add vehicle state and its error state
@@ -572,7 +581,7 @@ const AddSupplier = () => {
     setSelectedUploadRegoDocumentForDriver,
   ] = useState("");
   const [urlsForDriver, setUrlsForDriver] = useState<string[]>([]);
-  const modifiedUrlsForDriver = urls.reduce((acc: any, url, index) => {
+  const modifiedUrlsForDriver = urlsForDriver.reduce((acc: any, url, index) => {
     acc[index + 1] = url;
     return acc;
   }, []);
@@ -580,17 +589,65 @@ const AddSupplier = () => {
   const handleSubmit = async () => {
     if (buttonState === step1Btn) {
       // Check validation and get error status
-      const hasErrors = checkValidationForAddSupplier();
-      if (hasErrors) {
-        alert("Please fix the validation errors before submitting.");
-        return;
-      }
+      // const hasErrors = checkValidationForAddSupplier();
+      // if (hasErrors) {
+      //   toast("Please fix the validation errors before submitting.", {
+      //     icon: "⚠️",
+      //     style: {
+      //       borderRadius: "10px",
+      //       background: "#333",
+      //       color: "#fff",
+      //     },
+      //   });
+      //   return;
+      // }
+
+      // Uploading driver profile ...
+      // const [profileUrl] = await Promise.all([
+      //   Promise.all(
+      //     Object.values(selectedProfile)?.map((imageInfo) =>
+      //       uploadDriverProfile(imageInfo)
+      //     )
+      //   ),
+      // ]);
+
+      // Uploading driver license documents ...
+      // const [driverLicense] = await Promise.all([
+      //   Promise.all(
+      //     Object.values(selectedUploadRegoDocument)?.map((imageInfo) =>
+      //       uploadDriverLicenseDocuments(imageInfo)
+      //     )
+      //   ),
+      // ]);
+
+      const newSupplierDetails = {
+        ...addSupplier,
+        // avatar: profileUrl[0]?.response,
+        // licenseDetails: {
+        //   ...driverDetails.licenseDetails,
+        //   documents: driverLicense[0]?.response,
+        // },
+        onboardingDocuments: urlsForSupplier?.map(
+          (url: any, index: number) => ({
+            type: url,
+            uploadDate: formattedDate,
+          })
+        ),
+      };
+
       const response: any = await addSupplierIntoSupplier(
-        addSupplier,
+        newSupplierDetails,
         token || ""
       );
-      if (response?.status === 200) {
-        alert("Supplier Added Successfully");
+      if (response.data) {
+        toast("Supplier has been successfully created..", {
+          icon: "👏",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
         // Uncomment the following line when whole code of add supplier is finished
         // seButtonState(step2Btn);
         // Auto scroll up for better user experience
@@ -599,7 +656,14 @@ const AddSupplier = () => {
           behavior: "smooth", // for smooth scrolling
         });
       } else {
-        alert("Something went Wrong! Please try again later.");
+        toast("Something went wrong", {
+          icon: "⚠️",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
       }
     } else if (buttonState === step2Btn) {
       // Check validation and get error status
@@ -704,8 +768,8 @@ const AddSupplier = () => {
           uploadDate: formattedDate,
         })),
       };
-      console.log("urlsForDriver",urlsForDriver)
-      console.log("newDriverDetails",newDriverDetails)
+      console.log("urlsForDriver", urlsForDriver);
+      console.log("newDriverDetails", newDriverDetails);
 
       const response: any = await addSupplierDriver(
         newDriverDetails,
@@ -929,6 +993,9 @@ const AddSupplier = () => {
               setAddSupplier={setAddSupplier}
               error={addSupplierError}
               setError={setAddSupplierError}
+              urls={urlsForSupplier}
+              setUrls={setUrlsForSupplier}
+              modifiedUrls={modifiedUrlsForSupplier}
             />
           ) : buttonState === step2Btn ? (
             <NestedAddVehicle

@@ -6,92 +6,113 @@ import DropDownMap from "../DropDownMap";
 import Button from "../Button";
 import DateWithoutDropdown from "../DateWithoutDropdown";
 import FileUpload from "../FileUpload";
+import { uploadSupplierComplianceDocuments } from "@/network-request/supplier/supplier";
+import { formatDate } from "@/utils";
 
 export const NestedAddSupplier = (props: any) => {
   const [selectedData, setSelectedData] = useState();
-  const { addSupplier, setAddSupplier, error, setError } = props;
+  const {
+    addSupplier,
+    setAddSupplier,
+    error,
+    setError,
+    modifiedUrls,
+    urls,
+    setUrls,
+  } = props;
   console.log("addSupplier", addSupplier);
   console.log("error in add supplier", error);
 
   const [selectedFiles, setSelectedFiles] = useState<
-  { id: number; file: File; currentDate: Date | null }[]
->([]);
-const [uploadStatus, setUploadStatus] = useState<{ [id: number]: boolean }>(
-  {}
-);
-const [showUploadMessage, setShowUploadMessage] = useState(false);
-
-
-const modifiedUrls = urls.reduce((acc: any, url, index) => {
-  acc[index + 1] = url;
-  return acc;
-}, []);
-
-const handleFileChanges = (
-  event: React.ChangeEvent<HTMLInputElement>,
-  documentId: number
-) => {
-  const file = event.target.files ? event.target.files[0] : null;
-  const documentExists = documentCollectionData.find(
-    (doc) => doc.id === documentId
+    { id: number; file: File; currentDate: Date | null }[]
+  >([]);
+  const [uploadStatus, setUploadStatus] = useState<{ [id: number]: boolean }>(
+    {}
   );
-  if (file && documentExists) {
-    const newSelectedFiles = [...selectedFiles];
-    const existingFileIndex = newSelectedFiles.findIndex(
-      (file) => file.id === documentId
+  const [showUploadMessage, setShowUploadMessage] = useState(false);
+
+  // const [urls, setUrls] = useState<string[]>([]);
+  // const modifiedUrls = urls.reduce((acc: any, url, index) => {
+  //   acc[index + 1] = url;
+  //   return acc;
+  // }, []);
+
+  const handleFileChanges = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    documentId: number
+  ) => {
+    const file = event.target.files ? event.target.files[0] : null;
+    const documentExists = documentCollectionData.find(
+      (doc) => doc.id === documentId
     );
-    const currentDate = new Date();
-    if (existingFileIndex !== -1) {
-      newSelectedFiles[existingFileIndex] = {
-        id: documentId,
-        file,
-        currentDate,
-      };
-    } else {
-      newSelectedFiles.push({ id: documentId, file, currentDate });
-    }
-    setSelectedFiles(newSelectedFiles);
-  }
-};
-
-const handleViewDocuments = (id: number) => {
-  const index = id;
-  if (index >= 1 && index < modifiedUrls.length) {
-    const url = modifiedUrls[index];
-    window.open(url, "_blank");
-  } else {
-    console.error("URL not found for id:", id);
-  }
-};
-
-const handleUploadFileWithId = async (id: number, combinedObject: any) => {
-  try {
-    const project = combinedObject[id];
-    if (id && project?.id) {
-      const file = [project?.file];
-      const uploadDocumentResponses = await Promise.all(
-        Object.values(file)?.map((file) =>
-          uploadSingleSingleDriverOnboardingDocuments(file)
-        )
+    if (file && documentExists) {
+      const newSelectedFiles = [...selectedFiles];
+      const existingFileIndex = newSelectedFiles.findIndex(
+        (file) => file.id === documentId
       );
-      const newUrls = uploadDocumentResponses
-        ?.map((response) => response?.response)
-        .filter(Boolean);
-      setUrls((prevUrls) => {
-        const updatedUrls = [...prevUrls];
-        updatedUrls[id - 1] = newUrls[0]; // Update the URL at the correct index
-        return updatedUrls;
-      });
-      setUploadStatus((prevStatus) => ({ ...prevStatus, [id]: true }));
-      setTimeout(() => {
-        setShowUploadMessage(true);
-      }, 4000);
+      const currentDate = new Date();
+      if (existingFileIndex !== -1) {
+        newSelectedFiles[existingFileIndex] = {
+          id: documentId,
+          file,
+          currentDate,
+        };
+      } else {
+        newSelectedFiles.push({ id: documentId, file, currentDate });
+      }
+      setSelectedFiles(newSelectedFiles);
     }
-  } catch (error) {
-    console.error("Error occurred:", error);
-  }
-};
+  };
 
+  const handleViewDocuments = (id: number) => {
+    const index = id;
+    if (index >= 1 && index < modifiedUrls.length) {
+      const url = modifiedUrls[index];
+      window.open(url, "_blank");
+    } else {
+      console.error("URL not found for id:", id);
+    }
+  };
+
+  const combinedObject = selectedFiles.reduce(
+    (accumulator: any, currentItem: any) => {
+      accumulator[currentItem.id] = {
+        id: currentItem.id,
+        file: currentItem.file,
+        currentDate: currentItem.currentDate,
+      };
+      return accumulator;
+    },
+    {}
+  );
+
+  const handleUploadFileWithId = async (id: number, combinedObject: any) => {
+    try {
+      const project = combinedObject[id];
+      if (id && project?.id) {
+        const file = [project?.file];
+        const uploadDocumentResponses = await Promise.all(
+          Object.values(file)?.map((file) =>
+            uploadSupplierComplianceDocuments(file)
+          )
+        );
+        const newUrls = uploadDocumentResponses
+          ?.map((response) => response?.response)
+          .filter(Boolean);
+        setUrls((prevUrls: any) => {
+          const updatedUrls = [...prevUrls];
+          updatedUrls[id - 1] = newUrls[0]; // Update the URL at the correct index
+          return updatedUrls;
+        });
+        setUploadStatus((prevStatus) => ({ ...prevStatus, [id]: true }));
+        setTimeout(() => {
+          setShowUploadMessage(true);
+        }, 4000);
+      }
+    } catch (error) {
+      console.error("Error occurred:", error);
+    }
+  };
 
   return (
     <div className="">
@@ -107,12 +128,12 @@ const handleUploadFileWithId = async (id: number, combinedObject: any) => {
         <div className="mx-2">
           <Progressbar />
         </div>
-        <div className="relative w-fit">
+        {/* <div className="relative w-fit">
           <Image src="/driverImage.svg" alt="driver" width={100} height={100} />
           <span className="w-6 h-6 rounded-full bg-accent3 block text-white flex justify-center items-end text-xl absolute right-2 bottom-2">
             +
           </span>
-        </div>
+        </div> */}
         <div className="bg-white mr-4 mt-4 rounded-md">
           <h2 className="text-black font-semibold mt-8">
             Supplier Information
@@ -1631,7 +1652,7 @@ const handleUploadFileWithId = async (id: number, combinedObject: any) => {
         <div className="mb-4 mt-8">
           <h3 className="w-full mb-4 rounded-md font-semibold text-black">
             {" "}
-            Onboarding Documents
+            Compliance Documents
           </h3>
 
           <div className="grid grid-cols-5 bg-table-header p-4 rounded-md text-black text-center mb-2 ">
@@ -1932,7 +1953,15 @@ const businessOperationCollection = [
 const areaCollection = [
   {
     value:
-      "Australian Capital Territory, Northern Territory, Tasmania, Victoria",
+      "Australian Capital Territory",
+  },
+  {
+    value:
+      "Northern Territory",
+  },
+  {
+    value:
+      "Tasmania, Victoria",
   },
 ];
 
