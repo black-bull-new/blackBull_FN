@@ -13,7 +13,7 @@ import { NestedAddSupplier } from "../../../../components/supplier/NestedAddSupp
 import { NestedAddVehicle } from "../../../../components/supplier/NestedAddVehicle";
 import NestedAddDriver from "../../../../components/supplier/NestedAddDriver";
 import { getCookie } from "cookies-next";
-import { addSupplierIntoSupplier } from "@/network-request/supplier/supplier";
+import { addSupplierIntoSupplier, uploadSupplierProfile } from "@/network-request/supplier/supplier";
 import {
   addVehicleIntoSupplier,
   uploadSupplierVehicleRegoDocuments,
@@ -164,8 +164,7 @@ const AddSupplier = () => {
     abn: "",
     legalName: "",
     website: "",
-    // this profile state is static because backend team working on that
-    profile: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    profile: "",
     opreations: {
       contactPerson: "",
       desgination: "",
@@ -305,7 +304,7 @@ const AddSupplier = () => {
       type: "",
       uploadDate: "",
     },
-    onboardingDocuments:[]
+    onboardingDocuments: []
   });
   const [addSupplierError, setAddSupplierError] = useState<any>({
     companyNameError: "",
@@ -361,6 +360,8 @@ const AddSupplier = () => {
     },
     // accreditationDocument: "",
   });
+  const [selectedProfileForSupplier, setSelectedProfileForSupplier] = useState("");
+  const [selectedUploadRegoDocumentForSupplier, setSelectedUploadRegoDocumentForSupplier] = useState("");
   const [urlsForSupplier, setUrlsForSupplier] = useState<string[]>([]);
   const modifiedUrlsForSupplier = urlsForSupplier.reduce(
     (acc: any, url, index) => {
@@ -369,6 +370,7 @@ const AddSupplier = () => {
     },
     []
   );
+  console.log({ selectedProfileForSupplier })
 
   /**
    * add vehicle state and its error state
@@ -577,9 +579,7 @@ const AddSupplier = () => {
   });
   const [selectedProfileForDriver, setSelectedProfileForDriver] = useState("");
   const [
-    selectedUploadRegoDocumentForDriver,
-    setSelectedUploadRegoDocumentForDriver,
-  ] = useState("");
+    selectedUploadRegoDocumentForDriver, setSelectedUploadRegoDocumentForDriver] = useState("");
   const [urlsForDriver, setUrlsForDriver] = useState<string[]>([]);
   const modifiedUrlsForDriver = urlsForDriver.reduce((acc: any, url, index) => {
     acc[index + 1] = url;
@@ -588,7 +588,6 @@ const AddSupplier = () => {
 
   const handleSubmit = async () => {
     if (buttonState === step1Btn) {
-      // Check validation and get error status
       const hasErrors = checkValidationForAddSupplier();
       if (hasErrors) {
         toast("Please fix the validation errors before submitting.", {
@@ -603,13 +602,13 @@ const AddSupplier = () => {
       }
 
       // Uploading driver profile ...
-      // const [profileUrl] = await Promise.all([
-      //   Promise.all(
-      //     Object.values(selectedProfile)?.map((imageInfo) =>
-      //       uploadDriverProfile(imageInfo)
-      //     )
-      //   ),
-      // ]);
+      const [profileUrl] = await Promise.all([
+        Promise.all(
+          Object.values(selectedProfileForSupplier)?.map((imageInfo) =>
+            uploadSupplierProfile(imageInfo)
+          )
+        ),
+      ]);
 
       // Uploading driver license documents ...
       // const [driverLicense] = await Promise.all([
@@ -622,7 +621,7 @@ const AddSupplier = () => {
 
       const newSupplierDetails = {
         ...addSupplier,
-        // avatar: profileUrl[0]?.response,
+        profile: profileUrl[0]?.response,
         // licenseDetails: {
         //   ...driverDetails.licenseDetails,
         //   documents: driverLicense[0]?.response,
@@ -996,6 +995,8 @@ const AddSupplier = () => {
               error={addSupplierError}
               setError={setAddSupplierError}
               urls={urlsForSupplier}
+              selectedProfileSupplier={selectedProfileForSupplier}
+              setSelectedProfileSupplier={setSelectedProfileForSupplier}
               setUrls={setUrlsForSupplier}
               modifiedUrls={modifiedUrlsForSupplier}
             />
