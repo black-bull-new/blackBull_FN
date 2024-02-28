@@ -1259,37 +1259,11 @@ export const NestedAddSupplier = (props: any) => {
           </div>
           <div className="w-fit my-4">
             <FileUpload file="Upload Accreditation Document"
+              id="accreditationFile"
+              name="accreditationDocument"
               onChange={handleAccreditationDocument}
               fileName={accreditationDocument?.file?.name || ""}
             />
-
-            {/* <div className="relative w-full">
-              <div >
-                <label
-                  htmlFor="myFile"
-                  className="flex gap-2 items-center cursor-pointer"
-                >
-                  {accreditationDocument?.file?.name ?
-                    (
-                      <div className="bg-[#2B36D9] text-white px-10 py-[12px] flex justify-center text-sm font-semibold rounded-full whitespace-nowrap ">
-                        {accreditationDocument?.file?.name}
-                      </div>
-                    ) : (
-                      <div className="bg-[#2B36D9] text-white px-10 py-[12px] flex justify-center text-sm font-semibold rounded-full whitespace-nowrap ">
-                        Upload Accreditation Document
-                      </div>
-                    )
-                  }
-                </label>
-                <input
-                  type="file"
-                  id="myFile"
-                  name="filename"
-                  hidden
-                  onChange={handleAccreditationDocument}
-                />
-              </div>
-            </div> */}
           </div>
           <h2 className="text-black font-semibold mt-8 mb-4">
             Insurance Details
@@ -1371,36 +1345,13 @@ export const NestedAddSupplier = (props: any) => {
                 });
               }}
             />
-            <FileUpload file="Attach Document"
+            <FileUpload
+              file="Attach Document"
+              id="productFile"
+              name="productDocument"
               onChange={handleProductLiabilityDocument}
               fileName={productDocument?.file?.name || ""}
             />
-
-            {/* <div className="relative w-full">
-              <div >
-                <label
-                  htmlFor="myFile"
-                  className="flex gap-2 items-center cursor-pointer"
-                >
-                  {productDocument?.file?.name ?
-                    (
-                      <div className="bg-[#2B36D9] text-white px-10 py-[12px] flex justify-center text-sm font-semibold rounded-full whitespace-nowrap ">
-                        {productDocument?.file?.name}
-                      </div>
-                    ) : (
-                      <div className="bg-[#2B36D9] text-white px-10 py-[12px] flex justify-center text-sm font-semibold rounded-full whitespace-nowrap ">
-                        Attach Document
-                      </div>
-                    )
-                  }
-                </label>
-                <input
-                  type="file"
-                  hidden
-                  onChange={handleProductLiabilityDocument}
-                />
-              </div>
-            </div> */}
           </div>
           <h3 className="text-black font-semibold text-sm my-4">
             Public Liability
