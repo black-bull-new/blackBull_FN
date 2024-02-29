@@ -22,7 +22,7 @@ export const NestedAddSupplier = (props: any) => {
     setUrls,
 
     selectedProfileSupplier,
-    setSelectedProfileSupplier
+    setSelectedProfileSupplier,
   } = props;
   // console.log("addSupplier", addSupplier);
   // console.log("error in add supplier", error);
@@ -127,31 +127,78 @@ export const NestedAddSupplier = (props: any) => {
       fileInputRef?.current?.click();
     }
   };
-  const [documentRender, setDocumentRender] = React.useState("");
-  const [selectedUploadRegoDocument, setSelectedUploadRegoDocument] =
-    React.useState("");
 
-  const handleFileChange = (setSide: any, setPreview: any) => (event: any) => {
+  const [selectedUploadRegoDocument, setSelectedUploadRegoDocument] =
+    React.useState(null);
+  const [documentRender, setDocumentRender] = React.useState("");
+
+  const [selectedUploadRegoDocument2, setSelectedUploadRegoDocument2] =
+    React.useState(null);
+  const [documentRender2, setDocumentRender2] = React.useState("");
+
+  const handleFileChange = (setFile: any, setPreview: any) => (event: any) => {
     const selectedFile = event.target.files && event.target.files[0];
-    setSide({ file: selectedFile });
+    setFile(selectedFile);
     if (selectedFile) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreview(reader?.result! as any);
-      };
-      reader.readAsDataURL(selectedFile);
+      readAndSetPreview(selectedFile, setPreview);
     }
   };
 
+  const readAndSetPreview = (file: any, setPreview: any) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreview(reader?.result || "");
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // const [documentRender, setDocumentRender] = React.useState("");
+  // const [documentRender2, setDocumentRender2] = React.useState("");
+  // const [selectedUploadRegoDocument, setSelectedUploadRegoDocument] =
+  //   React.useState("");
+  // const [selectedUploadRegoDocument2, setSelectedUploadRegoDocument2] =
+  //   React.useState("");
+
+  // const handleFileChange = (setSide: any, setPreview: any) => (event: any) => {
+  //   console.log("handleFileChange");
+  //   const selectedFile = event.target.files && event.target.files[0];
+  //   console.log("first", selectedFile);
+  //   setSide({ file: selectedFile });
+  //   if (selectedFile) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setPreview(reader?.result! as any);
+  //     };
+  //     reader.readAsDataURL(selectedFile);
+  //   }
+  // };
+  // const handleFileChange2 = (setSide: any, setPreview: any) => (event: any) => {
+  //   console.log("handleFileChange2");
+  //   const selectedFile = event.target.files && event.target.files[0];
+  //   console.log("second", selectedFile);
+  //   setSide({ file: selectedFile });
+  //   if (selectedFile) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setPreview(reader?.result! as any);
+  //     };
+  //     reader.readAsDataURL(selectedFile);
+  //   }
+  // };
+
+  // const handleDocumentUpload = handleFileChange(
+  //   setSelectedUploadRegoDocument,
+  //   setDocumentRender
+  // );
+  // const handleDocumentUpload2 = handleFileChange2(
+  //   setSelectedUploadRegoDocument2,
+  //   setDocumentRender2
+  // );
   const handleProfileFileChange = handleFileChange(
     setSelectedProfileSupplier,
-    setProfile
+    setProfile,
   );
 
-  const handleDocumentUpload = handleFileChange(
-    setSelectedUploadRegoDocument,
-    setDocumentRender
-  );
   return (
     <div className="">
       <div className="bg-white mr-4 flex justify-between items-center rounded-md">
@@ -304,12 +351,12 @@ export const NestedAddSupplier = (props: any) => {
               label="Supplier ID"
               // value={addSupplier.website}
               className="w-full"
-            // onChange={(e: any) => {
-            //   setAddSupplier({
-            //     ...addSupplier,
-            //     website: e.target.value,
-            //   });
-            // }}
+              // onChange={(e: any) => {
+              //   setAddSupplier({
+              //     ...addSupplier,
+              //     website: e.target.value,
+              //   });
+              // }}
             />
           </div>
           <h2 className="text-black font-semibold mt-8">Contact Information</h2>
@@ -1265,7 +1312,15 @@ export const NestedAddSupplier = (props: any) => {
             />
           </div>
           <div className="w-fit my-4">
-            <FileUpload file="Choose Accreditation Document" />
+            <FileUpload
+              file="Upload Accreditation Document"
+              onChange={handleFileChange(
+                setSelectedUploadRegoDocument,
+                setDocumentRender
+              )}
+              //@ts-expect-error
+              fileName={selectedUploadRegoDocument?.name || ""}
+            />
           </div>
           <h2 className="text-black font-semibold mt-8 mb-4">
             Insurance Details
@@ -1347,7 +1402,15 @@ export const NestedAddSupplier = (props: any) => {
                 });
               }}
             />
-            <FileUpload file="Choose Document" />
+            <FileUpload
+              file="Attach Document"
+              onChange={handleFileChange(
+                setSelectedUploadRegoDocument2,
+                setDocumentRender2
+              )}
+              //@ts-expect-error
+              fileName={selectedUploadRegoDocument2?.name || ""}
+            />
           </div>
           <h3 className="text-black font-semibold text-sm my-4">
             Public Liability
@@ -1863,10 +1926,10 @@ export const NestedAddSupplier = (props: any) => {
                             {selectedFiles.find((file) => file.id === data?.id)
                               ?.currentDate
                               ? formatDate(
-                                selectedFiles.find(
-                                  (file) => file.id === data?.id
-                                )?.currentDate
-                              )
+                                  selectedFiles.find(
+                                    (file) => file.id === data?.id
+                                  )?.currentDate
+                                )
                               : "No date available"}
                           </p>
                         </div>
@@ -2038,16 +2101,13 @@ const businessOperationCollection = [
 
 const areaCollection = [
   {
-    value:
-      "Australian Capital Territory",
+    value: "Australian Capital Territory",
   },
   {
-    value:
-      "Northern Territory",
+    value: "Northern Territory",
   },
   {
-    value:
-      "Tasmania, Victoria",
+    value: "Tasmania, Victoria",
   },
 ];
 

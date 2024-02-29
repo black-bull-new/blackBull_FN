@@ -17,7 +17,6 @@ import {
   uploadVehicleRegoDocuemnts,
 } from "@/network-request/vehicle/vehicleApi";
 
-
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
@@ -64,7 +63,6 @@ const correctVehicleStateName = (stateName: string): string => {
 
   return nameMapping[stateName] || stateName;
 };
-
 
 const CreateVehicle = () => {
   const token = getCookie("token");
@@ -143,6 +141,51 @@ const CreateVehicle = () => {
     accountNameError: "",
     vehicleDocumentStatusError: "Complete",
   });
+
+  const [documentDataCollection, setDocumentDataCollection] = useState([
+    {
+      id: 1,
+      Vehicle: "Placeholder",
+      rego: "Placeholder",
+      uploadDate: "19/12/2023",
+      UploadedDoc: "doc.pdf",
+      status: "Approved",
+      viewDoc: "view",
+    },
+    {
+      id: 2,
+      Vehicle: "Placeholder",
+      rego: "Placeholder",
+      uploadDate: "14/12/2023",
+      UploadedDoc: "doc.pdf",
+      status: "Approved",
+      viewDoc: "view",
+    },
+    {
+      id: 3,
+      Vehicle: "Placeholder",
+      rego: "Placeholder",
+      uploadDate: "20/12/2023",
+      UploadedDoc: "doc.pdf",
+      status: "Approved",
+      viewDoc: "view",
+    },
+  ]);
+
+  const handleAddRow = () => {
+    const newRow = {
+      id: documentDataCollection.length + 1,
+      Vehicle: "New Vehicle",
+      rego: "New Rego",
+      uploadDate: "New Upload Date",
+      UploadedDoc: "new-doc.pdf",
+      status: "New Status",
+      viewDoc: "view",
+    };
+
+    setDocumentDataCollection([...documentDataCollection, newRow]);
+    // You might also need to update other state variables accordingly for the new row.
+  };
 
   const checkValidation = () => {
     const newErrors = { ...error };
@@ -225,9 +268,6 @@ const CreateVehicle = () => {
     setSelectedUploadRegoDocument,
     setDocumentRender
   );
-
-
-
 
   const [selectedFiles, setSelectedFiles] = useState<
     { id: number; file: File; currentDate: Date | null }[]
@@ -327,7 +367,9 @@ const CreateVehicle = () => {
         console.log("Project", { project });
         const file = [project?.file];
         const uploadDocumentResponses = await Promise.all(
-          Object.values(file)?.map((file) => uploadSingleSingleVehicleDocuments(file))
+          Object.values(file)?.map((file) =>
+            uploadSingleSingleVehicleDocuments(file)
+          )
         );
         console.log({ uploadDocumentResponses });
         const newUrls = uploadDocumentResponses
@@ -354,10 +396,9 @@ const CreateVehicle = () => {
     return acc;
   }, []);
 
-
   const handleViewDocuments = (id: number) => {
     console.log("CHECK", id, modifiedUrls);
-    const index = id - 1;  // Adjust index to start from 0
+    const index = id - 1; // Adjust index to start from 0
     if (index >= 0 && index < modifiedUrls.length) {
       const url = modifiedUrls[index];
       window.open(url, "_blank");
@@ -1105,9 +1146,15 @@ const CreateVehicle = () => {
                 </div>
               </div>
               <div className="mt-8">
-                <h3 className="text-black w-full mb-4 font-semibold">
-                  Vehicle Documents
-                </h3>
+                <div className="flex">
+                  <h3 className="text-black w-full mb-4 font-semibold">
+                    Vehicle Documents
+                  </h3>
+                  <button onClick={handleAddRow} className="text-white mb-2 flex justify-center items-center font-thin bg-[#2B36D9] w-[48px] h-[48px] pb-2 rounded-full text-[40px]">
+                    +
+                  </button>
+                </div>
+
                 <div className="grid grid-cols-[16%_16%_16%_16%_16%_20%] text-black bg-[#EFF2F3] py-4 rounded-md flex text-center">
                   {vehicleDocumentCollection?.map((value, index) => {
                     return (
@@ -1170,10 +1217,10 @@ const CreateVehicle = () => {
                                   (file) => file.id === data?.id
                                 )?.currentDate
                                   ? formatDate(
-                                    selectedFiles.find(
-                                      (file) => file.id === data?.id
-                                    )?.currentDate
-                                  )
+                                      selectedFiles.find(
+                                        (file) => file.id === data?.id
+                                      )?.currentDate
+                                    )
                                   : "No date available"}
                               </p>
                             </div>
@@ -1262,35 +1309,35 @@ const vehicleDocumentCollection = [
     heading: "VIEW DOC.",
   },
 ];
-const documentDataCollection = [
-  {
-    id: 1,
-    Vehicle: "Placeholder",
-    rego: "Placeholder",
-    uploadDate: "19/12/2023",
-    UploadedDoc: "doc.pdf",
-    status: "Approved",
-    viewDoc: "view",
-  },
-  {
-    id: 2,
-    Vehicle: "Placeholder",
-    rego: "Placeholder",
-    uploadDate: "14/12/2023",
-    UploadedDoc: "doc.pdf",
-    status: "Approved",
-    viewDoc: "view",
-  },
-  {
-    id: 3,
-    Vehicle: "Placeholder",
-    rego: "Placeholder",
-    uploadDate: "20/12/2023",
-    UploadedDoc: "doc.pdf",
-    status: "Approved",
-    viewDoc: "view",
-  },
-];
+// const documentDataCollection = [
+//   {
+//     id: 1,
+//     Vehicle: "Placeholder",
+//     rego: "Placeholder",
+//     uploadDate: "19/12/2023",
+//     UploadedDoc: "doc.pdf",
+//     status: "Approved",
+//     viewDoc: "view",
+//   },
+//   {
+//     id: 2,
+//     Vehicle: "Placeholder",
+//     rego: "Placeholder",
+//     uploadDate: "14/12/2023",
+//     UploadedDoc: "doc.pdf",
+//     status: "Approved",
+//     viewDoc: "view",
+//   },
+//   {
+//     id: 3,
+//     Vehicle: "Placeholder",
+//     rego: "Placeholder",
+//     uploadDate: "20/12/2023",
+//     UploadedDoc: "doc.pdf",
+//     status: "Approved",
+//     viewDoc: "view",
+//   },
+// ];
 const ownershipStatus = [
   {
     value: "Owned",
