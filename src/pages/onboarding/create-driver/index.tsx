@@ -193,6 +193,19 @@ const CreateDriver = () => {
       specialDrivingLicence: "",
     },
   });
+
+  const [documentDataCollection, setDocumentDataCollection] = useState<any>([
+    // {
+    //   id: 1,
+    //   Vehicle: "",
+    //   rego: "Placeholder",
+    //   uploadDate: "19/12/2023",
+    //   UploadedDoc: "doc.pdf",
+    //   status: "Approved",
+    //   viewDoc: "view",
+    //   flag: true,
+    // },
+  ]);
   console.log({ error });
 
   const [uploadStatus, setUploadStatus] = useState<{ [id: number]: boolean }>(
@@ -222,8 +235,8 @@ const CreateDriver = () => {
     documentId: number
   ) => {
     const file = event.target.files ? event.target.files[0] : null;
-    const documentExists = documentCollectionData.find(
-      (doc) => doc.id === documentId
+    const documentExists = documentDataCollection.find(
+      (doc: any) => doc.id === documentId
     );
     if (file && documentExists) {
       const newSelectedFiles = [...selectedFiles];
@@ -286,6 +299,53 @@ const CreateDriver = () => {
     } else {
       console.error("URL not found for id:", id);
     }
+  };
+
+  const handleAddRow = () => {
+    const newRow = {
+      id: documentDataCollection.length + 1,
+      Vehicle: "",
+      rego: "New Rego",
+      uploadDate: "New Upload Date",
+      UploadedDoc: "new-doc.pdf",
+      status: "New Status",
+      viewDoc: "view",
+      flag: true,
+    };
+
+    setDocumentDataCollection([...documentDataCollection, newRow]);
+    // You might also need to update other state variables accordingly for the new row.
+  };
+
+  const handleInputChange = (id: any, value: any) => {
+    setDocumentDataCollection((prevCollection: any) => {
+      const updatedCollection = prevCollection.map((item: any) =>
+        item.id === id ? { ...item, Vehicle: value } : item
+      );
+
+      return updatedCollection;
+    });
+  };
+
+  const handleInputBlur = (id: any) => {
+    // setInputValue("");
+    setDocumentDataCollection((prevCollection: any) => {
+      const updatedCollection = prevCollection.map((item: any) =>
+        item.id === id ? { ...item, flag: false } : item
+      );
+
+      return updatedCollection;
+    });
+  };
+
+  const handleInputClick = (id: any) => {
+    setDocumentDataCollection((prevCollection: any) => {
+      const updatedCollection = prevCollection.map((item: any) =>
+        item.id === id ? { ...item, flag: true } : item
+      );
+
+      return updatedCollection;
+    });
   };
 
   const checkValidation = () => {
@@ -1635,10 +1695,18 @@ const CreateDriver = () => {
           </div>
           <div className="bg-white mr-4 px-4 rounded-md mt-4 p-4">
             <div className="mb-4 mt-8">
-              <h3 className="w-full mb-4 rounded-md font-semibold text-black">
-                {" "}
-                Onboarding Documents
-              </h3>
+              <div className="flex">
+                <h3 className="w-full mb-4 rounded-md font-semibold text-black">
+                  {" "}
+                  Onboarding Documents
+                </h3>
+                <button
+                  onClick={handleAddRow}
+                  className="text-white mb-2 flex justify-center items-center font-thin bg-[#2B36D9] w-[48px] h-[48px] pb-2 rounded-full text-[40px]"
+                >
+                  +
+                </button>
+              </div>
 
               <div className="grid grid-cols-5 bg-table-header p-4 rounded-md text-black text-center mb-2 ">
                 {documentCollectionHeading?.map((value, index) => {
@@ -1652,11 +1720,28 @@ const CreateDriver = () => {
                 })}
               </div>
               <div className="grid grid-cols-5 p-4 rounded-md text-black text-center items-center">
-                {documentCollectionData?.map((data, index) => {
+                {documentDataCollection?.map((data: any, index: any) => {
                   return (
                     <>
                       <div className="mb-6 align-middle">
-                        {data.documentType}
+                        {data.flag ? (
+                          <input
+                            className="border-b-2 text-center border-[#607D8B]"
+                            placeholder="Document Name"
+                            value={data.Vehicle}
+                            onChange={(e) =>
+                              handleInputChange(data.id, e.target.value)
+                            }
+                            onBlur={() => handleInputBlur(data.id)}
+                          />
+                        ) : (
+                          <span
+                            onClick={() => handleInputClick(data.id)}
+                            className="cursor-pointer text-center"
+                          >
+                            {data.Vehicle}
+                          </span>
+                        )}
                       </div>
                       <div className="text-center mb-6">
                         <label className="cursor-pointer">
@@ -1767,10 +1852,10 @@ const CreateDriver = () => {
                                   (file) => file.id === data?.id
                                 )?.currentDate
                                   ? formatDate(
-                                    selectedFiles.find(
-                                      (file) => file.id === data?.id
-                                    )?.currentDate
-                                  )
+                                      selectedFiles.find(
+                                        (file) => file.id === data?.id
+                                      )?.currentDate
+                                    )
                                   : "No date available"}
                               </p>
                             </div>
@@ -1893,71 +1978,71 @@ const documentCollectionHeading = [
     heading: "Date of upload",
   },
 ];
-const documentCollectionData = [
-  {
-    id: 1,
-    documentType: "Visa Status",
-    uploadedDocument: "visa-status.pdf",
-    uploadDate: "20/12/2023",
-  },
-  {
-    id: 2,
-    documentType: "Driver License (Front) ",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-  {
-    id: 3,
-    documentType: "Driver License (Back) ",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-  {
-    id: 4,
-    documentType: "License History",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-  {
-    id: 5,
-    documentType: "Police Verification",
-    uploadedDocument: "police-verification.pdf",
-    uploadDate: "20/12/2023",
-  },
-  {
-    id: 6,
-    documentType: "Passport (Front)",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-  {
-    id: 7,
-    documentType: "Passport (Back)",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-  {
-    id: 8,
-    documentType: "Health Insurance",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-  {
-    id: 9,
-    documentType: "Driver Certificate",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-  {
-    id: 10,
-    documentType: "Fitness",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-  {
-    id: 11,
-    documentType: "Drug Test",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-];
+// const documentDataCollection = [
+//   {
+//     id: 1,
+//     documentType: "Visa Status",
+//     uploadedDocument: "visa-status.pdf",
+//     uploadDate: "20/12/2023",
+//   },
+//   {
+//     id: 2,
+//     documentType: "Driver License (Front) ",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+//   {
+//     id: 3,
+//     documentType: "Driver License (Back) ",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+//   {
+//     id: 4,
+//     documentType: "License History",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+//   {
+//     id: 5,
+//     documentType: "Police Verification",
+//     uploadedDocument: "police-verification.pdf",
+//     uploadDate: "20/12/2023",
+//   },
+//   {
+//     id: 6,
+//     documentType: "Passport (Front)",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+//   {
+//     id: 7,
+//     documentType: "Passport (Back)",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+//   {
+//     id: 8,
+//     documentType: "Health Insurance",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+//   {
+//     id: 9,
+//     documentType: "Driver Certificate",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+//   {
+//     id: 10,
+//     documentType: "Fitness",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+//   {
+//     id: 11,
+//     documentType: "Drug Test",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+// ];
