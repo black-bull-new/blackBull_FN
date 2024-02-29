@@ -5,10 +5,10 @@ import Maininputfield from "../Maininputfield";
 import DropDownMap from "../DropDownMap";
 import Button from "../Button";
 import DateWithoutDropdown from "../DateWithoutDropdown";
-import FileUpload from "../FileUpload";
 import { uploadSupplierComplianceDocuments } from "@/network-request/supplier/supplier";
 import { formatDate } from "@/utils";
 import Maindatefield from "../Maindatefield";
+import FileUpload from "../FileUpload";
 
 export const NestedAddSupplier = (props: any) => {
   const [selectedData, setSelectedData] = useState();
@@ -27,7 +27,10 @@ export const NestedAddSupplier = (props: any) => {
     setAccreditationDocument,
 
     productDocument,
-    setProductDocument
+    setProductDocument,
+
+    publicDocument,
+    setPublicDocument
   } = props;
   const [selectedFiles, setSelectedFiles] = useState<
     { id: number; file: File; currentDate: Date | null }[]
@@ -149,6 +152,11 @@ export const NestedAddSupplier = (props: any) => {
 
   const handleProductLiabilityDocument = handleFileChange(
     setProductDocument,
+    setDocumentRender
+  )
+
+  const handlePublicLiabilityDocument = handleFileChange(
+    setPublicDocument,
     setDocumentRender
   )
 
@@ -1430,7 +1438,12 @@ export const NestedAddSupplier = (props: any) => {
                 });
               }}
             />
-            <FileUpload file="Choose Document" />
+            <FileUpload file="Attch Document"
+              id="publicFile"
+              name="publicDocument"
+              onChange={handlePublicLiabilityDocument}
+              fileName={publicDocument?.file?.file || ""}
+            />
           </div>
           <h3 className="text-black font-semibold text-sm my-4">Work Cover</h3>
 

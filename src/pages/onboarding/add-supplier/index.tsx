@@ -5,7 +5,6 @@ import DropDownMap from "../../../../components/DropDownMap";
 import { useState } from "react";
 import Button from "../../../../components/Button";
 import DateWithoutDropdown from "../../../../components/DateWithoutDropdown";
-import FileUpload from "../../../../components/FileUpload";
 import Maindatefield from "../../../../components/Maindatefield";
 import StatusChip from "../../../../components/StatusChip";
 import Checkbox from "../../../../components/Checkbox";
@@ -374,8 +373,10 @@ const AddSupplier = () => {
   // ================================================== Uploading documents ==================================================
   const [selectedAccreditationDocumentForSupplier, setSelectedAccreditationDocumentForSupplier] = useState("");
   const [selectedProductLiabilityDocumentForSupplier, setSelectedProductLiabilityDocumentForSupplier] = useState("");
+  const [selectedPublicLiabilityDocumentForSupplier, setSelectedPublicLiabilityDocumentForSupplier] = useState("");
   console.log({ selectedAccreditationDocumentForSupplier })
   console.log({ selectedProductLiabilityDocumentForSupplier })
+  console.log({ selectedPublicLiabilityDocumentForSupplier })
 
 
   /**
@@ -1011,6 +1012,9 @@ const AddSupplier = () => {
 
               productDocument={selectedProductLiabilityDocumentForSupplier}
               setProductDocument={setSelectedProductLiabilityDocumentForSupplier}
+              
+              publicDocument={selectedPublicLiabilityDocumentForSupplier}
+              setPublicDocument={setSelectedPublicLiabilityDocumentForSupplier}
             />
           ) : buttonState === step2Btn ? (
             <NestedAddVehicle
