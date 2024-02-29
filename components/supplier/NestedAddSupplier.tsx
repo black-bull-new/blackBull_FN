@@ -20,18 +20,23 @@ export const NestedAddSupplier = (props: any) => {
     modifiedUrls,
     urls,
     setUrls,
-
     setSelectedProfileSupplier,
-
     accreditationDocument,
     setAccreditationDocument,
-
     productDocument,
     setProductDocument,
-
     publicDocument,
-    setPublicDocument
+    setPublicDocument,
+    workCoverDocument,
+    setWorkCoverDocument,
+    marineDocument,
+    setMarineDocument,
+    marineAlcoholDocument,
+    setMarineAlcoholDocument,
+    cocDocument,
+    setCocDocument
   } = props;
+
   const [selectedFiles, setSelectedFiles] = useState<
     { id: number; file: File; currentDate: Date | null }[]
   >([]);
@@ -157,6 +162,27 @@ export const NestedAddSupplier = (props: any) => {
 
   const handlePublicLiabilityDocument = handleFileChange(
     setPublicDocument,
+    setDocumentRender
+  )
+
+  const handleWorkCoverDocument = handleFileChange(
+    setWorkCoverDocument,
+    setDocumentRender
+  )
+
+  const handleMarineDocument = handleFileChange(
+    setMarineDocument,
+    setDocumentRender
+  )
+
+  const handleMarineAlcoholDocument = handleFileChange(
+    setMarineAlcoholDocument,
+    setDocumentRender
+  )
+
+
+  const handleCocDocument = handleFileChange(
+    setCocDocument,
     setDocumentRender
   )
 
@@ -1442,7 +1468,7 @@ export const NestedAddSupplier = (props: any) => {
               id="publicFile"
               name="publicDocument"
               onChange={handlePublicLiabilityDocument}
-              fileName={publicDocument?.file?.file || ""}
+              fileName={publicDocument?.file?.name || ""}
             />
           </div>
           <h3 className="text-black font-semibold text-sm my-4">Work Cover</h3>
@@ -1519,7 +1545,12 @@ export const NestedAddSupplier = (props: any) => {
                 });
               }}
             />
-            <FileUpload file="Choose Document" />
+            <FileUpload file="Attach Document"
+              id="workCoverFile"
+              name="workCoverDocument"
+              onChange={handleWorkCoverDocument}
+              fileName={workCoverDocument?.file?.name || ""}
+            />
           </div>
           <h3 className="text-black font-semibold text-sm my-4">
             Marine (General & Refrigerated)
@@ -1596,7 +1627,12 @@ export const NestedAddSupplier = (props: any) => {
                 });
               }}
             />
-            <FileUpload file="Choose Document" />
+            <FileUpload file="Attach Document"
+              id="marineFile"
+              name="marineDocument"
+              onChange={handleMarineDocument}
+              fileName={marineDocument?.file?.name || ""}
+            />
           </div>
           <h3 className="text-black font-semibold text-sm my-4">
             Marine (Alcohol)
@@ -1673,7 +1709,12 @@ export const NestedAddSupplier = (props: any) => {
                 });
               }}
             />
-            <FileUpload file="Choose Document" />
+            <FileUpload file="Attach Document"
+              id="marineAlcoholFile"
+              name="marineAlcoholDocument"
+              onChange={handleMarineAlcoholDocument}
+              fileName={marineAlcoholDocument?.file?.name || ""}
+            />
           </div>
           <h3 className="text-black font-semibold text-sm my-4">COC</h3>
 
@@ -1747,7 +1788,12 @@ export const NestedAddSupplier = (props: any) => {
                 });
               }}
             />
-            <FileUpload file="Choose Document" />
+            <FileUpload file="Attach Document"
+              id="cocFile"
+              name="cocDocument"
+              onChange={handleCocDocument}
+              fileName={cocDocument?.file?.name || ""}
+            />
           </div>
         </div>
       </div>

@@ -17,8 +17,10 @@ const FileUpload = (props: any) => {
           id={props?.id}
           name={props?.name}
           hidden
+          accept=".docx,.doc,.pdf"
           onChange={props?.onChange}
         />
+
       </div>
       {props?.errorMessage && (
         <div className="text-red-500 text-[12px] mt-1">
