@@ -15,18 +15,16 @@ const Header = () => {
     try {
       const response = await logoutUser();
       if (response.success) {
-        toast("Logout Successfully Done...", {
-          icon: "👏",
+        toast("You have been logged out successfully.", {
+          // icon: "👏",
           style: {
             borderRadius: "10px",
             background: "#333",
             color: "#fff",
           },
         });
-        setTimeout(() => {
-          destroyCookie(null,"token")
-          router.push("/login");
-        }, 2000)
+        destroyCookie(null, "token")
+        router.push("/login");
       }
     } catch (error) {
       toast("Something went wrong", {

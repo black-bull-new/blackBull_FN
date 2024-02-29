@@ -5,10 +5,10 @@ import Maininputfield from "../Maininputfield";
 import DropDownMap from "../DropDownMap";
 import Button from "../Button";
 import DateWithoutDropdown from "../DateWithoutDropdown";
-import FileUpload from "../FileUpload";
 import { uploadSupplierComplianceDocuments } from "@/network-request/supplier/supplier";
 import { formatDate } from "@/utils";
 import Maindatefield from "../Maindatefield";
+import FileUpload from "../FileUpload";
 
 export const NestedAddSupplier = (props: any) => {
   const [selectedData, setSelectedData] = useState();
@@ -20,12 +20,22 @@ export const NestedAddSupplier = (props: any) => {
     modifiedUrls,
     urls,
     setUrls,
-
-    selectedProfileSupplier,
     setSelectedProfileSupplier,
+    accreditationDocument,
+    setAccreditationDocument,
+    productDocument,
+    setProductDocument,
+    publicDocument,
+    setPublicDocument,
+    workCoverDocument,
+    setWorkCoverDocument,
+    marineDocument,
+    setMarineDocument,
+    marineAlcoholDocument,
+    setMarineAlcoholDocument,
+    cocDocument,
+    setCocDocument
   } = props;
-  // console.log("addSupplier", addSupplier);
-  // console.log("error in add supplier", error);
 
   const [selectedFiles, setSelectedFiles] = useState<
     { id: number; file: File; currentDate: Date | null }[]
@@ -34,13 +44,6 @@ export const NestedAddSupplier = (props: any) => {
     {}
   );
   const [showUploadMessage, setShowUploadMessage] = useState(false);
-
-  // const [urls, setUrls] = useState<string[]>([]);
-  // const modifiedUrls = urls.reduce((acc: any, url, index) => {
-  //   acc[index + 1] = url;
-  //   return acc;
-  // }, []);
-
   const handleFileChanges = (
     event: React.ChangeEvent<HTMLInputElement>,
     documentId: number
@@ -127,10 +130,11 @@ export const NestedAddSupplier = (props: any) => {
       fileInputRef?.current?.click();
     }
   };
+  const [documentRender, setDocumentRender] = React.useState("");
 
   const [selectedUploadRegoDocument, setSelectedUploadRegoDocument] =
     React.useState(null);
-  const [documentRender, setDocumentRender] = React.useState("");
+  // const [documentRender, setDocumentRender] = React.useState("");
 
   const [selectedUploadRegoDocument2, setSelectedUploadRegoDocument2] =
     React.useState(null);
@@ -138,7 +142,8 @@ export const NestedAddSupplier = (props: any) => {
 
   const handleFileChange = (setFile: any, setPreview: any) => (event: any) => {
     const selectedFile = event.target.files && event.target.files[0];
-    setFile(selectedFile);
+    console.log({ selectedFile })
+    setFile({ file: selectedFile });
     if (selectedFile) {
       readAndSetPreview(selectedFile, setPreview);
     }
@@ -199,6 +204,42 @@ export const NestedAddSupplier = (props: any) => {
     setProfile,
   );
 
+  const handleAccreditationDocument = handleFileChange(
+    setAccreditationDocument,
+    setDocumentRender
+  );
+
+  const handleProductLiabilityDocument = handleFileChange(
+    setProductDocument,
+    setDocumentRender
+  )
+
+  const handlePublicLiabilityDocument = handleFileChange(
+    setPublicDocument,
+    setDocumentRender
+  )
+
+  const handleWorkCoverDocument = handleFileChange(
+    setWorkCoverDocument,
+    setDocumentRender
+  )
+
+  const handleMarineDocument = handleFileChange(
+    setMarineDocument,
+    setDocumentRender
+  )
+
+  const handleMarineAlcoholDocument = handleFileChange(
+    setMarineAlcoholDocument,
+    setDocumentRender
+  )
+
+
+  const handleCocDocument = handleFileChange(
+    setCocDocument,
+    setDocumentRender
+  )
+
   return (
     <div className="">
       <div className="bg-white mr-4 flex justify-between items-center rounded-md">
@@ -213,13 +254,6 @@ export const NestedAddSupplier = (props: any) => {
         <div className="mx-2">
           <Progressbar />
         </div>
-        {/* <div className="relative w-fit">
-          <Image src="/driverImage.svg" alt="driver" width={100} height={100} />
-          <span className="w-6 h-6 rounded-full bg-accent3 block text-white flex justify-center items-end text-xl absolute right-2 bottom-2">
-            +
-          </span>
-        </div> */}
-
         <div className="relative w-fit">
           <span className="flex flex-row justify-center my-4">
             <span className="mb-4 text-center flex justify-center items-center">
@@ -1312,14 +1346,11 @@ export const NestedAddSupplier = (props: any) => {
             />
           </div>
           <div className="w-fit my-4">
-            <FileUpload
-              file="Upload Accreditation Document"
-              onChange={handleFileChange(
-                setSelectedUploadRegoDocument,
-                setDocumentRender
-              )}
-              //@ts-expect-error
-              fileName={selectedUploadRegoDocument?.name || ""}
+            <FileUpload file="Upload Accreditation Document"
+              id="accreditationFile"
+              name="accreditationDocument"
+              onChange={handleAccreditationDocument}
+              fileName={accreditationDocument?.file?.name || ""}
             />
           </div>
           <h2 className="text-black font-semibold mt-8 mb-4">
@@ -1404,12 +1435,10 @@ export const NestedAddSupplier = (props: any) => {
             />
             <FileUpload
               file="Attach Document"
-              onChange={handleFileChange(
-                setSelectedUploadRegoDocument2,
-                setDocumentRender2
-              )}
-              //@ts-expect-error
-              fileName={selectedUploadRegoDocument2?.name || ""}
+              id="productFile"
+              name="productDocument"
+              onChange={handleProductLiabilityDocument}
+              fileName={productDocument?.file?.name || ""}
             />
           </div>
           <h3 className="text-black font-semibold text-sm my-4">
@@ -1489,7 +1518,12 @@ export const NestedAddSupplier = (props: any) => {
                 });
               }}
             />
-            <FileUpload file="Choose Document" />
+            <FileUpload file="Attch Document"
+              id="publicFile"
+              name="publicDocument"
+              onChange={handlePublicLiabilityDocument}
+              fileName={publicDocument?.file?.name || ""}
+            />
           </div>
           <h3 className="text-black font-semibold text-sm my-4">Work Cover</h3>
 
@@ -1565,7 +1599,12 @@ export const NestedAddSupplier = (props: any) => {
                 });
               }}
             />
-            <FileUpload file="Choose Document" />
+            <FileUpload file="Attach Document"
+              id="workCoverFile"
+              name="workCoverDocument"
+              onChange={handleWorkCoverDocument}
+              fileName={workCoverDocument?.file?.name || ""}
+            />
           </div>
           <h3 className="text-black font-semibold text-sm my-4">
             Marine (General & Refrigerated)
@@ -1642,7 +1681,12 @@ export const NestedAddSupplier = (props: any) => {
                 });
               }}
             />
-            <FileUpload file="Choose Document" />
+            <FileUpload file="Attach Document"
+              id="marineFile"
+              name="marineDocument"
+              onChange={handleMarineDocument}
+              fileName={marineDocument?.file?.name || ""}
+            />
           </div>
           <h3 className="text-black font-semibold text-sm my-4">
             Marine (Alcohol)
@@ -1719,7 +1763,12 @@ export const NestedAddSupplier = (props: any) => {
                 });
               }}
             />
-            <FileUpload file="Choose Document" />
+            <FileUpload file="Attach Document"
+              id="marineAlcoholFile"
+              name="marineAlcoholDocument"
+              onChange={handleMarineAlcoholDocument}
+              fileName={marineAlcoholDocument?.file?.name || ""}
+            />
           </div>
           <h3 className="text-black font-semibold text-sm my-4">COC</h3>
 
@@ -1793,7 +1842,12 @@ export const NestedAddSupplier = (props: any) => {
                 });
               }}
             />
-            <FileUpload file="Choose Document" />
+            <FileUpload file="Attach Document"
+              id="cocFile"
+              name="cocDocument"
+              onChange={handleCocDocument}
+              fileName={cocDocument?.file?.name || ""}
+            />
           </div>
         </div>
       </div>
@@ -2140,3 +2194,5 @@ const invoiceComuColletion = [
     value: "Admin Email",
   },
 ];
+
+

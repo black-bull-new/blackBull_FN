@@ -5,7 +5,6 @@ import DropDownMap from "../../../../components/DropDownMap";
 import { useState } from "react";
 import Button from "../../../../components/Button";
 import DateWithoutDropdown from "../../../../components/DateWithoutDropdown";
-import FileUpload from "../../../../components/FileUpload";
 import Maindatefield from "../../../../components/Maindatefield";
 import StatusChip from "../../../../components/StatusChip";
 import Checkbox from "../../../../components/Checkbox";
@@ -13,7 +12,7 @@ import { NestedAddSupplier } from "../../../../components/supplier/NestedAddSupp
 import { NestedAddVehicle } from "../../../../components/supplier/NestedAddVehicle";
 import NestedAddDriver from "../../../../components/supplier/NestedAddDriver";
 import { getCookie } from "cookies-next";
-import { addSupplierIntoSupplier, uploadSupplierProfile } from "@/network-request/supplier/supplier";
+import { addSupplierIntoSupplier, uploadSupplierAccreditationDocuments, uploadSupplierCocDocuments, uploadSupplierMarineAlcoholDocuments, uploadSupplierMarineDocuments, uploadSupplierProductLiabilityDocuments, uploadSupplierProfile, uploadSupplierPublicLiabilityDocuments, uploadSupplierWorkCoverDocuments } from "@/network-request/supplier/supplier";
 import {
   addVehicleIntoSupplier,
   uploadSupplierVehicleRegoDocuments,
@@ -154,7 +153,18 @@ const AddSupplier = () => {
   const step1Btn = "Proceed to Add Vehicle";
   const step2Btn = "Proceed to Add Driver";
   const step3Btn = "Submit";
-  const [buttonState, seButtonState] = useState(step2Btn);
+  const [buttonState, seButtonState] = useState(step1Btn);
+
+  const initialDocumentsState = {
+    accreditationDocument: "",
+    productLiabilityDocument: "",
+    publicLiabilityDocument: "",
+    workCoverDocument: "",
+    marineDocument: "",
+    marineAlcoholDocument: "",
+    cocDocument: ""
+  }
+
   /**
    * add supplier state and its error state
    */
@@ -361,7 +371,6 @@ const AddSupplier = () => {
     // accreditationDocument: "",
   });
   const [selectedProfileForSupplier, setSelectedProfileForSupplier] = useState("");
-  const [selectedUploadRegoDocumentForSupplier, setSelectedUploadRegoDocumentForSupplier] = useState("");
   const [urlsForSupplier, setUrlsForSupplier] = useState<string[]>([]);
   const modifiedUrlsForSupplier = urlsForSupplier.reduce(
     (acc: any, url, index) => {
@@ -371,6 +380,10 @@ const AddSupplier = () => {
     []
   );
   console.log({ selectedProfileForSupplier })
+
+  // ================================================== Uploading documents ==================================================
+  const [selectedDocuments, setSelectedDocuments] = useState(initialDocumentsState);
+  console.log({ selectedDocuments })
 
   /**
    * add vehicle state and its error state
@@ -588,18 +601,18 @@ const AddSupplier = () => {
 
   const handleSubmit = async () => {
     if (buttonState === step1Btn) {
-      const hasErrors = checkValidationForAddSupplier();
-      if (hasErrors) {
-        toast("Please fix the validation errors before submitting.", {
-          icon: "⚠️",
-          style: {
-            borderRadius: "10px",
-            background: "#333",
-            color: "#fff",
-          },
-        });
-        return;
-      }
+      // const hasErrors = checkValidationForAddSupplier();
+      // if (hasErrors) {
+      //   toast("Please fix the validation errors before submitting.", {
+      //     icon: "⚠️",
+      //     style: {
+      //       borderRadius: "10px",
+      //       background: "#333",
+      //       color: "#fff",
+      //     },
+      //   });
+      //   return;
+      // }
 
       // Uploading driver profile ...
       const [profileUrl] = await Promise.all([
@@ -611,359 +624,295 @@ const AddSupplier = () => {
       ]);
 
       // Uploading driver license documents ...
-      // const [driverLicense] = await Promise.all([
-      //   Promise.all(
-      //     Object.values(selectedUploadRegoDocument)?.map((imageInfo) =>
-      //       uploadDriverLicenseDocuments(imageInfo)
-      //     )
-      //   ),
-      // ]);
-
+      const uploadAllDocuments = async function (documents:string, uploadFunction:any) {
+        return await Promise.all(
+          Object.values(documents)?.map((imageInfo) => uploadFunction(imageInfo))
+        );
+      };
+      
+      const [
+        accreditationDocuments,
+        producteDocuments,
+        publicDocuments,
+        workCoverDocument,
+        marineDocument,
+        marineAlcoholDocument,
+        cocDocument
+      ] = await Promise.all([
+        uploadAllDocuments(selectedDocuments?.accreditationDocument, uploadSupplierAccreditationDocuments),
+        uploadAllDocuments(selectedDocuments?.productLiabilityDocument, uploadSupplierProductLiabilityDocuments),
+        uploadAllDocuments(selectedDocuments?.publicLiabilityDocument, uploadSupplierPublicLiabilityDocuments),
+        uploadAllDocuments(selectedDocuments?.workCoverDocument, uploadSupplierWorkCoverDocuments),
+        uploadAllDocuments(selectedDocuments?.marineDocument, uploadSupplierMarineDocuments),
+        uploadAllDocuments(selectedDocuments?.marineAlcoholDocument, uploadSupplierMarineAlcoholDocuments),
+        uploadAllDocuments(selectedDocuments?.cocDocument, uploadSupplierCocDocuments)
+      ]);
+      
+      
       const newSupplierDetails = {
         ...addSupplier,
         profile: profileUrl[0]?.response,
-        // licenseDetails: {
-        //   ...driverDetails.licenseDetails,
-        //   documents: driverLicense[0]?.response,
-        // },
-        onboardingDocuments: urlsForSupplier?.map(
-          (url: any, index: number) => ({
-            type: url,
-            uploadDate: formattedDate,
-          })
-        ),
-      };
-
-      const response: any = await addSupplierIntoSupplier(
-        newSupplierDetails,
-        token || ""
-      );
-      if (response.data) {
-        toast("Supplier has been successfully created..", {
-          icon: "👏",
-          style: {
-            borderRadius: "10px",
-            background: "#333",
-            color: "#fff",
+        accreditationDocument: accreditationDocuments[0]?.response,
+        insuranceDetails: {
+          ...addSupplier.insuranceDetails,
+          productLiability: {
+            ...addSupplier.insuranceDetails.productLiability,
+            document: producteDocuments[0]?.response
           },
+          publicLiability: {
+            ...addSupplier.insuranceDetails.publicLiability,
+            document: publicDocuments[0]?.response
+          },
+          workCover: {
+            ...addSupplier.insuranceDetails.workCover,
+            document: workCoverDocument[0]?.response
+          },
+          marineGeneral: {
+            ...addSupplier.insuranceDetails.marineGeneral,
+            document: marineDocument[0]?.response
+          },
+          marineAlcohol: {
+            ...addSupplier.insuranceDetails.marineAlcohol,
+            document: marineAlcoholDocument[0]?.response
+          },
+          coc: {
+            ...addSupplier.insuranceDetails.coc,
+            document: cocDocument[0]?.response
+          }
+        },
+        onboardingDocuments: urlsForSupplier?.map(
+            (url: any, index: number) => ({
+              type: url,
+              uploadDate: formattedDate,
+            })
+          ),
+        };
+
+        const response: any = await addSupplierIntoSupplier(
+          newSupplierDetails,
+          token || ""
+        );
+        console.log({ response })
+      if(response.data) {
+          toast("Supplier has been successfully created..", {
+            icon: "👏",
+            style: {
+              borderRadius: "10px",
+              background: "#333",
+              color: "#fff",
+            },
+          });
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+      seButtonState(step2Btn)
+    } else {
+      toast("Something went wrong", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+    }
+  } else if (buttonState === step2Btn) {
+    // Check validation and get error status
+    const hasErrors = checkValidationForAddVehicle();
+    if (hasErrors) {
+      toast("Please fix the validation errors before submitting.", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+      return;
+    }
+    const uploadDocument = await Promise.all(
+      Object.values(selectedUploadRegoDocument)?.map((file) =>
+        uploadSuppliervehicleDocuments(file)
+      )
+    );
+    console.log({ uploadDocument });
+    const customVehiclePayload = {
+      ...addVehicle,
+      document: uploadDocument[0]?.response,
+      vehicleDocuments: urls?.map((url: any, index: number) => ({
+        type: url,
+        uploadDate: formattedDate,
+        status: selectedStatusValues[index % selectedStatusValues.length],
+      })),
+    };
+
+    const response: any = await addVehicleIntoSupplier(
+      customVehiclePayload,
+      token || ""
+    );
+    if (response?.status === 200) {
+      toast("Vehicle has been successfully added..", {
+        icon: "👏",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+      seButtonState(step3Btn)
+    } else {
+      toast("Something went wrong", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+    }
+    // Uncomment the following line when whole code of add vehicle is finished
+    // seButtonState(step3Btn);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // for smooth scrolling
+    });
+  } else if (buttonState === step3Btn) {
+    // Check validation and get error status
+    const hasErrors = checkValidationForAddDriver();
+    if (hasErrors) {
+      toast("Please fix the validation errors before submitting.", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+      return;
+    }
+
+    // Uploading driver profile ...
+    const [profileUrl] = await Promise.all([
+      Promise.all(
+        Object.values(selectedProfileForDriver)?.map((imageInfo) =>
+          uploadSupplierDriverProfile(imageInfo)
+        )
+      ),
+    ]);
+    // Uploading driver license documents ...
+    const [driverLicense] = await Promise.all([
+      Promise.all(
+        Object.values(selectedUploadRegoDocumentForDriver)?.map((imageInfo) =>
+          uploadSupplierDriverlicenseDocuments(imageInfo)
+        )
+      ),
+    ]);
+
+    const newDriverDetails = {
+      ...addDriver,
+      avatar: profileUrl[0]?.response,
+      licenseDetails: {
+        ...addDriver.licenseDetails,
+        documents: driverLicense[0]?.response,
+      },
+      onboardingDocuments: urlsForDriver?.map((url: any, index: number) => ({
+        type: url[0],
+        uploadDate: formattedDate,
+      })),
+    };
+    console.log("urlsForDriver", urlsForDriver);
+    console.log("newDriverDetails", newDriverDetails);
+
+    const response: any = await addSupplierDriver(
+      newDriverDetails,
+      token || ""
+    );
+    console.log({ response });
+    if (response.data) {
+      // seButtonState(step1Btn);
+      toast("Driver has been successfully created..", {
+        icon: "👏",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth", // for smooth scrolling
+      });
+    } else {
+      toast("Something went wrong", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+    }
+  }
+};
+
+/**
+ *
+ * @returns true if error occurred in add driver state otherwise false
+ */
+const checkValidationForAddDriver = () => {
+  const newErrors = { ...addDriverError };
+  let hasErrors = false;
+
+  Object.keys(addDriver).forEach((key) => {
+    if (
+      key !== "avatar" &&
+      key !== "employmentHistory" &&
+      key !== "visaStatus" &&
+      key !== "driverLicenseFront" &&
+      key !== "driverLicenseBack" &&
+      key !== "licenseHistory" &&
+      key !== "policeVerification" &&
+      key !== "passportFront" &&
+      key !== "passportBack" &&
+      key !== "healthInsurance" &&
+      key !== "driverCertificate" &&
+      key !== "fitness" &&
+      key !== "drugTest" &&
+      key !== "specialDrivingLicense"
+    ) {
+      if (typeof addDriver[key] === "object" && addDriver[key] !== null) {
+        // Ensure that nested error objects are initialized
+        newErrors[key + "Error"] = newErrors[key + "Error"] || {};
+
+        // Handle nested objects with a different logic
+        Object.keys(addDriver[key]).forEach((nestedKey) => {
+          const nestedKeyPath = `${key}Error.${nestedKey}`;
+
+          if (
+            !addDriver[key][nestedKey] ||
+            addDriver[key][nestedKey] === undefined
+          ) {
+            newErrors[key + "Error"][
+              nestedKey
+            ] = `${correctAddDriverStateName(
+              nestedKey
+            )} is required in ${correctAddDriverStateName(key)}`;
+            hasErrors = true;
+          } else {
+            newErrors[key + "Error"][nestedKey] = "";
+          }
         });
-        // Uncomment the following line when whole code of add supplier is finished
-        // seButtonState(step2Btn);
+      } else {
+        // Handle non-nested fields
         // Auto scroll up for better user experience
         window.scrollTo({
           top: 0,
           behavior: "smooth", // for smooth scrolling
         });
-        seButtonState(step2Btn) 
-      } else {
-        toast("Something went wrong", {
-          icon: "⚠️",
-          style: {
-            borderRadius: "10px",
-            background: "#333",
-            color: "#fff",
-          },
-        });
-      }
-    } else if (buttonState === step2Btn) {
-      // Check validation and get error status
-      const hasErrors = checkValidationForAddVehicle();
-      if (hasErrors) {
-        toast("Please fix the validation errors before submitting.", {
-          icon: "⚠️",
-          style: {
-            borderRadius: "10px",
-            background: "#333",
-            color: "#fff",
-          },
-        });
-        return;
-      }
-      const uploadDocument = await Promise.all(
-        Object.values(selectedUploadRegoDocument)?.map((file) =>
-          uploadSuppliervehicleDocuments(file)
-        )
-      );
-      console.log({ uploadDocument });
-      const customVehiclePayload = {
-        ...addVehicle,
-        document: uploadDocument[0]?.response,
-        vehicleDocuments: urls?.map((url: any, index: number) => ({
-          type: url,
-          uploadDate: formattedDate,
-          status: selectedStatusValues[index % selectedStatusValues.length],
-        })),
-      };
 
-      const response: any = await addVehicleIntoSupplier(
-        customVehiclePayload,
-        token || ""
-      );
-      if (response?.status === 200) {
-        toast("Vehicle has been successfully added..", {
-          icon: "👏",
-          style: {
-            borderRadius: "10px",
-            background: "#333",
-            color: "#fff",
-          },
-        });
-        seButtonState(step3Btn) 
-      } else {
-        toast("Something went wrong", {
-          icon: "⚠️",
-          style: {
-            borderRadius: "10px",
-            background: "#333",
-            color: "#fff",
-          },
-        });
-      }
-      // Uncomment the following line when whole code of add vehicle is finished
-      // seButtonState(step3Btn);
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth", // for smooth scrolling
-      });
-    } else if (buttonState === step3Btn) {
-      // Check validation and get error status
-      const hasErrors = checkValidationForAddDriver();
-      if (hasErrors) {
-        toast("Please fix the validation errors before submitting.", {
-          icon: "⚠️",
-          style: {
-            borderRadius: "10px",
-            background: "#333",
-            color: "#fff",
-          },
-        });
-        return;
-      }
-
-      // Uploading driver profile ...
-      const [profileUrl] = await Promise.all([
-        Promise.all(
-          Object.values(selectedProfileForDriver)?.map((imageInfo) =>
-            uploadSupplierDriverProfile(imageInfo)
-          )
-        ),
-      ]);
-      // Uploading driver license documents ...
-      const [driverLicense] = await Promise.all([
-        Promise.all(
-          Object.values(selectedUploadRegoDocumentForDriver)?.map((imageInfo) =>
-            uploadSupplierDriverlicenseDocuments(imageInfo)
-          )
-        ),
-      ]);
-
-      const newDriverDetails = {
-        ...addDriver,
-        avatar: profileUrl[0]?.response,
-        licenseDetails: {
-          ...addDriver.licenseDetails,
-          documents: driverLicense[0]?.response,
-        },
-        onboardingDocuments: urlsForDriver?.map((url: any, index: number) => ({
-          type: url[0],
-          uploadDate: formattedDate,
-        })),
-      };
-      console.log("urlsForDriver", urlsForDriver);
-      console.log("newDriverDetails", newDriverDetails);
-
-      const response: any = await addSupplierDriver(
-        newDriverDetails,
-        token || ""
-      );
-      console.log({ response });
-      if (response.data) {
-        // seButtonState(step1Btn);
-        toast("Driver has been successfully created..", {
-          icon: "👏",
-          style: {
-            borderRadius: "10px",
-            background: "#333",
-            color: "#fff",
-          },
-        });
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth", // for smooth scrolling
-        });
-      } else {
-        toast("Something went wrong", {
-          icon: "⚠️",
-          style: {
-            borderRadius: "10px",
-            background: "#333",
-            color: "#fff",
-          },
-        });
-      }
-    }
-  };
-
-  /**
-   *
-   * @returns true if error occurred in add driver state otherwise false
-   */
-  const checkValidationForAddDriver = () => {
-    const newErrors = { ...addDriverError };
-    let hasErrors = false;
-
-    Object.keys(addDriver).forEach((key) => {
-      if (
-        key !== "avatar" &&
-        key !== "employmentHistory" &&
-        key !== "visaStatus" &&
-        key !== "driverLicenseFront" &&
-        key !== "driverLicenseBack" &&
-        key !== "licenseHistory" &&
-        key !== "policeVerification" &&
-        key !== "passportFront" &&
-        key !== "passportBack" &&
-        key !== "healthInsurance" &&
-        key !== "driverCertificate" &&
-        key !== "fitness" &&
-        key !== "drugTest" &&
-        key !== "specialDrivingLicense"
-      ) {
-        if (typeof addDriver[key] === "object" && addDriver[key] !== null) {
-          // Ensure that nested error objects are initialized
-          newErrors[key + "Error"] = newErrors[key + "Error"] || {};
-
-          // Handle nested objects with a different logic
-          Object.keys(addDriver[key]).forEach((nestedKey) => {
-            const nestedKeyPath = `${key}Error.${nestedKey}`;
-
-            if (
-              !addDriver[key][nestedKey] ||
-              addDriver[key][nestedKey] === undefined
-            ) {
-              newErrors[key + "Error"][
-                nestedKey
-              ] = `${correctAddDriverStateName(
-                nestedKey
-              )} is required in ${correctAddDriverStateName(key)}`;
-              hasErrors = true;
-            } else {
-              newErrors[key + "Error"][nestedKey] = "";
-            }
-          });
-        } else {
-          // Handle non-nested fields
-          // Auto scroll up for better user experience
-          window.scrollTo({
-            top: 0,
-            behavior: "smooth", // for smooth scrolling
-          });
-
-          if (!addDriver[key]) {
-            newErrors[key + "Error"] = `${correctAddDriverStateName(
-              key
-            )} is required`;
-            hasErrors = true;
-          } else {
-            newErrors[key + "Error"] = "";
-          }
-        }
-      }
-    });
-
-    setAddDriverError(newErrors);
-    // Return the error status
-    return hasErrors;
-  };
-
-  /**
-   *
-   * @returns true if error occurred in add supplier state otherwise false
-   */
-  const checkValidationForAddSupplier = () => {
-    const newErrors = { ...addSupplierError };
-    let hasErrors = false;
-
-    Object.keys(addSupplier).forEach((key) => {
-      if (
-        key !== "companySuiteDetails" &&
-        key !== "warehouseDetails" &&
-        key !== "insuranceDetails" &&
-        key !== "accreditationDocument" &&
-        key !== "alcoholPolicy" &&
-        key !== "drug" &&
-        key !== "fatiquePolicyPresentationSystem" &&
-        key !== "gpsSnapshot" &&
-        key !== "procedure" &&
-        key !== "riskManagementPolicy" &&
-        key !== "speedPolicy" &&
-        key !== "workHealthSafetyPolicy" &&
-        key !== "certificateOfAccreditation"
-      ) {
-        if (typeof addSupplier[key] === "object" && addSupplier[key] !== null) {
-          // Ensure that nested error objects are initialized
-          newErrors[key + "Error"] = newErrors[key + "Error"] || {};
-
-          // Handle nested objects with a different logic
-          Object.keys(addSupplier[key]).forEach((nestedKey) => {
-            const nestedKeyPath = `${key}Error.${nestedKey}`;
-
-            if (
-              !addSupplier[key][nestedKey] ||
-              addSupplier[key][nestedKey] === undefined
-            ) {
-              newErrors[key + "Error"][
-                nestedKey
-              ] = `${correctAddSupplierStateName(
-                nestedKey
-              )} is required in ${correctAddSupplierStateName(key)}`;
-              hasErrors = true;
-            } else {
-              newErrors[key + "Error"][nestedKey] = "";
-            }
-          });
-        } else {
-          // Handle non-nested fields
-          // Auto scroll up for better user experience
-          window.scrollTo({
-            top: 0,
-            behavior: "smooth", // for smooth scrolling
-          });
-
-          if (!addSupplier[key]) {
-            newErrors[key + "Error"] = `${correctAddSupplierStateName(
-              key
-            )} is required`;
-            hasErrors = true;
-          } else {
-            newErrors[key + "Error"] = "";
-          }
-        }
-      }
-    });
-
-    setAddSupplierError(newErrors);
-    // Return the error status
-    return hasErrors;
-  };
-  /**
-   *
-   * @returns true if error occurred in add vehicle state otherwise false
-   */
-  const checkValidationForAddVehicle = () => {
-    const newErrors = { ...addVehicleError };
-    let hasErrors = false;
-    Object.keys(addVehicle).forEach((key) => {
-      // Handle non-nested fields
-      // Auto scroll up for better user experience
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth", // for smooth scrolling
-      });
-
-      if (key !== "document" && key !== "vehicleDocuments") {
-        if (!addVehicle[key]) {
-          newErrors[key + "Error"] = `${correctAddVehicleStateName(
+        if (!addDriver[key]) {
+          newErrors[key + "Error"] = `${correctAddDriverStateName(
             key
           )} is required`;
           hasErrors = true;
@@ -971,84 +920,227 @@ const AddSupplier = () => {
           newErrors[key + "Error"] = "";
         }
       }
-    });
-    setAddVehicleError(newErrors);
-    // Return the error status
-    return hasErrors;
-  };
+    }
+  });
 
-  return (
-    <>
-      {/* <Header /> */}
-      <div className="flex bg-[#E9EFFF]">
-        <div>
-          <Toaster />
-        </div>
-        {/* <div className="sticky top-0">
+  setAddDriverError(newErrors);
+  // Return the error status
+  return hasErrors;
+};
+
+/**
+ *
+ * @returns true if error occurred in add supplier state otherwise false
+ */
+const checkValidationForAddSupplier = () => {
+  const newErrors = { ...addSupplierError };
+  let hasErrors = false;
+
+  Object.keys(addSupplier).forEach((key) => {
+    if (
+      key !== "companySuiteDetails" &&
+      key !== "warehouseDetails" &&
+      key !== "insuranceDetails" &&
+      key !== "accreditationDocument" &&
+      key !== "alcoholPolicy" &&
+      key !== "drug" &&
+      key !== "fatiquePolicyPresentationSystem" &&
+      key !== "gpsSnapshot" &&
+      key !== "procedure" &&
+      key !== "riskManagementPolicy" &&
+      key !== "speedPolicy" &&
+      key !== "workHealthSafetyPolicy" &&
+      key !== "certificateOfAccreditation"
+    ) {
+      if (typeof addSupplier[key] === "object" && addSupplier[key] !== null) {
+        // Ensure that nested error objects are initialized
+        newErrors[key + "Error"] = newErrors[key + "Error"] || {};
+
+        // Handle nested objects with a different logic
+        Object.keys(addSupplier[key]).forEach((nestedKey) => {
+          const nestedKeyPath = `${key}Error.${nestedKey}`;
+
+          if (
+            !addSupplier[key][nestedKey] ||
+            addSupplier[key][nestedKey] === undefined
+          ) {
+            newErrors[key + "Error"][
+              nestedKey
+            ] = `${correctAddSupplierStateName(
+              nestedKey
+            )} is required in ${correctAddSupplierStateName(key)}`;
+            hasErrors = true;
+          } else {
+            newErrors[key + "Error"][nestedKey] = "";
+          }
+        });
+      } else {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth", // for smooth scrolling
+        });
+
+        if (!addSupplier[key]) {
+          newErrors[key + "Error"] = `${correctAddSupplierStateName(
+            key
+          )} is required`;
+          hasErrors = true;
+        } else {
+          newErrors[key + "Error"] = "";
+        }
+      }
+    }
+  });
+
+  setAddSupplierError(newErrors);
+  // Return the error status
+  return hasErrors;
+};
+/**
+ *
+ * @returns true if error occurred in add vehicle state otherwise false
+ */
+const checkValidationForAddVehicle = () => {
+  const newErrors = { ...addVehicleError };
+  let hasErrors = false;
+  Object.keys(addVehicle).forEach((key) => {
+    // Handle non-nested fields
+    // Auto scroll up for better user experience
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // for smooth scrolling
+    });
+
+    if (key !== "document" && key !== "vehicleDocuments") {
+      if (!addVehicle[key]) {
+        newErrors[key + "Error"] = `${correctAddVehicleStateName(
+          key
+        )} is required`;
+        hasErrors = true;
+      } else {
+        newErrors[key + "Error"] = "";
+      }
+    }
+  });
+  setAddVehicleError(newErrors);
+  // Return the error status
+  return hasErrors;
+};
+
+return (
+  <>
+    {/* <Header /> */}
+    <div className="flex bg-[#E9EFFF]">
+      <div>
+        <Toaster />
+      </div>
+      {/* <div className="sticky top-0">
           <Sidebar />
         </div> */}
-        <div className="ml-[316px] w-full mt-4">
-          {buttonState === step1Btn ? (
-            <NestedAddSupplier
-              addSupplier={addSupplier}
-              setAddSupplier={setAddSupplier}
-              error={addSupplierError}
-              setError={setAddSupplierError}
-              urls={urlsForSupplier}
-              selectedProfileSupplier={selectedProfileForSupplier}
-              setSelectedProfileSupplier={setSelectedProfileForSupplier}
-              setUrls={setUrlsForSupplier}
-              modifiedUrls={modifiedUrlsForSupplier}
-            />
-          ) : buttonState === step2Btn ? (
-            <NestedAddVehicle
-              addVehicle={addVehicle}
-              setAddVehicle={setAddVehicle}
-              error={addVehicleError}
-              setError={setAddVehicleError}
-              selectedUploadRegoDocument={selectedUploadRegoDocument}
-              setSelectedUploadRegoDocument={setSelectedUploadRegoDocument}
-              urls={urls}
-              setUrls={setUrls}
-              modifiedUrls={modifiedUrls}
-              selectedStatusValues={selectedStatusValues}
-              setSelectedStatusValues={setSelectedStatusValues}
-            />
-          ) : buttonState === step3Btn ? (
-            <NestedAddDriver
-              addDriver={addDriver}
-              setAddDriver={setAddDriver}
-              error={addDriverError}
-              setError={setAddDriverError}
-              selectedProfile={selectedProfileForDriver}
-              setSelectedProfile={setSelectedProfileForDriver}
-              selectedUploadRegoDocument={selectedUploadRegoDocumentForDriver}
-              setSelectedUploadRegoDocument={
-                setSelectedUploadRegoDocumentForDriver
-              }
-              urls={urlsForDriver}
-              setUrls={setUrlsForDriver}
-              modifiedUrls={modifiedUrlsForDriver}
-            />
-          ) : null}
+      <div className="ml-[316px] w-full mt-4">
+        {buttonState === step1Btn ? (
+          <NestedAddSupplier
+            addSupplier={addSupplier}
+            setAddSupplier={setAddSupplier}
+            error={addSupplierError}
+            setError={setAddSupplierError}
+            urls={urlsForSupplier}
+            selectedProfileSupplier={selectedProfileForSupplier}
+            setSelectedProfileSupplier={setSelectedProfileForSupplier}
+            setUrls={setUrlsForSupplier}
+            modifiedUrls={modifiedUrlsForSupplier}
 
-          {/* create and save button */}
+            accreditationDocument={selectedDocuments?.accreditationDocument}
+            setAccreditationDocument={(value: string) => setSelectedDocuments(item => ({
+              ...item,
+              accreditationDocument: value
+            }))}
 
-          <div className="mr-4 px-4 rounded-md mb-20 p-4 flex justify-end gap-2">
-            <Button
-              text="Save"
-              className="!bg-transparent !text-[#000] border px-8 !rounded-xl text-sm border-[#032272]"
-            />
-            <Button
-              onClick={handleSubmit}
-              text={buttonState}
-              className="px-8 rounded-full text-sm"
-            />
-          </div>
+            productDocument={selectedDocuments?.productLiabilityDocument}
+            setProductDocument={(value: string) => setSelectedDocuments(item => ({
+              ...item,
+              productLiabilityDocument: value
+            }))}
+
+            publicDocument={selectedDocuments?.publicLiabilityDocument}
+            setPublicDocument={(value: string) => setSelectedDocuments(item => ({
+              ...item,
+              publicLiabilityDocument: value
+            }))}
+
+            workCoverDocument={selectedDocuments?.workCoverDocument}
+            setWorkCoverDocument={(value: string) => setSelectedDocuments(item => ({
+              ...item,
+              workCoverDocument: value
+            }))}
+
+            marineDocument={selectedDocuments?.marineDocument}
+            setMarineDocument={(value: string) => setSelectedDocuments(item => ({
+              ...item,
+              marineDocument: value
+            }))}
+
+            marineAlcoholDocument={selectedDocuments?.marineAlcoholDocument}
+            setMarineAlcoholDocument={(value: string) => setSelectedDocuments(item => ({
+              ...item,
+              marineAlcoholDocument: value
+            }))}
+
+            cocDocument={selectedDocuments?.cocDocument}
+            setCocDocument={(value: string) => setSelectedDocuments(item => ({
+              ...item,
+              cocDocument: value
+            }))}
+          />
+        ) : buttonState === step2Btn ? (
+          <NestedAddVehicle
+            addVehicle={addVehicle}
+            setAddVehicle={setAddVehicle}
+            error={addVehicleError}
+            setError={setAddVehicleError}
+            selectedUploadRegoDocument={selectedUploadRegoDocument}
+            setSelectedUploadRegoDocument={setSelectedUploadRegoDocument}
+            urls={urls}
+            setUrls={setUrls}
+            modifiedUrls={modifiedUrls}
+            selectedStatusValues={selectedStatusValues}
+            setSelectedStatusValues={setSelectedStatusValues}
+          />
+        ) : buttonState === step3Btn ? (
+          <NestedAddDriver
+            addDriver={addDriver}
+            setAddDriver={setAddDriver}
+            error={addDriverError}
+            setError={setAddDriverError}
+            selectedProfile={selectedProfileForDriver}
+            setSelectedProfile={setSelectedProfileForDriver}
+            selectedUploadRegoDocument={selectedUploadRegoDocumentForDriver}
+            setSelectedUploadRegoDocument={
+              setSelectedUploadRegoDocumentForDriver
+            }
+            urls={urlsForDriver}
+            setUrls={setUrlsForDriver}
+            modifiedUrls={modifiedUrlsForDriver}
+          />
+        ) : null}
+
+        {/* create and save button */}
+
+        <div className="mr-4 px-4 rounded-md mb-20 p-4 flex justify-end gap-2">
+          <Button
+            text="Save"
+            className="!bg-transparent !text-[#000] border px-8 !rounded-xl text-sm border-[#032272]"
+          />
+          <Button
+            onClick={handleSubmit}
+            text={buttonState}
+            className="px-8 rounded-full text-sm"
+          />
         </div>
       </div>
-    </>
-  );
+    </div>
+  </>
+);
 };
 export default AddSupplier;
 
