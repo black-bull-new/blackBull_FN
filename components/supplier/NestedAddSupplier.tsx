@@ -2085,17 +2085,10 @@ const stateCollection = [
 
 const businessOperationCollection = [
   {
-    value: "Queensland, Victoria",
+    value: "Queensland "
   },
   {
-    value: "item1",
-  },
-
-  {
-    value: "item2",
-  },
-  {
-    value: "item3",
+    value: "Victoria",
   },
 ];
 
