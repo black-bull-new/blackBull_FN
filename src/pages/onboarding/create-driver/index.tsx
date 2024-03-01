@@ -337,7 +337,6 @@ const CreateDriver = () => {
           typeof driverDetails[key] === "object" &&
           driverDetails[key] !== null
         ) {
-          // Handle nested objects with a different logic
           Object.keys(driverDetails[key]).forEach((nestedKey) => {
             if (nestedKey !== "documents") {
               if (
@@ -354,11 +353,9 @@ const CreateDriver = () => {
             }
           });
         } else {
-          // Handle non-nested fields
-          // Auto scroll up for better user experience
           window.scrollTo({
             top: 0,
-            behavior: "smooth", // for smooth scrolling
+            behavior: "smooth",
           });
 
           if (!driverDetails[key]) {
@@ -373,7 +370,6 @@ const CreateDriver = () => {
       }
     });
     setError(newErrors);
-    // Return the error status
     return hasErrors;
   };
 
@@ -1525,9 +1521,6 @@ const CreateDriver = () => {
                 </div>
               )
             })}
-
-
-
 
             <div className="mb-4 mt-8">
               <h3 className="w-full mb-4 rounded-md font-semibold text-black">
