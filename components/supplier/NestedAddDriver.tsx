@@ -920,6 +920,7 @@ const NestedAddDriver = (props: any) => {
                 },
               });
             }}
+            errorMessage={error.licenseDetailsError?.licenseNumber}
           />
           <Maininputfield
             label="Licence Card Number"
@@ -934,6 +935,7 @@ const NestedAddDriver = (props: any) => {
                 },
               });
             }}
+            errorMessage={error.licenseDetailsError?.licenseCardNumber}
           />
           <DropDownMap
             label="Licence Type"
@@ -950,6 +952,7 @@ const NestedAddDriver = (props: any) => {
                 },
               });
             }}
+            errorMessage={error.licenseDetailsError?.licenseType}
           />
           <DropDownMap
             label="State of Issue"
@@ -966,6 +969,7 @@ const NestedAddDriver = (props: any) => {
                 },
               });
             }}
+            errorMessage={error.licenseDetailsError?.state}
           />
           <Maindatefield
             label="Date Of Issue"
@@ -979,6 +983,7 @@ const NestedAddDriver = (props: any) => {
                 },
               });
             }}
+            errorMessage={error.licenseDetailsError?.dateOfIssue}
           />
           <Maindatefield
             label="Expiry Date"
@@ -992,6 +997,7 @@ const NestedAddDriver = (props: any) => {
                 },
               });
             }}
+            errorMessage={error.licenseDetailsError?.expiryDate}
           />
           <Maininputfield
             label="Days left for renewal"
@@ -1006,6 +1012,7 @@ const NestedAddDriver = (props: any) => {
                 },
               });
             }}
+            errorMessage={error.licenseDetailsError?.daysLeftForRenewal}
           />
           <FileUpload
             file="Upload Rego Document"

@@ -45,6 +45,10 @@ export const NestedAddSupplier = (props: any) => {
   );
   const [showUploadMessage, setShowUploadMessage] = useState(false);
 
+  const regexOfPhoneNumber = /^(?:\+61|0)[2-478](?:[ -]?[0-9]){8}$/;
+  const regexOfEmail =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.+([a-zA-Z0-9-]+)2*$/;
+  const regexOfWebsite = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
   const [documentDataCollection, setDocumentDataCollection] = useState<any>([]);
 
   const handleAddRow = () => {
@@ -417,13 +421,23 @@ export const NestedAddSupplier = (props: any) => {
               value={addSupplier.website}
               className="w-full"
               onChange={(e: any) => {
+                const inputValue = e.target.value;
+                if (!regexOfWebsite.test(inputValue)) {
+                  setError({
+                    ...error,
+                    websiteAddressError: "Please enter a valid webiste address",
+                  });
+                  setError({
+                    ...error,
+                    websiteError: "Please enter a valid webiste address",
+                  });
+                } else {
+                  setError({ ...error, websiteError: "" });
+                }
                 setAddSupplier({
                   ...addSupplier,
                   website: e.target.value,
                 });
-                if (e.target.value.length > 0) {
-                  setError({ ...error, websiteError: "" });
-                }
               }}
               errorMessage={error.websiteError}
             />
@@ -431,12 +445,12 @@ export const NestedAddSupplier = (props: any) => {
               label="Supplier ID"
               // value={addSupplier.website}
               className="w-full"
-            // onChange={(e: any) => {
-            //   setAddSupplier({
-            //     ...addSupplier,
-            //     website: e.target.value,
-            //   });
-            // }}
+              // onChange={(e: any) => {
+              //   setAddSupplier({
+              //     ...addSupplier,
+              //     website: e.target.value,
+              //   });
+              // }}
             />
           </div>
           <h2 className="text-black font-semibold mt-8">Contact Information</h2>
@@ -495,14 +509,17 @@ export const NestedAddSupplier = (props: any) => {
               value={addSupplier.opreations?.number}
               className="w-full"
               onChange={(e: any) => {
-                setAddSupplier({
-                  ...addSupplier,
-                  opreations: {
-                    ...addSupplier.opreations,
-                    number: e.target.value,
-                  },
-                });
-                if (e.target.value.length > 0) {
+                const phoneNumber = e.target.value;
+                // Check if the entered value is a valid 10-digit phone number
+                if (!regexOfPhoneNumber.test(phoneNumber)) {
+                  setError({
+                    ...error,
+                    opreationsError: {
+                      ...error.opreationsError,
+                      number: "Please enter a valid 10-digit phone number",
+                    },
+                  });
+                } else {
                   setError({
                     ...error,
                     opreationsError: {
@@ -511,6 +528,13 @@ export const NestedAddSupplier = (props: any) => {
                     },
                   });
                 }
+                setAddSupplier({
+                  ...addSupplier,
+                  opreations: {
+                    ...addSupplier.opreations,
+                    number: e.target.value,
+                  },
+                });
               }}
               errorMessage={error.opreationsError?.number}
             />
@@ -519,14 +543,16 @@ export const NestedAddSupplier = (props: any) => {
               value={addSupplier.opreations?.opreationEmail}
               className="w-full"
               onChange={(e: any) => {
-                setAddSupplier({
-                  ...addSupplier,
-                  opreations: {
-                    ...addSupplier.opreations,
-                    opreationEmail: e.target.value,
-                  },
-                });
-                if (e.target.value.length > 0) {
+                const inputValue = e.target.value;
+                if (!regexOfEmail.test(inputValue)) {
+                  setError({
+                    ...error,
+                    opreationsError: {
+                      ...error.opreationsError,
+                      opreationEmail: "Please enter a valid email address",
+                    },
+                  });
+                } else {
                   setError({
                     ...error,
                     opreationsError: {
@@ -535,6 +561,13 @@ export const NestedAddSupplier = (props: any) => {
                     },
                   });
                 }
+                setAddSupplier({
+                  ...addSupplier,
+                  opreations: {
+                    ...addSupplier.opreations,
+                    opreationEmail: e.target.value,
+                  },
+                });
               }}
               errorMessage={error.opreationsError?.opreationEmail}
             />
@@ -594,14 +627,17 @@ export const NestedAddSupplier = (props: any) => {
               value={addSupplier.compliance?.number}
               className="w-full"
               onChange={(e: any) => {
-                setAddSupplier({
-                  ...addSupplier,
-                  compliance: {
-                    ...addSupplier.compliance,
-                    number: e.target.value,
-                  },
-                });
-                if (e.target.value.length > 0) {
+                const phoneNumber = e.target.value;
+                // Check if the entered value is a valid 10-digit phone number
+                if (!regexOfPhoneNumber.test(phoneNumber)) {
+                  setError({
+                    ...error,
+                    complianceError: {
+                      ...error.complianceError,
+                      number: "Please enter a valid 10-digit phone number",
+                    },
+                  });
+                } else {
                   setError({
                     ...error,
                     complianceError: {
@@ -610,6 +646,13 @@ export const NestedAddSupplier = (props: any) => {
                     },
                   });
                 }
+                setAddSupplier({
+                  ...addSupplier,
+                  compliance: {
+                    ...addSupplier.compliance,
+                    number: e.target.value,
+                  },
+                });
               }}
               errorMessage={error.complianceError?.number}
             />
@@ -618,14 +661,16 @@ export const NestedAddSupplier = (props: any) => {
               value={addSupplier.compliance?.complianceEmail}
               className="w-full"
               onChange={(e: any) => {
-                setAddSupplier({
-                  ...addSupplier,
-                  compliance: {
-                    ...addSupplier.compliance,
-                    complianceEmail: e.target.value,
-                  },
-                });
-                if (e.target.value.length > 0) {
+                const inputValue = e.target.value;
+                if (!regexOfEmail.test(inputValue)) {
+                  setError({
+                    ...error,
+                    complianceError: {
+                      ...error.complianceError,
+                      complianceEmail: "Please enter a valid email address",
+                    },
+                  });
+                } else {
                   setError({
                     ...error,
                     complianceError: {
@@ -634,6 +679,13 @@ export const NestedAddSupplier = (props: any) => {
                     },
                   });
                 }
+                setAddSupplier({
+                  ...addSupplier,
+                  compliance: {
+                    ...addSupplier.compliance,
+                    complianceEmail: e.target.value,
+                  },
+                });
               }}
               errorMessage={error.complianceError?.complianceEmail}
             />
@@ -693,14 +745,17 @@ export const NestedAddSupplier = (props: any) => {
               value={addSupplier.admin?.number}
               className="w-full"
               onChange={(e: any) => {
-                setAddSupplier({
-                  ...addSupplier,
-                  admin: {
-                    ...addSupplier.admin,
-                    number: e.target.value,
-                  },
-                });
-                if (e.target.value.length > 0) {
+                const phoneNumber = e.target.value;
+                // Check if the entered value is a valid 10-digit phone number
+                if (!regexOfPhoneNumber.test(phoneNumber)) {
+                  setError({
+                    ...error,
+                    adminError: {
+                      ...error.adminError,
+                      number: "Please enter a valid 10-digit phone number",
+                    },
+                  });
+                } else {
                   setError({
                     ...error,
                     adminError: {
@@ -709,6 +764,13 @@ export const NestedAddSupplier = (props: any) => {
                     },
                   });
                 }
+                setAddSupplier({
+                  ...addSupplier,
+                  admin: {
+                    ...addSupplier.admin,
+                    number: e.target.value,
+                  },
+                });
               }}
               errorMessage={error.adminError?.number}
             />
@@ -717,14 +779,16 @@ export const NestedAddSupplier = (props: any) => {
               value={addSupplier.admin?.adminEmail}
               className="w-full"
               onChange={(e: any) => {
-                setAddSupplier({
-                  ...addSupplier,
-                  admin: {
-                    ...addSupplier.admin,
-                    adminEmail: e.target.value,
-                  },
-                });
-                if (e.target.value.length > 0) {
+                const inputValue = e.target.value;
+                if (!regexOfEmail.test(inputValue)) {
+                  setError({
+                    ...error,
+                    adminError: {
+                      ...error.adminError,
+                      adminEmail: "Please enter a valid email address",
+                    },
+                  });
+                } else {
                   setError({
                     ...error,
                     adminError: {
@@ -733,6 +797,13 @@ export const NestedAddSupplier = (props: any) => {
                     },
                   });
                 }
+                setAddSupplier({
+                  ...addSupplier,
+                  admin: {
+                    ...addSupplier.admin,
+                    adminEmail: e.target.value,
+                  },
+                });
               }}
               errorMessage={error.adminError?.adminEmail}
             />
@@ -792,14 +863,17 @@ export const NestedAddSupplier = (props: any) => {
               value={addSupplier.dispatch?.number}
               className="w-full"
               onChange={(e: any) => {
-                setAddSupplier({
-                  ...addSupplier,
-                  dispatch: {
-                    ...addSupplier.dispatch,
-                    number: e.target.value,
-                  },
-                });
-                if (e.target.value.length > 0) {
+                const phoneNumber = e.target.value;
+                // Check if the entered value is a valid 10-digit phone number
+                if (!regexOfPhoneNumber.test(phoneNumber)) {
+                  setError({
+                    ...error,
+                    dispatchError: {
+                      ...error.dispatchError,
+                      number: "Please enter a valid 10-digit phone number",
+                    },
+                  });
+                } else {
                   setError({
                     ...error,
                     dispatchError: {
@@ -808,6 +882,13 @@ export const NestedAddSupplier = (props: any) => {
                     },
                   });
                 }
+                setAddSupplier({
+                  ...addSupplier,
+                  dispatch: {
+                    ...addSupplier.dispatch,
+                    number: e.target.value,
+                  },
+                });
               }}
               errorMessage={error.dispatchError?.number}
             />
@@ -816,14 +897,16 @@ export const NestedAddSupplier = (props: any) => {
               value={addSupplier.dispatch?.dispatchEmail}
               className="w-full"
               onChange={(e: any) => {
-                setAddSupplier({
-                  ...addSupplier,
-                  dispatch: {
-                    ...addSupplier.dispatch,
-                    dispatchEmail: e.target.value,
-                  },
-                });
-                if (e.target.value.length > 0) {
+                const inputValue = e.target.value;
+                if (!regexOfEmail.test(inputValue)) {
+                  setError({
+                    ...error,
+                    dispatchError: {
+                      ...error.dispatchError,
+                      dispatchEmail: "Please enter a valid email address",
+                    },
+                  });
+                } else {
                   setError({
                     ...error,
                     dispatchError: {
@@ -832,6 +915,13 @@ export const NestedAddSupplier = (props: any) => {
                     },
                   });
                 }
+                setAddSupplier({
+                  ...addSupplier,
+                  dispatch: {
+                    ...addSupplier.dispatch,
+                    dispatchEmail: e.target.value,
+                  },
+                });
               }}
               errorMessage={error.dispatchError?.dispatchEmail}
             />
@@ -2059,10 +2149,10 @@ export const NestedAddSupplier = (props: any) => {
                             {selectedFiles.find((file) => file.id === data?.id)
                               ?.currentDate
                               ? formatDate(
-                                selectedFiles.find(
-                                  (file) => file.id === data?.id
-                                )?.currentDate
-                              )
+                                  selectedFiles.find(
+                                    (file) => file.id === data?.id
+                                  )?.currentDate
+                                )
                               : "No date available"}
                           </p>
                         </div>
@@ -2218,7 +2308,7 @@ const stateCollection = [
 
 const businessOperationCollection = [
   {
-    value: "Queensland "
+    value: "Queensland ",
   },
   {
     value: "Victoria",
