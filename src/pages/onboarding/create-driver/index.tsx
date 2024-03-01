@@ -1485,11 +1485,28 @@ const CreateDriver = () => {
                             error.employmentHistoryError?.referenceContactNumber
                           }
                         />
+                        <div className="mb-8 mt-2 flex">
+
+                          <Button
+                            onClick={handleAddMoreExperience}
+                            text="Add More Experiences"
+                            className="bg-[#2B36D9] px-4 !w-fit"
+                          />
+                          {index > 0 && (
+                            <span
+                              onClick={() => handleRemoveExperience(index)}
+                              className="ml-4 cursor-pointer"
+                              style={{ color: 'red', marginTop: '10px', marginRight: '10px' }}
+                            >
+                              Remove
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="mb-8 mt-8 flex justify-end">
+                  {/* <div className="mb-8 mt-8 flex justify-end">
                     {index > 0 && (
                       <span
                         onClick={() => handleRemoveExperience(index)}
@@ -1504,7 +1521,7 @@ const CreateDriver = () => {
                       text="Add More Experiences"
                       className="bg-[#2B36D9] px-4 !w-fit"
                     />
-                  </div>
+                  </div> */}
                 </div>
               )
             })}
