@@ -3,7 +3,7 @@ import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
 import { logoutUser } from "@/network-request/api";
 import { useRouter } from "next/router";
-import { destroyCookie } from 'nookies';
+import { destroyCookie } from "nookies";
 const Header = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const router = useRouter();
@@ -16,15 +16,17 @@ const Header = () => {
       const response = await logoutUser();
       if (response.success) {
         toast("You have been logged out successfully.", {
-          // icon: "👏",
+          icon: "👏",
           style: {
             borderRadius: "10px",
             background: "#333",
             color: "#fff",
           },
         });
-        destroyCookie(null, "token")
-        router.push("/login");
+        setTimeout(() => {
+          destroyCookie(null, "token");
+          router.push("/login");
+        }, 2000);
       }
     } catch (error) {
       toast("Something went wrong", {
