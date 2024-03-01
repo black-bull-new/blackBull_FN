@@ -445,19 +445,21 @@ const CreateDriver = () => {
       ),
     ]);
 
-    const updatedEmploymentHistory = addMoreExperience?.map((employment: any) => {
-      console.log({ employment })
-      return {
-        ...employment,
-        previousEmployer: employment?.previousEmployer,
-        yearsOfExperience: employment?.yearsOfExperience,
-        reasonOfLeaving: employment?.reasonOfLeaving,
-        companyName: employment?.companyName,
-        referenceContactName: employment?.referenceContactName,
-        referenceEmailId: employment?.referenceEmailId,
-        referenceContactNumber: employment?.referenceContactNumber,
-      };
-    });
+    const updatedEmploymentHistory = addMoreExperience?.map(
+      (employment: any) => {
+        console.log({ employment });
+        return {
+          ...employment,
+          previousEmployer: employment?.previousEmployer,
+          yearsOfExperience: employment?.yearsOfExperience,
+          reasonOfLeaving: employment?.reasonOfLeaving,
+          companyName: employment?.companyName,
+          referenceContactName: employment?.referenceContactName,
+          referenceEmailId: employment?.referenceEmailId,
+          referenceContactNumber: employment?.referenceContactNumber,
+        };
+      }
+    );
 
     const newDriverDetails = {
       ...driverDetails,
@@ -474,8 +476,8 @@ const CreateDriver = () => {
     };
 
     const response = await addDriver(newDriverDetails, token || "");
-    const result = response?.data?.data
-    console.log({ result })
+    const result = response?.data?.data;
+    console.log({ result });
     if (result) {
       toast("Driver has been successfully created..", {
         icon: "👏",
@@ -505,9 +507,10 @@ const CreateDriver = () => {
   const regexOfEmail =
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.+([a-zA-Z0-9-]+)2*$/;
 
-
   // ============================================================= Add More Experience =============================================================
-  const [addMoreExperience, setAddMoreExperience] = React.useState<Array<any>>([]);
+  const [addMoreExperience, setAddMoreExperience] = React.useState<Array<any>>(
+    []
+  );
 
   React.useEffect(() => {
     if (addMoreExperience.length === 0) {
@@ -519,7 +522,7 @@ const CreateDriver = () => {
           companyName: "",
           referenceContactName: "",
           referenceEmailId: "",
-          referenceContactNumber: ""
+          referenceContactNumber: "",
         },
       ]);
     }
@@ -528,21 +531,28 @@ const CreateDriver = () => {
   const handleAddMoreExperience = () => {
     setAddMoreExperience([
       ...addMoreExperience,
-      { previousEmployer: "", yearsOfExperience: "", reasonOfLeaving: "", companyName: "", referenceContactName: "", referenceEmailId: "", referenceContactNumber: "" },
+      {
+        previousEmployer: "",
+        yearsOfExperience: "",
+        reasonOfLeaving: "",
+        companyName: "",
+        referenceContactName: "",
+        referenceEmailId: "",
+        referenceContactNumber: "",
+      },
     ]);
-  }
+  };
 
   const handleRemoveExperience = (index: number) => {
     setAddMoreExperience(addMoreExperience.filter((_, i) => i !== index));
-  }
-  console.log({ addMoreExperience })
+  };
+  console.log({ addMoreExperience });
 
   const handleExperienceChange = (value: any, fieldName: any, index: any) => {
     const data = [...addMoreExperience];
     data[index][fieldName] = value.target.value;
     setAddMoreExperience(data);
   };
-
 
   return (
     <>
@@ -1274,7 +1284,9 @@ const CreateDriver = () => {
                         //   }
                         // }}
                         className="w-full"
-                        errorMessage={error.employmentHistoryError?.previousEmployer}
+                        errorMessage={
+                          error.employmentHistoryError?.previousEmployer
+                        }
                       />
                       <Maininputfield
                         label="Years Of Experience"
@@ -1303,7 +1315,9 @@ const CreateDriver = () => {
                         //   }
                         // }}
                         className="w-full"
-                        errorMessage={error.employmentHistoryError?.yearsOfExperience}
+                        errorMessage={
+                          error.employmentHistoryError?.yearsOfExperience
+                        }
                       />
                       <Maininputfield
                         label="Reason for leaving"
@@ -1332,7 +1346,9 @@ const CreateDriver = () => {
                         //   }
                         // }}
                         className="w-full"
-                        errorMessage={error.employmentHistoryError?.reasonOfLeaving}
+                        errorMessage={
+                          error.employmentHistoryError?.reasonOfLeaving
+                        }
                       />
                     </div>
 
@@ -1370,7 +1386,9 @@ const CreateDriver = () => {
                           //   }
                           // }}
                           className="w-full"
-                          errorMessage={error.employmentHistoryError?.companyName}
+                          errorMessage={
+                            error.employmentHistoryError?.companyName
+                          }
                         />
                         <Maininputfield
                           label="Reference (Contact Name)"
@@ -1378,7 +1396,11 @@ const CreateDriver = () => {
                           name="referenceContactName"
                           value={item?.referenceContactName}
                           onChange={(e: any) =>
-                            handleExperienceChange(e, "referenceContactName", index)
+                            handleExperienceChange(
+                              e,
+                              "referenceContactName",
+                              index
+                            )
                           }
                           // onChange={(e: any) => {
                           //   setDriverDetails({
@@ -1450,7 +1472,11 @@ const CreateDriver = () => {
                           name="referenceContactNumber"
                           value={item?.referenceContactNumber}
                           onChange={(e: any) =>
-                            handleExperienceChange(e, "referenceContactNumber", index)
+                            handleExperienceChange(
+                              e,
+                              "referenceContactNumber",
+                              index
+                            )
                           }
                           // onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                           //   const inputValue = e.target.value;
@@ -1494,7 +1520,11 @@ const CreateDriver = () => {
                       <span
                         onClick={() => handleRemoveExperience(index)}
                         className="ml-4 cursor-pointer"
-                        style={{ color: 'red', marginTop: '10px', marginRight: '10px' }}
+                        style={{
+                          color: "red",
+                          marginTop: "10px",
+                          marginRight: "10px",
+                        }}
                       >
                         Remove
                       </span>
@@ -1506,11 +1536,8 @@ const CreateDriver = () => {
                     />
                   </div>
                 </div>
-              )
+              );
             })}
-
-
-
 
             <div className="mb-4 mt-8">
               <h3 className="w-full mb-4 rounded-md font-semibold text-black">
@@ -1930,10 +1957,10 @@ const CreateDriver = () => {
                                   (file) => file.id === data?.id
                                 )?.currentDate
                                   ? formatDate(
-                                    selectedFiles.find(
-                                      (file) => file.id === data?.id
-                                    )?.currentDate
-                                  )
+                                      selectedFiles.find(
+                                        (file) => file.id === data?.id
+                                      )?.currentDate
+                                    )
                                   : "No date available"}
                               </p>
                             </div>
