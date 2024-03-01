@@ -132,22 +132,76 @@ export const NestedAddSupplier = (props: any) => {
   };
   const [documentRender, setDocumentRender] = React.useState("");
 
-  const handleFileChange = (setSide: any, setPreview: any) => (event: any) => {
+  const [selectedUploadRegoDocument, setSelectedUploadRegoDocument] =
+    React.useState(null);
+  // const [documentRender, setDocumentRender] = React.useState("");
+
+  const [selectedUploadRegoDocument2, setSelectedUploadRegoDocument2] =
+    React.useState(null);
+  const [documentRender2, setDocumentRender2] = React.useState("");
+
+  const handleFileChange = (setFile: any, setPreview: any) => (event: any) => {
     const selectedFile = event.target.files && event.target.files[0];
     console.log({ selectedFile })
-    setSide({ file: selectedFile });
+    setFile({ file: selectedFile });
     if (selectedFile) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreview(reader?.result! as any);
-      };
-      reader.readAsDataURL(selectedFile);
+      readAndSetPreview(selectedFile, setPreview);
     }
   };
 
+  const readAndSetPreview = (file: any, setPreview: any) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreview(reader?.result || "");
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // const [documentRender, setDocumentRender] = React.useState("");
+  // const [documentRender2, setDocumentRender2] = React.useState("");
+  // const [selectedUploadRegoDocument, setSelectedUploadRegoDocument] =
+  //   React.useState("");
+  // const [selectedUploadRegoDocument2, setSelectedUploadRegoDocument2] =
+  //   React.useState("");
+
+  // const handleFileChange = (setSide: any, setPreview: any) => (event: any) => {
+  //   console.log("handleFileChange");
+  //   const selectedFile = event.target.files && event.target.files[0];
+  //   console.log("first", selectedFile);
+  //   setSide({ file: selectedFile });
+  //   if (selectedFile) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setPreview(reader?.result! as any);
+  //     };
+  //     reader.readAsDataURL(selectedFile);
+  //   }
+  // };
+  // const handleFileChange2 = (setSide: any, setPreview: any) => (event: any) => {
+  //   console.log("handleFileChange2");
+  //   const selectedFile = event.target.files && event.target.files[0];
+  //   console.log("second", selectedFile);
+  //   setSide({ file: selectedFile });
+  //   if (selectedFile) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setPreview(reader?.result! as any);
+  //     };
+  //     reader.readAsDataURL(selectedFile);
+  //   }
+  // };
+
+  // const handleDocumentUpload = handleFileChange(
+  //   setSelectedUploadRegoDocument,
+  //   setDocumentRender
+  // );
+  // const handleDocumentUpload2 = handleFileChange2(
+  //   setSelectedUploadRegoDocument2,
+  //   setDocumentRender2
+  // );
   const handleProfileFileChange = handleFileChange(
     setSelectedProfileSupplier,
-    setProfile
+    setProfile,
   );
 
   const handleAccreditationDocument = handleFileChange(
@@ -331,12 +385,12 @@ export const NestedAddSupplier = (props: any) => {
               label="Supplier ID"
               // value={addSupplier.website}
               className="w-full"
-            // onChange={(e: any) => {
-            //   setAddSupplier({
-            //     ...addSupplier,
-            //     website: e.target.value,
-            //   });
-            // }}
+              // onChange={(e: any) => {
+              //   setAddSupplier({
+              //     ...addSupplier,
+              //     website: e.target.value,
+              //   });
+              // }}
             />
           </div>
           <h2 className="text-black font-semibold mt-8">Contact Information</h2>
@@ -1926,10 +1980,10 @@ export const NestedAddSupplier = (props: any) => {
                             {selectedFiles.find((file) => file.id === data?.id)
                               ?.currentDate
                               ? formatDate(
-                                selectedFiles.find(
-                                  (file) => file.id === data?.id
-                                )?.currentDate
-                              )
+                                  selectedFiles.find(
+                                    (file) => file.id === data?.id
+                                  )?.currentDate
+                                )
                               : "No date available"}
                           </p>
                         </div>
@@ -2094,16 +2148,13 @@ const businessOperationCollection = [
 
 const areaCollection = [
   {
-    value:
-      "Australian Capital Territory",
+    value: "Australian Capital Territory",
   },
   {
-    value:
-      "Northern Territory",
+    value: "Northern Territory",
   },
   {
-    value:
-      "Tasmania, Victoria",
+    value: "Tasmania, Victoria",
   },
 ];
 
@@ -2136,3 +2187,5 @@ const invoiceComuColletion = [
     value: "Admin Email",
   },
 ];
+
+

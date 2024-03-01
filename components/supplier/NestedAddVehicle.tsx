@@ -96,7 +96,7 @@ export const NestedAddVehicle = (props: any) => {
 
   const handleViewDocuments = (id: number) => {
     console.log("CHECK", id, modifiedUrls);
-    const index = id - 1;  // Adjust index to start from 0
+    const index = id - 1; // Adjust index to start from 0
     if (index >= 0 && index < modifiedUrls.length) {
       const url = modifiedUrls[index];
       window.open(url, "_blank");
@@ -260,10 +260,10 @@ export const NestedAddVehicle = (props: any) => {
             }}
             errorMessage={error.vehicleModelError}
           />
-          <Maindatefield
+          <DropDownMap
             label="Vehicle Type"
+            mapOption={vehicleTypeColleciton}
             value={addVehicle.vehicleType}
-            className="w-full"
             onChange={(e: any) => {
               setAddVehicle({
                 ...addVehicle,
@@ -278,10 +278,10 @@ export const NestedAddVehicle = (props: any) => {
             }}
             errorMessage={error.vehicleTypeError}
           />
-          <Maindatefield
+          <DropDownMap
             label="Type of Trailer"
+            mapOption={trailerTypeCollection}
             value={addVehicle.typeOfTrailer}
-            className="w-full"
             onChange={(e: any) => {
               setAddVehicle({
                 ...addVehicle,
@@ -296,10 +296,10 @@ export const NestedAddVehicle = (props: any) => {
             }}
             errorMessage={error.typeOfTrailerError}
           />
-          <Maindatefield
+          <DropDownMap
             label="State of Registration"
+            mapOption={registrationStateCollection}
             value={addVehicle.stateOfRegistration}
-            className="w-full"
             onChange={(e: any) => {
               setAddVehicle({
                 ...addVehicle,
@@ -637,10 +637,10 @@ export const NestedAddVehicle = (props: any) => {
                           {selectedFiles.find((file) => file.id === data?.id)
                             ?.currentDate
                             ? formatDate(
-                              selectedFiles.find(
-                                (file) => file.id === data?.id
-                              )?.currentDate
-                            )
+                                selectedFiles.find(
+                                  (file) => file.id === data?.id
+                                )?.currentDate
+                              )
                             : "No date available"}
                         </p>
                       </div>
@@ -724,7 +724,71 @@ const documentDataCollection = [
     viewDoc: "view",
   },
 ];
-
+const registrationStateCollection = [
+  {
+    value: "Victoria",
+  },
+  {
+    value: "Australian Capital Territory",
+  },
+  {
+    value: "New South Wales",
+  },
+  {
+    value: "Northern Territory",
+  },
+  {
+    value: "Queensland",
+  },
+  {
+    value: "South Australia",
+  },
+  {
+    value: "Tasmania",
+  },
+  {
+    value: "Western Australia",
+  },
+];
+const trailerTypeCollection = [
+  {
+    value: "Straight",
+  },
+  { value: "Drop" },
+  {
+    value: "Freezer",
+  },
+  {
+    value: "Mezz",
+  },
+  {
+    value: "Box",
+  },
+  {
+    value: "Dog",
+  },
+  {
+    value: "Semi",
+  },
+  {
+    value: "Low loader",
+  },
+  {
+    value: "Tag",
+  },
+  {
+    value: "Drop Decks with Ramps",
+  },
+  {
+    value: "Drop Decks with Ramps",
+  },
+  {
+    value: "B-Doubles",
+  },
+  {
+    value: "Oversize Road Train",
+  },
+];
 const vehicleDocumentCollection = [
   {
     heading: "VEHICLE",
@@ -779,5 +843,26 @@ const insuranceCoverageCollection = [
   },
   {
     value: "$10 Million Coverage",
+  },
+];
+
+const vehicleTypeColleciton = [
+  {
+    value: "Prime Mover",
+  },
+  {
+    value: "Trailer A",
+  },
+  {
+    value: "Trailer B",
+  },
+  {
+    value: "Foklift",
+  },
+  {
+    value: "Car",
+  },
+  {
+    value: "UTE",
   },
 ];

@@ -28,6 +28,9 @@ const NestedAddDriver = (props: any) => {
   } = props;
   console.log("AddDriver state", addDriver);
   console.log("Error State", error);
+  const regexOfPhoneNumber = /^(?:\+61|0)[2-478](?:[ -]?[0-9]){8}$/;
+  const regexOfEmail =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.+([a-zA-Z0-9-]+)2*$/;
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [profile, setProfile] = React.useState("");
   // const [selectedProfile, setSelectedProfile] = React.useState("");
@@ -279,13 +282,19 @@ const NestedAddDriver = (props: any) => {
             value={addDriver?.email}
             className="w-full"
             onChange={(e: any) => {
+              const inputValue = e.target.value;
+              if (!regexOfEmail.test(inputValue)) {
+                setError({
+                  ...error,
+                  emailError: "Please enter a valid email address",
+                });
+              } else {
+                setError({ ...error, emailError: "" });
+              }
               setAddDriver({
                 ...addDriver,
                 email: e.target.value,
               });
-              if (e.target.value.length > 0) {
-                setError({ ...error, emailError: "" });
-              }
             }}
             errorMessage={error.emailError}
           />
@@ -294,13 +303,20 @@ const NestedAddDriver = (props: any) => {
             value={addDriver?.mobile}
             className="w-full"
             onChange={(e: any) => {
+              const phoneNumber = e.target.value;
+              // Check if the entered value is a valid 10-digit phone number
+              if (!regexOfPhoneNumber.test(phoneNumber)) {
+                setError({
+                  ...error,
+                  mobileError: "Please enter a valid 10-digit phone number",
+                });
+              } else {
+                setError({ ...error, mobileError: "" });
+              }
               setAddDriver({
                 ...addDriver,
                 mobile: e.target.value,
               });
-              if (e.target.value.length > 0) {
-                setError({ ...error, mobileError: "" });
-              }
             }}
             errorMessage={error.mobileError}
           />
@@ -669,14 +685,17 @@ const NestedAddDriver = (props: any) => {
             value={addDriver?.emergencyContactInformation?.contactNumber}
             className="w-full"
             onChange={(e: any) => {
-              setAddDriver({
-                ...addDriver,
-                emergencyContactInformation: {
-                  ...addDriver.emergencyContactInformation,
-                  contactNumber: e.target.value,
-                },
-              });
-              if (e.target.value.length > 0) {
+              const phoneNumber = e.target.value;
+              // Check if the entered value is a valid 10-digit phone number
+              if (!regexOfPhoneNumber.test(phoneNumber)) {
+                setError({
+                  ...error,
+                  emergencyContactInformationError: {
+                    ...error.emergencyContactInformationError,
+                    contactNumber: "Please enter a valid 10-digit phone number",
+                  },
+                });
+              } else {
                 setError({
                   ...error,
                   emergencyContactInformationError: {
@@ -685,6 +704,13 @@ const NestedAddDriver = (props: any) => {
                   },
                 });
               }
+              setAddDriver({
+                ...addDriver,
+                emergencyContactInformation: {
+                  ...addDriver.emergencyContactInformation,
+                  contactNumber: e.target.value,
+                },
+              });
             }}
             errorMessage={error.emergencyContactInformationError?.contactNumber}
           />
