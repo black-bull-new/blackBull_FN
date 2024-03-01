@@ -62,9 +62,9 @@ const correctDriverStateName = (stateName: string): string => {
     dateOfIssue: "Date Of Issue",
     expiryDate: "Expiry Date",
     daysLeftForRenewal: "Days Left For Renewal",
-    perviousEmployer: "Pervious Employer",
+    previousEmployer: "Pervious Employer",
     yearsOfExperience: "Years Of Experience",
-    reasonForLeaving: "Reason For Leaving",
+    reasonOfLeaving: "Reason For Leaving",
     companyName: "Company Name",
     referenceContactName: "Reference Contact Name",
     referenceEmailId: "Reference Email Id",
@@ -121,16 +121,7 @@ const CreateDriver = () => {
       daysLeftForRenewal: "",
       documents: "",
     },
-    employmentHistory: {
-      perviousEmployer: "",
-      yearsOfExperience: "",
-      reasonForLeaving: "",
-
-      companyName: "",
-      referenceContactName: "",
-      referenceEmailId: "",
-      referenceContactNumber: "",
-    },
+    employmentHistory: [],
     specialDrivingLicence: {
       specialDrivingLicence: "",
     },
@@ -180,9 +171,9 @@ const CreateDriver = () => {
       daysLeftForRenewal: "",
     },
     employmentHistoryError: {
-      perviousEmployer: "",
+      previousEmployer: "",
       yearsOfExperience: "",
-      reasonForLeaving: "",
+      reasonOfLeaving: "",
 
       companyName: "",
       referenceContactName: "",
@@ -465,6 +456,20 @@ const CreateDriver = () => {
       ),
     ]);
 
+    const updatedEmploymentHistory = addMoreExperience?.map((employment: any) => {
+      console.log({ employment })
+      return {
+        ...employment,
+        previousEmployer: employment?.previousEmployer,
+        yearsOfExperience: employment?.yearsOfExperience,
+        reasonOfLeaving: employment?.reasonOfLeaving,
+        companyName: employment?.companyName,
+        referenceContactName: employment?.referenceContactName,
+        referenceEmailId: employment?.referenceEmailId,
+        referenceContactNumber: employment?.referenceContactNumber,
+      };
+    });
+
     const newDriverDetails = {
       ...driverDetails,
       avatar: profileUrl[0]?.response,
@@ -476,10 +481,13 @@ const CreateDriver = () => {
         type: url,
         uploadDate: formattedDate,
       })),
+      employmentHistory: updatedEmploymentHistory,
     };
 
     const response = await addDriver(newDriverDetails, token || "");
-    if (response?.data?.data) {
+    const result = response?.data?.data
+    console.log({ result })
+    if (result) {
       toast("Driver has been successfully created..", {
         icon: "👏",
         style: {
@@ -507,7 +515,45 @@ const CreateDriver = () => {
   const regexOfPhoneNumber = /^(?:\+61|0)[2-478](?:[ -]?[0-9]){8}$/;
   const regexOfEmail =
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.+([a-zA-Z0-9-]+)2*$/;
-  const regexOfWebsite = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
+
+
+  // ============================================================= Add More Experience =============================================================
+  const [addMoreExperience, setAddMoreExperience] = React.useState<Array<any>>([]);
+
+  React.useEffect(() => {
+    if (addMoreExperience.length === 0) {
+      setAddMoreExperience([
+        {
+          previousEmployer: "",
+          yearsOfExperience: "",
+          reasonOfLeaving: "",
+          companyName: "",
+          referenceContactName: "",
+          referenceEmailId: "",
+          referenceContactNumber: ""
+        },
+      ]);
+    }
+  }, []);
+
+  const handleAddMoreExperience = () => {
+    setAddMoreExperience([
+      ...addMoreExperience,
+      { previousEmployer: "", yearsOfExperience: "", reasonOfLeaving: "", companyName: "", referenceContactName: "", referenceEmailId: "", referenceContactNumber: "" },
+    ]);
+  }
+
+  const handleRemoveExperience = (index: number) => {
+    setAddMoreExperience(addMoreExperience.filter((_, i) => i !== index));
+  }
+  console.log({ addMoreExperience })
+
+  const handleExperienceChange = (value: any, fieldName: any, index: any) => {
+    const data = [...addMoreExperience];
+    data[index][fieldName] = value.target.value;
+    setAddMoreExperience(data);
+  };
+
 
   return (
     <>
@@ -1195,247 +1241,288 @@ const CreateDriver = () => {
                 />
               </div>
             </div>
+
             <div className="mb-4 mt-8">
               <h3 className="w-full mb-4 rounded-md font-semibold text-black">
                 {" "}
                 Employment History
               </h3>
-              <h4 className="text-sm font-semibold mb-4 text-black">
-                Experience
-              </h4>
-              <div className="grid grid-cols-3 gap-4">
-                <Maininputfield
-                  label="Pervious Employer"
-                  value={driverDetails.employmentHistory.perviousEmployer}
-                  onChange={(e: any) => {
-                    setDriverDetails({
-                      ...driverDetails,
-                      employmentHistory: {
-                        ...driverDetails.employmentHistory,
-                        perviousEmployer: e.target.value,
-                      },
-                    });
-                    if (e.target.value.length > 0) {
-                      setError({
-                        ...error,
-                        employmentHistoryError: {
-                          ...error.employmentHistoryError,
-                          perviousEmployer: "",
-                        },
-                      });
-                    }
-                  }}
-                  className="w-full"
-                  errorMessage={error.employmentHistoryError?.perviousEmployer}
-                />
-                <Maininputfield
-                  label="Years Of Experience"
-                  value={driverDetails.employmentHistory.yearsOfExperience}
-                  onChange={(e: any) => {
-                    setDriverDetails({
-                      ...driverDetails,
-                      employmentHistory: {
-                        ...driverDetails.employmentHistory,
-                        yearsOfExperience: e.target.value,
-                      },
-                    });
-                    if (e.target.value.length > 0) {
-                      setError({
-                        ...error,
-                        employmentHistoryError: {
-                          ...error.employmentHistoryError,
-                          yearsOfExperience: "",
-                        },
-                      });
-                    }
-                  }}
-                  className="w-full"
-                  errorMessage={error.employmentHistoryError?.yearsOfExperience}
-                />
-                <Maininputfield
-                  label="Reason for leaving"
-                  value={driverDetails.employmentHistory.reasonForLeaving}
-                  onChange={(e: any) => {
-                    setDriverDetails({
-                      ...driverDetails,
-                      employmentHistory: {
-                        ...driverDetails.employmentHistory,
-                        reasonForLeaving: e.target.value,
-                      },
-                    });
-                    if (e.target.value.length > 0) {
-                      setError({
-                        ...error,
-                        employmentHistoryError: {
-                          ...error.employmentHistoryError,
-                          reasonForLeaving: "",
-                        },
-                      });
-                    }
-                  }}
-                  className="w-full"
-                  errorMessage={error.employmentHistoryError?.reasonForLeaving}
-                />
-              </div>
+            </div>
 
-              {/* commenting out for temporary as backend is not accepting referance informtion objext*/}
-              <div className="mb-4 mt-8">
-                <h4 className="text-sm font-semibold mb-4 text-blueGrey-900">
-                  Reference Information
-                </h4>
+            {addMoreExperience?.map((item: any, index: number) => {
+              return (
+                <div key={index}>
+                  <div>
+                    <h4 className="text-sm font-semibold mb-4 text-black">
+                      Experience
+                    </h4>
 
-                <div className="grid grid-cols-3 gap-4">
-                  <Maininputfield
-                    label="Company Name"
-                    value={driverDetails.employmentHistory.companyName}
-                    onChange={(e: any) => {
-                      setDriverDetails({
-                        ...driverDetails,
-                        employmentHistory: {
-                          ...driverDetails.employmentHistory,
-                          companyName: e.target.value,
-                        },
-                      });
-                      if (e.target.value.length > 0) {
-                        setError({
-                          ...error,
-                          employmentHistoryError: {
-                            ...error.employmentHistoryError,
-                            companyName: "",
-                          },
-                        });
-                      }
-                    }}
-                    className="w-full"
-                    errorMessage={error.employmentHistoryError?.companyName}
-                  />
-                  <Maininputfield
-                    label="Reference (Contact Name)"
-                    value={driverDetails.employmentHistory.referenceContactName}
-                    onChange={(e: any) => {
-                      setDriverDetails({
-                        ...driverDetails,
-                        employmentHistory: {
-                          ...driverDetails.employmentHistory,
-                          referenceContactName: e.target.value,
-                        },
-                      });
-                      if (e.target.value.length > 0) {
-                        setError({
-                          ...error,
-                          employmentHistoryError: {
-                            ...error.employmentHistoryError,
-                            referenceContactName: "",
-                          },
-                        });
-                      }
-                    }}
-                    className="w-full"
-                    errorMessage={
-                      error.employmentHistoryError?.referenceContactName
-                    }
-                  />
-                  <Maininputfield
-                    label="Reference (Email ID)"
-                    value={driverDetails.employmentHistory.referenceEmailId}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      const inputValue = e.target.value;
-                      if (!regexOfEmail.test(inputValue)) {
-                        setError({
-                          ...error,
-                          employmentHistoryError: {
-                            ...error.employmentHistoryError,
-                            referenceEmailId:
-                              "Please enter a valid email address",
-                          },
-                        });
-                      } else {
-                        setError({
-                          ...error,
-                          employmentHistoryError: {
-                            ...error.employmentHistoryError,
-                            referenceEmailId: "",
-                          },
-                        });
-                      }
-                      setDriverDetails({
-                        ...driverDetails,
-                        employmentHistory: {
-                          ...driverDetails.employmentHistory,
-                          referenceEmailId: e.target.value,
-                        },
-                      });
-                    }}
-                    className="w-full"
-                    errorMessage={
-                      error.employmentHistoryError?.referenceEmailId
-                    }
-                  />
-                  <Maininputfield
-                    label="Reference (Contact Number)"
-                    value={
-                      driverDetails.employmentHistory.referenceContactNumber
-                    }
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      const inputValue = e.target.value;
-                      if (!regexOfPhoneNumber.test(inputValue)) {
-                        setError({
-                          ...error,
-                          employmentHistoryError: {
-                            ...error.employmentHistoryError,
-                            referenceContactNumber:
-                              "Please enter a valid phone number",
-                          },
-                        });
-                      } else {
-                        setError({
-                          ...error,
-                          employmentHistoryError: {
-                            ...error.employmentHistoryError,
-                            referenceContactNumber: "",
-                          },
-                        });
-                      }
-                      setDriverDetails({
-                        ...driverDetails,
-                        employmentHistory: {
-                          ...driverDetails.employmentHistory,
-                          referenceContactNumber: e.target.value,
-                        },
-                      });
-                    }}
-                    // onChange={(e: any) => {
-                    //   setDriverDetails({
-                    //     ...driverDetails,
-                    //     employmentHistory: {
-                    //       ...driverDetails.employmentHistory,
-                    //       referenceContactNumber: e.target.value,
-                    //     },
-                    //   });
-                    //   if (e.target.value.length > 0) {
-                    //     setError({
-                    //       ...error,
-                    //       employmentHistoryError: {
-                    //         ...error.employmentHistoryError,
-                    //         referenceContactNumber: "",
-                    //       },
-                    //     });
-                    //   }
-                    // }}
-                    className="w-full"
-                    errorMessage={
-                      error.employmentHistoryError?.referenceContactNumber
-                    }
-                  />
+                    <div className="grid grid-cols-3 gap-4">
+                      <Maininputfield
+                        label="Pervious Employer"
+                        id="previousEmployer"
+                        name="previousEmployer"
+                        value={item?.previousEmployer}
+                        onChange={(e: any) =>
+                          handleExperienceChange(e, "previousEmployer", index)
+                        }
+                        // onChange={(e: any) => {
+                        //   setDriverDetails({
+                        //     ...driverDetails,
+                        //     employmentHistory: {
+                        //       ...driverDetails.employmentHistory,
+                        //       previousEmployer: e.target.value,
+                        //     },
+                        //   });
+                        //   if (e.target.value.length > 0) {
+                        //     setError({
+                        //       ...error,
+                        //       employmentHistoryError: {
+                        //         ...error.employmentHistoryError,
+                        //         previousEmployer: "",
+                        //       },
+                        //     });
+                        //   }
+                        // }}
+                        className="w-full"
+                        errorMessage={error.employmentHistoryError?.previousEmployer}
+                      />
+                      <Maininputfield
+                        label="Years Of Experience"
+                        id="yearsOfExperience"
+                        name="yearsOfExperience"
+                        value={item?.yearsOfExperience}
+                        onChange={(e: any) =>
+                          handleExperienceChange(e, "yearsOfExperience", index)
+                        }
+                        // onChange={(e: any) => {
+                        //   setDriverDetails({
+                        //     ...driverDetails,
+                        //     employmentHistory: {
+                        //       ...driverDetails.employmentHistory,
+                        //       yearsOfExperience: e.target.value,
+                        //     },
+                        //   });
+                        //   if (e.target.value.length > 0) {
+                        //     setError({
+                        //       ...error,
+                        //       employmentHistoryError: {
+                        //         ...error.employmentHistoryError,
+                        //         yearsOfExperience: "",
+                        //       },
+                        //     });
+                        //   }
+                        // }}
+                        className="w-full"
+                        errorMessage={error.employmentHistoryError?.yearsOfExperience}
+                      />
+                      <Maininputfield
+                        label="Reason for leaving"
+                        id="reasonOfLeaving"
+                        name="reasonOfLeaving"
+                        value={item?.reasonOfLeaving}
+                        onChange={(e: any) =>
+                          handleExperienceChange(e, "reasonOfLeaving", index)
+                        }
+                        // onChange={(e: any) => {
+                        //   setDriverDetails({
+                        //     ...driverDetails,
+                        //     employmentHistory: {
+                        //       ...driverDetails.employmentHistory,
+                        //       reasonOfLeaving: e.target.value,
+                        //     },
+                        //   });
+                        //   if (e.target.value.length > 0) {
+                        //     setError({
+                        //       ...error,
+                        //       employmentHistoryError: {
+                        //         ...error.employmentHistoryError,
+                        //         reasonOfLeaving: "",
+                        //       },
+                        //     });
+                        //   }
+                        // }}
+                        className="w-full"
+                        errorMessage={error.employmentHistoryError?.reasonOfLeaving}
+                      />
+                    </div>
+
+                    {/* commenting out for temporary as backend is not accepting referance informtion objext*/}
+                    <div className="mb-4 mt-8">
+                      <h4 className="text-sm font-semibold mb-4 text-blueGrey-900">
+                        Reference Information
+                      </h4>
+
+                      <div className="grid grid-cols-3 gap-4">
+                        <Maininputfield
+                          label="Company Name"
+                          id="companyName"
+                          name="companyName"
+                          value={item?.companyName}
+                          onChange={(e: any) =>
+                            handleExperienceChange(e, "companyName", index)
+                          }
+                          // onChange={(e: any) => {
+                          //   setDriverDetails({
+                          //     ...driverDetails,
+                          //     employmentHistory: {
+                          //       ...driverDetails.employmentHistory,
+                          //       companyName: e.target.value,
+                          //     },
+                          //   });
+                          //   if (e.target.value.length > 0) {
+                          //     setError({
+                          //       ...error,
+                          //       employmentHistoryError: {
+                          //         ...error.employmentHistoryError,
+                          //         companyName: "",
+                          //       },
+                          //     });
+                          //   }
+                          // }}
+                          className="w-full"
+                          errorMessage={error.employmentHistoryError?.companyName}
+                        />
+                        <Maininputfield
+                          label="Reference (Contact Name)"
+                          id="referenceContactName"
+                          name="referenceContactName"
+                          value={item?.referenceContactName}
+                          onChange={(e: any) =>
+                            handleExperienceChange(e, "referenceContactName", index)
+                          }
+                          // onChange={(e: any) => {
+                          //   setDriverDetails({
+                          //     ...driverDetails,
+                          //     employmentHistory: {
+                          //       ...driverDetails.employmentHistory,
+                          //       referenceContactName: e.target.value,
+                          //     },
+                          //   });
+                          //   if (e.target.value.length > 0) {
+                          //     setError({
+                          //       ...error,
+                          //       employmentHistoryError: {
+                          //         ...error.employmentHistoryError,
+                          //         referenceContactName: "",
+                          //       },
+                          //     });
+                          //   }
+                          // }}
+                          className="w-full"
+                          errorMessage={
+                            error.employmentHistoryError?.referenceContactName
+                          }
+                        />
+                        <Maininputfield
+                          label="Reference (Email ID)"
+                          id="referenceEmailId"
+                          name="referenceEmailId"
+                          value={item?.referenceEmailId}
+                          onChange={(e: any) =>
+                            handleExperienceChange(e, "referenceEmailId", index)
+                          }
+                          // onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          //   const inputValue = e.target.value;
+                          //   if (!regexOfEmail.test(inputValue)) {
+                          //     setError({
+                          //       ...error,
+                          //       employmentHistoryError: {
+                          //         ...error.employmentHistoryError,
+                          //         referenceEmailId:
+                          //           "Please enter a valid email address",
+                          //       },
+                          //     });
+                          //   } else {
+                          //     setError({
+                          //       ...error,
+                          //       employmentHistoryError: {
+                          //         ...error.employmentHistoryError,
+                          //         referenceEmailId: "",
+                          //       },
+                          //     });
+                          //   }
+                          //   setDriverDetails({
+                          //     ...driverDetails,
+                          //     employmentHistory: {
+                          //       ...driverDetails.employmentHistory,
+                          //       referenceEmailId: e.target.value,
+                          //     },
+                          //   });
+                          // }}
+                          className="w-full"
+                          errorMessage={
+                            error.employmentHistoryError?.referenceEmailId
+                          }
+                        />
+                        <Maininputfield
+                          label="Reference (Contact Number)"
+                          id="referenceContactNumber"
+                          name="referenceContactNumber"
+                          value={item?.referenceContactNumber}
+                          onChange={(e: any) =>
+                            handleExperienceChange(e, "referenceContactNumber", index)
+                          }
+                          // onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          //   const inputValue = e.target.value;
+                          //   if (!regexOfPhoneNumber.test(inputValue)) {
+                          //     setError({
+                          //       ...error,
+                          //       employmentHistoryError: {
+                          //         ...error.employmentHistoryError,
+                          //         referenceContactNumber:
+                          //           "Please enter a valid phone number",
+                          //       },
+                          //     });
+                          //   } else {
+                          //     setError({
+                          //       ...error,
+                          //       employmentHistoryError: {
+                          //         ...error.employmentHistoryError,
+                          //         referenceContactNumber: "",
+                          //       },
+                          //     });
+                          //   }
+                          //   setDriverDetails({
+                          //     ...driverDetails,
+                          //     employmentHistory: {
+                          //       ...driverDetails.employmentHistory,
+                          //       referenceContactNumber: e.target.value,
+                          //     },
+                          //   });
+                          // }}
+                          className="w-full"
+                          errorMessage={
+                            error.employmentHistoryError?.referenceContactNumber
+                          }
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mb-8 mt-8 flex justify-end">
+                    {index > 0 && (
+                      <span
+                        onClick={() => handleRemoveExperience(index)}
+                        className="ml-4 cursor-pointer"
+                        style={{ color: 'red', marginTop: '10px', marginRight: '10px' }}
+                      >
+                        Remove
+                      </span>
+                    )}
+                    <Button
+                      onClick={handleAddMoreExperience}
+                      text="Add More Experiences"
+                      className="bg-[#2B36D9] px-4 !w-fit"
+                    />
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div className="mb-8 mt-8 flex justify-end">
-              <Button
-                text="Add More Experiences"
-                className="bg-[#2B36D9] px-4 !w-fit"
-              />
-            </div>
+              )
+            })}
+
+
+
+
             <div className="mb-4 mt-8">
               <h3 className="w-full mb-4 rounded-md font-semibold text-black">
                 {" "}
@@ -1633,8 +1720,8 @@ const CreateDriver = () => {
               <div className="grid grid-cols-3 gap-4">
                 <Maininputfield
                   label="Pervious Employer"
-                  value={driverDetails.employmentHistory.perviousEmployer}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, employmentHistory: {...driverDetails.employmentHistory, perviousEmployer: e.target.value}})}
+                  value={driverDetails.employmentHistory.previousEmployer}
+                  onChange={(e:any)=>setDriverDetails({...driverDetails, employmentHistory: {...driverDetails.employmentHistory, previousEmployer: e.target.value}})}
                   className="w-full"
                 />
                 <Maininputfield
@@ -1646,8 +1733,8 @@ const CreateDriver = () => {
 
                 <Maininputfield
                   label="Reason for leaving"
-                  value={driverDetails.employmentHistory.reasonForLeaving}
-                  onChange={(e:any)=>setDriverDetails({...driverDetails, employmentHistory: {...driverDetails.employmentHistory, reasonForLeaving: e.target.value}})}
+                  value={driverDetails.employmentHistory.reasonOfLeaving}
+                  onChange={(e:any)=>setDriverDetails({...driverDetails, employmentHistory: {...driverDetails.employmentHistory, reasonOfLeaving: e.target.value}})}
                   className="w-full"
                 />
               </div>
@@ -1852,10 +1939,10 @@ const CreateDriver = () => {
                                   (file) => file.id === data?.id
                                 )?.currentDate
                                   ? formatDate(
-                                      selectedFiles.find(
-                                        (file) => file.id === data?.id
-                                      )?.currentDate
-                                    )
+                                    selectedFiles.find(
+                                      (file) => file.id === data?.id
+                                    )?.currentDate
+                                  )
                                   : "No date available"}
                               </p>
                             </div>
