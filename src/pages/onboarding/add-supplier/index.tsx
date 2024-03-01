@@ -642,10 +642,7 @@ const AddSupplier = () => {
       ]);
 
       // Uploading driver license documents ...
-      const uploadAllDocuments = async function (
-        documents: string,
-        uploadFunction: any
-      ) {
+      const uploadAllDocuments = async function (documents: string, uploadFunction: any) {
         return await Promise.all(
           Object.values(documents)?.map((imageInfo) =>
             uploadFunction(imageInfo)
@@ -735,7 +732,7 @@ const AddSupplier = () => {
         newSupplierDetails,
         token || ""
       );
-      console.log({ response });
+      console.log({ response })
       if (response.data) {
         toast("Supplier has been successfully created..", {
           icon: "👏",
@@ -749,7 +746,7 @@ const AddSupplier = () => {
           top: 0,
           behavior: "smooth",
         });
-        seButtonState(step2Btn);
+        seButtonState(step2Btn)
       } else {
         toast("Something went wrong", {
           icon: "⚠️",
@@ -803,7 +800,7 @@ const AddSupplier = () => {
             color: "#fff",
           },
         });
-        seButtonState(step3Btn);
+        seButtonState(step3Btn)
       } else {
         toast("Something went wrong", {
           icon: "⚠️",
@@ -1094,55 +1091,48 @@ const AddSupplier = () => {
               setSelectedProfileSupplier={setSelectedProfileForSupplier}
               setUrls={setUrlsForSupplier}
               modifiedUrls={modifiedUrlsForSupplier}
+
               accreditationDocument={selectedDocuments?.accreditationDocument}
-              setAccreditationDocument={(value: string) =>
-                setSelectedDocuments((item) => ({
-                  ...item,
-                  accreditationDocument: value,
-                }))
-              }
+              setAccreditationDocument={(value: string) => setSelectedDocuments(item => ({
+                ...item,
+                accreditationDocument: value
+              }))}
+
               productDocument={selectedDocuments?.productLiabilityDocument}
-              setProductDocument={(value: string) =>
-                setSelectedDocuments((item) => ({
-                  ...item,
-                  productLiabilityDocument: value,
-                }))
-              }
+              setProductDocument={(value: string) => setSelectedDocuments(item => ({
+                ...item,
+                productLiabilityDocument: value
+              }))}
+
               publicDocument={selectedDocuments?.publicLiabilityDocument}
-              setPublicDocument={(value: string) =>
-                setSelectedDocuments((item) => ({
-                  ...item,
-                  publicLiabilityDocument: value,
-                }))
-              }
+              setPublicDocument={(value: string) => setSelectedDocuments(item => ({
+                ...item,
+                publicLiabilityDocument: value
+              }))}
+
               workCoverDocument={selectedDocuments?.workCoverDocument}
-              setWorkCoverDocument={(value: string) =>
-                setSelectedDocuments((item) => ({
-                  ...item,
-                  workCoverDocument: value,
-                }))
-              }
+              setWorkCoverDocument={(value: string) => setSelectedDocuments(item => ({
+                ...item,
+                workCoverDocument: value
+              }))}
+
               marineDocument={selectedDocuments?.marineDocument}
-              setMarineDocument={(value: string) =>
-                setSelectedDocuments((item) => ({
-                  ...item,
-                  marineDocument: value,
-                }))
-              }
+              setMarineDocument={(value: string) => setSelectedDocuments(item => ({
+                ...item,
+                marineDocument: value
+              }))}
+
               marineAlcoholDocument={selectedDocuments?.marineAlcoholDocument}
-              setMarineAlcoholDocument={(value: string) =>
-                setSelectedDocuments((item) => ({
-                  ...item,
-                  marineAlcoholDocument: value,
-                }))
-              }
+              setMarineAlcoholDocument={(value: string) => setSelectedDocuments(item => ({
+                ...item,
+                marineAlcoholDocument: value
+              }))}
+
               cocDocument={selectedDocuments?.cocDocument}
-              setCocDocument={(value: string) =>
-                setSelectedDocuments((item) => ({
-                  ...item,
-                  cocDocument: value,
-                }))
-              }
+              setCocDocument={(value: string) => setSelectedDocuments(item => ({
+                ...item,
+                cocDocument: value
+              }))}
             />
           ) : buttonState === step2Btn ? (
             <NestedAddVehicle

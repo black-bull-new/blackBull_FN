@@ -10,11 +10,12 @@ const Maininputfield = (props: any) => {
           {props.label}
         </label>
         <input
-          type="text" 
+          type="text"
           id={props.id}
           className={`pl-[15px] leading-[24px] bg-[#EFF2F3] text-[#35454C] outline-none w-[300px] placeholder:text-[16px]  text-[16px] font-medium ${props.className}`}
           placeholder={props.placeholder}
           value={props.value}
+          name={props.name}
           onChange={props.onChange}
         />
       </div>

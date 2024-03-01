@@ -431,12 +431,12 @@ export const NestedAddSupplier = (props: any) => {
               label="Supplier ID"
               // value={addSupplier.website}
               className="w-full"
-              // onChange={(e: any) => {
-              //   setAddSupplier({
-              //     ...addSupplier,
-              //     website: e.target.value,
-              //   });
-              // }}
+            // onChange={(e: any) => {
+            //   setAddSupplier({
+            //     ...addSupplier,
+            //     website: e.target.value,
+            //   });
+            // }}
             />
           </div>
           <h2 className="text-black font-semibold mt-8">Contact Information</h2>
@@ -2059,10 +2059,10 @@ export const NestedAddSupplier = (props: any) => {
                             {selectedFiles.find((file) => file.id === data?.id)
                               ?.currentDate
                               ? formatDate(
-                                  selectedFiles.find(
-                                    (file) => file.id === data?.id
-                                  )?.currentDate
-                                )
+                                selectedFiles.find(
+                                  (file) => file.id === data?.id
+                                )?.currentDate
+                              )
                               : "No date available"}
                           </p>
                         </div>
@@ -2218,17 +2218,10 @@ const stateCollection = [
 
 const businessOperationCollection = [
   {
-    value: "Queensland, Victoria",
+    value: "Queensland "
   },
   {
-    value: "item1",
-  },
-
-  {
-    value: "item2",
-  },
-  {
-    value: "item3",
+    value: "Victoria",
   },
 ];
 
