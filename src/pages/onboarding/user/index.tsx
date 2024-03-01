@@ -167,7 +167,7 @@ const User = () => {
     const response: any = await createUser(customPayload, token || "");
     console.log("FINAL RESPONSE", { response });
     if (response?.status === 200) {
-      toast("User has", {
+      toast("User has been created successfully", {
         icon: "👏",
         style: {
           borderRadius: "10px",

@@ -148,20 +148,7 @@ const CreateVehicle = () => {
     vehicleDocumentStatusError: "Complete",
   });
 
-  const [documentDataCollection, setDocumentDataCollection] = useState<any>([
-    // {
-    //   id: 1,
-    //   Vehicle: "",
-    //   rego: "Placeholder",
-    //   uploadDate: "19/12/2023",
-    //   UploadedDoc: "doc.pdf",
-    //   status: "Approved",
-    //   viewDoc: "view",
-    //   flag: true,
-    // },
-  ]);
-
-  const [inputValue, setInputValue] = useState("");
+  const [documentDataCollection, setDocumentDataCollection] = useState<any>([]);
 
   const handleInputChange = (id: any, value: any) => {
     setDocumentDataCollection((prevCollection: any) => {
@@ -932,7 +919,9 @@ const CreateVehicle = () => {
                 )}
                 <FileUpload
                   file="Upload Rego Document"
+                  id="vehicleRegoFile"
                   onChange={handleProfileFileChange}
+                  name="vehicleRegoDocument"
                   //@ts-expect-error
                   fileName={selectedUploadRegoDocument?.file?.name || ""}
                 />

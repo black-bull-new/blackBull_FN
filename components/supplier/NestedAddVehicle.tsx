@@ -35,6 +35,56 @@ export const NestedAddVehicle = (props: any) => {
     { id: number; file: File; currentDate: Date | null }[]
   >([]);
 
+  const [documentDataCollection, setDocumentDataCollection] = useState<any>([]);
+
+  const handleInputChange = (id: any, value: any) => {
+    setDocumentDataCollection((prevCollection: any) => {
+      const updatedCollection = prevCollection.map((item: any) =>
+        item.id === id ? { ...item, Vehicle: value } : item
+      );
+
+      return updatedCollection;
+    });
+  };
+
+  const handleInputBlur = (id: any) => {
+    // setInputValue("");
+    setDocumentDataCollection((prevCollection: any) => {
+      const updatedCollection = prevCollection.map((item: any) =>
+        item.id === id ? { ...item, flag: false } : item
+      );
+
+      return updatedCollection;
+    });
+  };
+
+  const handleInputClick = (id: any) => {
+    setDocumentDataCollection((prevCollection: any) => {
+      const updatedCollection = prevCollection.map((item: any) =>
+        item.id === id ? { ...item, flag: true } : item
+      );
+
+      return updatedCollection;
+    });
+  };
+
+  console.log("documentDataCollection", documentDataCollection);
+  const handleAddRow = () => {
+    const newRow = {
+      id: documentDataCollection.length + 1,
+      Vehicle: "",
+      rego: "New Rego",
+      uploadDate: "New Upload Date",
+      UploadedDoc: "new-doc.pdf",
+      status: "New Status",
+      viewDoc: "view",
+      flag: true,
+    };
+
+    setDocumentDataCollection([...documentDataCollection, newRow]);
+    // You might also need to update other state variables accordingly for the new row.
+  };
+
   const handleFileChanges = (
     event: React.ChangeEvent<HTMLInputElement>,
     documentId: number
@@ -372,6 +422,8 @@ export const NestedAddVehicle = (props: any) => {
         <div className="mt-4 w-fit">
           <FileUpload
             file="Upload Rego Document"
+            id="supplierVehicleRegoFile"
+            name="supplierVehicleRegoDocument"
             onChange={handleProfileFileChange}
             fileName={selectedUploadRegoDocument?.file?.name || ""}
           />
@@ -576,9 +628,18 @@ export const NestedAddVehicle = (props: any) => {
           />
         </div>
         <div className="mt-8">
-          <h3 className="text-black w-full mb-4 font-semibold">
-            Vehicle Documents
-          </h3>
+          <div className="flex">
+            <h3 className="text-black w-full mb-4 font-semibold">
+              Vehicle Documents
+            </h3>
+            <button
+              onClick={handleAddRow}
+              className="text-white mb-2 flex justify-center items-center font-thin bg-[#2B36D9] w-[48px] h-[48px] pb-2 rounded-full text-[40px]"
+            >
+              +
+            </button>
+          </div>
+
           <div className="grid grid-cols-[16%_16%_16%_16%_16%_20%] text-black bg-[#EFF2F3] py-4 rounded-md flex text-center">
             {vehicleDocumentCollection?.map((value, index) => {
               return (
@@ -596,12 +657,31 @@ export const NestedAddVehicle = (props: any) => {
 
           <div>
             <div>
-              {documentDataCollection?.map((data: any, index) => (
+              {documentDataCollection?.map((data: any, index: any) => (
                 <div
                   className="text-black grid grid-cols-[16%_16%_16%_16%_16%_20%] py-4 flex text-center"
                   key={index}
                 >
-                  <div>{data.Vehicle}</div>
+                  <div>
+                    {data.flag ? (
+                      <input
+                        className="border-b-2 text-center border-[#607D8B]"
+                        placeholder="Document Name"
+                        value={data.Vehicle}
+                        onChange={(e) =>
+                          handleInputChange(data.id, e.target.value)
+                        }
+                        onBlur={() => handleInputBlur(data.id)}
+                      />
+                    ) : (
+                      <span
+                        onClick={() => handleInputClick(data.id)}
+                        className="cursor-pointer text-center"
+                      >
+                        {data.Vehicle}
+                      </span>
+                    )}
+                  </div>
                   <div className="text-center">
                     <label className="cursor-pointer">
                       <React.Fragment>
@@ -617,7 +697,7 @@ export const NestedAddVehicle = (props: any) => {
                             </p>
                           </div>
                         ) : (
-                          <span className="!w-fit m-auto bg-[#2B36D9] text-sm px-6 rounded-full mb-6 font-semibold py-2 text-white">
+                          <span className="!w-fit m-auto bg-[#2B36D9] py-2  text-sm px-6 rounded-full mb-6 font-semibold placeholder:py-[4px] text-white">
                             Select
                           </span>
                         )}
@@ -652,18 +732,18 @@ export const NestedAddVehicle = (props: any) => {
                     {uploadStatus[data?.id] ? (
                       <p style={{ color: "green" }}>
                         {showUploadMessage ? (
-                          <span className="!w-fit m-auto bg-[#2B36D9] cursor-pointer text-sm px-6 rounded-full mb-6 font-semibold  py-2 text-white">
+                          <span className="!w-fit m-auto bg-[#2B36D9] py-2  cursor-pointer text-sm px-6 rounded-full mb-6 font-semibold  text-white">
                             Uploaded
                           </span>
                         ) : (
-                          <span className="!w-fit m-auto bg-[#2B36D9] cursor-pointer text-sm px-6 rounded-full mb-6 font-semibold py-2 text-white">
+                          <span className="!w-fit m-auto bg-[#2B36D9] py-2  cursor-pointer text-sm px-6 rounded-full mb-6 font-semibold  text-white">
                             Uploading...
                           </span>
                         )}
                       </p>
                     ) : (
                       <span
-                        className="!w-fit m-auto bg-[#2B36D9] cursor-pointer text-sm px-6 rounded-full mb-6 font-semibold  py-2 text-white"
+                        className="!w-fit m-auto bg-[#2B36D9] py-2 cursor-pointer text-sm px-6 rounded-full mb-6 font-semibold text-white"
                         onClick={() =>
                           handleUploadFileWithId(data?.id, combinedObject)
                         }
@@ -695,35 +775,35 @@ export const NestedAddVehicle = (props: any) => {
   );
 };
 
-const documentDataCollection = [
-  {
-    id: 1,
-    Vehicle: "Placeholder",
-    rego: "Placeholder",
-    uploadDate: "19/12/2023",
-    UploadedDoc: "doc.pdf",
-    status: "Approved",
-    viewDoc: "view",
-  },
-  {
-    id: 2,
-    Vehicle: "Placeholder",
-    rego: "Placeholder",
-    uploadDate: "18/12/2023",
-    UploadedDoc: "doc.pdf",
-    status: "Under Review",
-    viewDoc: "view",
-  },
-  {
-    id: 3,
-    Vehicle: "Placeholder",
-    rego: "Placeholder",
-    uploadDate: "17/12/2023",
-    UploadedDoc: "doc.pdf",
-    status: "Rejected",
-    viewDoc: "view",
-  },
-];
+// const documentDataCollection = [
+//   {
+//     id: 1,
+//     Vehicle: "Placeholder",
+//     rego: "Placeholder",
+//     uploadDate: "19/12/2023",
+//     UploadedDoc: "doc.pdf",
+//     status: "Approved",
+//     viewDoc: "view",
+//   },
+//   {
+//     id: 2,
+//     Vehicle: "Placeholder",
+//     rego: "Placeholder",
+//     uploadDate: "18/12/2023",
+//     UploadedDoc: "doc.pdf",
+//     status: "Under Review",
+//     viewDoc: "view",
+//   },
+//   {
+//     id: 3,
+//     Vehicle: "Placeholder",
+//     rego: "Placeholder",
+//     uploadDate: "17/12/2023",
+//     UploadedDoc: "doc.pdf",
+//     status: "Rejected",
+//     viewDoc: "view",
+//   },
+// ];
 const registrationStateCollection = [
   {
     value: "Victoria",

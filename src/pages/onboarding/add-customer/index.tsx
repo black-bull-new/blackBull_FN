@@ -676,8 +676,8 @@ const AddCustomer = () => {
                   }
                 }}
                 errorMessage={error.companyAddressError?.state}
-              // selectedData={selectedData}
-              // setSelectedData={setSelectedData}
+                // selectedData={selectedData}
+                // setSelectedData={setSelectedData}
               />
               <Maininputfield
                 label="Country"
@@ -702,8 +702,8 @@ const AddCustomer = () => {
                   }
                 }}
                 errorMessage={error.companyAddressError?.country}
-              // selectedData={selectedData}
-              // setSelectedData={setSelectedData}
+                // selectedData={selectedData}
+                // setSelectedData={setSelectedData}
               />
               <Maininputfield
                 label="Post Code"
@@ -1803,6 +1803,8 @@ const AddCustomer = () => {
               <FileUpload
                 file="Upload Contractual Document"
                 onChange={handleDocumentUpload}
+                id="customerContractualFile"
+                name="customerContractualDocument"
                 //@ts-expect-error
                 fileName={selectedUploadContractDocument?.file?.name || ""}
               />

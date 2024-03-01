@@ -34,7 +34,7 @@ export const NestedAddSupplier = (props: any) => {
     marineAlcoholDocument,
     setMarineAlcoholDocument,
     cocDocument,
-    setCocDocument
+    setCocDocument,
   } = props;
 
   const [selectedFiles, setSelectedFiles] = useState<
@@ -44,13 +44,63 @@ export const NestedAddSupplier = (props: any) => {
     {}
   );
   const [showUploadMessage, setShowUploadMessage] = useState(false);
+
+  const [documentDataCollection, setDocumentDataCollection] = useState<any>([]);
+
+  const handleAddRow = () => {
+    const newRow = {
+      id: documentDataCollection.length + 1,
+      Vehicle: "",
+      rego: "New Rego",
+      uploadDate: "New Upload Date",
+      UploadedDoc: "new-doc.pdf",
+      status: "New Status",
+      viewDoc: "view",
+      flag: true,
+    };
+
+    setDocumentDataCollection([...documentDataCollection, newRow]);
+    // You might also need to update other state variables accordingly for the new row.
+  };
+
+  const handleInputChange = (id: any, value: any) => {
+    setDocumentDataCollection((prevCollection: any) => {
+      const updatedCollection = prevCollection.map((item: any) =>
+        item.id === id ? { ...item, Vehicle: value } : item
+      );
+
+      return updatedCollection;
+    });
+  };
+
+  const handleInputBlur = (id: any) => {
+    // setInputValue("");
+    setDocumentDataCollection((prevCollection: any) => {
+      const updatedCollection = prevCollection.map((item: any) =>
+        item.id === id ? { ...item, flag: false } : item
+      );
+
+      return updatedCollection;
+    });
+  };
+
+  const handleInputClick = (id: any) => {
+    setDocumentDataCollection((prevCollection: any) => {
+      const updatedCollection = prevCollection.map((item: any) =>
+        item.id === id ? { ...item, flag: true } : item
+      );
+
+      return updatedCollection;
+    });
+  };
+
   const handleFileChanges = (
     event: React.ChangeEvent<HTMLInputElement>,
     documentId: number
   ) => {
     const file = event.target.files ? event.target.files[0] : null;
-    const documentExists = documentCollectionData.find(
-      (doc) => doc.id === documentId
+    const documentExists = documentDataCollection.find(
+      (doc: any) => doc.id === documentId
     );
     if (file && documentExists) {
       const newSelectedFiles = [...selectedFiles];
@@ -142,7 +192,7 @@ export const NestedAddSupplier = (props: any) => {
 
   const handleFileChange = (setFile: any, setPreview: any) => (event: any) => {
     const selectedFile = event.target.files && event.target.files[0];
-    console.log({ selectedFile })
+    console.log({ selectedFile });
     setFile({ file: selectedFile });
     if (selectedFile) {
       readAndSetPreview(selectedFile, setPreview);
@@ -201,7 +251,7 @@ export const NestedAddSupplier = (props: any) => {
   // );
   const handleProfileFileChange = handleFileChange(
     setSelectedProfileSupplier,
-    setProfile,
+    setProfile
   );
 
   const handleAccreditationDocument = handleFileChange(
@@ -212,33 +262,29 @@ export const NestedAddSupplier = (props: any) => {
   const handleProductLiabilityDocument = handleFileChange(
     setProductDocument,
     setDocumentRender
-  )
+  );
 
   const handlePublicLiabilityDocument = handleFileChange(
     setPublicDocument,
     setDocumentRender
-  )
+  );
 
   const handleWorkCoverDocument = handleFileChange(
     setWorkCoverDocument,
     setDocumentRender
-  )
+  );
 
   const handleMarineDocument = handleFileChange(
     setMarineDocument,
     setDocumentRender
-  )
+  );
 
   const handleMarineAlcoholDocument = handleFileChange(
     setMarineAlcoholDocument,
     setDocumentRender
-  )
+  );
 
-
-  const handleCocDocument = handleFileChange(
-    setCocDocument,
-    setDocumentRender
-  )
+  const handleCocDocument = handleFileChange(setCocDocument, setDocumentRender);
 
   return (
     <div className="">
@@ -1346,7 +1392,8 @@ export const NestedAddSupplier = (props: any) => {
             />
           </div>
           <div className="w-fit my-4">
-            <FileUpload file="Upload Accreditation Document"
+            <FileUpload
+              file="Upload Accreditation Document"
               id="accreditationFile"
               name="accreditationDocument"
               onChange={handleAccreditationDocument}
@@ -1518,7 +1565,8 @@ export const NestedAddSupplier = (props: any) => {
                 });
               }}
             />
-            <FileUpload file="Attch Document"
+            <FileUpload
+              file="Attch Document"
               id="publicFile"
               name="publicDocument"
               onChange={handlePublicLiabilityDocument}
@@ -1599,7 +1647,8 @@ export const NestedAddSupplier = (props: any) => {
                 });
               }}
             />
-            <FileUpload file="Attach Document"
+            <FileUpload
+              file="Attach Document"
               id="workCoverFile"
               name="workCoverDocument"
               onChange={handleWorkCoverDocument}
@@ -1681,7 +1730,8 @@ export const NestedAddSupplier = (props: any) => {
                 });
               }}
             />
-            <FileUpload file="Attach Document"
+            <FileUpload
+              file="Attach Document"
               id="marineFile"
               name="marineDocument"
               onChange={handleMarineDocument}
@@ -1763,7 +1813,8 @@ export const NestedAddSupplier = (props: any) => {
                 });
               }}
             />
-            <FileUpload file="Attach Document"
+            <FileUpload
+              file="Attach Document"
               id="marineAlcoholFile"
               name="marineAlcoholDocument"
               onChange={handleMarineAlcoholDocument}
@@ -1842,7 +1893,8 @@ export const NestedAddSupplier = (props: any) => {
                 });
               }}
             />
-            <FileUpload file="Attach Document"
+            <FileUpload
+              file="Attach Document"
               id="cocFile"
               name="cocDocument"
               onChange={handleCocDocument}
@@ -1853,10 +1905,18 @@ export const NestedAddSupplier = (props: any) => {
       </div>
       <div className="bg-white mr-4 px-4 rounded-md mt-4 p-4">
         <div className="mb-4 mt-8">
-          <h3 className="w-full mb-4 rounded-md font-semibold text-black">
-            {" "}
-            Compliance Documents
-          </h3>
+          <div className="flex">
+            <h3 className="w-full mb-4 rounded-md font-semibold text-black">
+              {" "}
+              Compliance Documents
+            </h3>
+            <button
+              onClick={handleAddRow}
+              className="text-white mb-2 flex justify-center items-center font-thin bg-[#2B36D9] w-[48px] h-[48px] pb-2 rounded-full text-[40px]"
+            >
+              +
+            </button>
+          </div>
 
           <div className="grid grid-cols-5 bg-table-header p-4 rounded-md text-black text-center mb-2 ">
             {documentCollectionHeading?.map((value, index) => {
@@ -1870,10 +1930,29 @@ export const NestedAddSupplier = (props: any) => {
             })}
           </div>
           <div className="grid grid-cols-5 p-4 rounded-md text-black text-center items-center">
-            {documentCollectionData?.map((data, index) => {
+            {documentDataCollection?.map((data: any, index: any) => {
               return (
                 <>
-                  <div className="mb-6 align-middle">{data.documentType}</div>
+                  <div className="mb-6 align-middle">
+                    {data.flag ? (
+                      <input
+                        className="border-b-2 text-center border-[#607D8B]"
+                        placeholder="Document Name"
+                        value={data.Vehicle}
+                        onChange={(e) =>
+                          handleInputChange(data.id, e.target.value)
+                        }
+                        onBlur={() => handleInputBlur(data.id)}
+                      />
+                    ) : (
+                      <span
+                        onClick={() => handleInputClick(data.id)}
+                        className="cursor-pointer text-center"
+                      >
+                        {data.Vehicle}
+                      </span>
+                    )}
+                  </div>
                   <div className="text-center mb-6">
                     <label className="cursor-pointer">
                       <React.Fragment>
@@ -2011,74 +2090,74 @@ export const NestedAddSupplier = (props: any) => {
   );
 };
 
-const documentCollectionData = [
-  {
-    id: 1,
-    documentType: "Visa Status",
-    uploadedDocument: "visa-status.pdf",
-    uploadDate: "20/12/2023",
-  },
-  {
-    id: 2,
-    documentType: "Driver License (Front) ",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-  {
-    id: 3,
-    documentType: "Driver License (Back) ",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-  {
-    id: 4,
-    documentType: "License History",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-  {
-    id: 5,
-    documentType: "Police Verification",
-    uploadedDocument: "police-verification.pdf",
-    uploadDate: "20/12/2023",
-  },
-  {
-    id: 6,
-    documentType: "Passport (Front)",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-  {
-    id: 7,
-    documentType: "Passport (Back)",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-  {
-    id: 8,
-    documentType: "Health Insurance",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-  {
-    id: 9,
-    documentType: "Driver Certificate",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-  {
-    id: 10,
-    documentType: "Fitness",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-  {
-    id: 11,
-    documentType: "Drug Test",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-];
+// const documentDataCollection = [
+//   {
+//     id: 1,
+//     documentType: "Visa Status",
+//     uploadedDocument: "visa-status.pdf",
+//     uploadDate: "20/12/2023",
+//   },
+//   {
+//     id: 2,
+//     documentType: "Driver License (Front) ",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+//   {
+//     id: 3,
+//     documentType: "Driver License (Back) ",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+//   {
+//     id: 4,
+//     documentType: "License History",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+//   {
+//     id: 5,
+//     documentType: "Police Verification",
+//     uploadedDocument: "police-verification.pdf",
+//     uploadDate: "20/12/2023",
+//   },
+//   {
+//     id: 6,
+//     documentType: "Passport (Front)",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+//   {
+//     id: 7,
+//     documentType: "Passport (Back)",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+//   {
+//     id: 8,
+//     documentType: "Health Insurance",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+//   {
+//     id: 9,
+//     documentType: "Driver Certificate",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+//   {
+//     id: 10,
+//     documentType: "Fitness",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+//   {
+//     id: 11,
+//     documentType: "Drug Test",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+// ];
 
 const documentCollectionHeading = [
   {
@@ -2194,5 +2273,3 @@ const invoiceComuColletion = [
     value: "Admin Email",
   },
 ];
-
-

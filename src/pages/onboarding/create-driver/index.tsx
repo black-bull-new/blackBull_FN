@@ -194,18 +194,7 @@ const CreateDriver = () => {
     },
   });
 
-  const [documentDataCollection, setDocumentDataCollection] = useState<any>([
-    // {
-    //   id: 1,
-    //   Vehicle: "",
-    //   rego: "Placeholder",
-    //   uploadDate: "19/12/2023",
-    //   UploadedDoc: "doc.pdf",
-    //   status: "Approved",
-    //   viewDoc: "view",
-    //   flag: true,
-    // },
-  ]);
+  const [documentDataCollection, setDocumentDataCollection] = useState<any>([]);
   console.log({ error });
 
   const [uploadStatus, setUploadStatus] = useState<{ [id: number]: boolean }>(
@@ -1618,6 +1607,8 @@ const CreateDriver = () => {
                 <FileUpload
                   file="Upload Rego Document"
                   onChange={handleDocumentUpload}
+                  id="uploadDriverRegoFile"
+                  name="uploadDriverRegoDocument"
                   //@ts-expect-error
                   fileName={selectedUploadRegoDocument?.file?.name || ""}
                 />

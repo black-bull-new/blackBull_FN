@@ -47,6 +47,55 @@ const NestedAddDriver = (props: any) => {
   );
   const [showUploadMessage, setShowUploadMessage] = useState(false);
 
+  const [documentDataCollection, setDocumentDataCollection] = useState<any>([]);
+
+  const handleAddRow = () => {
+    const newRow = {
+      id: documentDataCollection.length + 1,
+      Vehicle: "",
+      rego: "New Rego",
+      uploadDate: "New Upload Date",
+      UploadedDoc: "new-doc.pdf",
+      status: "New Status",
+      viewDoc: "view",
+      flag: true,
+    };
+
+    setDocumentDataCollection([...documentDataCollection, newRow]);
+    // You might also need to update other state variables accordingly for the new row.
+  };
+
+  const handleInputChange = (id: any, value: any) => {
+    setDocumentDataCollection((prevCollection: any) => {
+      const updatedCollection = prevCollection.map((item: any) =>
+        item.id === id ? { ...item, Vehicle: value } : item
+      );
+
+      return updatedCollection;
+    });
+  };
+
+  const handleInputBlur = (id: any) => {
+    // setInputValue("");
+    setDocumentDataCollection((prevCollection: any) => {
+      const updatedCollection = prevCollection.map((item: any) =>
+        item.id === id ? { ...item, flag: false } : item
+      );
+
+      return updatedCollection;
+    });
+  };
+
+  const handleInputClick = (id: any) => {
+    setDocumentDataCollection((prevCollection: any) => {
+      const updatedCollection = prevCollection.map((item: any) =>
+        item.id === id ? { ...item, flag: true } : item
+      );
+
+      return updatedCollection;
+    });
+  };
+
   const combinedObject = selectedFiles.reduce(
     (accumulator: any, currentItem: any) => {
       accumulator[currentItem.id] = {
@@ -75,8 +124,8 @@ const NestedAddDriver = (props: any) => {
     documentId: number
   ) => {
     const file = event.target.files ? event.target.files[0] : null;
-    const documentExists = documentCollectionData.find(
-      (doc) => doc.id === documentId
+    const documentExists = documentDataCollection.find(
+      (doc: any) => doc.id === documentId
     );
     if (file && documentExists) {
       const newSelectedFiles = [...selectedFiles];
@@ -960,6 +1009,8 @@ const NestedAddDriver = (props: any) => {
           />
           <FileUpload
             file="Upload Rego Document"
+            id="supplierDriverRegoFile"
+            name="supplierDriverRegoDocument"
             onChange={handleDocumentUpload}
             fileName={selectedUploadRegoDocument?.file?.name || ""}
           />
@@ -1009,112 +1060,130 @@ const NestedAddDriver = (props: any) => {
             errorMessage={error.specialDrivingLicenseError}
           />
         </div>
-        <div className="bg-white mr-4 font-light px-4 rounded-md mt-4 p-4">
-          <div className="mb-4 mt-8">
+        <div className="mb-4 mt-8">
+          <div className="flex">
             <h3 className="w-full mb-4 rounded-md font-semibold text-black">
               {" "}
               Onboarding Documents
             </h3>
+            <button
+              onClick={handleAddRow}
+              className="text-white mb-2 flex justify-center items-center font-thin bg-[#2B36D9] w-[48px] h-[48px] pb-2 rounded-full text-[40px]"
+            >
+              +
+            </button>
+          </div>
 
-            <div className="grid grid-cols-5 bg-table-header p-4 rounded-md text-black text-center mb-2 ">
-              {documentCollectionHeading?.map((value, index) => {
-                return (
-                  <>
-                    <h4 key={index} className="font-semibold text-sm">
-                      {value.heading}
-                    </h4>
-                  </>
-                );
-              })}
-            </div>
-            <div className="grid grid-cols-5 p-4 rounded-md text-black text-center items-center">
-              {documentCollectionData?.map((data, index) => {
-                return (
-                  <>
-                    <div className="mb-6 align-middle">{data.documentType}</div>
-                    <div className="text-center mb-6">
-                      <label className="cursor-pointer">
-                        <React.Fragment>
-                          {selectedFiles.find((file) => file.id === data?.id)
-                            ?.file ? (
-                            <div>
-                              <p>
-                                {
-                                  selectedFiles.find(
-                                    (file) => file.id === data?.id
-                                  )?.file.name
+          <div className="grid grid-cols-5 bg-table-header p-4 rounded-md text-black text-center mb-2 ">
+            {documentCollectionHeading?.map((value, index) => {
+              return (
+                <>
+                  <h4 key={index} className="font-semibold text-sm">
+                    {value.heading}
+                  </h4>
+                </>
+              );
+            })}
+          </div>
+          <div className="grid grid-cols-5 p-4 rounded-md text-black text-center items-center">
+            {documentDataCollection?.map((data: any, index: any) => {
+              return (
+                <>
+                  <div className="mb-6 align-middle">
+                    {data.flag ? (
+                      <input
+                        className="border-b-2 text-center border-[#607D8B]"
+                        placeholder="Document Name"
+                        value={data.Vehicle}
+                        onChange={(e) =>
+                          handleInputChange(data.id, e.target.value)
+                        }
+                        onBlur={() => handleInputBlur(data.id)}
+                      />
+                    ) : (
+                      <span
+                        onClick={() => handleInputClick(data.id)}
+                        className="cursor-pointer text-center"
+                      >
+                        {data.Vehicle}
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-center mb-6">
+                    <label className="cursor-pointer">
+                      <React.Fragment>
+                        {selectedFiles.find((file) => file.id === data?.id)
+                          ?.file ? (
+                          <div>
+                            <p>
+                              {
+                                selectedFiles.find(
+                                  (file) => file.id === data?.id
+                                )?.file.name
+                              }
+                            </p>
+                          </div>
+                        ) : (
+                          <span className="!w-fit m-auto bg-[#2B36D9] py-2 rounded-full text-sm px-6 mb-6 font-semibold  text-white">
+                            Select
+                          </span>
+                        )}
+                      </React.Fragment>
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept=".doc,.docx,.pdf"
+                        onChange={(e) => handleFileChanges(e, data?.id)}
+                      />
+                    </label>
+                  </div>
+                  <div>
+                    {uploadStatus[data?.id] ? (
+                      <p style={{ color: "green" }}>
+                        {showUploadMessage ? (
+                          <span className="!w-fit m-auto inline-block  bg-[#2B36D9] py-2 rounded-full cursor-pointer text-sm px-6 font-semibold text-white">
+                            Uploaded
+                          </span>
+                        ) : (
+                          <span className="!w-fit m-auto bg-[#2B36D9] py-2 rounded-full cursor-pointer text-sm px-6 mb-6 font-semibold text-white">
+                            Uploading...
+                          </span>
+                        )}
+                      </p>
+                    ) : (
+                      <React.Fragment>
+                        {selectedFiles.find((file) => file.id === data?.id)
+                          ?.file ? (
+                          <div>
+                            <p className="!w-fit m-auto  cursor-pointer text-sm px-6  mb-6 font-semibold py-[4px] text-white">
+                              <span
+                                className="!w-fit m-auto bg-[#2B36D9] py-2 rounded-full cursor-pointer text-sm px-6 mb-6 font-semibold  text-white"
+                                onClick={() =>
+                                  handleUploadFileWithId(
+                                    data?.id,
+                                    combinedObject
+                                  )
                                 }
-                              </p>
-                            </div>
-                          ) : (
-                            <span className="!w-fit m-auto bg-[#2B36D9] py-2 rounded-full text-sm px-6 mb-6 font-semibold  text-white">
-                              Select
-                            </span>
-                          )}
-                        </React.Fragment>
-                        <input
-                          type="file"
-                          className="hidden"
-                          accept=".doc,.docx,.pdf"
-                          onChange={(e) => handleFileChanges(e, data?.id)}
-                        />
-                      </label>
-                    </div>
-                    <div>
-                      {uploadStatus[data?.id] ? (
-                        <p style={{ color: "green" }}>
-                          {showUploadMessage ? (
-                            // <div className="mb-6 underline decoration-[#2B36D9] text-center">
-                            //   <span
-                            //     className="cursor-pointer text-primary"
-                            //     onClick={() => handleViewDocuments(data?.id)}
-                            //   >
-                            //     View
-                            //   </span>
-                            // </div>
-                            <span className="!w-fit m-auto inline-block mb-3 bg-[#2B36D9] py-2 rounded-full cursor-pointer text-sm px-6 mb-6 font-semibold text-white">
-                              Uploaded
-                            </span>
-                          ) : (
-                            <span className="!w-fit m-auto inline-block mb-3 bg-[#2B36D9] py-2 rounded-full cursor-pointer text-sm px-6 mb-6 font-semibold text-white">
-                              Uploading...
-                            </span>
-                          )}
-                        </p>
-                      ) : (
-                        <React.Fragment>
-                          {selectedFiles.find((file) => file.id === data?.id)
-                            ?.file ? (
-                            <div>
-                              <p className="!w-fit m-auto  cursor-pointer text-sm px-6  mb-6  py-[4px] text-white">
-                                <span
-                                  className="!w-fit m-auto bg-[#2B36D9] py-2 rounded-full cursor-pointer text-sm px-6 mb-6 font-semibold  text-white"
-                                  onClick={() =>
-                                    handleUploadFileWithId(
-                                      data?.id,
-                                      combinedObject
-                                    )
-                                  }
-                                >
-                                  Upload
-                                </span>
-                              </p>
-                            </div>
-                          ) : (
-                            <p className="mb-6">No file Uploaded</p>
-                          )}
-                        </React.Fragment>
-                        // <span
-                        //   className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white"
-                        //   onClick={() =>
-                        //     handleUploadFileWithId(data?.id, combinedObject)
-                        //   }
-                        // >
-                        //   Upload
-                        // </span>
-                      )}
-                    </div>
-                    {/* <div className="mb-6 align-middle mt-3">
+                              >
+                                Upload
+                              </span>
+                            </p>
+                          </div>
+                        ) : (
+                          <p className="mb-6">No file Uploaded</p>
+                        )}
+                      </React.Fragment>
+                      // <span
+                      //   className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white"
+                      //   onClick={() =>
+                      //     handleUploadFileWithId(data?.id, combinedObject)
+                      //   }
+                      // >
+                      //   Upload
+                      // </span>
+                    )}
+                  </div>
+                  {/* <div className="mb-6 align-middle mt-3">
                         <React.Fragment>
                           {selectedFiles.find((file) => file.id === data?.id)
                             ?.file ? (
@@ -1133,45 +1202,38 @@ const NestedAddDriver = (props: any) => {
                           )}
                         </React.Fragment>
                       </div> */}
-                    <div className="mb-6">
-                      <div>
-                        {selectedFiles.find((file) => file.id === data?.id) ? (
-                          <div>
-                            <p>
-                              {selectedFiles.find(
-                                (file) => file.id === data?.id
-                              )?.currentDate
-                                ? formatDate(
-                                    selectedFiles.find(
-                                      (file) => file.id === data?.id
-                                    )?.currentDate
-                                  )
-                                : "No date available"}
-                            </p>
-                          </div>
-                        ) : (
-                          <p>No date available</p>
-                        )}
-                      </div>
+                  <div className="mb-6">
+                    <div>
+                      {selectedFiles.find((file) => file.id === data?.id) ? (
+                        <div>
+                          <p>
+                            {selectedFiles.find((file) => file.id === data?.id)
+                              ?.currentDate
+                              ? formatDate(
+                                  selectedFiles.find(
+                                    (file) => file.id === data?.id
+                                  )?.currentDate
+                                )
+                              : "No date available"}
+                          </p>
+                        </div>
+                      ) : (
+                        <p>No date available</p>
+                      )}
                     </div>
-                    <div className="mb-6 flex gap-2 justify-center">
-                      <Image
-                        src={"/edit.svg"}
-                        alt="svg"
-                        width={24}
-                        height={24}
-                      />
-                      <Image
-                        src={"/trash.svg"}
-                        alt="svg"
-                        width={24}
-                        height={24}
-                      />
-                    </div>
-                  </>
-                );
-              })}
-            </div>
+                  </div>
+                  <div className="mb-6 flex gap-2 justify-center">
+                    <Image src={"/edit.svg"} alt="svg" width={24} height={24} />
+                    <Image
+                      src={"/trash.svg"}
+                      alt="svg"
+                      width={24}
+                      height={24}
+                    />
+                  </div>
+                </>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -1181,74 +1243,74 @@ const NestedAddDriver = (props: any) => {
 
 export default NestedAddDriver;
 
-const documentCollectionData = [
-  {
-    id: 1,
-    documentType: "Visa Status",
-    uploadedDocument: "visa-status.pdf",
-    uploadDate: "20/12/2023",
-  },
-  {
-    id: 2,
-    documentType: "Driver License (Front) ",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-  {
-    id: 3,
-    documentType: "Driver License (Back) ",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-  {
-    id: 4,
-    documentType: "License History",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-  {
-    id: 5,
-    documentType: "Police Verification",
-    uploadedDocument: "police-verification.pdf",
-    uploadDate: "20/12/2023",
-  },
-  {
-    id: 6,
-    documentType: "Passport (Front)",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-  {
-    id: 7,
-    documentType: "Passport (Back)",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-  {
-    id: 8,
-    documentType: "Health Insurance",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-  {
-    id: 9,
-    documentType: "Driver Certificate",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-  {
-    id: 10,
-    documentType: "Fitness",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-  {
-    id: 11,
-    documentType: "Drug Test",
-    uploadedDocument: "-",
-    uploadDate: "-",
-  },
-];
+// const documentCollectionData = [
+//   {
+//     id: 1,
+//     documentType: "Visa Status",
+//     uploadedDocument: "visa-status.pdf",
+//     uploadDate: "20/12/2023",
+//   },
+//   {
+//     id: 2,
+//     documentType: "Driver License (Front) ",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+//   {
+//     id: 3,
+//     documentType: "Driver License (Back) ",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+//   {
+//     id: 4,
+//     documentType: "License History",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+//   {
+//     id: 5,
+//     documentType: "Police Verification",
+//     uploadedDocument: "police-verification.pdf",
+//     uploadDate: "20/12/2023",
+//   },
+//   {
+//     id: 6,
+//     documentType: "Passport (Front)",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+//   {
+//     id: 7,
+//     documentType: "Passport (Back)",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+//   {
+//     id: 8,
+//     documentType: "Health Insurance",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+//   {
+//     id: 9,
+//     documentType: "Driver Certificate",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+//   {
+//     id: 10,
+//     documentType: "Fitness",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+//   {
+//     id: 11,
+//     documentType: "Drug Test",
+//     uploadedDocument: "-",
+//     uploadDate: "-",
+//   },
+// ];
 const documentCollectionHeading = [
   {
     heading: "Document type",
