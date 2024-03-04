@@ -43,10 +43,10 @@ const SignUp = () => {
       if (emailError) {
         errors.email = emailError;
       }
-      const phoneError = validatePhone(values.number);
-      if (phoneError) {
-        errors.number = phoneError;
-      }
+      // const phoneError = validatePhone(values.number);
+      // if (phoneError) {
+      //   errors.number = phoneError;
+      // }
       const profEmailError = validateEmail(values.profEmail);
       if (profEmailError) {
         errors.profEmail = profEmailError;
@@ -237,7 +237,7 @@ const SignUp = () => {
                     formik.touched.number && formik.errors.number ? true : false
                   }
                 />
-                {formik.touched.number && formik.errors.number ? (
+                {/* {formik.touched.number && formik.errors.number ? (
                   <div
                     style={{
                       textAlign: "left",
@@ -248,7 +248,7 @@ const SignUp = () => {
                   >
                     {formik.errors.number as React.ReactNode}
                   </div>
-                ) : null}
+                ) : null} */}
               </div>
               <div className="flex flex-col mt-2">
                 <div className="flex gap-2 items-center">

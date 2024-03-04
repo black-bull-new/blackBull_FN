@@ -65,13 +65,29 @@ export const NestedAddSupplier = (props: any) => {
   }, []);
   console.log("addMoreFields", addMoreFields);
 
+  const handleFieldsChange = (value: any, fieldName: any, index: any) => {
+    const data = [...addMoreFields];
+    data[index][fieldName] = value.target.value;
+    setAddMoreFields(data);
+  };
+
   const handleAddMoreFields = () => {
+    setShowOtherFields(true);
     setAddMoreFields([
       ...addMoreFields,
       {
         others: "",
       },
     ]);
+  };
+
+  const handleRemoveExperience = (index: number) => {
+    if (index === 1) {
+      setShowOtherFields(false);
+    } else {
+      setShowOtherFields(true);
+    }
+    setAddMoreFields(addMoreFields.filter((_: any, i: any) => i !== index));
   };
 
   // *** End Here Add more **
@@ -937,7 +953,7 @@ export const NestedAddSupplier = (props: any) => {
           <h3 className="text-black font-semibold text-sm my-4">
             Invoice Communication Preferences
           </h3>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid mb-4 grid-cols-3 gap-4">
             <DropDownMap
               label="Select Email"
               mapOption={invoiceComuColletion}
@@ -959,30 +975,38 @@ export const NestedAddSupplier = (props: any) => {
               <Button
                 onClick={() => {
                   setShowOtherFields(true);
+                  setAddMoreFields([
+                    ...addMoreFields,
+                    {
+                      others: "",
+                    },
+                  ]);
                 }}
-                text="Add More Fields"
+                text="Initial Add More Fields"
                 className="bg-[#2B36D9] px-4 !w-fit"
               />
             )}
           </div>
           {showOtherFields &&
-            addMoreFields?.map((item: any, index: number) => {
+            addMoreFields?.slice(1).map((item: any, index: number) => {
+              const displayIndex = index + 1;
+
               return (
-                <div key={index}>
+                <div key={displayIndex}>
                   <div>
                     <h4 className="text-sm font-semibold mb-4 text-black">
-                      Others
+                      Others {displayIndex}
                     </h4>
                   </div>
-                  <div>
+                  <div className="grid grid-cols-3 gap-4">
                     <Maininputfield
                       label="Others"
-                      id="others"
-                      name="others"
+                      id={`others-${displayIndex}`}
+                      name={`others-${displayIndex}`}
                       value={item?.others}
-                      // onChange={(e: any) =>
-                      //   handleExperienceChange(e, "others", index+1)
-                      // }
+                      onChange={(e: any) =>
+                        handleFieldsChange(e, "others", displayIndex)
+                      }
                       className="w-full"
                       errorMessage={
                         error.employmentHistoryError?.previousEmployer
@@ -997,7 +1021,7 @@ export const NestedAddSupplier = (props: any) => {
                     />
 
                     <span
-                      // onClick={() => handleRemoveExperience(index)}
+                      onClick={() => handleRemoveExperience(displayIndex)}
                       className="ml-4 cursor-pointer"
                       style={{
                         color: "red",
@@ -1011,6 +1035,7 @@ export const NestedAddSupplier = (props: any) => {
                 </div>
               );
             })}
+
           <h2 className="text-black font-semibold mt-8 mb-4">
             Company C-Suite Details
           </h2>
