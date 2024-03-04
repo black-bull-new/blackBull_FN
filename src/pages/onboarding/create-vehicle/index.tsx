@@ -407,9 +407,20 @@ const CreateVehicle = () => {
     return acc;
   }, []);
 
+
+  // const handleViewDocuments = (id: number) => {
+  //   console.log("modifiedUrls",modifiedUrls)
+  //     const index = id;
+  //     if (index >= 1 && index < modifiedUrls.length) {
+  //       const url = modifiedUrls[index];
+  //       window.open(url, "_blank");
+  //     } else {
+  //       console.error("URL not found for id:", id);
+  //     }
+  //   };
   const handleViewDocuments = (id: number) => {
     console.log("CHECK", id, modifiedUrls);
-    const index = id - 1; // Adjust index to start from 0
+    const index = id - 1;  // Adjust index to start from 0
     if (index >= 0 && index < modifiedUrls.length) {
       const url = modifiedUrls[index];
       window.open(url, "_blank");
