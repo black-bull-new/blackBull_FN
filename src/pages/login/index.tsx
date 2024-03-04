@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Checkbox from "../../../components/Checkbox";
 // import {useLogin} from '../../network-request/mutation';
 // import { toast } from 'react-toastify';
@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 import { Login } from "@/network-request/types";
 import { loginUser } from "@/network-request/api";
 import toast, { Toaster } from "react-hot-toast";
-import { setCookie } from 'nookies';
+import { setCookie } from "nookies";
 
 const Login = () => {
   const router = useRouter();
@@ -22,11 +22,30 @@ const Login = () => {
       password: "",
     } as Login,
 
+    validate: (values) => {
+      const errors: { email?: string; password?: string } = {};
+
+      // Validate email
+      const emailError = validateEmail(values.email);
+      if (emailError) {
+        errors.email = emailError;
+      }
+
+      // Validate other fields as needed
+      // ...
+
+      return errors;
+    },
+
     // validationSchema: SignupvalidationSchema,
     onSubmit: (values: Login) => {
       console.log("VALUES", { values });
       onLogin(values);
     },
+  });
+
+  const [error, setError] = useState({
+    emailError: "",
   });
 
   const {
@@ -40,46 +59,75 @@ const Login = () => {
   } = formik;
   console.log({ values });
 
+  const regexOfEmail =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.+([a-zA-Z0-9-]+)2*$/;
+
+  const validateEmail = (value: string) => {
+    let error;
+    if (!value) {
+      error = "Email is required";
+    } else if (!regexOfEmail.test(value)) {
+      error = "Invalid email address";
+    }
+    return error;
+  };
+
   const onLogin = React.useCallback(async (values: any) => {
     console.log("values>>>>>>", values);
     try {
       const response = await loginUser(values?.email, values?.password);
       console.log({ response });
       if (response?.token) {
-        setCookie(null, 'token', response?.token, {
+        setCookie(null, "token", response?.token, {
           maxAge: 7 * 24 * 60 * 60,
-          path: '/',
+          path: "/",
         });
-        toast('Welcome back! You are now signed in.',
-          {
-            icon: '👏',
-            style: {
-              borderRadius: '10px',
-              background: '#333',
-              color: '#fff',
-            },
-          }
-        );
+        toast("Welcome back! You are now signed in.", {
+          icon: "👏",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
         setTimeout(() => {
           router.push("/onboarding");
-        }, 3000)
+        }, 3000);
       } else {
         console.log("Login credentials error");
       }
     } catch (error: any) {
       console.log({ error });
+      toast(error?.response?.data?.message, {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
     }
   }, []);
 
   const [visibel, SetVisible] = React.useState(false);
   const isValidVisibility = formik.dirty && formik.isValid;
+  console.log("formik.touched.email", formik.touched.email);
   return (
     <React.Fragment>
       <div>
         <div className=" pt-6 pl-8 absolute">
-          <Image src="/logoOzi.svg" alt="logo" width={130} height={50} priority quality={100} />
+          <Image
+            src="/logoOzi.svg"
+            alt="logo"
+            width={130}
+            height={50}
+            priority
+            quality={100}
+          />
         </div>
-        <div><Toaster /></div>
+        <div>
+          <Toaster />
+        </div>
         <div className="grid grid-cols-2 items-center">
           <form
             onSubmit={
@@ -90,10 +138,10 @@ const Login = () => {
             method="POST"
           >
             <div className="max-w-[440px] ml-auto mr-auto text-center pt-10">
-              <h1 className="font-bold text-3xl tracking-wide">
+              <h1 className="text-black font-bold text-3xl tracking-wide">
                 Welcome Back!
               </h1>
-              <p className="mt-2">
+              <p className="mt-2 text-black">
                 Log in to BlackBull for instant access to your dashboard.
               </p>
               <div className="flex flex-col mt-11">

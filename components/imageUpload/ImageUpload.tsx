@@ -22,7 +22,7 @@ const ImageUpload = ({handleSubmit}:any) => {
 
   return (
     <div className="grid gap-4 justify-end mt-4">
-      <div>
+      {/* <div>
         <div className="bg-white border border-[#e5e5e5] rounded-md w-[343px] h-[180px]">
           {image && (
             <Image
@@ -34,9 +34,9 @@ const ImageUpload = ({handleSubmit}:any) => {
             />
           )}
         </div>
-      </div>
+      </div> */}
       <div className="relative">
-        <label
+        {/* <label
           htmlFor="file-upload"
           className="flex gap-2 bg-[#2B36D9] w-fit text-white items-center py-2 px-4 rounded-md absolute right-0"
         >
@@ -50,7 +50,7 @@ const ImageUpload = ({handleSubmit}:any) => {
           }}
           id="file-upload"
           onChange={handleImageChange}
-        />
+        /> */}
         <div className="flex justify-end my-6 gap-2">
           <Button
             text="Save"

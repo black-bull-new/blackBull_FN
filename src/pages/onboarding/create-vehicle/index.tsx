@@ -17,7 +17,6 @@ import {
   uploadVehicleRegoDocuemnts,
 } from "@/network-request/vehicle/vehicleApi";
 
-
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
@@ -50,6 +49,8 @@ const correctVehicleStateName = (stateName: string): string => {
     situation: "Situation",
     truckOdometer: "Truck Odometer",
     rentedCompanyName: "Rented Company Name",
+    vehicleNumber: "Vehicle Number",
+    trailerNumber: "Trailer Number",
     dateOfHire: "Date Of Hire",
     contractValidTill: "Contract Valid Till",
     term: "Term",
@@ -65,7 +66,6 @@ const correctVehicleStateName = (stateName: string): string => {
   return nameMapping[stateName] || stateName;
 };
 
-
 const CreateVehicle = () => {
   const token = getCookie("token");
   const router = useRouter();
@@ -74,10 +74,12 @@ const CreateVehicle = () => {
     registrationNumber: "",
     registrationExpiry: "",
     vinNumber: "",
+    vehicleNumber: "",
     vehicleManufacturer: "",
     vehicleModel: "",
     vehicleType: "",
     typeOfTrailer: "",
+    trailerNumber: "",
     stateOfRegistration: "",
     engineNumber: "",
     compliancePlate: "",
@@ -112,10 +114,12 @@ const CreateVehicle = () => {
     registrationNumberError: "",
     registrationExpiryError: "",
     vinNumberError: "",
+    vehicleNumberError: "",
     vehicleManufacturerError: "",
     vehicleModelError: "",
     vehicleTypeError: "",
     typeOfTrailerError: "",
+    trailerNumberError: "",
     stateOfRegistrationError: "",
     engineNumberError: "",
     compliancePlateError: "",
@@ -143,6 +147,56 @@ const CreateVehicle = () => {
     accountNameError: "",
     vehicleDocumentStatusError: "Complete",
   });
+
+  const [documentDataCollection, setDocumentDataCollection] = useState<any>([]);
+
+  const handleInputChange = (id: any, value: any) => {
+    setDocumentDataCollection((prevCollection: any) => {
+      const updatedCollection = prevCollection.map((item: any) =>
+        item.id === id ? { ...item, Vehicle: value } : item
+      );
+
+      return updatedCollection;
+    });
+  };
+
+  const handleInputBlur = (id: any) => {
+    // setInputValue("");
+    setDocumentDataCollection((prevCollection: any) => {
+      const updatedCollection = prevCollection.map((item: any) =>
+        item.id === id ? { ...item, flag: false } : item
+      );
+
+      return updatedCollection;
+    });
+  };
+
+  const handleInputClick = (id: any) => {
+    setDocumentDataCollection((prevCollection: any) => {
+      const updatedCollection = prevCollection.map((item: any) =>
+        item.id === id ? { ...item, flag: true } : item
+      );
+
+      return updatedCollection;
+    });
+  };
+
+  console.log("documentDataCollection", documentDataCollection);
+  const handleAddRow = () => {
+    const newRow = {
+      id: documentDataCollection.length + 1,
+      Vehicle: "",
+      rego: "New Rego",
+      uploadDate: "New Upload Date",
+      UploadedDoc: "new-doc.pdf",
+      status: "New Status",
+      viewDoc: "view",
+      flag: true,
+    };
+
+    setDocumentDataCollection([...documentDataCollection, newRow]);
+    // You might also need to update other state variables accordingly for the new row.
+  };
 
   const checkValidation = () => {
     const newErrors = { ...error };
@@ -226,9 +280,6 @@ const CreateVehicle = () => {
     setDocumentRender
   );
 
-
-
-
   const [selectedFiles, setSelectedFiles] = useState<
     { id: number; file: File; currentDate: Date | null }[]
   >([]);
@@ -239,7 +290,7 @@ const CreateVehicle = () => {
   ) => {
     const file = event.target.files ? event.target.files[0] : null;
     const documentExists = documentDataCollection.find(
-      (doc) => doc.id === documentId
+      (doc: any) => doc.id === documentId
     );
     if (file && documentExists) {
       const newSelectedFiles = [...selectedFiles];
@@ -327,7 +378,9 @@ const CreateVehicle = () => {
         console.log("Project", { project });
         const file = [project?.file];
         const uploadDocumentResponses = await Promise.all(
-          Object.values(file)?.map((file) => uploadSingleSingleVehicleDocuments(file))
+          Object.values(file)?.map((file) =>
+            uploadSingleSingleVehicleDocuments(file)
+          )
         );
         console.log({ uploadDocumentResponses });
         const newUrls = uploadDocumentResponses
@@ -454,7 +507,7 @@ const CreateVehicle = () => {
         <div className="ml-[316px] w-full mt-4">
           <div className="bg-white mr-4 flex justify-between items-center rounded-md">
             <h2 className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">
-              Create Vehicle
+              Add Vehicle
             </h2>
             <div className="h-8 w-8 flex justify-center cursor-pointer text-2xl items-center bg-blueGrey-100 rounded-full mr-4">
               <span className="mt-[-2px] ml-[2px] text-[#292D32] rotate-45">
@@ -523,6 +576,25 @@ const CreateVehicle = () => {
                   className="w-full"
                   errorMessage={error.vinNumberError}
                 />
+                <Maininputfield
+                  label="Vehicle Number"
+                  value={vehicleDetails.vehicleNumber}
+                  onChange={(e: any) => {
+                    setVehicleDetails({
+                      ...vehicleDetails,
+                      vehicleNumber: e.target.value,
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        vehicleNumberError: "",
+                      });
+                    }
+                  }}
+                  className="w-full"
+                  errorMessage={error.vehicleNumberError}
+                />
+
                 <Maininputfield
                   label="Vehicle Manufacturer"
                   className="w-full"
@@ -599,6 +671,24 @@ const CreateVehicle = () => {
                     }
                   }}
                   errorMessage={error.typeOfTrailerError}
+                />
+                <Maininputfield
+                  label="Trailer Number"
+                  value={vehicleDetails.trailerNumber}
+                  onChange={(e: any) => {
+                    setVehicleDetails({
+                      ...vehicleDetails,
+                      trailerNumber: e.target.value,
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        trailerNumberError: "",
+                      });
+                    }
+                  }}
+                  className="w-full"
+                  errorMessage={error.trailerNumberError}
                 />
                 <DropDownMap
                   label="State of Registration"
@@ -840,7 +930,9 @@ const CreateVehicle = () => {
                 )}
                 <FileUpload
                   file="Upload Rego Document"
+                  id="vehicleRegoFile"
                   onChange={handleProfileFileChange}
+                  name="vehicleRegoDocument"
                   //@ts-expect-error
                   fileName={selectedUploadRegoDocument?.file?.name || ""}
                 />
@@ -1115,9 +1207,18 @@ const CreateVehicle = () => {
                 </div>
               </div>
               <div className="mt-8">
-                <h3 className="text-black w-full mb-4 font-semibold">
-                  Vehicle Documents
-                </h3>
+                <div className="flex">
+                  <h3 className="text-black w-full mb-4 font-semibold">
+                    Vehicle Documents
+                  </h3>
+                  <button
+                    onClick={handleAddRow}
+                    className="text-white mb-2 flex justify-center items-center font-thin bg-[#2B36D9] w-[48px] h-[48px] pb-2 rounded-full text-[40px]"
+                  >
+                    +
+                  </button>
+                </div>
+
                 <div className="grid grid-cols-[16%_16%_16%_16%_16%_20%] text-black bg-[#EFF2F3] py-4 rounded-md flex text-center">
                   {vehicleDocumentCollection?.map((value, index) => {
                     return (
@@ -1135,12 +1236,31 @@ const CreateVehicle = () => {
 
                 <div>
                   <div>
-                    {documentDataCollection?.map((data, index) => (
+                    {documentDataCollection?.map((data: any, index: any) => (
                       <div
                         className="text-black grid grid-cols-[16%_16%_16%_16%_16%_20%] py-4 flex text-center"
                         key={index}
                       >
-                        <div>{data.Vehicle}</div>
+                        <div>
+                          {data.flag ? (
+                            <input
+                              className="border-b-2 text-center border-[#607D8B]"
+                              placeholder="Document Name"
+                              value={data.Vehicle}
+                              onChange={(e) =>
+                                handleInputChange(data.id, e.target.value)
+                              }
+                              onBlur={() => handleInputBlur(data.id)}
+                            />
+                          ) : (
+                            <span
+                              onClick={() => handleInputClick(data.id)}
+                              className="cursor-pointer text-center"
+                            >
+                              {data.Vehicle}
+                            </span>
+                          )}
+                        </div>
                         <div className="text-center">
                           <label className="cursor-pointer">
                             <React.Fragment>
@@ -1180,10 +1300,10 @@ const CreateVehicle = () => {
                                   (file) => file.id === data?.id
                                 )?.currentDate
                                   ? formatDate(
-                                    selectedFiles.find(
-                                      (file) => file.id === data?.id
-                                    )?.currentDate
-                                  )
+                                      selectedFiles.find(
+                                        (file) => file.id === data?.id
+                                      )?.currentDate
+                                    )
                                   : "No date available"}
                               </p>
                             </div>
@@ -1254,53 +1374,53 @@ const CreateVehicle = () => {
 export default CreateVehicle;
 const vehicleDocumentCollection = [
   {
-    heading: "VEHICLE",
+    heading: "Document Name",
   },
   {
-    heading: "REGO",
+    heading: "Attachment",
   },
   {
-    heading: "UPLOAD DATE",
+    heading: "Upload Date",
   },
   {
-    heading: "UPLOADED DOC.",
+    heading: "Uploaded Doc.",
   },
   {
-    heading: "STATUS",
+    heading: "Status",
   },
   {
-    heading: "VIEW DOC.",
+    heading: "View Doc.",
   },
 ];
-const documentDataCollection = [
-  {
-    id: 1,
-    Vehicle: "Placeholder",
-    rego: "Placeholder",
-    uploadDate: "19/12/2023",
-    UploadedDoc: "doc.pdf",
-    status: "Approved",
-    viewDoc: "view",
-  },
-  {
-    id: 2,
-    Vehicle: "Placeholder",
-    rego: "Placeholder",
-    uploadDate: "14/12/2023",
-    UploadedDoc: "doc.pdf",
-    status: "Approved",
-    viewDoc: "view",
-  },
-  {
-    id: 3,
-    Vehicle: "Placeholder",
-    rego: "Placeholder",
-    uploadDate: "20/12/2023",
-    UploadedDoc: "doc.pdf",
-    status: "Approved",
-    viewDoc: "view",
-  },
-];
+// const documentDataCollection = [
+//   {
+//     id: 1,
+//     Vehicle: "Placeholder",
+//     rego: "Placeholder",
+//     uploadDate: "19/12/2023",
+//     UploadedDoc: "doc.pdf",
+//     status: "Approved",
+//     viewDoc: "view",
+//   },
+//   {
+//     id: 2,
+//     Vehicle: "Placeholder",
+//     rego: "Placeholder",
+//     uploadDate: "14/12/2023",
+//     UploadedDoc: "doc.pdf",
+//     status: "Approved",
+//     viewDoc: "view",
+//   },
+//   {
+//     id: 3,
+//     Vehicle: "Placeholder",
+//     rego: "Placeholder",
+//     uploadDate: "20/12/2023",
+//     UploadedDoc: "doc.pdf",
+//     status: "Approved",
+//     viewDoc: "view",
+//   },
+// ];
 const ownershipStatus = [
   {
     value: "Owned",

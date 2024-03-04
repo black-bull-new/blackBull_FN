@@ -3,7 +3,7 @@ import Image from "next/image";
 import Progressbar from "../../../../components/Progressbar";
 import Maininputfield from "../../../../components/Maininputfield";
 import DropDownMap from "../../../../components/DropDownMap";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "../../../../components/Button";
 import FileUpload from "../../../../components/FileUpload";
 import {
@@ -122,11 +122,12 @@ const AddCustomer = () => {
     },
     invoicePrefrences: "",
     invoiceCommunicationPrefrences: "",
-    companySuiteDetails: {
-      designation: "",
-      directorEmailAddress: "",
-      directorContactNumber: "",
-    },
+    // companySuiteDetails: {
+    //   designation: "",
+    //   directorEmailAddress: "",
+    //   directorContactNumber: "",
+    // },
+    companySuiteDetails: [],
     payment: {
       accountName: "",
       bankName: "",
@@ -134,14 +135,15 @@ const AddCustomer = () => {
       accountNumber: "",
     },
     paymentTerm: "",
-    warehouseLocation: {
-      street1: "",
-      street2: "",
-      suburb: "",
-      state: "",
-      country: "",
-      postCode: "",
-    },
+    warehouseLocation: [],
+    // warehouseLocation: {
+    //   street1: "",
+    //   street2: "",
+    //   suburb: "",
+    //   state: "",
+    //   country: "Australia",
+    //   postCode: "",
+    // },
     document: "",
   });
 
@@ -197,11 +199,6 @@ const AddCustomer = () => {
     },
     invoicePrefrencesError: "",
     invoiceCommunicationPrefrencesError: "",
-    companySuiteDetailsError: {
-      designation: "",
-      directorEmailAddress: "",
-      directorContactNumber: "",
-    },
     paymentError: {
       accountName: "",
       bankName: "",
@@ -209,15 +206,87 @@ const AddCustomer = () => {
       accountNumber: "",
     },
     paymentTermError: "",
-    warehouseLocationError: {
-      street1: "",
-      street2: "",
-      suburb: "",
-      state: "",
-      country: "",
-      postCode: "",
-    },
   });
+
+  // *********** Add More Director ********************************
+
+  const [addMoreDirector, setAddMoreDirector] = useState<Array<any>>([]);
+
+  useEffect(() => {
+    if (addMoreDirector.length === 0) {
+      setAddMoreDirector([
+        {
+          designation: "",
+          directorEmailAddress: "",
+          directorContactNumber: "",
+        },
+      ]);
+    }
+  }, []);
+
+  const handleExperienceChange = (value: any, fieldName: any, index: any) => {
+    const data = [...addMoreDirector];
+    data[index][fieldName] = value.target.value;
+    setAddMoreDirector(data);
+  };
+
+  const handleAddMoreExperience = () => {
+    setAddMoreDirector([
+      ...addMoreDirector,
+      {
+        designation: "",
+        directorEmailAddress: "",
+        directorContactNumber: "",
+      },
+    ]);
+  };
+
+  const handleRemoveExperience = (index: number) => {
+    setAddMoreDirector(addMoreDirector.filter((_, i) => i !== index));
+  };
+
+  // *********** Add More Address ********************************
+
+  const [addMoreAddress, setAddMoreAddress] = useState<Array<any>>([]);
+
+  useEffect(() => {
+    if (addMoreAddress.length === 0) {
+      setAddMoreAddress([
+        {
+          street1: "",
+          street2: "",
+          suburb: "",
+          state: "",
+          country: "Australia",
+          postCode: "",
+        },
+      ]);
+    }
+  }, []);
+
+  const handleAddressChange = (value: any, fieldName: any, index: any) => {
+    const data = [...addMoreAddress];
+    data[index][fieldName] = value.target.value;
+    setAddMoreAddress(data);
+  };
+
+  const handleAddAddress = () => {
+    setAddMoreAddress([
+      ...addMoreAddress,
+      {
+        street1: "",
+        street2: "",
+        suburb: "",
+        state: "",
+        country: "Australia",
+        postCode: "",
+      },
+    ]);
+  };
+
+  const handleRemoveAddress = (index: number) => {
+    setAddMoreAddress(addMoreAddress.filter((_, i) => i !== index));
+  };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [profile, setProfile] = useState("");
@@ -288,10 +357,35 @@ const AddCustomer = () => {
 
     console.log("Avatar", profileUrl[0]?.response);
 
+    const updatedDirector = addMoreDirector?.map((director: any) => {
+      console.log({ director });
+      return {
+        ...director,
+        designation: director?.designation,
+        directorEmailAddress: director?.directorEmailAddress,
+        directorContactNumber: director?.directorContactNumber,
+      };
+    });
+
+    const updatedAddress = addMoreAddress?.map((address: any) => {
+      console.log({ address });
+      return {
+        ...address,
+        street1: address?.street1,
+        street2: address?.street2,
+        suburb: address?.suburb,
+        state: address?.state,
+        country: address?.country,
+        postCode: address?.postCode,
+      };
+    });
+
     const newCustomer = {
       ...customer,
       avatar: profileUrl[0]?.response,
       document: customerContract[0]?.response,
+      companySuiteDetails: updatedDirector,
+      warehouseLocation: updatedAddress,
     };
 
     const response: any = await addCustomer(newCustomer, token || "");
@@ -321,7 +415,12 @@ const AddCustomer = () => {
     const newErrors = { ...error };
     let hasErrors = false;
     Object.keys(customer).forEach((key) => {
-      if (key !== "document" && key !== "avatar") {
+      if (
+        key !== "document" &&
+        key !== "avatar" &&
+        key !== "companySuiteDetails" &&
+        key !== "warehouseLocation"
+      ) {
         if (typeof customer[key] === "object" && customer[key] !== null) {
           // Handle nested objects with a different logic
           Object.keys(customer[key]).forEach((nestedKey) => {
@@ -676,8 +775,8 @@ const AddCustomer = () => {
                   }
                 }}
                 errorMessage={error.companyAddressError?.state}
-              // selectedData={selectedData}
-              // setSelectedData={setSelectedData}
+                // selectedData={selectedData}
+                // setSelectedData={setSelectedData}
               />
               <Maininputfield
                 label="Country"
@@ -702,8 +801,8 @@ const AddCustomer = () => {
                   }
                 }}
                 errorMessage={error.companyAddressError?.country}
-              // selectedData={selectedData}
-              // setSelectedData={setSelectedData}
+                // selectedData={selectedData}
+                // setSelectedData={setSelectedData}
               />
               <Maininputfield
                 label="Post Code"
@@ -1389,8 +1488,159 @@ const AddCustomer = () => {
                 errorMessage={error.invoiceCommunicationPrefrencesError}
               />
             </div>
-            <h3 className="font-semibold px-4 text-sm text-[#28353A] text-[16px]">
+            <h3 className="font-semibold mb-4 px-4 text-sm text-[#28353A] text-[16px]">
               Company C-Suite Details
+            </h3>
+            {addMoreDirector?.map((item: any, index: number) => {
+              return (
+                <div key={index}>
+                  <div>
+                    <h3 className="font-semibold px-4 text-sm text-[#28353A] text-[16px]">
+                      Director {index + 1}
+                    </h3>
+                    <div className="grid grid-cols-3 gap-4 p-4">
+                      <Maininputfield
+                        label="Designation"
+                        value={item?.designation}
+                        onChange={(e: any) =>
+                          handleExperienceChange(e, "designation", index)
+                        }
+                        // onChange={(e: any) => {
+                        //   setCustomer({
+                        //     ...customer,
+                        //     companySuiteDetails: {
+                        //       ...customer.companySuiteDetails,
+                        //       designation: e.target.value,
+                        //     },
+                        //   });
+                        //   if (e.target.value.length > 0) {
+                        //     setError({
+                        //       ...error,
+                        //       companySuiteDetailsError: {
+                        //         ...error.companySuiteDetailsError,
+                        //         designation: "",
+                        //       },
+                        //     });
+                        //   }
+                        // }}
+                        className="w-full"
+                        errorMessage={
+                          error.companySuiteDetailsError?.designation
+                        }
+                      />
+                      <Maininputfield
+                        label="Director Email Address"
+                        value={item?.directorEmailAddress}
+                        onChange={(e: any) =>
+                          handleExperienceChange(
+                            e,
+                            "directorEmailAddress",
+                            index
+                          )
+                        }
+                        // onChange={(e: any) => {
+                        //   const inputValue = e.target.value;
+                        //   if (!regexOfEmail.test(inputValue)) {
+                        //     setError({
+                        //       ...error,
+                        //       companySuiteDetailsError: {
+                        //         ...error.companySuiteDetailsError,
+                        //         directorEmailAddress:
+                        //           "Please enter a valid email address",
+                        //       },
+                        //     });
+                        //   } else {
+                        //     setError({
+                        //       ...error,
+                        //       companySuiteDetailsError: {
+                        //         ...error.companySuiteDetailsError,
+                        //         directorEmailAddress: "",
+                        //       },
+                        //     });
+                        //   }
+                        //   setCustomer({
+                        //     ...customer,
+                        //     companySuiteDetails: {
+                        //       ...customer.companySuiteDetails,
+                        //       directorEmailAddress: e.target.value,
+                        //     },
+                        //   });
+                        // }}
+                        className="w-full"
+                        errorMessage={
+                          error.companySuiteDetailsError?.directorEmailAddress
+                        }
+                      />
+                      <Maininputfield
+                        label="Director Contact Number"
+                        value={item?.directorContactNumber}
+                        onChange={(e: any) =>
+                          handleExperienceChange(
+                            e,
+                            "directorContactNumber",
+                            index
+                          )
+                        }
+                        // onChange={(e: any) => {
+                        //   const phoneNumber = e.target.value;
+                        //   if (!regexOfPhoneNumber.test(phoneNumber)) {
+                        //     setError((prevError: any) => ({
+                        //       ...prevError,
+                        //       companySuiteDetailsError: {
+                        //         ...prevError.companySuiteDetailsError,
+                        //         directorContactNumber:
+                        //           "Please enter a valid 10-digit phone number",
+                        //       },
+                        //     }));
+                        //   } else {
+                        //     setError((prevError: any) => ({
+                        //       ...prevError,
+                        //       companySuiteDetailsError: {
+                        //         ...prevError.companySuiteDetailsError,
+                        //         directorContactNumber: "",
+                        //       },
+                        //     }));
+                        //   }
+                        //   setCustomer((prevCustomer: any) => ({
+                        //     ...prevCustomer,
+                        //     companySuiteDetails: {
+                        //       ...prevCustomer.companySuiteDetails,
+                        //       directorContactNumber: phoneNumber,
+                        //     },
+                        //   }));
+                        // }}
+                        className="w-full"
+                        errorMessage={
+                          error.companySuiteDetailsError?.directorContactNumber
+                        }
+                      />
+                    </div>
+                    <div className="mb-8 me-3 flex justify-end">
+                      <Button
+                        onClick={handleAddMoreExperience}
+                        text="Add More Director"
+                        className="!w-fit bg-[#2B36D9] !px-4"
+                      />
+                      {index > 0 && (
+                        <span
+                          onClick={() => handleRemoveExperience(index)}
+                          className="ml-4 cursor-pointer"
+                          style={{
+                            color: "red",
+                            marginTop: "10px",
+                            marginRight: "10px",
+                          }}
+                        >
+                          Remove
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+            {/* <h3 className="font-semibold mt-4 px-4 text-sm text-[#28353A] text-[16px]">
+              Director
             </h3>
             <div className="grid grid-cols-3 gap-4 p-4">
               <Maininputfield
@@ -1457,25 +1707,7 @@ const AddCustomer = () => {
                 label="Director Contact Number"
                 value={customer.companySuiteDetails.directorContactNumber}
                 onChange={(e: any) => {
-                  // setCustomer({
-                  //   ...customer,
-                  //   companySuiteDetails: {
-                  //     ...customer.companySuiteDetails,
-                  //     directorContactNumber: e.target.value,
-                  //   },
-                  // });
-                  // if (e.target.value.length > 0) {
-                  //   setError({
-                  //     ...error,
-                  //     companySuiteDetailsError: {
-                  //       ...error.companySuiteDetailsError,
-                  //       directorContactNumber: "",
-                  //     },
-                  //   });
-                  // }
-
                   const phoneNumber = e.target.value;
-                  // Check if the entered value is a valid 10-digit phone number
                   if (!regexOfPhoneNumber.test(phoneNumber)) {
                     setError((prevError: any) => ({
                       ...prevError,
@@ -1490,7 +1722,7 @@ const AddCustomer = () => {
                       ...prevError,
                       companySuiteDetailsError: {
                         ...prevError.companySuiteDetailsError,
-                        directorContactNumber: "", // Clear the error if the input is valid
+                        directorContactNumber: "",
                       },
                     }));
                   }
@@ -1513,7 +1745,7 @@ const AddCustomer = () => {
                 text="Add More Director"
                 className="!w-fit bg-[#2B36D9] !px-4"
               />
-            </div>
+            </div> */}
             <h2 className="font-semibold p-4 text-[#151515] text-[18px]">
               {" "}
               Payment
@@ -1638,8 +1870,204 @@ const AddCustomer = () => {
               {" "}
               Warehouse Locations & Address
             </h2>
-
-            <h3 className="font-semibold px-4 text-sm text-[#28353A] text-[16px]">
+            {addMoreAddress?.map((item: any, index: number) => {
+              return (
+                <div key={index}>
+                  <h3 className="font-semibold px-4 text-sm text-[#28353A] text-[16px]">
+                    Address {index + 1}
+                  </h3>
+                  <div className="grid grid-cols-3 gap-4 p-4">
+                    <Maininputfield
+                      label="Street 1"
+                      value={item?.street1}
+                      onChange={(e: any) =>
+                        handleAddressChange(e, "street1", index)
+                      }
+                      // onChange={(e: any) => {
+                      //   setCustomer({
+                      //     ...customer,
+                      //     warehouseLocation: {
+                      //       ...customer.warehouseLocation,
+                      //       street1: e.target.value,
+                      //     },
+                      //   });
+                      //   if (e.target.value.length > 0) {
+                      //     setError({
+                      //       ...error,
+                      //       warehouseLocationError: {
+                      //         ...error.warehouseLocationError,
+                      //         street1: "",
+                      //       },
+                      //     });
+                      //   }
+                      // }}
+                      className="w-full"
+                      errorMessage={error.warehouseLocationError?.street1}
+                    />
+                    <Maininputfield
+                      label="Street 2"
+                      value={item?.street2}
+                      onChange={(e: any) =>
+                        handleAddressChange(e, "street2", index)
+                      }
+                      // onChange={(e: any) => {
+                      //   setCustomer({
+                      //     ...customer,
+                      //     warehouseLocation: {
+                      //       ...customer.warehouseLocation,
+                      //       street2: e.target.value,
+                      //     },
+                      //   });
+                      //   if (e.target.value.length > 0) {
+                      //     setError({
+                      //       ...error,
+                      //       warehouseLocationError: {
+                      //         ...error.warehouseLocationError,
+                      //         street2: "",
+                      //       },
+                      //     });
+                      //   }
+                      // }}
+                      className="w-full"
+                      errorMessage={error.warehouseLocationError?.street2}
+                    />
+                    <Maininputfield
+                      label="Suburb"
+                      value={item?.suburb}
+                      onChange={(e: any) =>
+                        handleAddressChange(e, "suburb", index)
+                      }
+                      // value={customer.warehouseLocation.suburb}
+                      // onChange={(e: any) => {
+                      //   setCustomer({
+                      //     ...customer,
+                      //     warehouseLocation: {
+                      //       ...customer.warehouseLocation,
+                      //       suburb: e.target.value,
+                      //     },
+                      //   });
+                      //   if (e.target.value.length > 0) {
+                      //     setError({
+                      //       ...error,
+                      //       warehouseLocationError: {
+                      //         ...error.warehouseLocationError,
+                      //         suburb: "",
+                      //       },
+                      //     });
+                      //   }
+                      // }}
+                      className="w-full"
+                      errorMessage={error.warehouseLocationError?.suburb}
+                    />
+                    <DropDownMap
+                      label="State"
+                      mapOption={stateCollection}
+                      value={item?.state}
+                      onChange={(e: any) =>
+                        handleAddressChange(e, "state", index)
+                      }
+                      // value={customer.warehouseLocation.state}
+                      // onChange={(e: any) => {
+                      //   setCustomer({
+                      //     ...customer,
+                      //     warehouseLocation: {
+                      //       ...customer.warehouseLocation,
+                      //       state: e.target.value,
+                      //     },
+                      //   });
+                      //   if (e.target.value.length > 0) {
+                      //     setError({
+                      //       ...error,
+                      //       warehouseLocationError: {
+                      //         ...error.warehouseLocationError,
+                      //         state: "",
+                      //       },
+                      //     });
+                      //   }
+                      // }}
+                      errorMessage={error.warehouseLocationError?.state}
+                    />
+                    <Maininputfield
+                      label="Country"
+                      mapOption={countryCollection}
+                      value={item?.country}
+                      onChange={(e: any) =>
+                        handleAddressChange(e, "country", index)
+                      }
+                      // value={customer.warehouseLocation.country}
+                      // onChange={(e: any) => {
+                      //   setCustomer({
+                      //     ...customer,
+                      //     warehouseLocation: {
+                      //       ...customer.warehouseLocation,
+                      //       country: e.target.value,
+                      //     },
+                      //   });
+                      //   if (e.target.value.length > 0) {
+                      //     setError({
+                      //       ...error,
+                      //       warehouseLocationError: {
+                      //         ...error.warehouseLocationError,
+                      //         country: "",
+                      //       },
+                      //     });
+                      //   }
+                      // }}
+                      errorMessage={error.warehouseLocationError?.country}
+                    />
+                    <Maininputfield
+                      label="Post Code"
+                      value={item?.postCode}
+                      onChange={(e: any) =>
+                        handleAddressChange(e, "postCode", index)
+                      }
+                      // value={customer.warehouseLocation.postCode}
+                      // onChange={(e: any) => {
+                      //   setCustomer({
+                      //     ...customer,
+                      //     warehouseLocation: {
+                      //       ...customer.warehouseLocation,
+                      //       postCode: e.target.value,
+                      //     },
+                      //   });
+                      //   if (e.target.value.length > 0) {
+                      //     setError({
+                      //       ...error,
+                      //       warehouseLocationError: {
+                      //         ...error.warehouseLocationError,
+                      //         postCode: "",
+                      //       },
+                      //     });
+                      //   }
+                      // }}
+                      className="w-full"
+                      errorMessage={error.warehouseLocationError?.postCode}
+                    />
+                  </div>
+                  <div className="mb-8 me-3 flex justify-end">
+                    <Button
+                      onClick={handleAddAddress}
+                      text="Add More Addresses"
+                      className="!w-fit bg-[#2B36D9] !px-4"
+                    />
+                    {index > 0 && (
+                      <span
+                        onClick={() => handleRemoveAddress(index)}
+                        className="ml-4 cursor-pointer"
+                        style={{
+                          color: "red",
+                          marginTop: "10px",
+                          marginRight: "10px",
+                        }}
+                      >
+                        Remove
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+            {/* <h3 className="font-semibold px-4 text-sm text-[#28353A] text-[16px]">
               Address 1
             </h3>
             <div className="grid grid-cols-3 gap-4 p-4">
@@ -1739,7 +2167,7 @@ const AddCustomer = () => {
                 }}
                 errorMessage={error.warehouseLocationError?.state}
               />
-              <DropDownMap
+              <Maininputfield
                 label="Country"
                 mapOption={countryCollection}
                 value={customer.warehouseLocation.country}
@@ -1793,7 +2221,7 @@ const AddCustomer = () => {
                 text="Add More Addresses"
                 className="!w-fit bg-[#2B36D9] !px-4"
               />
-            </div>
+            </div> */}
             <h2 className="font-semibold p-4 text-[#151515] text-[18px]">
               {" "}
               Contract Document
@@ -1801,8 +2229,10 @@ const AddCustomer = () => {
 
             <div className="grid grid-cols-3 gap-4 p-4">
               <FileUpload
-                file="Choose Contract Document"
+                file="Upload Contractual Document"
                 onChange={handleDocumentUpload}
+                id="customerContractualFile"
+                name="customerContractualDocument"
                 //@ts-expect-error
                 fileName={selectedUploadContractDocument?.file?.name || ""}
               />
@@ -1831,19 +2261,25 @@ const stateCollection = [
     value: "Victoria",
   },
   {
-    value: "items1",
+    value: "Australian Capital Territory",
   },
   {
-    value: "items2",
+    value: "New South Wales",
   },
   {
-    value: "items3",
+    value: "Northern Territory",
   },
   {
-    value: "items4",
+    value: "Queensland",
   },
   {
-    value: "items5",
+    value: "South Australia",
+  },
+  {
+    value: "Tasmania",
+  },
+  {
+    value: "Western Australia",
   },
 ];
 const countryCollection = [
@@ -1871,13 +2307,7 @@ const invoiceColletion = [
     value: "Mail",
   },
   {
-    value: "item1",
-  },
-  {
-    value: "item2",
-  },
-  {
-    value: "item3",
+    value: "None",
   },
 ];
 const invoiceComuColletion = [
@@ -1885,13 +2315,19 @@ const invoiceComuColletion = [
     value: "Accounts Payable Email, Operations Email",
   },
   {
-    value: "item1",
+    value: "Accounts Payable Email",
   },
   {
-    value: "item2",
+    value: "Accounts Receivable Email",
   },
   {
-    value: "item3",
+    value: "Opreations Email",
+  },
+  {
+    value: "Compliance Email",
+  },
+  {
+    value: "Admin Email",
   },
 ];
 const paymentTermsCollection = [
@@ -1899,15 +2335,30 @@ const paymentTermsCollection = [
     value: "Net 30",
   },
   {
-    value: "item1",
+    value: "Net 15",
   },
   {
-    value: "item2",
+    value: "Net 14",
   },
   {
-    value: "item3",
+    value: "Net 7",
   },
   {
-    value: "item4",
+    value: "Due on Receipt",
+  },
+  {
+    value: "Net 45",
+  },
+  {
+    value: "End of the Month",
+  },
+  {
+    value: "Net Monthly Account",
+  },
+  {
+    value: "Cash in Advance",
+  },
+  {
+    value: "Cash on Delivery",
   },
 ];

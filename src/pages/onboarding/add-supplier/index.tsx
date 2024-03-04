@@ -5,7 +5,6 @@ import DropDownMap from "../../../../components/DropDownMap";
 import { useState } from "react";
 import Button from "../../../../components/Button";
 import DateWithoutDropdown from "../../../../components/DateWithoutDropdown";
-import FileUpload from "../../../../components/FileUpload";
 import Maindatefield from "../../../../components/Maindatefield";
 import StatusChip from "../../../../components/StatusChip";
 import Checkbox from "../../../../components/Checkbox";
@@ -13,7 +12,17 @@ import { NestedAddSupplier } from "../../../../components/supplier/NestedAddSupp
 import { NestedAddVehicle } from "../../../../components/supplier/NestedAddVehicle";
 import NestedAddDriver from "../../../../components/supplier/NestedAddDriver";
 import { getCookie } from "cookies-next";
-import { addSupplierIntoSupplier } from "@/network-request/supplier/supplier";
+import {
+  addSupplierIntoSupplier,
+  uploadSupplierAccreditationDocuments,
+  uploadSupplierCocDocuments,
+  uploadSupplierMarineAlcoholDocuments,
+  uploadSupplierMarineDocuments,
+  uploadSupplierProductLiabilityDocuments,
+  uploadSupplierProfile,
+  uploadSupplierPublicLiabilityDocuments,
+  uploadSupplierWorkCoverDocuments,
+} from "@/network-request/supplier/supplier";
 import {
   addVehicleIntoSupplier,
   uploadSupplierVehicleRegoDocuments,
@@ -24,7 +33,11 @@ import {
 //   // correctAddSupplierStateName,
 //   // correctAddVehicleStateName,
 // } from "../utility/utilityMethod";
-import { addSupplierDriver } from "@/network-request/supplier/driver";
+import {
+  addSupplierDriver,
+  uploadSupplierDriverProfile,
+  uploadSupplierDriverlicenseDocuments,
+} from "@/network-request/supplier/driver";
 import { formattedDate } from "@/utils";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -59,12 +72,12 @@ const correctAddDriverStateName = (stateName: string): string => {
     referenceEmailId: "Reference Email Id",
     referenceContactNumber: "Reference Contact Number",
     licenseDetails: "License Details",
-    licenceNumber: "Licence Number",
+    licenseNumber: "Licence Number",
     licenseCardNumber: "License Card Number",
     licenseType: "License Type",
     dateOfIssue: "Date Of Issue",
     expiryDate: "Expiry Date",
-    daysLeftForRenewal: "DaysLeft For Renewal",
+    daysLeftForRenewal: "Days Left For Renewal",
     documents: "Documents",
     specialDrivingLicense: "Special Driving License",
   };
@@ -86,7 +99,7 @@ const correctAddSupplierStateName = (stateName: string): string => {
     number: "Number",
     opreationEmail: "Opreation Email",
     compliance: "compliance",
-    complianceEmail: "",
+    complianceEmail: "Compliance Email",
     admin: "Admin",
     adminEmail: "Admin Email",
     dispatch: "Dispatch",
@@ -150,7 +163,18 @@ const AddSupplier = () => {
   const step1Btn = "Proceed to Add Vehicle";
   const step2Btn = "Proceed to Add Driver";
   const step3Btn = "Submit";
-  const [buttonState, seButtonState] = useState(step3Btn);
+  const [buttonState, seButtonState] = useState(step1Btn);
+
+  const initialDocumentsState = {
+    accreditationDocument: "",
+    productLiabilityDocument: "",
+    publicLiabilityDocument: "",
+    workCoverDocument: "",
+    marineDocument: "",
+    marineAlcoholDocument: "",
+    cocDocument: "",
+  };
+
   /**
    * add supplier state and its error state
    */
@@ -160,8 +184,7 @@ const AddSupplier = () => {
     abn: "",
     legalName: "",
     website: "",
-    // this profile state is static because backend team working on that
-    profile: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    profile: "",
     opreations: {
       contactPerson: "",
       desgination: "",
@@ -301,6 +324,7 @@ const AddSupplier = () => {
       type: "",
       uploadDate: "",
     },
+    onboardingDocuments: [],
   });
   const [addSupplierError, setAddSupplierError] = useState<any>({
     companyNameError: "",
@@ -356,6 +380,24 @@ const AddSupplier = () => {
     },
     // accreditationDocument: "",
   });
+  const [selectedProfileForSupplier, setSelectedProfileForSupplier] =
+    useState("");
+  const [urlsForSupplier, setUrlsForSupplier] = useState<string[]>([]);
+  const modifiedUrlsForSupplier = urlsForSupplier.reduce(
+    (acc: any, url, index) => {
+      acc[index + 1] = url;
+      return acc;
+    },
+    []
+  );
+  console.log({ selectedProfileForSupplier });
+  console.log("addSupplierError", addSupplierError);
+
+  // ================================================== Uploading documents ==================================================
+  const [selectedDocuments, setSelectedDocuments] = useState(
+    initialDocumentsState
+  );
+  console.log({ selectedDocuments });
 
   /**
    * add vehicle state and its error state
@@ -434,7 +476,7 @@ const AddSupplier = () => {
       street: "",
       suburb: "",
       state: "",
-      country: "",
+      country: "Australia",
       pincode: "",
     },
     permanentAddress: {
@@ -442,7 +484,7 @@ const AddSupplier = () => {
       street: "",
       suburb: "",
       state: "",
-      country: "",
+      country: "Australia",
       pincode: "",
     },
     emergencyContactInformation: {
@@ -473,50 +515,51 @@ const AddSupplier = () => {
     },
     specialDrivingLicense: "",
 
-    visaStatus: {
-      type: "visa-status",
-      uploadDate: "20/02/2024",
-    },
-    driverLicenseFront: {
-      type: "visa-status",
-      uploadDate: "20/02/2024",
-    },
-    driverLicenseBack: {
-      type: "visa-status",
-      uploadDate: "20/02/2024",
-    },
-    licenseHistory: {
-      type: "visa-status",
-      uploadDate: "20/02/2024",
-    },
-    policeVerification: {
-      type: "visa-status",
-      uploadDate: "20/02/2024",
-    },
-    passportFront: {
-      type: "visa-status",
-      uploadDate: "20/02/2024",
-    },
-    passportBack: {
-      type: "visa-status",
-      uploadDate: "20/02/2024",
-    },
-    healthInsurance: {
-      type: "visa-status",
-      uploadDate: "20/02/2024",
-    },
-    driverCertificate: {
-      type: "visa-status",
-      uploadDate: "20/02/2024",
-    },
-    fitness: {
-      type: "visa-status",
-      uploadDate: "20/02/2024",
-    },
-    drugTest: {
-      type: "visa-status",
-      uploadDate: "20/02/2024",
-    },
+    // visaStatus: {
+    //   type: "visa-status",
+    //   uploadDate: "20/02/2024",
+    // },
+    // driverLicenseFront: {
+    //   type: "visa-status",
+    //   uploadDate: "20/02/2024",
+    // },
+    // driverLicenseBack: {
+    //   type: "visa-status",
+    //   uploadDate: "20/02/2024",
+    // },
+    // licenseHistory: {
+    //   type: "visa-status",
+    //   uploadDate: "20/02/2024",
+    // },
+    // policeVerification: {
+    //   type: "visa-status",
+    //   uploadDate: "20/02/2024",
+    // },
+    // passportFront: {
+    //   type: "visa-status",
+    //   uploadDate: "20/02/2024",
+    // },
+    // passportBack: {
+    //   type: "visa-status",
+    //   uploadDate: "20/02/2024",
+    // },
+    // healthInsurance: {
+    //   type: "visa-status",
+    //   uploadDate: "20/02/2024",
+    // },
+    // driverCertificate: {
+    //   type: "visa-status",
+    //   uploadDate: "20/02/2024",
+    // },
+    // fitness: {
+    //   type: "visa-status",
+    //   uploadDate: "20/02/2024",
+    // },
+    // drugTest: {
+    //   type: "visa-status",
+    //   uploadDate: "20/02/2024",
+    // },
+    onboardingDocuments: [],
   });
 
   const [addDriverError, setAddDriverError] = useState<any>({
@@ -549,43 +592,172 @@ const AddSupplier = () => {
       contactNumber: "",
       relationship: "",
     },
-    // licenseDetailsError: {
-    //   licenseNumber: "",
-    //   licenseCardNumber: "",
-    //   licenseType: "",
-    //   state: "",
-    //   dateOfIssue: "",
-    //   expiryDate: "",
-    //   daysLeftForRenewal: "",
-    //   documents: [],
-    // },
+    licenseDetailsError: {
+      licenseNumber: "",
+      licenseCardNumber: "",
+      licenseType: "",
+      state: "",
+      dateOfIssue: "",
+      expiryDate: "",
+      daysLeftForRenewal: "",
+    },
     specialDrivingLicenseError: "",
   });
-  console.log("addVehicleError", addVehicleError);
-  console.log("selectedStatusValues", selectedStatusValues);
+
+  console.log("addDriverError", addDriverError);
+  const [selectedProfileForDriver, setSelectedProfileForDriver] = useState("");
+  const [
+    selectedUploadRegoDocumentForDriver,
+    setSelectedUploadRegoDocumentForDriver,
+  ] = useState("");
+  const [urlsForDriver, setUrlsForDriver] = useState<string[]>([]);
+  const modifiedUrlsForDriver = urlsForDriver.reduce((acc: any, url, index) => {
+    acc[index + 1] = url;
+    return acc;
+  }, []);
+
   const handleSubmit = async () => {
     if (buttonState === step1Btn) {
-      // Check validation and get error status
       const hasErrors = checkValidationForAddSupplier();
       if (hasErrors) {
-        alert("Please fix the validation errors before submitting.");
+        toast("Please fix the validation errors before submitting.", {
+          icon: "⚠️",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
         return;
       }
+
+      // Uploading driver profile ...
+      const [profileUrl] = await Promise.all([
+        Promise.all(
+          Object.values(selectedProfileForSupplier)?.map((imageInfo) =>
+            uploadSupplierProfile(imageInfo)
+          )
+        ),
+      ]);
+
+      // Uploading driver license documents ...
+      const uploadAllDocuments = async function (
+        documents: string,
+        uploadFunction: any
+      ) {
+        return await Promise.all(
+          Object.values(documents)?.map((imageInfo) =>
+            uploadFunction(imageInfo)
+          )
+        );
+      };
+
+      const [
+        accreditationDocuments,
+        producteDocuments,
+        publicDocuments,
+        workCoverDocument,
+        marineDocument,
+        marineAlcoholDocument,
+        cocDocument,
+      ] = await Promise.all([
+        uploadAllDocuments(
+          selectedDocuments?.accreditationDocument,
+          uploadSupplierAccreditationDocuments
+        ),
+        uploadAllDocuments(
+          selectedDocuments?.productLiabilityDocument,
+          uploadSupplierProductLiabilityDocuments
+        ),
+        uploadAllDocuments(
+          selectedDocuments?.publicLiabilityDocument,
+          uploadSupplierPublicLiabilityDocuments
+        ),
+        uploadAllDocuments(
+          selectedDocuments?.workCoverDocument,
+          uploadSupplierWorkCoverDocuments
+        ),
+        uploadAllDocuments(
+          selectedDocuments?.marineDocument,
+          uploadSupplierMarineDocuments
+        ),
+        uploadAllDocuments(
+          selectedDocuments?.marineAlcoholDocument,
+          uploadSupplierMarineAlcoholDocuments
+        ),
+        uploadAllDocuments(
+          selectedDocuments?.cocDocument,
+          uploadSupplierCocDocuments
+        ),
+      ]);
+
+      const newSupplierDetails = {
+        ...addSupplier,
+        profile: profileUrl[0]?.response,
+        accreditationDocument: accreditationDocuments[0]?.response,
+        insuranceDetails: {
+          ...addSupplier.insuranceDetails,
+          productLiability: {
+            ...addSupplier.insuranceDetails.productLiability,
+            document: producteDocuments[0]?.response,
+          },
+          publicLiability: {
+            ...addSupplier.insuranceDetails.publicLiability,
+            document: publicDocuments[0]?.response,
+          },
+          workCover: {
+            ...addSupplier.insuranceDetails.workCover,
+            document: workCoverDocument[0]?.response,
+          },
+          marineGeneral: {
+            ...addSupplier.insuranceDetails.marineGeneral,
+            document: marineDocument[0]?.response,
+          },
+          marineAlcohol: {
+            ...addSupplier.insuranceDetails.marineAlcohol,
+            document: marineAlcoholDocument[0]?.response,
+          },
+          coc: {
+            ...addSupplier.insuranceDetails.coc,
+            document: cocDocument[0]?.response,
+          },
+        },
+        onboardingDocuments: urlsForSupplier?.map(
+          (url: any, index: number) => ({
+            type: url,
+            uploadDate: formattedDate,
+          })
+        ),
+      };
+
       const response: any = await addSupplierIntoSupplier(
-        addSupplier,
+        newSupplierDetails,
         token || ""
       );
-      if (response?.status === 200) {
-        alert("Supplier Added Successfully");
-        // Uncomment the following line when whole code of add supplier is finished
-        // seButtonState(step2Btn);
-        // Auto scroll up for better user experience
+      console.log({ response });
+      if (response.data) {
+        toast("Supplier has been successfully created..", {
+          icon: "👏",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
         window.scrollTo({
           top: 0,
-          behavior: "smooth", // for smooth scrolling
+          behavior: "smooth",
         });
+        seButtonState(step2Btn);
       } else {
-        alert("Something went Wrong! Please try again later.");
+        toast("Something went wrong", {
+          icon: "⚠️",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
       }
     } else if (buttonState === step2Btn) {
       // Check validation and get error status
@@ -630,6 +802,7 @@ const AddSupplier = () => {
             color: "#fff",
           },
         });
+        seButtonState(step3Btn);
       } else {
         toast("Something went wrong", {
           icon: "⚠️",
@@ -650,16 +823,76 @@ const AddSupplier = () => {
       // Check validation and get error status
       const hasErrors = checkValidationForAddDriver();
       if (hasErrors) {
-        alert("Please fix the validation errors before submitting.");
+        toast("Please fix the validation errors before submitting.", {
+          icon: "⚠️",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
         return;
       }
-      const response: any = await addSupplierDriver(addDriver, token || "");
+
+      // Uploading driver profile ...
+      const [profileUrl] = await Promise.all([
+        Promise.all(
+          Object.values(selectedProfileForDriver)?.map((imageInfo) =>
+            uploadSupplierDriverProfile(imageInfo)
+          )
+        ),
+      ]);
+      // Uploading driver license documents ...
+      const [driverLicense] = await Promise.all([
+        Promise.all(
+          Object.values(selectedUploadRegoDocumentForDriver)?.map((imageInfo) =>
+            uploadSupplierDriverlicenseDocuments(imageInfo)
+          )
+        ),
+      ]);
+
+      const newDriverDetails = {
+        ...addDriver,
+        avatar: profileUrl[0]?.response,
+        licenseDetails: {
+          ...addDriver.licenseDetails,
+          documents: driverLicense[0]?.response,
+        },
+        onboardingDocuments: urlsForDriver?.map((url: any, index: number) => ({
+          type: url[0],
+          uploadDate: formattedDate,
+        })),
+      };
+      console.log("urlsForDriver", urlsForDriver);
+      console.log("newDriverDetails", newDriverDetails);
+
+      const response: any = await addSupplierDriver(
+        newDriverDetails,
+        token || ""
+      );
       console.log({ response });
-      if (response.state === 200) {
-        seButtonState(step1Btn);
+      if (response.data) {
+        // seButtonState(step1Btn);
+        toast("Driver has been successfully created..", {
+          icon: "👏",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
         window.scrollTo({
           top: 0,
           behavior: "smooth", // for smooth scrolling
+        });
+      } else {
+        toast("Something went wrong", {
+          icon: "⚠️",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
         });
       }
     }
@@ -687,7 +920,8 @@ const AddSupplier = () => {
         key !== "healthInsurance" &&
         key !== "driverCertificate" &&
         key !== "fitness" &&
-        key !== "drugTest"
+        key !== "drugTest" &&
+        key !== "specialDrivingLicense"
       ) {
         if (typeof addDriver[key] === "object" && addDriver[key] !== null) {
           // Ensure that nested error objects are initialized
@@ -695,20 +929,22 @@ const AddSupplier = () => {
 
           // Handle nested objects with a different logic
           Object.keys(addDriver[key]).forEach((nestedKey) => {
-            const nestedKeyPath = `${key}Error.${nestedKey}`;
+            if (nestedKey !== "documents") {
+              const nestedKeyPath = `${key}Error.${nestedKey}`;
 
-            if (
-              !addDriver[key][nestedKey] ||
-              addDriver[key][nestedKey] === undefined
-            ) {
-              newErrors[key + "Error"][
-                nestedKey
-              ] = `${correctAddDriverStateName(
-                nestedKey
-              )} is required in ${correctAddDriverStateName(key)}`;
-              hasErrors = true;
-            } else {
-              newErrors[key + "Error"][nestedKey] = "";
+              if (
+                !addDriver[key][nestedKey] ||
+                addDriver[key][nestedKey] === undefined
+              ) {
+                newErrors[key + "Error"][
+                  nestedKey
+                ] = `${correctAddDriverStateName(
+                  nestedKey
+                )} is required in ${correctAddDriverStateName(key)}`;
+                hasErrors = true;
+              } else {
+                newErrors[key + "Error"][nestedKey] = "";
+              }
             }
           });
         } else {
@@ -758,7 +994,8 @@ const AddSupplier = () => {
         key !== "riskManagementPolicy" &&
         key !== "speedPolicy" &&
         key !== "workHealthSafetyPolicy" &&
-        key !== "certificateOfAccreditation"
+        key !== "certificateOfAccreditation" &&
+        key !== "profile"
       ) {
         if (typeof addSupplier[key] === "object" && addSupplier[key] !== null) {
           // Ensure that nested error objects are initialized
@@ -783,8 +1020,6 @@ const AddSupplier = () => {
             }
           });
         } else {
-          // Handle non-nested fields
-          // Auto scroll up for better user experience
           window.scrollTo({
             top: 0,
             behavior: "smooth", // for smooth scrolling
@@ -854,6 +1089,60 @@ const AddSupplier = () => {
               setAddSupplier={setAddSupplier}
               error={addSupplierError}
               setError={setAddSupplierError}
+              urls={urlsForSupplier}
+              selectedProfileSupplier={selectedProfileForSupplier}
+              setSelectedProfileSupplier={setSelectedProfileForSupplier}
+              setUrls={setUrlsForSupplier}
+              modifiedUrls={modifiedUrlsForSupplier}
+              accreditationDocument={selectedDocuments?.accreditationDocument}
+              setAccreditationDocument={(value: string) =>
+                setSelectedDocuments((item) => ({
+                  ...item,
+                  accreditationDocument: value,
+                }))
+              }
+              productDocument={selectedDocuments?.productLiabilityDocument}
+              setProductDocument={(value: string) =>
+                setSelectedDocuments((item) => ({
+                  ...item,
+                  productLiabilityDocument: value,
+                }))
+              }
+              publicDocument={selectedDocuments?.publicLiabilityDocument}
+              setPublicDocument={(value: string) =>
+                setSelectedDocuments((item) => ({
+                  ...item,
+                  publicLiabilityDocument: value,
+                }))
+              }
+              workCoverDocument={selectedDocuments?.workCoverDocument}
+              setWorkCoverDocument={(value: string) =>
+                setSelectedDocuments((item) => ({
+                  ...item,
+                  workCoverDocument: value,
+                }))
+              }
+              marineDocument={selectedDocuments?.marineDocument}
+              setMarineDocument={(value: string) =>
+                setSelectedDocuments((item) => ({
+                  ...item,
+                  marineDocument: value,
+                }))
+              }
+              marineAlcoholDocument={selectedDocuments?.marineAlcoholDocument}
+              setMarineAlcoholDocument={(value: string) =>
+                setSelectedDocuments((item) => ({
+                  ...item,
+                  marineAlcoholDocument: value,
+                }))
+              }
+              cocDocument={selectedDocuments?.cocDocument}
+              setCocDocument={(value: string) =>
+                setSelectedDocuments((item) => ({
+                  ...item,
+                  cocDocument: value,
+                }))
+              }
             />
           ) : buttonState === step2Btn ? (
             <NestedAddVehicle
@@ -875,6 +1164,15 @@ const AddSupplier = () => {
               setAddDriver={setAddDriver}
               error={addDriverError}
               setError={setAddDriverError}
+              selectedProfile={selectedProfileForDriver}
+              setSelectedProfile={setSelectedProfileForDriver}
+              selectedUploadRegoDocument={selectedUploadRegoDocumentForDriver}
+              setSelectedUploadRegoDocument={
+                setSelectedUploadRegoDocumentForDriver
+              }
+              urls={urlsForDriver}
+              setUrls={setUrlsForDriver}
+              modifiedUrls={modifiedUrlsForDriver}
             />
           ) : null}
 
@@ -888,7 +1186,7 @@ const AddSupplier = () => {
             <Button
               onClick={handleSubmit}
               text={buttonState}
-              className="px-8 !rounded-xl text-sm"
+              className="px-8 rounded-full text-sm"
             />
           </div>
         </div>
@@ -897,345 +1195,3 @@ const AddSupplier = () => {
   );
 };
 export default AddSupplier;
-
-// const insuranceCoverageCollection = [
-//   {
-//     value: "$1 Million Coverage",
-//   },
-//   {
-//     value: "item1",
-//   },
-//   {
-//     value: "item2",
-//   },
-//   {
-//     value: "item3",
-//   },
-// ];
-// const situationCollection = [
-//   {
-//     value: "Anywhere",
-//   },
-//   {
-//     value: "item1",
-//   },
-//   {
-//     value: "item2",
-//   },
-// ];
-// const activeInactive = [
-//   {
-//     value: "Active",
-//   },
-//   {
-//     value: "Inactive",
-//   },
-// ];
-// const invoiceColletion = [
-//   {
-//     value: "Mail",
-//   },
-//   {
-//     value: "item1",
-//   },
-//   {
-//     value: "item2",
-//   },
-//   {
-//     value: "item3",
-//   },
-// ];
-// const invoiceComuColletion = [
-//   {
-//     value: "Accounts Payable Email, Operations Email",
-//   },
-//   {
-//     value: "item1",
-//   },
-//   {
-//     value: "item2",
-//   },
-//   {
-//     value: "item3",
-//   },
-// ];
-// const areaCollection = [
-//   {
-//     value:
-//       "Australian Capital Territory, Northern Territory, Tasmania, Victoria",
-//   },
-//   {
-//     value: "item1",
-//   },
-//   {
-//     value: "item2",
-//   },
-//   {
-//     value: "item3",
-//   },
-// ];
-// const businessOperationCollection = [
-//   {
-//     value: "Queensland, Victoria",
-//   },
-//   {
-//     value: "item1",
-//   },
-
-//   {
-//     value: "item2",
-//   },
-//   {
-//     value: "item3",
-//   },
-// ];
-// const stateCollection = [
-//   {
-//     value: "Victoria",
-//   },
-//   {
-//     value: "items1",
-//   },
-//   {
-//     value: "items2",
-//   },
-//   {
-//     value: "items3",
-//   },
-//   {
-//     value: "items4",
-//   },
-//   {
-//     value: "items5",
-//   },
-// ];
-// const carrierTypeCollection = [
-//   {
-//     value: "Trucking Carrier",
-//   },
-//   {
-//     value: "item1",
-//   },
-//   {
-//     value: "item2",
-//   },
-//   {
-//     value: "item3",
-//   },
-// ];
-// const documentCollectionData = [
-//   {
-//     documentType: "Drug",
-//     uploadedDocument: "drug.pdf",
-//     uploadDate: "20/12/2023",
-//   },
-//   {
-//     documentType: "Alcohol Policy",
-//     uploadedDocument: "alcohol.pdf",
-//     uploadDate: "20/12/2023",
-//   },
-//   {
-//     documentType: "Procedure",
-//     uploadedDocument: "procedure.pdf",
-//     uploadDate: "20/12/2023",
-//   },
-//   {
-//     documentType: "Risk Management Policy",
-//     uploadedDocument: "doc.pdf",
-//     uploadDate: "20/12/2023",
-//   },
-//   {
-//     documentType: "Speed Policy",
-//     uploadedDocument: "doc.pdf",
-//     uploadDate: "20/12/2023",
-//   },
-//   {
-//     documentType: "Fatique Policy & Presentation system",
-//     uploadedDocument: "doc.pdf",
-//     uploadDate: "20/12/2023",
-//   },
-//   {
-//     documentType: "GPS Snapshot",
-//     uploadedDocument: "GPS-Snapshot.pdf",
-//     uploadDate: "20/12/2023",
-//   },
-//   {
-//     documentType: "Work Health & Safety Policy",
-//     uploadedDocument: "Work Health & Safety Policy.pdf",
-//     uploadDate: "20/12/2023",
-//   },
-// ];
-// const documentCollectionHeading = [
-//   {
-//     heading: "Document type",
-//   },
-//   {
-//     heading: "Attach files",
-//   },
-//   {
-//     heading: "Uploaded Documents",
-//   },
-//   {
-//     heading: "Date of upload",
-//   },
-// ];
-// const documentDataCollection = [
-//   {
-//     Vehicle: "Placeholder",
-//     rego: "Placeholder",
-//     uploadDate: "19/12/2023",
-//     UploadedDoc: "doc.pdf",
-//     status: "Approved",
-//     viewDoc: "view",
-//   },
-//   {
-//     Vehicle: "Placeholder",
-//     rego: "Placeholder",
-//     uploadDate: "18/12/2023",
-//     UploadedDoc: "doc.pdf",
-//     status: "Under Review",
-//     viewDoc: "view",
-//   },
-//   {
-//     Vehicle: "Placeholder",
-//     rego: "Placeholder",
-//     uploadDate: "17/12/2023",
-//     UploadedDoc: "doc.pdf",
-//     status: "Rejected",
-//     viewDoc: "view",
-//   },
-// ];
-// const vehicleDocumentCollection = [
-//   {
-//     heading: "VEHICLE",
-//   },
-//   {
-//     heading: "REGO",
-//   },
-//   {
-//     heading: "UPLOAD DATE",
-//   },
-//   {
-//     heading: "UPLOADED DOC.",
-//   },
-//   {
-//     heading: "STATUS",
-//   },
-//   {
-//     heading: "VIEW DOC.",
-//   },
-// ];
-// const countryCollection = [
-//   {
-//     value: "Australia",
-//   },
-//   {
-//     value: "item1",
-//   },
-//   {
-//     value: "item2",
-//   },
-//   {
-//     value: "item3",
-//   },
-//   {
-//     value: "item1",
-//   },
-//   {
-//     value: "item1",
-//   },
-// ];
-// const licenceTypes = [
-//   {
-//     value: "HR (Heavy Rigid Licence)",
-//   },
-//   {
-//     value: "item1",
-//   },
-//   {
-//     value: "item2",
-//   },
-// ];
-// const drivingLicenceCollection = [
-//   {
-//     value: "Dangerous Goods",
-//   },
-
-//   {
-//     value: "item1",
-//   },
-//   {
-//     value: "item2",
-//   },
-// ];
-// const documentCollectionHeadingDriver = [
-//   {
-//     heading: "Document type",
-//   },
-//   {
-//     heading: "Attach files",
-//   },
-//   {
-//     heading: "Uploaded Documents",
-//   },
-//   {
-//     heading: "Date of upload",
-//   },
-// ];
-// const documentCollectionDataDriver = [
-//   {
-//     documentType: "Visa Status",
-//     uploadedDocument: "visa-status.pdf",
-//     uploadDate: "20/12/2023",
-//   },
-//   {
-//     documentType: "Driver License (Front) ",
-//     uploadedDocument: "-",
-//     uploadDate: "-",
-//   },
-//   {
-//     documentType: "Driver License (Back) ",
-//     uploadedDocument: "-",
-//     uploadDate: "-",
-//   },
-//   {
-//     documentType: "License History",
-//     uploadedDocument: "-",
-//     uploadDate: "-",
-//   },
-//   {
-//     documentType: "Police Verification",
-//     uploadedDocument: "police-verification.pdf",
-//     uploadDate: "20/12/2023",
-//   },
-//   {
-//     documentType: "Passport (Front)",
-//     uploadedDocument: "-",
-//     uploadDate: "-",
-//   },
-//   {
-//     documentType: "Passport (Back)",
-//     uploadedDocument: "-",
-//     uploadDate: "-",
-//   },
-//   {
-//     documentType: "Health Insurance",
-//     uploadedDocument: "-",
-//     uploadDate: "-",
-//   },
-//   {
-//     documentType: "Driver Certificate",
-//     uploadedDocument: "-",
-//     uploadDate: "-",
-//   },
-//   {
-//     documentType: "Fitness",
-//     uploadedDocument: "-",
-//     uploadDate: "-",
-//   },
-//   {
-//     documentType: "Drug Test",
-//     uploadedDocument: "-",
-//     uploadDate: "-",
-//   },
-// ];

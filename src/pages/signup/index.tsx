@@ -30,6 +30,33 @@ const SignUp = () => {
       password: "",
     } as Register,
 
+    validate: (values) => {
+      const errors: {
+        number?: string;
+        profEmail?: string;
+        email?: string;
+        password?: string;
+      } = {};
+
+      // Validate email
+      const emailError = validateEmail(values.email);
+      if (emailError) {
+        errors.email = emailError;
+      }
+      const phoneError = validatePhone(values.number);
+      if (phoneError) {
+        errors.number = phoneError;
+      }
+      const profEmailError = validateEmail(values.profEmail);
+      if (profEmailError) {
+        errors.profEmail = profEmailError;
+      }
+      // Validate other fields as needed
+      // ...
+
+      return errors;
+    },
+
     // validationSchema: SignupvalidationSchema,
     onSubmit: (values: Register) => {
       console.log("VALUES", { values });
@@ -49,27 +76,48 @@ const SignUp = () => {
   } = formik;
   console.log({ values });
 
+  const regexOfPhoneNumber = /^(?:\+61|0)[2-478](?:[ -]?[0-9]){8}$/;
+  const regexOfEmail =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.+([a-zA-Z0-9-]+)2*$/;
+
+  const validatePhone = (value: any) => {
+    let error;
+    if (!value) {
+      error = "Contact number is required";
+    } else if (!regexOfPhoneNumber.test(value)) {
+      error = "Invalid contact number";
+    }
+    return error;
+  };
+
+  const validateEmail = (value: string) => {
+    let error;
+    if (!value) {
+      error = "Email is required";
+    } else if (!regexOfEmail.test(value)) {
+      error = "Invalid email address";
+    }
+    return error;
+  };
+
   const onSignup = React.useCallback(async (values: any) => {
     try {
       const response = await createUser(values);
       const result = response?.data;
       console.log({ result });
       if (result) {
-        toast('Congratulations! You have successfully signed up.',
-          {
-            icon: '👏',
-            style: {
-              borderRadius: '10px',
-              background: '#333',
-              color: '#fff',
-            },
-          }
-        );
+        toast("Congratulations! You have successfully signed up.", {
+          icon: "👏",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
         setTimeout(() => {
           router.push("/redirect");
         }, 3000);
       }
-
     } catch (error: any) {
       console.log({ error });
     }
@@ -84,7 +132,9 @@ const SignUp = () => {
         <div className=" pt-4 pl-6 absolute">
           <Image src="/logoOzi.svg" alt="logo" width={150} height={150} />
         </div>
-        <div><Toaster /></div>
+        <div>
+          <Toaster />
+        </div>
         <div className="grid grid-cols-2 items-center">
           <form onSubmit={handleSubmit}>
             <div className="max-w-[440px] ml-auto mr-auto text-center pt-10">
@@ -153,7 +203,22 @@ const SignUp = () => {
                   onBlur={handleBlur}
                   value={values?.email}
                   onChange={handleChange}
+                  hasError={
+                    formik.touched.email && formik.errors.email ? true : false
+                  }
                 />
+                {formik.touched.email && formik.errors.email ? (
+                  <div
+                    style={{
+                      textAlign: "left",
+                      fontSize: "12px",
+                      marginTop: "-10px",
+                      color: "red",
+                    }}
+                  >
+                    {formik.errors.email as React.ReactNode}
+                  </div>
+                ) : null}
 
                 <InputField
                   type={"number"}
@@ -168,7 +233,22 @@ const SignUp = () => {
                   svgHeight={0}
                   value={values?.number}
                   onChange={handleChange}
+                  hasError={
+                    formik.touched.number && formik.errors.number ? true : false
+                  }
                 />
+                {formik.touched.number && formik.errors.number ? (
+                  <div
+                    style={{
+                      textAlign: "left",
+                      fontSize: "12px",
+                      marginTop: "-10px",
+                      color: "red",
+                    }}
+                  >
+                    {formik.errors.number as React.ReactNode}
+                  </div>
+                ) : null}
               </div>
               <div className="flex flex-col mt-2">
                 <div className="flex gap-2 items-center">
@@ -226,7 +306,24 @@ const SignUp = () => {
                   svgHeight={0}
                   value={values?.profEmail}
                   onChange={handleChange}
+                  hasError={
+                    formik.touched.profEmail && formik.errors.profEmail
+                      ? true
+                      : false
+                  }
                 />
+                {formik.touched.profEmail && formik.errors.profEmail ? (
+                  <div
+                    style={{
+                      textAlign: "left",
+                      fontSize: "12px",
+                      marginTop: "-10px",
+                      color: "red",
+                    }}
+                  >
+                    {formik.errors.profEmail as React.ReactNode}
+                  </div>
+                ) : null}
 
                 <InputField
                   type={"text"}

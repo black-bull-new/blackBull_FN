@@ -35,6 +35,56 @@ export const NestedAddVehicle = (props: any) => {
     { id: number; file: File; currentDate: Date | null }[]
   >([]);
 
+  const [documentDataCollection, setDocumentDataCollection] = useState<any>([]);
+
+  const handleInputChange = (id: any, value: any) => {
+    setDocumentDataCollection((prevCollection: any) => {
+      const updatedCollection = prevCollection.map((item: any) =>
+        item.id === id ? { ...item, Vehicle: value } : item
+      );
+
+      return updatedCollection;
+    });
+  };
+
+  const handleInputBlur = (id: any) => {
+    // setInputValue("");
+    setDocumentDataCollection((prevCollection: any) => {
+      const updatedCollection = prevCollection.map((item: any) =>
+        item.id === id ? { ...item, flag: false } : item
+      );
+
+      return updatedCollection;
+    });
+  };
+
+  const handleInputClick = (id: any) => {
+    setDocumentDataCollection((prevCollection: any) => {
+      const updatedCollection = prevCollection.map((item: any) =>
+        item.id === id ? { ...item, flag: true } : item
+      );
+
+      return updatedCollection;
+    });
+  };
+
+  console.log("documentDataCollection", documentDataCollection);
+  const handleAddRow = () => {
+    const newRow = {
+      id: documentDataCollection.length + 1,
+      Vehicle: "",
+      rego: "New Rego",
+      uploadDate: "New Upload Date",
+      UploadedDoc: "new-doc.pdf",
+      status: "New Status",
+      viewDoc: "view",
+      flag: true,
+    };
+
+    setDocumentDataCollection([...documentDataCollection, newRow]);
+    // You might also need to update other state variables accordingly for the new row.
+  };
+
   const handleFileChanges = (
     event: React.ChangeEvent<HTMLInputElement>,
     documentId: number
@@ -96,7 +146,7 @@ export const NestedAddVehicle = (props: any) => {
 
   const handleViewDocuments = (id: number) => {
     console.log("CHECK", id, modifiedUrls);
-    const index = id - 1;  // Adjust index to start from 0
+    const index = id - 1; // Adjust index to start from 0
     if (index >= 0 && index < modifiedUrls.length) {
       const url = modifiedUrls[index];
       window.open(url, "_blank");
@@ -104,7 +154,7 @@ export const NestedAddVehicle = (props: any) => {
       console.error("URL not found for id:", id);
     }
   };
-  
+
   const handleUploadFileWithId = async (id: number, combinedObject: any) => {
     try {
       const project = combinedObject[id];
@@ -159,7 +209,7 @@ export const NestedAddVehicle = (props: any) => {
   return (
     <div>
       <div>
-        <h3 className="text-black font-semibold p-4 bg-white mr-4 mt-4 rounded-md">
+        <h3 className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">
           Add Vehicle
         </h3>
       </div>
@@ -260,10 +310,10 @@ export const NestedAddVehicle = (props: any) => {
             }}
             errorMessage={error.vehicleModelError}
           />
-          <Maindatefield
+          <DropDownMap
             label="Vehicle Type"
+            mapOption={vehicleTypeColleciton}
             value={addVehicle.vehicleType}
-            className="w-full"
             onChange={(e: any) => {
               setAddVehicle({
                 ...addVehicle,
@@ -278,10 +328,10 @@ export const NestedAddVehicle = (props: any) => {
             }}
             errorMessage={error.vehicleTypeError}
           />
-          <Maindatefield
+          <DropDownMap
             label="Type of Trailer"
+            mapOption={trailerTypeCollection}
             value={addVehicle.typeOfTrailer}
-            className="w-full"
             onChange={(e: any) => {
               setAddVehicle({
                 ...addVehicle,
@@ -296,10 +346,10 @@ export const NestedAddVehicle = (props: any) => {
             }}
             errorMessage={error.typeOfTrailerError}
           />
-          <Maindatefield
+          <DropDownMap
             label="State of Registration"
+            mapOption={registrationStateCollection}
             value={addVehicle.stateOfRegistration}
-            className="w-full"
             onChange={(e: any) => {
               setAddVehicle({
                 ...addVehicle,
@@ -372,6 +422,8 @@ export const NestedAddVehicle = (props: any) => {
         <div className="mt-4 w-fit">
           <FileUpload
             file="Upload Rego Document"
+            id="supplierVehicleRegoFile"
+            name="supplierVehicleRegoDocument"
             onChange={handleProfileFileChange}
             fileName={selectedUploadRegoDocument?.file?.name || ""}
           />
@@ -576,9 +628,18 @@ export const NestedAddVehicle = (props: any) => {
           />
         </div>
         <div className="mt-8">
-          <h3 className="text-black w-full mb-4 font-semibold">
-            Vehicle Documents
-          </h3>
+          <div className="flex">
+            <h3 className="text-black w-full mb-4 font-semibold">
+              Vehicle Documents
+            </h3>
+            <button
+              onClick={handleAddRow}
+              className="text-white mb-2 flex justify-center items-center font-thin bg-[#2B36D9] w-[48px] h-[48px] pb-2 rounded-full text-[40px]"
+            >
+              +
+            </button>
+          </div>
+
           <div className="grid grid-cols-[16%_16%_16%_16%_16%_20%] text-black bg-[#EFF2F3] py-4 rounded-md flex text-center">
             {vehicleDocumentCollection?.map((value, index) => {
               return (
@@ -596,12 +657,31 @@ export const NestedAddVehicle = (props: any) => {
 
           <div>
             <div>
-              {documentDataCollection?.map((data: any, index) => (
+              {documentDataCollection?.map((data: any, index: any) => (
                 <div
                   className="text-black grid grid-cols-[16%_16%_16%_16%_16%_20%] py-4 flex text-center"
                   key={index}
                 >
-                  <div>{data.Vehicle}</div>
+                  <div>
+                    {data.flag ? (
+                      <input
+                        className="border-b-2 text-center border-[#607D8B]"
+                        placeholder="Document Name"
+                        value={data.Vehicle}
+                        onChange={(e) =>
+                          handleInputChange(data.id, e.target.value)
+                        }
+                        onBlur={() => handleInputBlur(data.id)}
+                      />
+                    ) : (
+                      <span
+                        onClick={() => handleInputClick(data.id)}
+                        className="cursor-pointer text-center"
+                      >
+                        {data.Vehicle}
+                      </span>
+                    )}
+                  </div>
                   <div className="text-center">
                     <label className="cursor-pointer">
                       <React.Fragment>
@@ -617,7 +697,7 @@ export const NestedAddVehicle = (props: any) => {
                             </p>
                           </div>
                         ) : (
-                          <span className="!w-fit m-auto bg-[#2B36D9] text-sm px-6 rounded-full mb-6 font-semibold py-2 text-white">
+                          <span className="!w-fit m-auto bg-[#2B36D9] py-2  text-sm px-6 rounded-full mb-6 font-semibold placeholder:py-[4px] text-white">
                             Select
                           </span>
                         )}
@@ -652,18 +732,18 @@ export const NestedAddVehicle = (props: any) => {
                     {uploadStatus[data?.id] ? (
                       <p style={{ color: "green" }}>
                         {showUploadMessage ? (
-                          <span className="!w-fit m-auto bg-[#2B36D9] cursor-pointer text-sm px-6 rounded-full mb-6 font-semibold  py-2 text-white">
+                          <span className="!w-fit m-auto bg-[#2B36D9] py-2  cursor-pointer text-sm px-6 rounded-full mb-6 font-semibold  text-white">
                             Uploaded
                           </span>
                         ) : (
-                          <span className="!w-fit m-auto bg-[#2B36D9] cursor-pointer text-sm px-6 rounded-full mb-6 font-semibold py-2 text-white">
+                          <span className="!w-fit m-auto bg-[#2B36D9] py-2  cursor-pointer text-sm px-6 rounded-full mb-6 font-semibold  text-white">
                             Uploading...
                           </span>
                         )}
                       </p>
                     ) : (
                       <span
-                        className="!w-fit m-auto bg-[#2B36D9] cursor-pointer text-sm px-6 rounded-full mb-6 font-semibold  py-2 text-white"
+                        className="!w-fit m-auto bg-[#2B36D9] py-2 cursor-pointer text-sm px-6 rounded-full mb-6 font-semibold text-white"
                         onClick={() =>
                           handleUploadFileWithId(data?.id, combinedObject)
                         }
@@ -695,36 +775,100 @@ export const NestedAddVehicle = (props: any) => {
   );
 };
 
-const documentDataCollection = [
+// const documentDataCollection = [
+//   {
+//     id: 1,
+//     Vehicle: "Placeholder",
+//     rego: "Placeholder",
+//     uploadDate: "19/12/2023",
+//     UploadedDoc: "doc.pdf",
+//     status: "Approved",
+//     viewDoc: "view",
+//   },
+//   {
+//     id: 2,
+//     Vehicle: "Placeholder",
+//     rego: "Placeholder",
+//     uploadDate: "18/12/2023",
+//     UploadedDoc: "doc.pdf",
+//     status: "Under Review",
+//     viewDoc: "view",
+//   },
+//   {
+//     id: 3,
+//     Vehicle: "Placeholder",
+//     rego: "Placeholder",
+//     uploadDate: "17/12/2023",
+//     UploadedDoc: "doc.pdf",
+//     status: "Rejected",
+//     viewDoc: "view",
+//   },
+// ];
+const registrationStateCollection = [
   {
-    id: 1,
-    Vehicle: "Placeholder",
-    rego: "Placeholder",
-    uploadDate: "19/12/2023",
-    UploadedDoc: "doc.pdf",
-    status: "Approved",
-    viewDoc: "view",
+    value: "Victoria",
   },
   {
-    id: 2,
-    Vehicle: "Placeholder",
-    rego: "Placeholder",
-    uploadDate: "18/12/2023",
-    UploadedDoc: "doc.pdf",
-    status: "Under Review",
-    viewDoc: "view",
+    value: "Australian Capital Territory",
   },
   {
-    id: 3,
-    Vehicle: "Placeholder",
-    rego: "Placeholder",
-    uploadDate: "17/12/2023",
-    UploadedDoc: "doc.pdf",
-    status: "Rejected",
-    viewDoc: "view",
+    value: "New South Wales",
+  },
+  {
+    value: "Northern Territory",
+  },
+  {
+    value: "Queensland",
+  },
+  {
+    value: "South Australia",
+  },
+  {
+    value: "Tasmania",
+  },
+  {
+    value: "Western Australia",
   },
 ];
-
+const trailerTypeCollection = [
+  {
+    value: "Straight",
+  },
+  { value: "Drop" },
+  {
+    value: "Freezer",
+  },
+  {
+    value: "Mezz",
+  },
+  {
+    value: "Box",
+  },
+  {
+    value: "Dog",
+  },
+  {
+    value: "Semi",
+  },
+  {
+    value: "Low loader",
+  },
+  {
+    value: "Tag",
+  },
+  {
+    value: "Drop Decks with Ramps",
+  },
+  {
+    value: "Drop Decks with Ramps",
+  },
+  {
+    value: "B-Doubles",
+  },
+  {
+    value: "Oversize Road Train",
+  },
+];
 const vehicleDocumentCollection = [
   {
     heading: "VEHICLE",
@@ -751,10 +895,7 @@ const situationCollection = [
     value: "Anywhere",
   },
   {
-    value: "item1",
-  },
-  {
-    value: "item2",
+    value: "Limited",
   },
 ];
 
@@ -772,12 +913,36 @@ const insuranceCoverageCollection = [
     value: "$1 Million Coverage",
   },
   {
-    value: "item1",
+    value: "$2 Million Coverage",
   },
   {
-    value: "item2",
+    value: "$3 Million Coverage",
   },
   {
-    value: "item3",
+    value: "$5 Million Coverage",
+  },
+  {
+    value: "$10 Million Coverage",
+  },
+];
+
+const vehicleTypeColleciton = [
+  {
+    value: "Prime Mover",
+  },
+  {
+    value: "Trailer A",
+  },
+  {
+    value: "Trailer B",
+  },
+  {
+    value: "Foklift",
+  },
+  {
+    value: "Car",
+  },
+  {
+    value: "UTE",
   },
 ];
