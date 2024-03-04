@@ -995,19 +995,18 @@ export const NestedAddSupplier = (props: any) => {
                       text="Add More Fields"
                       className="bg-[#2B36D9] px-4 !w-fit"
                     />
-                    {index > 0 && (
-                      <span
-                        // onClick={() => handleRemoveExperience(index)}
-                        className="ml-4 cursor-pointer"
-                        style={{
-                          color: "red",
-                          marginTop: "10px",
-                          marginRight: "10px",
-                        }}
-                      >
-                        Remove
-                      </span>
-                    )}
+
+                    <span
+                      // onClick={() => handleRemoveExperience(index)}
+                      className="ml-4 cursor-pointer"
+                      style={{
+                        color: "red",
+                        marginTop: "10px",
+                        marginRight: "10px",
+                      }}
+                    >
+                      Remove
+                    </span>
                   </div>
                 </div>
               );
