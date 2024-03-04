@@ -210,7 +210,7 @@ const AddSupplier = () => {
       dispatchEmail: "",
     },
     invoicePreferences: "",
-    invoiceCommunicationPreferences: "",
+    invoiceCommunicationPreferences: [],
     companySuiteDetails: [
       {
         directorName: "",
@@ -326,6 +326,7 @@ const AddSupplier = () => {
     },
     onboardingDocuments: [],
   });
+  console.log("addSupplier", addSupplier);
   const [addSupplierError, setAddSupplierError] = useState<any>({
     companyNameError: "",
     tradingNameError: "",
@@ -358,7 +359,6 @@ const AddSupplier = () => {
       dispatchEmail: "",
     },
     invoicePreferencesError: "",
-    invoiceCommunicationPreferencesError: "",
     bankDetailsError: {
       accountName: "",
       bankName: "",
@@ -492,17 +492,7 @@ const AddSupplier = () => {
       contactNumber: "",
       relationship: "",
     },
-    employmentHistory: [
-      {
-        previousEmployer: "",
-        yearsOfExperience: "",
-        reasonOfLeaving: "",
-        companyName: "",
-        referenceContactName: "",
-        referenceEmailId: "",
-        referenceContactNumber: "",
-      },
-    ],
+    employmentHistory: [],
     licenseDetails: {
       licenseNumber: "",
       licenseCardNumber: "",
@@ -603,6 +593,7 @@ const AddSupplier = () => {
     },
     specialDrivingLicenseError: "",
   });
+  const [addMoreExperience, setAddMoreExperience] = useState<Array<any>>([]);
 
   console.log("addDriverError", addDriverError);
   const [selectedProfileForDriver, setSelectedProfileForDriver] = useState("");
@@ -851,6 +842,22 @@ const AddSupplier = () => {
         ),
       ]);
 
+      const updatedEmploymentHistory = addMoreExperience?.map(
+        (employment: any) => {
+          console.log({ employment });
+          return {
+            ...employment,
+            previousEmployer: employment?.previousEmployer,
+            yearsOfExperience: employment?.yearsOfExperience,
+            reasonOfLeaving: employment?.reasonOfLeaving,
+            companyName: employment?.companyName,
+            referenceContactName: employment?.referenceContactName,
+            referenceEmailId: employment?.referenceEmailId,
+            referenceContactNumber: employment?.referenceContactNumber,
+          };
+        }
+      );
+
       const newDriverDetails = {
         ...addDriver,
         avatar: profileUrl[0]?.response,
@@ -862,6 +869,7 @@ const AddSupplier = () => {
           type: url[0],
           uploadDate: formattedDate,
         })),
+        employmentHistory: updatedEmploymentHistory,
       };
       console.log("urlsForDriver", urlsForDriver);
       console.log("newDriverDetails", newDriverDetails);
@@ -995,7 +1003,8 @@ const AddSupplier = () => {
         key !== "speedPolicy" &&
         key !== "workHealthSafetyPolicy" &&
         key !== "certificateOfAccreditation" &&
-        key !== "profile"
+        key !== "profile" &&
+        key !== "invoiceCommunicationPreferences"
       ) {
         if (typeof addSupplier[key] === "object" && addSupplier[key] !== null) {
           // Ensure that nested error objects are initialized
@@ -1173,6 +1182,8 @@ const AddSupplier = () => {
               urls={urlsForDriver}
               setUrls={setUrlsForDriver}
               modifiedUrls={modifiedUrlsForDriver}
+              addMoreExperience={addMoreExperience}
+              setAddMoreExperience={setAddMoreExperience}
             />
           ) : null}
 

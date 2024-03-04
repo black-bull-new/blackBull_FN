@@ -1,5 +1,6 @@
+import CommonUI from "@/pages/onboarding/utility/CommonUI";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface StatusChipProps {
   chipColor: (value: any) => void;
@@ -7,10 +8,12 @@ interface StatusChipProps {
 
 const StatusChip = ({ chipColor }: StatusChipProps) => {
   const [color, setColor] = useState("");
+
   const toggleColor = (value: any) => {
     setColor(value.target.value);
     chipColor(value?.target?.value);
   };
+
   const options = [
     { option: "Select", value: "Select" },
     { option: "Approved", value: "Approved" },
@@ -21,11 +24,11 @@ const StatusChip = ({ chipColor }: StatusChipProps) => {
     <>
       <div className={"relative"}>
         <select
-          name="status" 
+          name="status"
           id="status"
           className={`focus:outline-none appearance-none pt-[5px] pb-[7px] text-center pl-4 pr-8 rounded-full text-white ${
             color === "Approved"
-              ? "bg-[#D9F2DD]  !text-[#359742] w-fit px-4 py-[5px] rounded-full m-auto flex items-center gap-2"
+              ? "bg-[#D9F2DD]  !text-[#359742] w-fit px-4 py-[5px] rounded-full m-auto flex items-center gap-2 "
               : color === "Under Review"
               ? "bg-[#EAEDFA]  !text-[#5872DA] w-fit px-4 py-[5px] rounded-full m-auto flex items-center gap-2"
               : color === "Rejected"
@@ -42,7 +45,15 @@ const StatusChip = ({ chipColor }: StatusChipProps) => {
                 onClick={() => toggleColor(value.option)}
                 className="bg-white text-black"
               >
-                {value.option}
+                <p className=" w-fit px-4 py-[5px] rounded-full m-auto flex items-center gap-2">
+                  {(value.value === "Approved" && color === "Approved") ||
+                  (value.value === "Under Review" &&
+                    color === "Under Review") ||
+                  (value.value === "Rejected" && color === "Rejected") ? (
+                    <span className="w-2 h-2 rounded-full block">•</span>
+                  ) : null}{" "}
+                  {value.option}
+                </p>
               </option>
             );
           })}
@@ -67,5 +78,3 @@ const StatusChip = ({ chipColor }: StatusChipProps) => {
   );
 };
 export default StatusChip;
-
-

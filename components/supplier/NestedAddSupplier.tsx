@@ -51,6 +51,31 @@ export const NestedAddSupplier = (props: any) => {
   const regexOfWebsite = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
   const [documentDataCollection, setDocumentDataCollection] = useState<any>([]);
 
+  // **** Add more fields ****
+  const [showOtherFields, setShowOtherFields] = useState(false);
+  const [addMoreFields, setAddMoreFields] = React.useState<any>([]);
+  React.useEffect(() => {
+    if (addMoreFields.length === 0) {
+      setAddMoreFields([
+        {
+          others: "",
+        },
+      ]);
+    }
+  }, []);
+  console.log("addMoreFields", addMoreFields);
+
+  const handleAddMoreFields = () => {
+    setAddMoreFields([
+      ...addMoreFields,
+      {
+        others: "",
+      },
+    ]);
+  };
+
+  // *** End Here Add more **
+
   const handleAddRow = () => {
     const newRow = {
       id: documentDataCollection.length + 1,
@@ -211,48 +236,6 @@ export const NestedAddSupplier = (props: any) => {
     reader.readAsDataURL(file);
   };
 
-  // const [documentRender, setDocumentRender] = React.useState("");
-  // const [documentRender2, setDocumentRender2] = React.useState("");
-  // const [selectedUploadRegoDocument, setSelectedUploadRegoDocument] =
-  //   React.useState("");
-  // const [selectedUploadRegoDocument2, setSelectedUploadRegoDocument2] =
-  //   React.useState("");
-
-  // const handleFileChange = (setSide: any, setPreview: any) => (event: any) => {
-  //   console.log("handleFileChange");
-  //   const selectedFile = event.target.files && event.target.files[0];
-  //   console.log("first", selectedFile);
-  //   setSide({ file: selectedFile });
-  //   if (selectedFile) {
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => {
-  //       setPreview(reader?.result! as any);
-  //     };
-  //     reader.readAsDataURL(selectedFile);
-  //   }
-  // };
-  // const handleFileChange2 = (setSide: any, setPreview: any) => (event: any) => {
-  //   console.log("handleFileChange2");
-  //   const selectedFile = event.target.files && event.target.files[0];
-  //   console.log("second", selectedFile);
-  //   setSide({ file: selectedFile });
-  //   if (selectedFile) {
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => {
-  //       setPreview(reader?.result! as any);
-  //     };
-  //     reader.readAsDataURL(selectedFile);
-  //   }
-  // };
-
-  // const handleDocumentUpload = handleFileChange(
-  //   setSelectedUploadRegoDocument,
-  //   setDocumentRender
-  // );
-  // const handleDocumentUpload2 = handleFileChange2(
-  //   setSelectedUploadRegoDocument2,
-  //   setDocumentRender2
-  // );
   const handleProfileFileChange = handleFileChange(
     setSelectedProfileSupplier,
     setProfile
@@ -960,28 +943,75 @@ export const NestedAddSupplier = (props: any) => {
               mapOption={invoiceComuColletion}
               selectedData={selectedData}
               setSelectedData={setSelectedData}
-              value={addSupplier.invoiceCommunicationPreferences}
+              value={addMoreFields[0]?.others}
               onChange={(e: any) => {
-                setAddSupplier({
-                  ...addSupplier,
-                  invoiceCommunicationPreferences: e.target.value,
-                });
-                if (e.target.value.length > 0) {
-                  setError({
-                    ...error,
-                    invoiceCommunicationPreferencesError: "",
-                  });
-                }
+                setAddMoreFields((prevFields: any) => [
+                  {
+                    ...prevFields[0],
+                    others: e.target.value,
+                  },
+                ]);
               }}
-              errorMessage={error.invoiceCommunicationPreferencesError}
             />
           </div>
-          <div className="flex justify-end py-2 px-4">
-            <Button
-              text="Add More Fields"
-              className="!w-fit bg-[#2B36D9] !px-4"
-            />
+          <div>
+            {!showOtherFields && (
+              <Button
+                onClick={() => {
+                  setShowOtherFields(true);
+                }}
+                text="Add More Fields"
+                className="bg-[#2B36D9] px-4 !w-fit"
+              />
+            )}
           </div>
+          {showOtherFields &&
+            addMoreFields?.map((item: any, index: number) => {
+              return (
+                <div key={index}>
+                  <div>
+                    <h4 className="text-sm font-semibold mb-4 text-black">
+                      Others
+                    </h4>
+                  </div>
+                  <div>
+                    <Maininputfield
+                      label="Others"
+                      id="others"
+                      name="others"
+                      value={item?.others}
+                      // onChange={(e: any) =>
+                      //   handleExperienceChange(e, "others", index+1)
+                      // }
+                      className="w-full"
+                      errorMessage={
+                        error.employmentHistoryError?.previousEmployer
+                      }
+                    />
+                  </div>
+                  <div className="mb-8 mt-8 flex justify-end">
+                    <Button
+                      onClick={handleAddMoreFields}
+                      text="Add More Fields"
+                      className="bg-[#2B36D9] px-4 !w-fit"
+                    />
+                    {index > 0 && (
+                      <span
+                        // onClick={() => handleRemoveExperience(index)}
+                        className="ml-4 cursor-pointer"
+                        style={{
+                          color: "red",
+                          marginTop: "10px",
+                          marginRight: "10px",
+                        }}
+                      >
+                        Remove
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
           <h2 className="text-black font-semibold mt-8 mb-4">
             Company C-Suite Details
           </h2>

@@ -170,16 +170,6 @@ const CreateDriver = () => {
       expiryDate: "",
       daysLeftForRenewal: "",
     },
-    employmentHistoryError: {
-      previousEmployer: "",
-      yearsOfExperience: "",
-      reasonOfLeaving: "",
-
-      companyName: "",
-      referenceContactName: "",
-      referenceEmailId: "",
-      referenceContactNumber: "",
-    },
     specialDrivingLicenceError: {
       specialDrivingLicence: "",
     },
@@ -332,7 +322,11 @@ const CreateDriver = () => {
     const newErrors = { ...error };
     let hasErrors = false;
     Object.keys(driverDetails).forEach((key) => {
-      if (key !== "avatar" && key !== "onboardingDocuments") {
+      if (
+        key !== "avatar" &&
+        key !== "onboardingDocuments" &&
+        key !== "employmentHistory"
+      ) {
         if (
           typeof driverDetails[key] === "object" &&
           driverDetails[key] !== null
@@ -1253,7 +1247,7 @@ const CreateDriver = () => {
                 <div key={index}>
                   <div>
                     <h4 className="text-sm font-semibold mb-4 text-black">
-                      Experience
+                      Experience {index + 1}
                     </h4>
 
                     <div className="grid grid-cols-3 gap-4">
@@ -1265,24 +1259,6 @@ const CreateDriver = () => {
                         onChange={(e: any) =>
                           handleExperienceChange(e, "previousEmployer", index)
                         }
-                        // onChange={(e: any) => {
-                        //   setDriverDetails({
-                        //     ...driverDetails,
-                        //     employmentHistory: {
-                        //       ...driverDetails.employmentHistory,
-                        //       previousEmployer: e.target.value,
-                        //     },
-                        //   });
-                        //   if (e.target.value.length > 0) {
-                        //     setError({
-                        //       ...error,
-                        //       employmentHistoryError: {
-                        //         ...error.employmentHistoryError,
-                        //         previousEmployer: "",
-                        //       },
-                        //     });
-                        //   }
-                        // }}
                         className="w-full"
                         errorMessage={
                           error.employmentHistoryError?.previousEmployer
@@ -1516,6 +1492,11 @@ const CreateDriver = () => {
                   </div>
 
                   <div className="mb-8 mt-8 flex justify-end">
+                    <Button
+                      onClick={handleAddMoreExperience}
+                      text="Add More Experiences"
+                      className="bg-[#2B36D9] px-4 !w-fit"
+                    />
                     {index > 0 && (
                       <span
                         onClick={() => handleRemoveExperience(index)}
@@ -1529,11 +1510,6 @@ const CreateDriver = () => {
                         Remove
                       </span>
                     )}
-                    <Button
-                      onClick={handleAddMoreExperience}
-                      text="Add More Experiences"
-                      className="bg-[#2B36D9] px-4 !w-fit"
-                    />
                   </div>
                 </div>
               );

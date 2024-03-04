@@ -25,6 +25,8 @@ const NestedAddDriver = (props: any) => {
     urls,
     setUrls,
     modifiedUrls,
+    addMoreExperience,
+    setAddMoreExperience,
   } = props;
   console.log("AddDriver state", addDriver);
   console.log("Error State", error);
@@ -48,6 +50,55 @@ const NestedAddDriver = (props: any) => {
   const [showUploadMessage, setShowUploadMessage] = useState(false);
 
   const [documentDataCollection, setDocumentDataCollection] = useState<any>([]);
+
+  // ******************************** ADD More Experince ********************************
+  // const [addMoreExperience, setAddMoreExperience] = React.useState<Array<any>>(
+  //   []
+  // );
+
+  React.useEffect(() => {
+    if (addMoreExperience.length === 0) {
+      setAddMoreExperience([
+        {
+          previousEmployer: "",
+          yearsOfExperience: "",
+          reasonOfLeaving: "",
+          companyName: "",
+          referenceContactName: "",
+          referenceEmailId: "",
+          referenceContactNumber: "",
+        },
+      ]);
+    }
+  }, []);
+
+  const handleAddMoreExperience = () => {
+    setAddMoreExperience([
+      ...addMoreExperience,
+      {
+        previousEmployer: "",
+        yearsOfExperience: "",
+        reasonOfLeaving: "",
+        companyName: "",
+        referenceContactName: "",
+        referenceEmailId: "",
+        referenceContactNumber: "",
+      },
+    ]);
+  };
+
+  const handleRemoveExperience = (index: number) => {
+    setAddMoreExperience(
+      addMoreExperience.filter((_: any, i: any) => i !== index)
+    );
+  };
+  console.log({ addMoreExperience });
+
+  const handleExperienceChange = (value: any, fieldName: any, index: any) => {
+    const data = [...addMoreExperience];
+    data[index][fieldName] = value.target.value;
+    setAddMoreExperience(data);
+  };
 
   const handleAddRow = () => {
     const newRow = {
@@ -791,7 +842,290 @@ const NestedAddDriver = (props: any) => {
         <h2 className="text-black font-semibold p-4 mt-6">
           Employment History
         </h2>
-        <h3 className="text-black font-semibold text-sm pl-4 text-blueGrey-900">
+
+        {addMoreExperience?.map((item: any, index: number) => {
+          return (
+            <div key={index}>
+              <div>
+                <h4 className="text-sm font-semibold mb-4 text-black">
+                  Experience {index + 1}
+                </h4>
+
+                <div className="grid grid-cols-3 gap-4">
+                  <Maininputfield
+                    label="Pervious Employer"
+                    id="previousEmployer"
+                    name="previousEmployer"
+                    value={item?.previousEmployer}
+                    onChange={(e: any) =>
+                      handleExperienceChange(e, "previousEmployer", index)
+                    }
+                    // onChange={(e: any) => {
+                    //   setDriverDetails({
+                    //     ...driverDetails,
+                    //     employmentHistory: {
+                    //       ...driverDetails.employmentHistory,
+                    //       previousEmployer: e.target.value,
+                    //     },
+                    //   });
+                    //   if (e.target.value.length > 0) {
+                    //     setError({
+                    //       ...error,
+                    //       employmentHistoryError: {
+                    //         ...error.employmentHistoryError,
+                    //         previousEmployer: "",
+                    //       },
+                    //     });
+                    //   }
+                    // }}
+                    className="w-full"
+                    errorMessage={
+                      error.employmentHistoryError?.previousEmployer
+                    }
+                  />
+                  <Maininputfield
+                    label="Years Of Experience"
+                    id="yearsOfExperience"
+                    name="yearsOfExperience"
+                    value={item?.yearsOfExperience}
+                    onChange={(e: any) =>
+                      handleExperienceChange(e, "yearsOfExperience", index)
+                    }
+                    // onChange={(e: any) => {
+                    //   setDriverDetails({
+                    //     ...driverDetails,
+                    //     employmentHistory: {
+                    //       ...driverDetails.employmentHistory,
+                    //       yearsOfExperience: e.target.value,
+                    //     },
+                    //   });
+                    //   if (e.target.value.length > 0) {
+                    //     setError({
+                    //       ...error,
+                    //       employmentHistoryError: {
+                    //         ...error.employmentHistoryError,
+                    //         yearsOfExperience: "",
+                    //       },
+                    //     });
+                    //   }
+                    // }}
+                    className="w-full"
+                    errorMessage={
+                      error.employmentHistoryError?.yearsOfExperience
+                    }
+                  />
+                  <Maininputfield
+                    label="Reason for leaving"
+                    id="reasonOfLeaving"
+                    name="reasonOfLeaving"
+                    value={item?.reasonOfLeaving}
+                    onChange={(e: any) =>
+                      handleExperienceChange(e, "reasonOfLeaving", index)
+                    }
+                    // onChange={(e: any) => {
+                    //   setDriverDetails({
+                    //     ...driverDetails,
+                    //     employmentHistory: {
+                    //       ...driverDetails.employmentHistory,
+                    //       reasonOfLeaving: e.target.value,
+                    //     },
+                    //   });
+                    //   if (e.target.value.length > 0) {
+                    //     setError({
+                    //       ...error,
+                    //       employmentHistoryError: {
+                    //         ...error.employmentHistoryError,
+                    //         reasonOfLeaving: "",
+                    //       },
+                    //     });
+                    //   }
+                    // }}
+                    className="w-full"
+                    errorMessage={error.employmentHistoryError?.reasonOfLeaving}
+                  />
+                </div>
+
+                {/* commenting out for temporary as backend is not accepting referance informtion objext*/}
+                <div className="mb-4 mt-8">
+                  <h4 className="text-sm font-semibold mb-4 text-blueGrey-900">
+                    Reference Information
+                  </h4>
+
+                  <div className="grid grid-cols-3 gap-4">
+                    <Maininputfield
+                      label="Company Name"
+                      id="companyName"
+                      name="companyName"
+                      value={item?.companyName}
+                      onChange={(e: any) =>
+                        handleExperienceChange(e, "companyName", index)
+                      }
+                      // onChange={(e: any) => {
+                      //   setDriverDetails({
+                      //     ...driverDetails,
+                      //     employmentHistory: {
+                      //       ...driverDetails.employmentHistory,
+                      //       companyName: e.target.value,
+                      //     },
+                      //   });
+                      //   if (e.target.value.length > 0) {
+                      //     setError({
+                      //       ...error,
+                      //       employmentHistoryError: {
+                      //         ...error.employmentHistoryError,
+                      //         companyName: "",
+                      //       },
+                      //     });
+                      //   }
+                      // }}
+                      className="w-full"
+                      errorMessage={error.employmentHistoryError?.companyName}
+                    />
+                    <Maininputfield
+                      label="Reference (Contact Name)"
+                      id="referenceContactName"
+                      name="referenceContactName"
+                      value={item?.referenceContactName}
+                      onChange={(e: any) =>
+                        handleExperienceChange(e, "referenceContactName", index)
+                      }
+                      // onChange={(e: any) => {
+                      //   setDriverDetails({
+                      //     ...driverDetails,
+                      //     employmentHistory: {
+                      //       ...driverDetails.employmentHistory,
+                      //       referenceContactName: e.target.value,
+                      //     },
+                      //   });
+                      //   if (e.target.value.length > 0) {
+                      //     setError({
+                      //       ...error,
+                      //       employmentHistoryError: {
+                      //         ...error.employmentHistoryError,
+                      //         referenceContactName: "",
+                      //       },
+                      //     });
+                      //   }
+                      // }}
+                      className="w-full"
+                      errorMessage={
+                        error.employmentHistoryError?.referenceContactName
+                      }
+                    />
+                    <Maininputfield
+                      label="Reference (Email ID)"
+                      id="referenceEmailId"
+                      name="referenceEmailId"
+                      value={item?.referenceEmailId}
+                      onChange={(e: any) =>
+                        handleExperienceChange(e, "referenceEmailId", index)
+                      }
+                      // onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      //   const inputValue = e.target.value;
+                      //   if (!regexOfEmail.test(inputValue)) {
+                      //     setError({
+                      //       ...error,
+                      //       employmentHistoryError: {
+                      //         ...error.employmentHistoryError,
+                      //         referenceEmailId:
+                      //           "Please enter a valid email address",
+                      //       },
+                      //     });
+                      //   } else {
+                      //     setError({
+                      //       ...error,
+                      //       employmentHistoryError: {
+                      //         ...error.employmentHistoryError,
+                      //         referenceEmailId: "",
+                      //       },
+                      //     });
+                      //   }
+                      //   setDriverDetails({
+                      //     ...driverDetails,
+                      //     employmentHistory: {
+                      //       ...driverDetails.employmentHistory,
+                      //       referenceEmailId: e.target.value,
+                      //     },
+                      //   });
+                      // }}
+                      className="w-full"
+                      errorMessage={
+                        error.employmentHistoryError?.referenceEmailId
+                      }
+                    />
+                    <Maininputfield
+                      label="Reference (Contact Number)"
+                      id="referenceContactNumber"
+                      name="referenceContactNumber"
+                      value={item?.referenceContactNumber}
+                      onChange={(e: any) =>
+                        handleExperienceChange(
+                          e,
+                          "referenceContactNumber",
+                          index
+                        )
+                      }
+                      // onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      //   const inputValue = e.target.value;
+                      //   if (!regexOfPhoneNumber.test(inputValue)) {
+                      //     setError({
+                      //       ...error,
+                      //       employmentHistoryError: {
+                      //         ...error.employmentHistoryError,
+                      //         referenceContactNumber:
+                      //           "Please enter a valid phone number",
+                      //       },
+                      //     });
+                      //   } else {
+                      //     setError({
+                      //       ...error,
+                      //       employmentHistoryError: {
+                      //         ...error.employmentHistoryError,
+                      //         referenceContactNumber: "",
+                      //       },
+                      //     });
+                      //   }
+                      //   setDriverDetails({
+                      //     ...driverDetails,
+                      //     employmentHistory: {
+                      //       ...driverDetails.employmentHistory,
+                      //       referenceContactNumber: e.target.value,
+                      //     },
+                      //   });
+                      // }}
+                      className="w-full"
+                      errorMessage={
+                        error.employmentHistoryError?.referenceContactNumber
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="mb-8 mt-8 flex justify-end">
+                <Button
+                  onClick={handleAddMoreExperience}
+                  text="Add More Experiences"
+                  className="bg-[#2B36D9] px-4 !w-fit"
+                />
+                {index > 0 && (
+                  <span
+                    onClick={() => handleRemoveExperience(index)}
+                    className="ml-4 cursor-pointer"
+                    style={{
+                      color: "red",
+                      marginTop: "10px",
+                      marginRight: "10px",
+                    }}
+                  >
+                    Remove
+                  </span>
+                )}
+              </div>
+            </div>
+          );
+        })}
+        {/* <h3 className="text-black font-semibold text-sm pl-4 text-blueGrey-900">
           Experience
         </h3>
         <div className="grid grid-cols-3 gap-4 p-4">
@@ -904,7 +1238,7 @@ const NestedAddDriver = (props: any) => {
             text="Add More Experiences"
             className="!w-fit bg-[#2B36D9] !px-4"
           />
-        </div>
+        </div> */}
         <h2 className="text-black font-semibold p-4 mt-6">License Details</h2>
         <div className="grid grid-cols-3 gap-4 p-4">
           <Maininputfield
@@ -919,6 +1253,15 @@ const NestedAddDriver = (props: any) => {
                   licenseNumber: e.target.value,
                 },
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  licenseDetailsError: {
+                    ...error.licenseDetailsError,
+                    licenseNumber: "",
+                  },
+                });
+              }
             }}
             errorMessage={error.licenseDetailsError?.licenseNumber}
           />
@@ -934,6 +1277,15 @@ const NestedAddDriver = (props: any) => {
                   licenseCardNumber: e.target.value,
                 },
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  licenseDetailsError: {
+                    ...error.licenseDetailsError,
+                    licenseCardNumber: "",
+                  },
+                });
+              }
             }}
             errorMessage={error.licenseDetailsError?.licenseCardNumber}
           />
@@ -951,6 +1303,15 @@ const NestedAddDriver = (props: any) => {
                   licenseType: e.target.value,
                 },
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  licenseDetailsError: {
+                    ...error.licenseDetailsError,
+                    licenseType: "",
+                  },
+                });
+              }
             }}
             errorMessage={error.licenseDetailsError?.licenseType}
           />
@@ -968,6 +1329,15 @@ const NestedAddDriver = (props: any) => {
                   state: e.target.value,
                 },
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  licenseDetailsError: {
+                    ...error.licenseDetailsError,
+                    state: "",
+                  },
+                });
+              }
             }}
             errorMessage={error.licenseDetailsError?.state}
           />
@@ -982,6 +1352,15 @@ const NestedAddDriver = (props: any) => {
                   dateOfIssue: e.target.value,
                 },
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  licenseDetailsError: {
+                    ...error.licenseDetailsError,
+                    dateOfIssue: "",
+                  },
+                });
+              }
             }}
             errorMessage={error.licenseDetailsError?.dateOfIssue}
           />
@@ -996,6 +1375,15 @@ const NestedAddDriver = (props: any) => {
                   expiryDate: e.target.value,
                 },
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  licenseDetailsError: {
+                    ...error.licenseDetailsError,
+                    expiryDate: "",
+                  },
+                });
+              }
             }}
             errorMessage={error.licenseDetailsError?.expiryDate}
           />
@@ -1011,6 +1399,15 @@ const NestedAddDriver = (props: any) => {
                   daysLeftForRenewal: e.target.value,
                 },
               });
+              if (e.target.value.length > 0) {
+                setError({
+                  ...error,
+                  licenseDetailsError: {
+                    ...error.licenseDetailsError,
+                    daysLeftForRenewal: "",
+                  },
+                });
+              }
             }}
             errorMessage={error.licenseDetailsError?.daysLeftForRenewal}
           />
