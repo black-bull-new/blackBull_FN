@@ -22,6 +22,7 @@ const Sidebar = () => {
     option === "Supplier" ? router.push("/onboarding/add-supplier") : "";
     option === "User" ? router.push("/onboarding/user-list") : "";
     option === "Onboarding" ? router.push("/onboarding") : "";
+    option === "Dashboard" ? router.push("/dashboard") : "";
     setSubmenu(option);
   };
   return (
@@ -95,6 +96,7 @@ const Sidebar = () => {
                   )}
                 </>
               );
+              
             })}
           </ul>
           <div>
