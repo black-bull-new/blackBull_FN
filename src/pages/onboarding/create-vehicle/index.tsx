@@ -280,8 +280,49 @@ const CreateVehicle = () => {
     setDocumentRender
   );
 
+  // const [selectedFiles, setSelectedFiles] = useState<
+  //   { id: number; file: File; currentDate: Date | null }[]
+  // >([]);
+
+  // const [selectedFileContent, setSelectedFileContent] = useState<string | null>(
+  //   null
+  // );
+  // const [isPreviewVisible, setIsPreviewVisible] = useState(false);
+
+  // const handleFileChanges = (
+  //   event: React.ChangeEvent<HTMLInputElement>,
+  //   documentId: number
+  // ) => {
+  //   const file = event.target.files ? event.target.files[0] : null;
+  //   const documentExists = documentDataCollection.find(
+  //     (doc: any) => doc.id === documentId
+  //   );
+  //   if (file && documentExists) {
+  //     const newSelectedFiles = [...selectedFiles];
+  //     const existingFileIndex = newSelectedFiles.findIndex(
+  //       (file) => file.id === documentId
+  //     );
+  //     const currentDate = new Date();
+  //     if (existingFileIndex !== -1) {
+  //       newSelectedFiles[existingFileIndex] = {
+  //         id: documentId,
+  //         file,
+  //         currentDate,
+  //       };
+  //     } else {
+  //       newSelectedFiles.push({ id: documentId, file, currentDate });
+  //     }
+  //     setSelectedFiles(newSelectedFiles);
+  //   }
+  // };
+
   const [selectedFiles, setSelectedFiles] = useState<
-    { id: number; file: File; currentDate: Date | null }[]
+    {
+      id: number;
+      file: File;
+      currentDate: Date | null;
+      content: string | null;
+    }[]
   >([]);
 
   const handleFileChanges = (
@@ -292,26 +333,64 @@ const CreateVehicle = () => {
     const documentExists = documentDataCollection.find(
       (doc: any) => doc.id === documentId
     );
+
     if (file && documentExists) {
       const newSelectedFiles = [...selectedFiles];
       const existingFileIndex = newSelectedFiles.findIndex(
         (file) => file.id === documentId
       );
       const currentDate = new Date();
+
       if (existingFileIndex !== -1) {
         newSelectedFiles[existingFileIndex] = {
           id: documentId,
           file,
           currentDate,
+          content: null, // Initialize content as null
         };
       } else {
-        newSelectedFiles.push({ id: documentId, file, currentDate });
+        newSelectedFiles.push({
+          id: documentId,
+          file,
+          currentDate,
+          content: null,
+        });
       }
+
       setSelectedFiles(newSelectedFiles);
+
+      // Read and set the PDF file content
+      readPDFFile(file, (result: any) => {
+        // Update selectedFiles with the new content
+        const updatedFiles = newSelectedFiles.map((file) =>
+          file.id === documentId ? { ...file, content: result } : file
+        );
+        setSelectedFiles(updatedFiles);
+      });
     }
   };
-  const files = selectedFiles?.map((selectedFile) => selectedFile.file);
-  console.log("files",files);
+
+  const readPDFFile = (file: any, callback: any) => {
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      callback(reader.result);
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  const handleOpenPreview = (documentId: number) => {
+    // Open a new tab for the selected document ID
+    const selectedFile = selectedFiles.find((file) => file.id === documentId);
+
+    if (selectedFile?.content) {
+      const newTab: any = window.open();
+      newTab.document.write(
+        `<embed src="${selectedFile.content}" width="100%" height="100%"/>`
+      );
+    }
+  };
 
   // ======================================== Handle status chip color on vehicle documents list ========================================
   const [selectedStatusValues, setSelectedStatusValues] = useState<any[]>([]);
@@ -1325,13 +1404,15 @@ const CreateVehicle = () => {
                         </div>
                         <div className="text-center items-center justify-center m-auto">
                           <StatusChip
-                            chipColor={(e:any) => handleStatusChipColor(e, index)}
+                            chipColor={(e: any) =>
+                              handleStatusChipColor(e, index)
+                            }
                           />
                         </div>
                         <div className="underline decoration-[#2B36D9] text-center">
                           <span
                             className="cursor-pointer text-primary"
-                            onClick={() => handleViewDocuments(data?.id)}
+                            onClick={() => handleOpenPreview(data?.id)}
                           >
                             Views
                           </span>
