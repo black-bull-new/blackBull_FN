@@ -1,103 +1,104 @@
-import React from "react";
-import Checkbox from "../../../components/Checkbox";
-// import {useLogin} from '../../network-request/mutation';
-// import { toast } from 'react-toastify';
-// import "react-toastify/dist/ReactToastify.css";
+import React, { useState } from "react";
 import InputField from "../../../components/InputField";
 import Image from "next/image";
 import Button from "../../../components/Button";
-// import { useRegister } from "@/network-request/mutation";
-import { SignupvalidationSchema } from "../../../components/fomsValidation";
-import { useFormik } from "formik";
 import { useRouter } from "next/router";
-import { Register } from "@/network-request/types";
 import { createUser } from "@/network-request/api";
 import toast, { Toaster } from "react-hot-toast";
+
+const correctStateName = (stateName: string): string => {
+  const nameMapping: { [key: string]: string } = {
+    firstName: "First Name",
+    lastName: "Last Name",
+    email: "Email",
+    number: "Number",
+    designation: "Designation",
+    companyName: "Company Name",
+    profEmail: "Email",
+    address: "Address",
+    password: "Password",
+  };
+
+  return nameMapping[stateName] || stateName;
+};
+
 const SignUp = () => {
-  // const { mutate } = useRegister();
   const router = useRouter();
-
-  const formik = useFormik({
-    initialValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      number: "",
-      designation: "",
-      companyName: "",
-      profEmail: "",
-      address: "",
-      password: "",
-    } as Register,
-
-    validate: (values) => {
-      const errors: {
-        number?: string;
-        profEmail?: string;
-        email?: string;
-        password?: string;
-      } = {};
-
-      // Validate email
-      const emailError = validateEmail(values.email);
-      if (emailError) {
-        errors.email = emailError;
-      }
-      // const phoneError = validatePhone(values.number);
-      // if (phoneError) {
-      //   errors.number = phoneError;
-      // }
-      const profEmailError = validateEmail(values.profEmail);
-      if (profEmailError) {
-        errors.profEmail = profEmailError;
-      }
-      // Validate other fields as needed
-      // ...
-
-      return errors;
-    },
-
-    // validationSchema: SignupvalidationSchema,
-    onSubmit: (values: Register) => {
-      console.log("VALUES", { values });
-      onSignup(values);
-      // onDriver(values);
-    },
+  const [state, setState] = useState<any>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    number: "",
+    designation: "",
+    companyName: "",
+    profEmail: "",
+    address: "",
+    password: "",
   });
 
-  const {
-    values,
-    errors,
-    handleChange,
-    handleSubmit,
-    touched,
-    setFieldValue,
-    handleBlur,
-  } = formik;
-  console.log({ values });
+  const [error, setError] = useState<any>({
+    firstNameError: "",
+    lastNameError: "",
+    emailError: "",
+    numberError: "",
+    designationError: "",
+    companyNameError: "",
+    profEmailError: "",
+    addressError: "",
+    passwordError: "",
+  });
 
   const regexOfPhoneNumber = /^(?:\+61|0)[2-478](?:[ -]?[0-9]){8}$/;
+
   const regexOfEmail =
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.+([a-zA-Z0-9-]+)2*$/;
 
-  const validatePhone = (value: any) => {
-    let error;
-    if (!value) {
-      error = "Contact number is required";
-    } else if (!regexOfPhoneNumber.test(value)) {
-      error = "Invalid contact number";
-    }
-    return error;
+  const checkValidation = () => {
+    const newErrors = { ...error };
+    let hasErrors = false;
+    Object.keys(state).forEach((key) => {
+      // Handle non-nested fields
+      // Auto scroll up for better user experience
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth", // for smooth scrolling
+      });
+
+      if (
+        key !== "requirePassword" &&
+        key !== "sendPassword" &&
+        key !== "temporaryPassword" &&
+        key !== "avatar"
+      ) {
+        if (!state[key]) {
+          newErrors[key + "Error"] = `${correctStateName(key)} is required`;
+          hasErrors = true;
+        } else {
+          newErrors[key + "Error"] = "";
+        }
+      }
+    });
+    setError(newErrors);
+    // Return the error status
+    return hasErrors;
   };
 
-  const validateEmail = (value: string) => {
-    let error;
-    if (!value) {
-      error = "Email is required";
-    } else if (!regexOfEmail.test(value)) {
-      error = "Invalid email address";
+  const handleSubmit = () => {
+    const hasErrors = checkValidation();
+    console.log("Errors", error);
+    if (hasErrors) {
+      toast("Please fix the validation errors before submitting.", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+      return;
+    } else {
+      onSignup(state);
     }
-    return error;
   };
 
   const onSignup = React.useCallback(async (values: any) => {
@@ -124,8 +125,6 @@ const SignUp = () => {
   }, []);
 
   const [visibel, SetVisible] = React.useState(false);
-  const isValidVisibility = formik.dirty && formik.isValid;
-
   return (
     <React.Fragment>
       <div>
@@ -136,7 +135,7 @@ const SignUp = () => {
           <Toaster />
         </div>
         <div className="grid grid-cols-2 items-center">
-          <form onSubmit={handleSubmit}>
+          <div>
             <div className="max-w-[440px] ml-auto mr-auto text-center pt-10">
               <h1 className="font-bold text-3xl tracking-wide text-black">
                 Join the Journey
@@ -163,14 +162,24 @@ const SignUp = () => {
                     className="bg-cool-gray pl-0 text-black"
                     name={"firstName"}
                     id={"firstName"}
-                    required={"required"}
-                    onBlur={handleBlur}
-                    value={values?.firstName}
-                    onChange={handleChange}
+                    value={state?.firstName}
+                    onChange={(e: any) => {
+                      setState({
+                        ...state,
+                        firstName: e.target.value,
+                      });
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          firstNameError: "",
+                        });
+                      }
+                    }}
                     alt={""}
                     src={""}
                     svgWidth={0}
                     svgHeight={0}
+                    errorMessage={error.firstNameError}
                   />
                   <InputField
                     type="text"
@@ -178,19 +187,28 @@ const SignUp = () => {
                     className="bg-cool-gray pl-0 text-black"
                     name={"lastName"}
                     id={"lastName"}
-                    onBlur={handleBlur}
-                    required={"required"}
-                    value={values?.lastName}
-                    onChange={handleChange}
+                    value={state?.lastName}
+                    onChange={(e: any) => {
+                      setState({
+                        ...state,
+                        lastName: e.target.value,
+                      });
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          lastNameError: "",
+                        });
+                      }
+                    }}
                     alt={""}
                     src={""}
                     svgWidth={0}
                     svgHeight={0}
+                    errorMessage={error.lastNameError}
                   />
                 </div>
 
                 <InputField
-                  required={"required"}
                   type="text"
                   placeholder="Email"
                   className="bg-cool-gray pl-0 text-black"
@@ -200,26 +218,27 @@ const SignUp = () => {
                   alt=""
                   svgWidth={0}
                   svgHeight={0}
-                  onBlur={handleBlur}
-                  value={values?.email}
-                  onChange={handleChange}
-                  hasError={
-                    formik.touched.email && formik.errors.email ? true : false
-                  }
+                  value={state?.email}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    const inputValue = e.target.value;
+                    if (!regexOfEmail.test(inputValue)) {
+                      setError({
+                        ...error,
+                        emailError: "Please enter a valid email address",
+                      });
+                    } else {
+                      setError({
+                        ...error,
+                        emailError: "", // Clear the error when the input is valid
+                      });
+                    }
+                    setState({
+                      ...state,
+                      email: e.target.value,
+                    });
+                  }}
+                  errorMessage={error.emailError}
                 />
-                {formik.touched.email && formik.errors.email ? (
-                  <div
-                    style={{
-                      textAlign: "left",
-                      fontSize: "12px",
-                      marginTop: "-10px",
-                      color: "red",
-                    }}
-                  >
-                    {formik.errors.email as React.ReactNode}
-                  </div>
-                ) : null}
-
                 <InputField
                   type={"number"}
                   placeholder="Contact Number"
@@ -229,26 +248,28 @@ const SignUp = () => {
                   src=""
                   alt=""
                   svgWidth={0}
-                  // required={"required"}
                   svgHeight={0}
-                  value={values?.number}
-                  onChange={handleChange}
-                  hasError={
-                    formik.touched.number && formik.errors.number ? true : false
-                  }
+                  value={state?.number}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    const inputValue = e.target.value;
+                    if (!regexOfPhoneNumber.test(inputValue)) {
+                      setError({
+                        ...error,
+                        numberError: "Please enter a valid phone number",
+                      });
+                    } else {
+                      setError({
+                        ...error,
+                        numberError: "", // Clear the error when the input is valid
+                      });
+                    }
+                    setState({
+                      ...state,
+                      number: e.target.value,
+                    });
+                  }}
+                  errorMessage={error.numberError}
                 />
-                {/* {formik.touched.number && formik.errors.number ? (
-                  <div
-                    style={{
-                      textAlign: "left",
-                      fontSize: "12px",
-                      marginTop: "-10px",
-                      color: "red",
-                    }}
-                  >
-                    {formik.errors.number as React.ReactNode}
-                  </div>
-                ) : null} */}
               </div>
               <div className="flex flex-col mt-2">
                 <div className="flex gap-2 items-center">
@@ -269,13 +290,25 @@ const SignUp = () => {
                     className="bg-cool-gray pl-0 text-black"
                     name={"designation"}
                     id={"designation"}
-                    // required={"required"}
-                    value={values?.designation}
-                    onChange={handleChange}
+                    //
+                    value={state?.designation}
+                    onChange={(e: any) => {
+                      setState({
+                        ...state,
+                        designation: e.target.value,
+                      });
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          designationError: "",
+                        });
+                      }
+                    }}
                     alt={""}
                     src={""}
                     svgWidth={0}
                     svgHeight={0}
+                    errorMessage={error.designationError}
                   />
                   <InputField
                     type="text"
@@ -283,18 +316,29 @@ const SignUp = () => {
                     className="bg-cool-gray pl-0 text-black"
                     name={"companyName"}
                     id={"companyName"}
-                    // required={"required"}
-                    value={values?.companyName}
-                    onChange={handleChange}
+                    //
+                    value={state?.companyName}
+                    onChange={(e: any) => {
+                      setState({
+                        ...state,
+                        companyName: e.target.value,
+                      });
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          companyNameError: "",
+                        });
+                      }
+                    }}
                     alt={""}
                     src={""}
                     svgWidth={0}
                     svgHeight={0}
+                    errorMessage={error.companyNameError}
                   />
                 </div>
 
                 <InputField
-                  // required={"required"}
                   type="text"
                   placeholder="Email"
                   className="bg-cool-gray pl-0 text-black"
@@ -304,27 +348,27 @@ const SignUp = () => {
                   alt=""
                   svgWidth={0}
                   svgHeight={0}
-                  value={values?.profEmail}
-                  onChange={handleChange}
-                  hasError={
-                    formik.touched.profEmail && formik.errors.profEmail
-                      ? true
-                      : false
-                  }
+                  value={state?.profEmail}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    const inputValue = e.target.value;
+                    if (!regexOfEmail.test(inputValue)) {
+                      setError({
+                        ...error,
+                        profEmailError: "Please enter a valid email address",
+                      });
+                    } else {
+                      setError({
+                        ...error,
+                        profEmailError: "", // Clear the error when the input is valid
+                      });
+                    }
+                    setState({
+                      ...state,
+                      profEmail: e.target.value,
+                    });
+                  }}
+                  errorMessage={error.profEmailError}
                 />
-                {formik.touched.profEmail && formik.errors.profEmail ? (
-                  <div
-                    style={{
-                      textAlign: "left",
-                      fontSize: "12px",
-                      marginTop: "-10px",
-                      color: "red",
-                    }}
-                  >
-                    {formik.errors.profEmail as React.ReactNode}
-                  </div>
-                ) : null}
-
                 <InputField
                   type={"text"}
                   placeholder="Address"
@@ -334,25 +378,40 @@ const SignUp = () => {
                   src=""
                   alt=""
                   svgWidth={0}
-                  // required={"required"}
                   svgHeight={0}
-                  value={values?.address}
-                  onChange={handleChange}
+                  value={state?.address}
+                  onChange={(e: any) => {
+                    setState({
+                      ...state,
+                      address: e.target.value,
+                    });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        addressError: "",
+                      });
+                    }
+                  }}
+                  errorMessage={error.addressError}
                 />
               </div>
               <InputField
                 type={visibel ? "text" : "password"}
                 placeholder="password"
-                className="bg-cool-gray "
-                onChange={handleChange}
-                required={"required"}
-                onBlur={handleBlur}
-                value={values?.password}
-                hasError={
-                  formik.touched.password && formik.errors.password
-                    ? true
-                    : false
-                }
+                className="bg-cool-gray text-black"
+                value={state?.password}
+                onChange={(e: any) => {
+                  setState({
+                    ...state,
+                    password: e.target.value,
+                  });
+                  if (e.target.value.length > 0) {
+                    setError({
+                      ...error,
+                      passwordError: "",
+                    });
+                  }
+                }}
                 name={"password"}
                 id={""}
                 src="/lock.svg"
@@ -361,21 +420,15 @@ const SignUp = () => {
                 svgHeight={16}
                 onClick={() => SetVisible(!visibel)}
                 isvisibel={visibel}
+                errorMessage={error.passwordError}
               />
 
               <div className="mt-8 mb-4">
                 <Button
                   text="Get Started"
-                  type="submit"
+                  onClick={handleSubmit}
                   className="flex justify-center !rounded-full text-white mt-4"
                 />
-                {/* <Button
-                  // visible={isValidVisibility}
-                  type="submit"
-                  text="Get Started"
-                  className="!rounded-[30px]  justify-center"
-                //onClick={() => router.push("/login")}
-                /> */}
               </div>
               <div>
                 <span className="text-[#737373] text-sm mt-10 font-medium cursor-pointer ">
@@ -390,7 +443,7 @@ const SignUp = () => {
                 </span>
               </div>
             </div>
-          </form>
+          </div>
           <div className="flex justify-center">
             <Image
               src="/Background.svg"

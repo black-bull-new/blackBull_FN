@@ -210,34 +210,19 @@ const AddSupplier = () => {
       dispatchEmail: "",
     },
     invoicePreferences: "",
-    invoiceCommunicationPreferences: [],
-    companySuiteDetails: [
-      {
-        directorName: "",
-        directorEmailAddress: "",
-        directorNumber: "",
-      },
-    ],
+    invoiceCommunicationPreferences: "",
+    companySuiteDetails: [],
+    warehouseDetails: [],
+    businessCoverage: {
+      areaCovered: "",
+      businessOpreations: "",
+    },
     bankDetails: {
       accountName: "",
       bankName: "",
       bsb: "",
       accountNumber: "",
     },
-    businessCoverage: {
-      areaCovered: "",
-      businessOpreations: "",
-    },
-    warehouseDetails: [
-      {
-        state: "",
-        street1: "",
-        street2: "",
-        suburb: "",
-        postcode: "",
-        typeOfCarrier: "",
-      },
-    ],
     certificateOfAccreditation: {
       accreditationNumber: "",
       massManagementExpiryDate: "",
@@ -325,8 +310,10 @@ const AddSupplier = () => {
       uploadDate: "",
     },
     onboardingDocuments: [],
+    invoiceOthers: [],
   });
   console.log("addSupplier", addSupplier);
+  const [addMoreFields, setAddMoreFields] = useState<any>([]);
   const [addSupplierError, setAddSupplierError] = useState<any>({
     companyNameError: "",
     tradingNameError: "",
@@ -380,6 +367,8 @@ const AddSupplier = () => {
     },
     // accreditationDocument: "",
   });
+  const [addMoreDirector, setAddMoreDirector] = useState<Array<any>>([]);
+  const [addMoreAddress, setAddMoreAddress] = useState<Array<any>>([]);
   const [selectedProfileForSupplier, setSelectedProfileForSupplier] =
     useState("");
   const [urlsForSupplier, setUrlsForSupplier] = useState<string[]>([]);
@@ -682,6 +671,44 @@ const AddSupplier = () => {
         ),
       ]);
 
+      //   invoiceCommunicationPreferences: [],
+      // companySuiteDetails: [],
+      // warehouseDetails: [],
+
+      console.log("addMoreFields", addMoreFields);
+
+      const updatedInvoiceCommunicationPreferences = addMoreFields?.map(
+        (field: any, index: number) => `Others ${index + 1}`
+      );
+
+      console.log(
+        "updatedInvoiceCommunicationPreferences",
+        updatedInvoiceCommunicationPreferences
+      );
+
+      const updatedCompanySuiteDetails = addMoreDirector?.map(
+        (director: any) => {
+          return {
+            ...director,
+            designation: director.designation,
+            directorEmailAddress: director.directorEmailAddress,
+            directorContactNumber: director.directorContactNumber,
+          };
+        }
+      );
+
+      const updatedWarehouse = addMoreAddress?.map((address: any) => {
+        return {
+          ...address,
+          street1: address.street1,
+          street2: address.street2,
+          suburb: address.suburb,
+          state: address.state,
+          country: address.country,
+          postCode: address.postCode,
+        };
+      });
+
       const newSupplierDetails = {
         ...addSupplier,
         profile: profileUrl[0]?.response,
@@ -719,6 +746,13 @@ const AddSupplier = () => {
             uploadDate: formattedDate,
           })
         ),
+        invoiceOthers: updatedInvoiceCommunicationPreferences?.map(
+          (value: any, index: number) => ({
+            type: value,
+          })
+        ),
+        companySuiteDetails: updatedCompanySuiteDetails,
+        warehouseDetails: updatedWarehouse,
       };
 
       const response: any = await addSupplierIntoSupplier(
@@ -1152,6 +1186,12 @@ const AddSupplier = () => {
                   cocDocument: value,
                 }))
               }
+              addMoreFields={addMoreFields}
+              setAddMoreFields={setAddMoreFields}
+              addMoreDirector={addMoreDirector}
+              setAddMoreDirector={setAddMoreDirector}
+              addMoreAddress={addMoreAddress}
+              setAddMoreAddress={setAddMoreAddress}
             />
           ) : buttonState === step2Btn ? (
             <NestedAddVehicle

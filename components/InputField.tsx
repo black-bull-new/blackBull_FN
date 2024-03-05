@@ -16,7 +16,9 @@ interface imputdata {
   hasError?:any;
   isvisibel?:boolean;
   required?:any;
+  errorMessage?:any;
 }
+
 
 const InputField = ({
   onChange,
@@ -35,9 +37,10 @@ const InputField = ({
   isvisibel,
   required,
   svgHeight,
+  errorMessage
 }: imputdata) => {
   return (
-    <>
+    <div className="relative">
       <div
         className={`text-left m-2 ml-0 flex  p-2 justify-between rounded-md ${className} ${hasError? 'border border-solid border-red-600 ':""}`}
       >
@@ -66,7 +69,10 @@ const InputField = ({
           />
         )}
       </div>
-    </>
+      {errorMessage && (
+        <div className="text-red-500 text-[12px] flex justify-start mt-1">{errorMessage}</div>
+      )}
+    </div>
   );
 };
 export default InputField;

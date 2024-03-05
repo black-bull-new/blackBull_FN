@@ -1,80 +1,63 @@
 import CommonUI from "@/pages/onboarding/utility/CommonUI";
-import Image from "next/image";
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 interface StatusChipProps {
   chipColor: (value: any) => void;
 }
 
+
 const StatusChip = ({ chipColor }: StatusChipProps) => {
-  const [color, setColor] = useState("");
+  const [selectedOption, setSelectedOption] = useState("");
+  const [flag, setFlag] = useState(true);
+  const options = [
+    { label: "Select", value: "" },
+    { label: "Approved", value: "Approved" },
+    { label: "Under Review", value: "Under Review" },
+    { label: "Rejected", value: "Rejected" },
+  ];
 
   const toggleColor = (value: any) => {
-    setColor(value.target.value);
-    chipColor(value?.target?.value);
+    setSelectedOption(value);
+    chipColor(value);
+    setFlag(false);
   };
 
-  const options = [
-    { option: "Select", value: "Select" },
-    { option: "Approved", value: "Approved" },
-    { option: "Under Review", value: "Under Review" },
-    { option: "Rejected", value: "Rejected" },
-  ];
   return (
-    <>
-      <div className={"relative"}>
-        <select
-          name="status"
-          id="status"
-          className={`focus:outline-none appearance-none pt-[5px] pb-[7px] text-center pl-4 pr-8 rounded-full text-white ${
-            color === "Approved"
-              ? "bg-[#D9F2DD]  !text-[#359742] w-fit px-4 py-[5px] rounded-full m-auto flex items-center gap-2 "
-              : color === "Under Review"
-              ? "bg-[#EAEDFA]  !text-[#5872DA] w-fit px-4 py-[5px] rounded-full m-auto flex items-center gap-2"
-              : color === "Rejected"
-              ? "bg-[#FFE5E5]  !text-[#FF6666] w-fit px-4 py-[5px] rounded-full m-auto flex items-center gap-2"
-              : "!text-black border"
-          }`}
-          onChange={toggleColor}
-        >
-          {options?.map((value, index) => {
-            return (
-              <option
-                value={value.value}
-                key={index}
-                onClick={() => toggleColor(value.option)}
-                className="bg-white text-black"
-              >
-                <p className=" w-fit px-4 py-[5px] rounded-full m-auto flex items-center gap-2">
-                  {(value.value === "Approved" && color === "Approved") ||
-                  (value.value === "Under Review" &&
-                    color === "Under Review") ||
-                  (value.value === "Rejected" && color === "Rejected") ? (
-                    <span className="w-2 h-2 rounded-full block">•</span>
-                  ) : null}{" "}
-                  {value.option}
-                </p>
+    <div className="relative">
+      <div className="relative">
+        {flag && (
+          <select
+            name="status"
+            id="status"
+            className={`focus:outline-none appearance-none pt-[5px] pb-[7px] text-center pl-4 pr-8 rounded-full text-black ${
+              selectedOption ? "bg-white text-black" : "border text-black"
+            }`}
+            onChange={(e) => toggleColor(e.target.value)}
+            value={selectedOption}
+          >
+            {options.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
               </option>
-            );
-          })}
-        </select>
-        <Image
-          src="/arrow-white.svg"
-          alt="arrow down"
-          width={16}
-          height={16}
-          className={`absolute right-2 top-[10px] ${
-            color === "Approved"
-              ? "!text-[#359742]"
-              : color === "Under Review"
-              ? "text-[#5872DA]"
-              : color === "Rejected"
-              ? "text-[#FF6666]"
-              : "text-black"
-          }`}
-        />
+            ))}
+          </select>
+        )}
+
+        {!flag && (
+          <div
+            onClick={() => {
+              setSelectedOption("");
+              chipColor("");
+              setFlag(true);
+            }}
+            className="cursor-pointer"
+          >
+            <CommonUI status={selectedOption} />
+          </div>
+        )}
       </div>
-    </>
+    </div>
   );
 };
+
 export default StatusChip;

@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const customerBaseUrl = "http://localhost:1800/api/c1"
+// const customerBaseUrl = "http://localhost:1800/api/c1"
 
 
 export const addCustomer = async (data: any, token: string) => {

@@ -264,7 +264,7 @@ const NestedAddDriver = (props: any) => {
       <div className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">
         <h2 className="text-black">Add Driver</h2>
       </div>
-      <div className="font-semibold text-xl mt-4 bg-white p-4 mr-4 rounded-md mb-20">
+      <div className=" mt-4 bg-white p-4 mr-4 rounded-md mb-20">
         <Progressbar />
         <div className="relative w-fit">
           <span className="flex flex-row justify-center my-4">
@@ -313,7 +313,7 @@ const NestedAddDriver = (props: any) => {
             </span>
           </span>
         </div>
-        <h2 className="text-black font-semibold p-4 mt-6">
+        <h2 className="text-black text-[18px] font-semibold p-4 ">
           Personal Information
         </h2>
         <div className="grid grid-cols-3 gap-4 p-4">
@@ -436,7 +436,7 @@ const NestedAddDriver = (props: any) => {
             errorMessage={error.nationalityError}
           />
         </div>
-        <h2 className="text-black font-semibold p-4 mt-6">
+        <h2 className="text-black font-semibold p-4 text-[18px]">
           Address Information
         </h2>
         <h3 className="text-black font-semibold text-sm pl-4">
@@ -752,7 +752,7 @@ const NestedAddDriver = (props: any) => {
             errorMessage={error.permanentAddressError?.pincode}
           />
         </div>
-        <h2 className="text-black font-semibold p-4 mt-6">
+        <h2 className="text-black font-semibold p-4 text-[18px]">
           Emergency Contact Information
         </h2>
         <div className="grid grid-cols-3 gap-4 p-4">
@@ -839,13 +839,13 @@ const NestedAddDriver = (props: any) => {
             errorMessage={error.emergencyContactInformationError?.relationship}
           />
         </div>
-        <h2 className="text-black font-semibold p-4 mt-6">
+        <h2 className="text-black font-semibold p-4 text-[18px]">
           Employment History
         </h2>
 
         {addMoreExperience?.map((item: any, index: number) => {
           return (
-            <div key={index}>
+            <div className="pl-4" key={index}>
               <div>
                 <h4 className="text-sm font-semibold mb-4 text-black">
                   Experience {index + 1}

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Progressbar from "../Progressbar";
 import Image from "next/image";
 import Maininputfield from "../Maininputfield";
@@ -35,6 +35,12 @@ export const NestedAddSupplier = (props: any) => {
     setMarineAlcoholDocument,
     cocDocument,
     setCocDocument,
+    addMoreFields,
+    setAddMoreFields,
+    addMoreDirector,
+    setAddMoreDirector,
+    addMoreAddress,
+    setAddMoreAddress,
   } = props;
 
   const [selectedFiles, setSelectedFiles] = useState<
@@ -53,16 +59,16 @@ export const NestedAddSupplier = (props: any) => {
 
   // **** Add more fields ****
   const [showOtherFields, setShowOtherFields] = useState(false);
-  const [addMoreFields, setAddMoreFields] = React.useState<any>([]);
-  React.useEffect(() => {
-    if (addMoreFields.length === 0) {
-      setAddMoreFields([
-        {
-          others: "",
-        },
-      ]);
-    }
-  }, []);
+  console.log("addMoreFields", addMoreFields);
+  // React.useEffect(() => {
+  //   if (addMoreFields.length === 0) {
+  //     setAddMoreFields([
+  //       {
+  //         others: "",
+  //       },
+  //     ]);
+  //   }
+  // }, []);
   console.log("addMoreFields", addMoreFields);
 
   const handleFieldsChange = (value: any, fieldName: any, index: any) => {
@@ -82,7 +88,7 @@ export const NestedAddSupplier = (props: any) => {
   };
 
   const handleRemoveExperience = (index: number) => {
-    if (index === 1) {
+    if (index === 0) {
       setShowOtherFields(false);
     } else {
       setShowOtherFields(true);
@@ -90,7 +96,85 @@ export const NestedAddSupplier = (props: any) => {
     setAddMoreFields(addMoreFields.filter((_: any, i: any) => i !== index));
   };
 
-  // *** End Here Add more **
+  // *** End Here Add more feilds**
+
+  // **** Add more director ****
+  // const [addMoreDirector, setAddMoreDirector] = useState<Array<any>>([]);
+  useEffect(() => {
+    if (addMoreDirector.length === 0) {
+      setAddMoreDirector([
+        {
+          designation: "",
+          directorEmailAddress: "",
+          directorNumber: "",
+        },
+      ]);
+    }
+  }, []);
+
+  const handleDirectorChange = (value: any, fieldName: any, index: any) => {
+    const data = [...addMoreDirector];
+    data[index][fieldName] = value.target.value;
+    setAddMoreDirector(data);
+  };
+
+  const handleAddMoreDirector = () => {
+    setAddMoreDirector([
+      ...addMoreDirector,
+      {
+        designation: "",
+        directorEmailAddress: "",
+        directorNumber: "",
+      },
+    ]);
+  };
+
+  const handleRemoveDirector = (index: number) => {
+    setAddMoreDirector(addMoreDirector.filter((_: any, i: any) => i !== index));
+  };
+  // *** End Here Add more director**
+
+  // *********** Add More Address ********************************
+
+  console.log("addMoreAddress", addMoreAddress);
+  useEffect(() => {
+    if (addMoreAddress.length === 0) {
+      setAddMoreAddress([
+        {
+          street1: "",
+          street2: "",
+          suburb: "",
+          state: "",
+          country: "Australia",
+          postcode: "",
+        },
+      ]);
+    }
+  }, []);
+
+  const handleAddressChange = (value: any, fieldName: any, index: any) => {
+    const data = [...addMoreAddress];
+    data[index][fieldName] = value.target.value;
+    setAddMoreAddress(data);
+  };
+
+  const handleAddAddress = () => {
+    setAddMoreAddress([
+      ...addMoreAddress,
+      {
+        street1: "",
+        street2: "",
+        suburb: "",
+        state: "",
+        country: "Australia",
+        postcode: "",
+      },
+    ]);
+  };
+
+  const handleRemoveAddress = (index: number) => {
+    setAddMoreAddress(addMoreAddress.filter((_: any, i: any) => i !== index));
+  };
 
   const handleAddRow = () => {
     const newRow = {
@@ -959,18 +1043,16 @@ export const NestedAddSupplier = (props: any) => {
               mapOption={invoiceComuColletion}
               selectedData={selectedData}
               setSelectedData={setSelectedData}
-              value={addMoreFields[0]?.others}
+              value={addSupplier.invoiceCommunicationPreferences}
               onChange={(e: any) => {
-                setAddMoreFields((prevFields: any) => [
-                  {
-                    ...prevFields[0],
-                    others: e.target.value,
-                  },
-                ]);
+                setAddSupplier({
+                  ...addSupplier,
+                  invoiceCommunicationPreferences: e.target.value,
+                });
               }}
             />
           </div>
-          <div>
+          <div className="flex justify-end">
             {!showOtherFields && (
               <Button
                 onClick={() => {
@@ -982,20 +1064,20 @@ export const NestedAddSupplier = (props: any) => {
                     },
                   ]);
                 }}
-                text="Initial Add More Fields"
+                text="Add More Fields"
                 className="bg-[#2B36D9] px-4 !w-fit"
               />
             )}
           </div>
           {showOtherFields &&
-            addMoreFields?.slice(1).map((item: any, index: number) => {
-              const displayIndex = index + 1;
+            addMoreFields?.map((item: any, index: number) => {
+              const displayIndex = index;
 
               return (
                 <div key={displayIndex}>
                   <div>
                     <h4 className="text-sm font-semibold mb-4 text-black">
-                      Others {displayIndex}
+                      Others {displayIndex+1}
                     </h4>
                   </div>
                   <div className="grid grid-cols-3 gap-4">
@@ -1039,7 +1121,71 @@ export const NestedAddSupplier = (props: any) => {
           <h2 className="text-black font-semibold mt-8 mb-4">
             Company C-Suite Details
           </h2>
-          <div className="grid grid-cols-3 gap-4">
+          {addMoreDirector?.map((item: any, index: number) => {
+            return (
+              <div key={index}>
+                <div>
+                  <h3 className="font-semibold px-4 text-sm text-[#28353A] text-[16px]">
+                    Director {index + 1}
+                  </h3>
+                  <div className="grid grid-cols-3 gap-4 p-4">
+                    <Maininputfield
+                      label="Designation"
+                      value={item?.designation}
+                      onChange={(e: any) =>
+                        handleDirectorChange(e, "designation", index)
+                      }
+                      className="w-full"
+                      errorMessage={error.companySuiteDetailsError?.designation}
+                    />
+                    <Maininputfield
+                      label="Director Email Address"
+                      value={item?.directorEmailAddress}
+                      onChange={(e: any) =>
+                        handleDirectorChange(e, "directorEmailAddress", index)
+                      }
+                      className="w-full"
+                      errorMessage={
+                        error.companySuiteDetailsError?.directorEmailAddress
+                      }
+                    />
+                    <Maininputfield
+                      label="Director Contact Number"
+                      value={item?.directorNumber}
+                      onChange={(e: any) =>
+                        handleDirectorChange(e, "directorNumber", index)
+                      }
+                      className="w-full"
+                      errorMessage={
+                        error.companySuiteDetailsError?.directorNumber
+                      }
+                    />
+                  </div>
+                  <div className="mb-8 me-3 flex justify-end">
+                    <Button
+                      onClick={handleAddMoreDirector}
+                      text="Add More Director"
+                      className="!w-fit bg-[#2B36D9] !px-4"
+                    />
+                    {index > 0 && (
+                      <span
+                        onClick={() => handleRemoveDirector(index)}
+                        className="ml-4 cursor-pointer"
+                        style={{
+                          color: "red",
+                          marginTop: "10px",
+                          marginRight: "10px",
+                        }}
+                      >
+                        Remove
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+          {/* <div className="grid grid-cols-3 gap-4">
             <Maininputfield
               label="Director Name"
               value={addSupplier.companySuiteDetails[0]?.directorName}
@@ -1094,7 +1240,7 @@ export const NestedAddSupplier = (props: any) => {
               text="Add More Director"
               className="!w-fit bg-[#2B36D9] !px-4"
             />
-          </div>
+          </div> */}
           <h2 className="text-black font-semibold mt-8 mb-4">Bank Details</h2>
           <div className="grid grid-cols-3 gap-4">
             <Maininputfield
@@ -1252,117 +1398,111 @@ export const NestedAddSupplier = (props: any) => {
             />
           </div>
           <h2 className="text-black font-semibold mt-8 mb-4">
-            Warehouse Details
+            Warehouse Locations & Address
           </h2>
-          <h3 className="text-black font-semibold text-sm my-4">Address 1</h3>
-          <div className="grid grid-cols-3 gap-4">
-            <DropDownMap
-              label="State"
-              mapOption={stateCollection}
-              selectedData={selectedData}
-              setSelectedData={setSelectedData}
-              value={addSupplier.warehouseDetails[0]?.state}
-              onChange={(e: any) => {
-                setAddSupplier({
-                  ...addSupplier,
-                  warehouseDetails: [
-                    {
-                      ...addSupplier.warehouseDetails[0],
-                      state: e.target.value,
-                    },
-                  ],
-                });
-              }}
-            />
-            <Maininputfield
-              label="Street 1"
-              value={addSupplier.warehouseDetails[0]?.street1}
-              className="w-full"
-              onChange={(e: any) => {
-                setAddSupplier({
-                  ...addSupplier,
-                  warehouseDetails: [
-                    {
-                      ...addSupplier.warehouseDetails[0],
-                      street1: e.target.value,
-                    },
-                  ],
-                });
-              }}
-            />
-            <Maininputfield
-              label="Street 2"
-              value={addSupplier.warehouseDetails[0]?.street2}
-              className="w-full"
-              onChange={(e: any) => {
-                setAddSupplier({
-                  ...addSupplier,
-                  warehouseDetails: [
-                    {
-                      ...addSupplier.warehouseDetails[0],
-                      street2: e.target.value,
-                    },
-                  ],
-                });
-              }}
-            />
-            <Maininputfield
-              label="Suburb"
-              value={addSupplier.warehouseDetails[0]?.suburb}
-              className="w-full"
-              onChange={(e: any) => {
-                setAddSupplier({
-                  ...addSupplier,
-                  warehouseDetails: [
-                    {
-                      ...addSupplier.warehouseDetails[0],
-                      suburb: e.target.value,
-                    },
-                  ],
-                });
-              }}
-            />
-            <Maininputfield
-              label="Post Code"
-              value={addSupplier.warehouseDetails[0]?.postcode}
-              className="w-full"
-              onChange={(e: any) => {
-                setAddSupplier({
-                  ...addSupplier,
-                  warehouseDetails: [
-                    {
-                      ...addSupplier.warehouseDetails[0],
-                      postcode: e.target.value,
-                    },
-                  ],
-                });
-              }}
-            />
-            <DropDownMap
-              label="Type Of Carrier"
-              mapOption={carrierTypeCollection}
-              selectedData={selectedData}
-              setSelectedData={setSelectedData}
-              value={addSupplier.warehouseDetails[0]?.typeOfCarrier}
-              onChange={(e: any) => {
-                setAddSupplier({
-                  ...addSupplier,
-                  warehouseDetails: [
-                    {
-                      ...addSupplier.warehouseDetails[0],
-                      typeOfCarrier: e.target.value,
-                    },
-                  ],
-                });
-              }}
-            />
-          </div>
-          <div className="flex justify-end py-2 px-4">
-            <Button
-              text="Add More Addresses"
-              className="!w-fit bg-[#2B36D9] !px-4"
-            />
-          </div>
+          {addMoreAddress?.map((item: any, index: number) => {
+            return (
+              <div key={index}>
+                <h3 className="font-semibold px-4 text-sm text-[#28353A] text-[16px]">
+                  Address {index + 1}
+                </h3>
+                <div className="grid grid-cols-3 gap-4 p-4">
+                  <Maininputfield
+                    label="Street 1"
+                    value={item?.street1}
+                    onChange={(e: any) =>
+                      handleAddressChange(e, "street1", index)
+                    }
+                    // onChange={(e: any) => {
+                    //   setCustomer({
+                    //     ...customer,
+                    //     warehouseLocation: {
+                    //       ...customer.warehouseLocation,
+                    //       street1: e.target.value,
+                    //     },
+                    //   });
+                    //   if (e.target.value.length > 0) {
+                    //     setError({
+                    //       ...error,
+                    //       warehouseLocationError: {
+                    //         ...error.warehouseLocationError,
+                    //         street1: "",
+                    //       },
+                    //     });
+                    //   }
+                    // }}
+                    className="w-full"
+                    errorMessage={error.warehouseLocationError?.street1}
+                  />
+                  <Maininputfield
+                    label="Street 2"
+                    value={item?.street2}
+                    onChange={(e: any) =>
+                      handleAddressChange(e, "street2", index)
+                    }
+                    className="w-full"
+                    errorMessage={error.warehouseLocationError?.street2}
+                  />
+                  <Maininputfield
+                    label="Suburb"
+                    value={item?.suburb}
+                    onChange={(e: any) =>
+                      handleAddressChange(e, "suburb", index)
+                    }
+                    className="w-full"
+                    errorMessage={error.warehouseLocationError?.suburb}
+                  />
+                  <DropDownMap
+                    label="State"
+                    mapOption={stateCollection}
+                    value={item?.state}
+                    onChange={(e: any) =>
+                      handleAddressChange(e, "state", index)
+                    }
+                    errorMessage={error.warehouseLocationError?.state}
+                  />
+                  <Maininputfield
+                    label="Country"
+                    // mapOption={countryCollection}
+                    value={item?.country}
+                    onChange={(e: any) =>
+                      handleAddressChange(e, "country", index)
+                    }
+                    errorMessage={error.warehouseLocationError?.country}
+                  />
+                  <Maininputfield
+                    label="Post Code"
+                    value={item?.postcode}
+                    onChange={(e: any) =>
+                      handleAddressChange(e, "postcode", index)
+                    }
+                    className="w-full"
+                    errorMessage={error.warehouseLocationError?.postcode}
+                  />
+                </div>
+                <div className="mb-8 me-3 flex justify-end">
+                  <Button
+                    onClick={handleAddAddress}
+                    text="Add More Addresses"
+                    className="!w-fit bg-[#2B36D9] !px-4"
+                  />
+                  {index > 0 && (
+                    <span
+                      onClick={() => handleRemoveAddress(index)}
+                      className="ml-4 cursor-pointer"
+                      style={{
+                        color: "red",
+                        marginTop: "10px",
+                        marginRight: "10px",
+                      }}
+                    >
+                      Remove
+                    </span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
 
           <h2 className="text-black font-semibold mt-8 mb-4">
             Cerificate Of Accreditation
