@@ -343,7 +343,7 @@ const SignUp = () => {
               <InputField
                 type={visibel ? "text" : "password"}
                 placeholder="password"
-                className="bg-cool-gray "
+                className="bg-cool-gray text-black"
                 onChange={handleChange}
                 required={"required"}
                 onBlur={handleBlur}

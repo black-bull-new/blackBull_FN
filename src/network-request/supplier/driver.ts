@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const supplierDriverBaseUrl = "http://localhost:1800/api/s1/d1";
+// const supplierDriverBaseUrl = "http://localhost:1800/api/s1/d1";
 
 export const addSupplierDriver = async (data: any, token: string) => {
     try {

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const vehicleBaseUrl = "http://localhost:1800/api/s1/v1";
+// const vehicleBaseUrl = "http://localhost:1800/api/s1/v1";
 
 export const addVehicleIntoSupplier = async (data: any, token: string) => {
   try {

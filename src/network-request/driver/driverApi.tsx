@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const DRIVER_BASE_URL = 'http://localhost:1800/api/d1'
+// const DRIVER_BASE_URL = 'http://localhost:1800/api/d1'
 // export const getAlldriversList = async()=>{
 //     const response = await axios.get('http://localhost:1800/api/d1/add-driver')
 // }
