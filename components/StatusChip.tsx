@@ -23,13 +23,13 @@ const StatusChip = ({ chipColor }: StatusChipProps) => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative mt-[-4px]">
       <div className="relative">
         {flag && (
           <select
             name="status"
             id="status"
-            className={`focus:outline-none appearance-none pt-[5px] pb-[7px] text-center pl-4 pr-8 rounded-full text-black ${
+            className={`focus:outline-none appearance-none pt-[5px] pb-[5px] text-center pl-4 pr-8 rounded-full text-black ${
               selectedOption ? "bg-white text-black" : "border text-black"
             }`}
             onChange={(e) => toggleColor(e.target.value)}

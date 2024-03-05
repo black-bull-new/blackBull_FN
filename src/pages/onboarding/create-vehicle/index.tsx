@@ -1413,7 +1413,7 @@ const CreateVehicle = () => {
                             </span>
                           )}
                         </div>
-                        <div className="text-center items-center justify-center m-auto">
+                        <div className="text-center  items-center justify-center m-auto">
                           <StatusChip
                             chipColor={(e: any) =>
                               handleStatusChipColor(e, index)
