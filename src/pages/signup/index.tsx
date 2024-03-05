@@ -446,11 +446,11 @@ const SignUp = () => {
           </div>
           <div className="flex justify-center">
             <Image
-              src="/Background.svg"
+              src="/Background.png"
               alt="logo"
-              width={700}
+              width={500}
               height={700}
-              className="w-full h-screen"
+              className="w-[80%] h-screen"
             />
           </div>
         </div>
