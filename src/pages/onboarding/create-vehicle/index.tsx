@@ -310,9 +310,8 @@ const CreateVehicle = () => {
       setSelectedFiles(newSelectedFiles);
     }
   };
-  // console.log({ selectedFiles });
   const files = selectedFiles?.map((selectedFile) => selectedFile.file);
-  // console.log({ files });
+  console.log("files",files);
 
   // ======================================== Handle status chip color on vehicle documents list ========================================
   const [selectedStatusValues, setSelectedStatusValues] = useState<any[]>([]);
@@ -1326,7 +1325,7 @@ const CreateVehicle = () => {
                         </div>
                         <div className="text-center items-center justify-center m-auto">
                           <StatusChip
-                            chipColor={(e) => handleStatusChipColor(e, index)}
+                            chipColor={(e:any) => handleStatusChipColor(e, index)}
                           />
                         </div>
                         <div className="underline decoration-[#2B36D9] text-center">
