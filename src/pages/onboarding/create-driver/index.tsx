@@ -1484,7 +1484,6 @@ const CreateDriver = () => {
                           }
                         />
                         <div className="mb-8 mt-2 flex">
-
                           <Button
                             onClick={handleAddMoreExperience}
                             text="Add More Experiences"
@@ -1494,7 +1493,11 @@ const CreateDriver = () => {
                             <span
                               onClick={() => handleRemoveExperience(index)}
                               className="ml-4 cursor-pointer"
-                              style={{ color: 'red', marginTop: '10px', marginRight: '10px' }}
+                              style={{
+                                color: "red",
+                                marginTop: "10px",
+                                marginRight: "10px",
+                              }}
                             >
                               Remove
                             </span>
@@ -1837,25 +1840,12 @@ const CreateDriver = () => {
                           </span>
                         )}
                       </div>
-                      <div className="text-center mb-6">
+                      <div className="text-center">
                         <label className="cursor-pointer">
                           <React.Fragment>
-                            {selectedFiles.find((file) => file.id === data?.id)
-                              ?.file ? (
-                              <div>
-                                <p>
-                                  {
-                                    selectedFiles.find(
-                                      (file) => file.id === data?.id
-                                    )?.file.name
-                                  }
-                                </p>
-                              </div>
-                            ) : (
-                              <span className="!w-fit m-auto bg-[#2B36D9] py-2 rounded-full text-sm px-6 mb-6 font-semibold  text-white">
-                                Select
-                              </span>
-                            )}
+                            <span className="!w-fit inline-block m-auto bg-[#2B36D9] py-2  text-sm px-6 rounded-full mb-6 font-semibold placeholder:py-[4px] text-white">
+                              Upload
+                            </span>
                           </React.Fragment>
                           <input
                             type="file"
@@ -1865,76 +1855,29 @@ const CreateDriver = () => {
                           />
                         </label>
                       </div>
-                      <div>
-                        {uploadStatus[data?.id] ? (
-                          <p style={{ color: "green" }}>
-                            {showUploadMessage ? (
-                              <div className="mb-6 underline decoration-[#2B36D9] text-center">
-                                <span
-                                  className="cursor-pointer text-primary"
-                                  onClick={() => handleViewDocuments(data?.id)}
-                                >
-                                  View
-                                </span>
-                              </div>
-                            ) : (
-                              <span className="!w-fit m-auto bg-[#2B36D9] py-2 rounded-full cursor-pointer text-sm px-6 mb-6 font-semibold text-white">
-                                Uploading...
-                              </span>
-                            )}
-                          </p>
+                      <div className="mb-6">
+                        {selectedFiles.find((file) => file.id === data?.id)
+                          ?.file ? (
+                          <div>
+                            <p>
+                              {
+                                selectedFiles.find(
+                                  (file) => file.id === data?.id
+                                )?.file.name
+                              }
+                            </p>
+                          </div>
                         ) : (
-                          <React.Fragment>
-                            {selectedFiles.find((file) => file.id === data?.id)
-                              ?.file ? (
-                              <div>
-                                <p className="!w-fit m-auto  cursor-pointer text-sm px-6  mb-6 font-semibold py-[4px] text-white">
-                                  <span
-                                    className="!w-fit m-auto bg-[#2B36D9] py-2 rounded-full cursor-pointer text-sm px-6 mb-6 font-semibold  text-white"
-                                    onClick={() =>
-                                      handleUploadFileWithId(
-                                        data?.id,
-                                        combinedObject
-                                      )
-                                    }
-                                  >
-                                    Upload
-                                  </span>
-                                </p>
-                              </div>
-                            ) : (
-                              <p className="mb-6">No file Uploaded</p>
-                            )}
-                          </React.Fragment>
-                          // <span
-                          //   className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white"
-                          //   onClick={() =>
-                          //     handleUploadFileWithId(data?.id, combinedObject)
-                          //   }
-                          // >
-                          //   Upload
-                          // </span>
+                          <span
+                            className="!w-fit m-auto  py-2 cursor-pointer  px-6 rounded-full mb-6 text-black"
+                            // onClick={() =>
+                            //   handleUploadFileWithId(data?.id, combinedObject)
+                            // }
+                          >
+                            No file Uploaded
+                          </span>
                         )}
                       </div>
-                      {/* <div className="mb-6 align-middle mt-3">
-                        <React.Fragment>
-                          {selectedFiles.find((file) => file.id === data?.id)
-                            ?.file ? (
-                            <div>
-                              <p className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">
-                                <span>Upload&nbsp;</span>
-                                {
-                                  selectedFiles.find(
-                                    (file) => file.id === data?.id
-                                  )?.file.name
-                                }
-                              </p>
-                            </div>
-                          ) : (
-                            <p>No file Uploaded</p>
-                          )}
-                        </React.Fragment>
-                      </div> */}
                       <div className="mb-6">
                         <div>
                           {selectedFiles.find(

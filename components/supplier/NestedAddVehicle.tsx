@@ -32,10 +32,81 @@ export const NestedAddVehicle = (props: any) => {
   //   React.useState("");
 
   const [selectedFiles, setSelectedFiles] = useState<
-    { id: number; file: File; currentDate: Date | null }[]
+    {
+      id: number;
+      file: File;
+      currentDate: Date | null;
+      content: string | null;
+    }[]
   >([]);
-
   const [documentDataCollection, setDocumentDataCollection] = useState<any>([]);
+
+  const handleFileChanges = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    documentId: number
+  ) => {
+    const file = event.target.files ? event.target.files[0] : null;
+    const documentExists = documentDataCollection.find(
+      (doc: any) => doc.id === documentId
+    );
+
+    if (file && documentExists) {
+      const newSelectedFiles = [...selectedFiles];
+      const existingFileIndex = newSelectedFiles.findIndex(
+        (file) => file.id === documentId
+      );
+      const currentDate = new Date();
+
+      if (existingFileIndex !== -1) {
+        newSelectedFiles[existingFileIndex] = {
+          id: documentId,
+          file,
+          currentDate,
+          content: null, // Initialize content as null
+        };
+      } else {
+        newSelectedFiles.push({
+          id: documentId,
+          file,
+          currentDate,
+          content: null,
+        });
+      }
+
+      setSelectedFiles(newSelectedFiles);
+
+      // Read and set the PDF file content
+      readPDFFile(file, (result: any) => {
+        // Update selectedFiles with the new content
+        const updatedFiles = newSelectedFiles.map((file) =>
+          file.id === documentId ? { ...file, content: result } : file
+        );
+        setSelectedFiles(updatedFiles);
+      });
+    }
+  };
+
+  const readPDFFile = (file: any, callback: any) => {
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      callback(reader.result);
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  const handleOpenPreview = (documentId: number) => {
+    // Open a new tab for the selected document ID
+    const selectedFile = selectedFiles.find((file) => file.id === documentId);
+
+    if (selectedFile?.content) {
+      const newTab: any = window.open();
+      newTab.document.write(
+        `<embed src="${selectedFile.content}" width="100%" height="100%"/>`
+      );
+    }
+  };
 
   const handleInputChange = (id: any, value: any) => {
     setDocumentDataCollection((prevCollection: any) => {
@@ -85,32 +156,32 @@ export const NestedAddVehicle = (props: any) => {
     // You might also need to update other state variables accordingly for the new row.
   };
 
-  const handleFileChanges = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    documentId: number
-  ) => {
-    const file = event.target.files ? event.target.files[0] : null;
-    const documentExists = documentDataCollection.find(
-      (doc: any) => doc.id === documentId
-    );
-    if (file && documentExists) {
-      const newSelectedFiles = [...selectedFiles];
-      const existingFileIndex = newSelectedFiles.findIndex(
-        (file) => file.id === documentId
-      );
-      const currentDate = new Date();
-      if (existingFileIndex !== -1) {
-        newSelectedFiles[existingFileIndex] = {
-          id: documentId,
-          file,
-          currentDate,
-        };
-      } else {
-        newSelectedFiles.push({ id: documentId, file, currentDate });
-      }
-      setSelectedFiles(newSelectedFiles);
-    }
-  };
+  // const handleFileChanges = (
+  //   event: React.ChangeEvent<HTMLInputElement>,
+  //   documentId: number
+  // ) => {
+  //   const file = event.target.files ? event.target.files[0] : null;
+  //   const documentExists = documentDataCollection.find(
+  //     (doc: any) => doc.id === documentId
+  //   );
+  //   if (file && documentExists) {
+  //     const newSelectedFiles = [...selectedFiles];
+  //     const existingFileIndex = newSelectedFiles.findIndex(
+  //       (file) => file.id === documentId
+  //     );
+  //     const currentDate = new Date();
+  //     if (existingFileIndex !== -1) {
+  //       newSelectedFiles[existingFileIndex] = {
+  //         id: documentId,
+  //         file,
+  //         currentDate,
+  //       };
+  //     } else {
+  //       newSelectedFiles.push({ id: documentId, file, currentDate });
+  //     }
+  //     setSelectedFiles(newSelectedFiles);
+  //   }
+  // };
   console.log("selectedFiles", selectedFiles);
   console.log("urls", urls);
 
@@ -629,7 +700,7 @@ export const NestedAddVehicle = (props: any) => {
         </div>
         <div className="mt-8">
           <div className="flex">
-            <h3 className="text-black w-full mb-4 font-semibold">
+            <h3 className="text-black w-full mb-4 text-[16px] font-semibold">
               Vehicle Documents
             </h3>
             <button
@@ -685,22 +756,9 @@ export const NestedAddVehicle = (props: any) => {
                   <div className="text-center">
                     <label className="cursor-pointer">
                       <React.Fragment>
-                        {selectedFiles.find((file) => file.id === data?.id)
-                          ?.file ? (
-                          <div>
-                            <p>
-                              {
-                                selectedFiles.find(
-                                  (file) => file.id === data?.id
-                                )?.file.name
-                              }
-                            </p>
-                          </div>
-                        ) : (
-                          <span className="!w-fit m-auto bg-[#2B36D9] py-2  text-sm px-6 rounded-full mb-6 font-semibold placeholder:py-[4px] text-white">
-                            Select
-                          </span>
-                        )}
+                        <span className="!w-fit m-auto bg-[#2B36D9] py-2  text-sm px-6 rounded-full mb-6 font-semibold placeholder:py-[4px] text-white">
+                          Upload
+                        </span>
                       </React.Fragment>
                       <input
                         type="file"
@@ -729,38 +787,36 @@ export const NestedAddVehicle = (props: any) => {
                     )}
                   </div>
                   <div>
-                    {uploadStatus[data?.id] ? (
-                      <p style={{ color: "green" }}>
-                        {showUploadMessage ? (
-                          <span className="!w-fit m-auto bg-[#2B36D9] py-2  cursor-pointer text-sm px-6 rounded-full mb-6 font-semibold  text-white">
-                            Uploaded
-                          </span>
-                        ) : (
-                          <span className="!w-fit m-auto bg-[#2B36D9] py-2  cursor-pointer text-sm px-6 rounded-full mb-6 font-semibold  text-white">
-                            Uploading...
-                          </span>
-                        )}
-                      </p>
+                    {selectedFiles.find((file) => file.id === data?.id)
+                      ?.file ? (
+                      <div>
+                        <p>
+                          {
+                            selectedFiles.find((file) => file.id === data?.id)
+                              ?.file.name
+                          }
+                        </p>
+                      </div>
                     ) : (
                       <span
-                        className="!w-fit m-auto bg-[#2B36D9] py-2 cursor-pointer text-sm px-6 rounded-full mb-6 font-semibold text-white"
-                        onClick={() =>
-                          handleUploadFileWithId(data?.id, combinedObject)
-                        }
+                        className="!w-fit m-auto  py-2 cursor-pointer  px-6 rounded-full mb-6 text-black"
+                        // onClick={() =>
+                        //   handleUploadFileWithId(data?.id, combinedObject)
+                        // }
                       >
-                        Upload
+                        No file Uploaded
                       </span>
                     )}
                   </div>
-                  <div className="text-center items-center justify-center m-auto">
+                  <div className="text-center  items-center justify-center m-auto">
                     <StatusChip
-                      chipColor={(e) => handleStatusChipColor(e, index)}
+                      chipColor={(e: any) => handleStatusChipColor(e, index)}
                     />
                   </div>
                   <div className="underline decoration-[#2B36D9] text-center">
                     <span
                       className="cursor-pointer text-primary"
-                      onClick={() => handleViewDocuments(data?.id)}
+                      onClick={() => handleOpenPreview(data?.id)}
                     >
                       Views
                     </span>

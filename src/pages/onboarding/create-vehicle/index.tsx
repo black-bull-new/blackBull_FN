@@ -485,7 +485,6 @@ const CreateVehicle = () => {
     return acc;
   }, []);
 
-
   // const handleViewDocuments = (id: number) => {
   //   console.log("modifiedUrls",modifiedUrls)
   //     const index = id;
@@ -498,7 +497,7 @@ const CreateVehicle = () => {
   //   };
   const handleViewDocuments = (id: number) => {
     console.log("CHECK", id, modifiedUrls);
-    const index = id - 1;  // Adjust index to start from 0
+    const index = id - 1; // Adjust index to start from 0
     if (index >= 0 && index < modifiedUrls.length) {
       const url = modifiedUrls[index];
       window.open(url, "_blank");
@@ -1286,8 +1285,8 @@ const CreateVehicle = () => {
               </div>
               <div className="mt-8">
                 <div className="flex">
-                  <h3 className="text-black w-full mb-4 font-semibold">
-                    Vehicle Documents
+                  <h3 className="text-black w-full mb-4 text-[16px] font-semibold">
+                    Documents
                   </h3>
                   <button
                     onClick={handleAddRow}
@@ -1342,23 +1341,9 @@ const CreateVehicle = () => {
                         <div className="text-center">
                           <label className="cursor-pointer">
                             <React.Fragment>
-                              {selectedFiles.find(
-                                (file) => file.id === data?.id
-                              )?.file ? (
-                                <div>
-                                  <p>
-                                    {
-                                      selectedFiles.find(
-                                        (file) => file.id === data?.id
-                                      )?.file.name
-                                    }
-                                  </p>
-                                </div>
-                              ) : (
-                                <span className="!w-fit m-auto bg-[#2B36D9] py-2  text-sm px-6 rounded-full mb-6 font-semibold placeholder:py-[4px] text-white">
-                                  Select
-                                </span>
-                              )}
+                              <span className="!w-fit m-auto bg-[#2B36D9] py-2  text-sm px-6 rounded-full mb-6 font-semibold placeholder:py-[4px] text-white">
+                                Upload
+                              </span>
                             </React.Fragment>
                             <input
                               type="file"
@@ -1390,26 +1375,25 @@ const CreateVehicle = () => {
                           )}
                         </div>
                         <div>
-                          {uploadStatus[data?.id] ? (
-                            <p style={{ color: "green" }}>
-                              {showUploadMessage ? (
-                                <span className="!w-fit m-auto bg-[#2B36D9] py-2  cursor-pointer text-sm px-6 rounded-full mb-6 font-semibold  text-white">
-                                  Uploaded
-                                </span>
-                              ) : (
-                                <span className="!w-fit m-auto bg-[#2B36D9] py-2  cursor-pointer text-sm px-6 rounded-full mb-6 font-semibold  text-white">
-                                  Uploading...
-                                </span>
-                              )}
-                            </p>
+                          {selectedFiles.find((file) => file.id === data?.id)
+                            ?.file ? (
+                            <div>
+                              <p>
+                                {
+                                  selectedFiles.find(
+                                    (file) => file.id === data?.id
+                                  )?.file.name
+                                }
+                              </p>
+                            </div>
                           ) : (
                             <span
-                              className="!w-fit m-auto bg-[#2B36D9] py-2 cursor-pointer text-sm px-6 rounded-full mb-6 font-semibold text-white"
-                              onClick={() =>
-                                handleUploadFileWithId(data?.id, combinedObject)
-                              }
+                              className="!w-fit m-auto  py-2 cursor-pointer  px-6 rounded-full mb-6 text-black"
+                              // onClick={() =>
+                              //   handleUploadFileWithId(data?.id, combinedObject)
+                              // }
                             >
-                              Upload
+                              No file Uploaded
                             </span>
                           )}
                         </div>

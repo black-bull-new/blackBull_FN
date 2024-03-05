@@ -1490,32 +1490,45 @@ const NestedAddDriver = (props: any) => {
             })}
           </div>
           <div className="grid grid-cols-5 p-4 rounded-md text-black text-center items-center">
-            {documentDataCollection?.map((data: any, index: any) => {
-              return (
-                <>
-                  <div className="mb-6 align-middle">
-                    {data.flag ? (
-                      <input
-                        className="border-b-2 text-center border-[#607D8B]"
-                        placeholder="Document Name"
-                        value={data.Vehicle}
-                        onChange={(e) =>
-                          handleInputChange(data.id, e.target.value)
-                        }
-                        onBlur={() => handleInputBlur(data.id)}
-                      />
-                    ) : (
-                      <span
-                        onClick={() => handleInputClick(data.id)}
-                        className="cursor-pointer text-center"
-                      >
-                        {data.Vehicle}
-                      </span>
-                    )}
-                  </div>
-                  <div className="text-center mb-6">
-                    <label className="cursor-pointer">
-                      <React.Fragment>
+                {documentDataCollection?.map((data: any, index: any) => {
+                  return (
+                    <>
+                      <div className="mb-6 align-middle">
+                        {data.flag ? (
+                          <input
+                            className="border-b-2 text-center border-[#607D8B]"
+                            placeholder="Document Name"
+                            value={data.Vehicle}
+                            onChange={(e) =>
+                              handleInputChange(data.id, e.target.value)
+                            }
+                            onBlur={() => handleInputBlur(data.id)}
+                          />
+                        ) : (
+                          <span
+                            onClick={() => handleInputClick(data.id)}
+                            className="cursor-pointer text-center"
+                          >
+                            {data.Vehicle}
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-center">
+                        <label className="cursor-pointer">
+                          <React.Fragment>
+                            <span className="!w-fit inline-block m-auto bg-[#2B36D9] py-2  text-sm px-6 rounded-full mb-6 font-semibold placeholder:py-[4px] text-white">
+                              Upload
+                            </span>
+                          </React.Fragment>
+                          <input
+                            type="file"
+                            className="hidden"
+                            accept=".doc,.docx,.pdf"
+                            onChange={(e) => handleFileChanges(e, data?.id)}
+                          />
+                        </label>
+                      </div>
+                      <div className="mb-6">
                         {selectedFiles.find((file) => file.id === data?.id)
                           ?.file ? (
                           <div>
@@ -1528,117 +1541,57 @@ const NestedAddDriver = (props: any) => {
                             </p>
                           </div>
                         ) : (
-                          <span className="!w-fit m-auto bg-[#2B36D9] py-2 rounded-full text-sm px-6 mb-6 font-semibold  text-white">
-                            Select
+                          <span
+                            className="!w-fit m-auto  py-2 cursor-pointer  px-6 rounded-full mb-6 text-black"
+                            // onClick={() =>
+                            //   handleUploadFileWithId(data?.id, combinedObject)
+                            // }
+                          >
+                            No file Uploaded
                           </span>
                         )}
-                      </React.Fragment>
-                      <input
-                        type="file"
-                        className="hidden"
-                        accept=".doc,.docx,.pdf"
-                        onChange={(e) => handleFileChanges(e, data?.id)}
-                      />
-                    </label>
-                  </div>
-                  <div>
-                    {uploadStatus[data?.id] ? (
-                      <p style={{ color: "green" }}>
-                        {showUploadMessage ? (
-                          <span className="!w-fit m-auto inline-block  bg-[#2B36D9] py-2 rounded-full cursor-pointer text-sm px-6 font-semibold text-white">
-                            Uploaded
-                          </span>
-                        ) : (
-                          <span className="!w-fit m-auto bg-[#2B36D9] py-2 rounded-full cursor-pointer text-sm px-6 mb-6 font-semibold text-white">
-                            Uploading...
-                          </span>
-                        )}
-                      </p>
-                    ) : (
-                      <React.Fragment>
-                        {selectedFiles.find((file) => file.id === data?.id)
-                          ?.file ? (
-                          <div>
-                            <p className="!w-fit m-auto  cursor-pointer text-sm px-6  mb-6 font-semibold py-[4px] text-white">
-                              <span
-                                className="!w-fit m-auto bg-[#2B36D9] py-2 rounded-full cursor-pointer text-sm px-6 mb-6 font-semibold  text-white"
-                                onClick={() =>
-                                  handleUploadFileWithId(
-                                    data?.id,
-                                    combinedObject
-                                  )
-                                }
-                              >
-                                Upload
-                              </span>
-                            </p>
-                          </div>
-                        ) : (
-                          <p className="mb-6">No file Uploaded</p>
-                        )}
-                      </React.Fragment>
-                      // <span
-                      //   className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white"
-                      //   onClick={() =>
-                      //     handleUploadFileWithId(data?.id, combinedObject)
-                      //   }
-                      // >
-                      //   Upload
-                      // </span>
-                    )}
-                  </div>
-                  {/* <div className="mb-6 align-middle mt-3">
-                        <React.Fragment>
-                          {selectedFiles.find((file) => file.id === data?.id)
-                            ?.file ? (
+                      </div>
+                      <div className="mb-6">
+                        <div>
+                          {selectedFiles.find(
+                            (file) => file.id === data?.id
+                          ) ? (
                             <div>
-                              <p className="!w-fit m-auto bg-accent3 cursor-pointer text-sm px-6 rounded-md mb-6 font-semibold rounded-md py-[4px] text-white">
-                                <span>Upload&nbsp;</span>
-                                {
-                                  selectedFiles.find(
-                                    (file) => file.id === data?.id
-                                  )?.file.name
-                                }
+                              <p>
+                                {selectedFiles.find(
+                                  (file) => file.id === data?.id
+                                )?.currentDate
+                                  ? formatDate(
+                                      selectedFiles.find(
+                                        (file) => file.id === data?.id
+                                      )?.currentDate
+                                    )
+                                  : "No date available"}
                               </p>
                             </div>
                           ) : (
-                            <p>No file Uploaded</p>
+                            <p>No date available</p>
                           )}
-                        </React.Fragment>
-                      </div> */}
-                  <div className="mb-6">
-                    <div>
-                      {selectedFiles.find((file) => file.id === data?.id) ? (
-                        <div>
-                          <p>
-                            {selectedFiles.find((file) => file.id === data?.id)
-                              ?.currentDate
-                              ? formatDate(
-                                  selectedFiles.find(
-                                    (file) => file.id === data?.id
-                                  )?.currentDate
-                                )
-                              : "No date available"}
-                          </p>
                         </div>
-                      ) : (
-                        <p>No date available</p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="mb-6 flex gap-2 justify-center">
-                    <Image src={"/edit.svg"} alt="svg" width={24} height={24} />
-                    <Image
-                      src={"/trash.svg"}
-                      alt="svg"
-                      width={24}
-                      height={24}
-                    />
-                  </div>
-                </>
-              );
-            })}
-          </div>
+                      </div>
+                      <div className="mb-6 flex gap-2 justify-center">
+                        <Image
+                          src={"/edit.svg"}
+                          alt="svg"
+                          width={24}
+                          height={24}
+                        />
+                        <Image
+                          src={"/trash.svg"}
+                          alt="svg"
+                          width={24}
+                          height={24}
+                        />
+                      </div>
+                    </>
+                  );
+                })}
+              </div>
         </div>
       </div>
     </div>
