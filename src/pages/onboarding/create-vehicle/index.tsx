@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../../../../components/Button";
 import DateWithoutDropdown from "../../../../components/DateWithoutDropdown";
 import DropDownMap from "../../../../components/DropDownMap";
@@ -574,6 +574,34 @@ const CreateVehicle = () => {
       });
     }
   };
+
+  // Function to calculate the difference in days
+  const calculateDaysDifference = () => {
+    const renewalDate: any = new Date(vehicleDetails.renewalDate);
+    const dateValidUntil: any = new Date(vehicleDetails.dateValidUntil);
+
+    // Calculate the difference in milliseconds
+    const differenceInMilliseconds = dateValidUntil - renewalDate;
+
+    // Convert milliseconds to days
+    const differenceInDays = Math.ceil(
+      differenceInMilliseconds / (1000 * 60 * 60 * 24)
+    );
+
+    setVehicleDetails({
+      ...vehicleDetails,
+      daysLeft: differenceInDays.toString(),
+    });
+  };
+
+  useEffect(() => {
+    if (
+      vehicleDetails.renewalDate !== "" &&
+      vehicleDetails.dateValidUntil !== ""
+    ) {
+      calculateDaysDifference();
+    }
+  }, [vehicleDetails.renewalDate, vehicleDetails.dateValidUntil]);
 
   return (
     <>
@@ -1171,6 +1199,7 @@ const CreateVehicle = () => {
                       }
                     }}
                     errorMessage={error.dateValidUntilError}
+                    min={vehicleDetails.renewalDate}
                   />
                   <Maininputfield
                     label="Days Left"

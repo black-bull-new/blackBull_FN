@@ -28,7 +28,7 @@ const Sidebar = () => {
   return (
     <>
       <div className="text-black flex relative top-0">
-        <nav className="fixed top-0 text-black bg-white p-4 w-[300px] h-screen">
+        <nav className="fixed top-0 text-black bg-white p-4 w-[300px] h-screen overflow-y-auto">
           <Image
             src="/logoOzi.svg"
             alt="logo"
@@ -36,7 +36,7 @@ const Sidebar = () => {
             height={100}
             className="m-auto"
           />
-          <ul className="list-none p-6 mb-4 mt-8">
+          <ul className="list-none p-6 mb-4 mt-8 max-h-[calc(100% - 170px)] overflow-y-auto">
             {sidebarCollection.map((value, index) => {
               return (
                 <>
@@ -49,12 +49,26 @@ const Sidebar = () => {
                   >
                     <div className="flex justify-between items-center w-full gap-2 cursor-pointer">
                       <div className="flex items-center gap-2">
-                        <Image
-                          src={value.imgUrl}
-                          alt={value.imageDesc}
-                          width={20}
-                          height={20}
-                        />
+                        {sidebarValue === value.value ? (
+                          <div className="flex justify-end rounded-full ms-[-1.1em] bg-gradient-opacity w-[38px] h-[38px]">
+                            <Image
+                              src={value.imgUrl}
+                              alt={value.imageDesc}
+                              width={20}
+                              height={20}
+                              className=" "
+                            />
+                          </div>
+                        ) : (
+                          <Image
+                            src={value.imgUrl}
+                            alt={value.imageDesc}
+                            width={20}
+                            height={20}
+                            className=""
+                          />
+                        )}
+
                         <div className="font-semibold text-md">
                           {value.value}
                         </div>
@@ -96,7 +110,6 @@ const Sidebar = () => {
                   )}
                 </>
               );
-              
             })}
           </ul>
           <div>
@@ -126,6 +139,20 @@ const sidebarCollection = [
     imageDesc: "calender",
 
     value: "Bookings",
+    dropdownIcon: "/dropdown.svg",
+  },
+  {
+    imgUrl: "/briefcase.svg",
+    imageDesc: "briefcase",
+
+    value: "Operations",
+    dropdownIcon: "/dropdown.svg",
+  },
+  {
+    imgUrl: "/truck.svg",
+    imageDesc: "truck",
+
+    value: "Dispatch",
     dropdownIcon: "/dropdown.svg",
   },
   {

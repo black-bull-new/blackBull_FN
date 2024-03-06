@@ -19,6 +19,7 @@ const Maindatefield = (props: any) => {
             placeholder={props.placeholder}
             value={props.value}
             onChange={props.onChange}
+            min={props.min} // Add min attribute
           />
         </div>
       </div>

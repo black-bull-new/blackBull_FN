@@ -77,3 +77,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 input::-webkit-inner-spin-button {
   appearance: none;
 }
+.bg-gradient-opacity {
+  background: linear-gradient(90deg, rgba(43, 54, 217, 0.3) 0%, #BDC1FF00 100%);
+}
+

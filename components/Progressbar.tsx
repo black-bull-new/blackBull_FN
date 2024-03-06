@@ -8,9 +8,7 @@ const Progressbar = () => {
         Your progress
       </h4>
       <div className="flex justify-between items-center">
-        <h5 className="text-primary text-[16px] font-bold">
-          80% to complete
-        </h5>
+        <h5 className="text-primary text-[16px] font-bold">80% to complete</h5>
         <p className="text-[#8097A2] text-[15px] flex gap-1 items-center">
           <Image src="/clock.svg" alt="clock" width={20} height={20} />
           20min
@@ -18,8 +16,8 @@ const Progressbar = () => {
       </div>
 
       <div>
-        <progress value={80} max={100} className="w-full h-2 rounded-full">
-          80%
+        <progress value={50} max={100} className="w-full h-2 rounded-full">
+          50%
         </progress>
       </div>
     </>

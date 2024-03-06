@@ -15,7 +15,7 @@ const Button = (props: any) => {
         )}
         <span className="text-base"> {props.text}</span>
         {props.dropDownIcon ? (
-          <Image src="/arrow-down.svg" alt="dropdown" width={16} height={16} />
+          <Image src="/arrow-down.svg" alt="dropdown" width={14} height={14} />
         ) : (
           ""
         )}
