@@ -11,7 +11,12 @@ const Sidebar = () => {
   const toggleSidebar = (value: any) => {
     // setState(!state);
     // setSidebarValue(value);
-    sidebarValue === "" ? setSidebarValue(value) : setSidebarValue("");
+    sidebarValue === ""
+      ? setSidebarValue(value)
+      : sidebarValue === value
+      ? ""
+      : setSidebarValue(value);
+    value === "Dashboard" ? router.push("/dashboard") : "";
   };
 
   const [submenu, setSubmenu] = useState("");
@@ -22,9 +27,9 @@ const Sidebar = () => {
     option === "Supplier" ? router.push("/onboarding/add-supplier") : "";
     option === "User" ? router.push("/onboarding/user-list") : "";
     option === "Onboarding" ? router.push("/onboarding") : "";
-    option === "Dashboard" ? router.push("/dashboard") : "";
     setSubmenu(option);
   };
+
   return (
     <>
       <div className="text-black flex relative top-0">
