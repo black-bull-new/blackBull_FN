@@ -515,33 +515,40 @@ const NestedAddDriver = (props: any) => {
             }}
             errorMessage={error.currentAddressError?.suburb}
           />
-
-          <DropDownMap
-            label="State"
-            mapOption={stateCollection}
-            selectedData={selectedData}
-            setSelectedData={setSelectedData}
-            value={addDriver?.currentAddress?.state}
-            onChange={(e: any) => {
-              setAddDriver({
-                ...addDriver,
-                currentAddress: {
-                  ...addDriver.currentAddress,
-                  state: e.target.value,
-                },
-              });
-              if (e.target.value.length > 0) {
-                setError({
-                  ...error,
-                  currentAddressError: {
-                    ...error.currentAddressError,
-                    state: "",
+          <div>
+            <DropDownMap
+              label="State"
+              mapOption={stateCollection}
+              selectedData={selectedData}
+              setSelectedData={setSelectedData}
+              value={addDriver?.currentAddress?.state}
+              onChange={(e: any) => {
+                setAddDriver({
+                  ...addDriver,
+                  currentAddress: {
+                    ...addDriver.currentAddress,
+                    state: e.target.value,
                   },
                 });
-              }
-            }}
-            errorMessage={error.currentAddressError?.state}
-          />
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    currentAddressError: {
+                      ...error.currentAddressError,
+                      state: "",
+                    },
+                  });
+                }
+              }}
+              errorMessage={error.currentAddressError?.state}
+            />{" "}
+            {addDriver?.currentAddress?.state === "Other" && (
+              <div className="mt-3">
+                <Maininputfield label="Other" className="w-full" />
+              </div>
+            )}
+          </div>
+
           <Maininputfield
             label="Country"
             // mapOption={countryCollection}
@@ -674,33 +681,40 @@ const NestedAddDriver = (props: any) => {
             }}
             errorMessage={error.permanentAddressError?.suburb}
           />
-
-          <DropDownMap
-            label="State"
-            mapOption={stateCollection}
-            selectedData={selectedData}
-            setSelectedData={setSelectedData}
-            value={addDriver?.permanentAddress?.state}
-            onChange={(e: any) => {
-              setAddDriver({
-                ...addDriver,
-                permanentAddress: {
-                  ...addDriver.permanentAddress,
-                  state: e.target.value,
-                },
-              });
-              if (e.target.value.length > 0) {
-                setError({
-                  ...error,
-                  permanentAddressError: {
-                    ...error.permanentAddressError,
-                    state: "",
+          <div>
+            <DropDownMap
+              label="State"
+              mapOption={stateCollection}
+              selectedData={selectedData}
+              setSelectedData={setSelectedData}
+              value={addDriver?.permanentAddress?.state}
+              onChange={(e: any) => {
+                setAddDriver({
+                  ...addDriver,
+                  permanentAddress: {
+                    ...addDriver.permanentAddress,
+                    state: e.target.value,
                   },
                 });
-              }
-            }}
-            errorMessage={error.permanentAddressError?.state}
-          />
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    permanentAddressError: {
+                      ...error.permanentAddressError,
+                      state: "",
+                    },
+                  });
+                }
+              }}
+              errorMessage={error.permanentAddressError?.state}
+            />
+            {addDriver?.permanentAddress?.state === "Other" && (
+              <div className="mt-3">
+                <Maininputfield label="Other" className="w-full" />
+              </div>
+            )}
+          </div>
+
           <Maininputfield
             label="Country"
             // mapOption={countryCollection}
@@ -1289,58 +1303,73 @@ const NestedAddDriver = (props: any) => {
             }}
             errorMessage={error.licenseDetailsError?.licenseCardNumber}
           />
-          <DropDownMap
-            label="Licence Type"
-            selectedData={addDriver}
-            setSelectedData={setSelectedData}
-            mapOption={licenceTypes}
-            value={addDriver?.licenseDetails?.licenseType}
-            onChange={(e: any) => {
-              setAddDriver({
-                ...addDriver,
-                licenseDetails: {
-                  ...addDriver.licenseDetails,
-                  licenseType: e.target.value,
-                },
-              });
-              if (e.target.value.length > 0) {
-                setError({
-                  ...error,
-                  licenseDetailsError: {
-                    ...error.licenseDetailsError,
-                    licenseType: "",
+          <div>
+            <DropDownMap
+              label="Licence Type"
+              selectedData={addDriver}
+              setSelectedData={setSelectedData}
+              mapOption={licenceTypes}
+              value={addDriver?.licenseDetails?.licenseType}
+              onChange={(e: any) => {
+                setAddDriver({
+                  ...addDriver,
+                  licenseDetails: {
+                    ...addDriver.licenseDetails,
+                    licenseType: e.target.value,
                   },
                 });
-              }
-            }}
-            errorMessage={error.licenseDetailsError?.licenseType}
-          />
-          <DropDownMap
-            label="State of Issue"
-            selectedData={stateCollection}
-            setSelectedData={setSelectedData}
-            mapOption={stateCollection}
-            value={addDriver?.licenseDetails?.state}
-            onChange={(e: any) => {
-              setAddDriver({
-                ...addDriver,
-                licenseDetails: {
-                  ...addDriver.licenseDetails,
-                  state: e.target.value,
-                },
-              });
-              if (e.target.value.length > 0) {
-                setError({
-                  ...error,
-                  licenseDetailsError: {
-                    ...error.licenseDetailsError,
-                    state: "",
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    licenseDetailsError: {
+                      ...error.licenseDetailsError,
+                      licenseType: "",
+                    },
+                  });
+                }
+              }}
+              errorMessage={error.licenseDetailsError?.licenseType}
+            />
+            {addDriver?.licenseDetails?.licenseType === "Other" && (
+              <div className="mt-3">
+                <Maininputfield label="Other" className="w-full" />
+              </div>
+            )}
+          </div>
+          <div>
+            <DropDownMap
+              label="State of Issue"
+              selectedData={stateCollection}
+              setSelectedData={setSelectedData}
+              mapOption={stateCollection}
+              value={addDriver?.licenseDetails?.state}
+              onChange={(e: any) => {
+                setAddDriver({
+                  ...addDriver,
+                  licenseDetails: {
+                    ...addDriver.licenseDetails,
+                    state: e.target.value,
                   },
                 });
-              }
-            }}
-            errorMessage={error.licenseDetailsError?.state}
-          />
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    licenseDetailsError: {
+                      ...error.licenseDetailsError,
+                      state: "",
+                    },
+                  });
+                }
+              }}
+              errorMessage={error.licenseDetailsError?.state}
+            />
+            {addDriver?.licenseDetails?.state === "Other" && (
+              <div className="mt-3">
+                <Maininputfield label="Other" className="w-full" />
+              </div>
+            )}
+          </div>
+
           <Maindatefield
             label="Date Of Issue"
             value={addDriver?.licenseDetails?.dateOfIssue}
@@ -1442,28 +1471,36 @@ const NestedAddDriver = (props: any) => {
         <h2 className="text-black font-semibold p-4 mt-4">
           Special Driving Licence
         </h2>
-        <div className="grid grid-cols-3 gap-4 p-4">
-          <DropDownMap
-            label="Special Driving Licence"
-            selectedData={addDriver}
-            setSelectedData={setAddDriver}
-            mapOption={drivingLicenceCollection}
-            value={addDriver?.specialDrivingLicense}
-            onChange={(e: any) => {
-              setAddDriver({
-                ...addDriver,
-                specialDrivingLicense: e.target.value,
-              });
-              if (e.target.value.length > 0) {
-                setError({
-                  ...error,
-                  specialDrivingLicenseError: "",
+        <div>
+          <div className="grid grid-cols-3 gap-4 p-4">
+            <DropDownMap
+              label="Special Driving Licence"
+              selectedData={addDriver}
+              setSelectedData={setAddDriver}
+              mapOption={drivingLicenceCollection}
+              value={addDriver?.specialDrivingLicense}
+              onChange={(e: any) => {
+                setAddDriver({
+                  ...addDriver,
+                  specialDrivingLicense: e.target.value,
                 });
-              }
-            }}
-            errorMessage={error.specialDrivingLicenseError}
-          />
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    specialDrivingLicenseError: "",
+                  });
+                }
+              }}
+              errorMessage={error.specialDrivingLicenseError}
+            />
+          </div>
+          {addDriver?.specialDrivingLicense === "Other" && (
+            <div className=" grid grid-cols-3 gap-4 ml-4 mt-1">
+              <Maininputfield label="Other" className="w-full" />
+            </div>
+          )}
         </div>
+
         <div className="mb-4 mt-8">
           <div className="flex">
             <h3 className="w-full mb-4 rounded-md font-semibold text-black">
@@ -1490,108 +1527,99 @@ const NestedAddDriver = (props: any) => {
             })}
           </div>
           <div className="grid grid-cols-5 p-4 rounded-md text-black text-center items-center">
-                {documentDataCollection?.map((data: any, index: any) => {
-                  return (
-                    <>
-                      <div className="mb-6 align-middle">
-                        {data.flag ? (
-                          <input
-                            className="border-b-2 text-center border-[#607D8B]"
-                            placeholder="Document Name"
-                            value={data.Vehicle}
-                            onChange={(e) =>
-                              handleInputChange(data.id, e.target.value)
-                            }
-                            onBlur={() => handleInputBlur(data.id)}
-                          />
-                        ) : (
-                          <span
-                            onClick={() => handleInputClick(data.id)}
-                            className="cursor-pointer text-center"
-                          >
-                            {data.Vehicle}
-                          </span>
-                        )}
+            {documentDataCollection?.map((data: any, index: any) => {
+              return (
+                <>
+                  <div className="mb-6 align-middle">
+                    {data.flag ? (
+                      <input
+                        className="border-b-2 text-center border-[#607D8B]"
+                        placeholder="Document Name"
+                        value={data.Vehicle}
+                        onChange={(e) =>
+                          handleInputChange(data.id, e.target.value)
+                        }
+                        onBlur={() => handleInputBlur(data.id)}
+                      />
+                    ) : (
+                      <span
+                        onClick={() => handleInputClick(data.id)}
+                        className="cursor-pointer text-center"
+                      >
+                        {data.Vehicle}
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-center">
+                    <label className="cursor-pointer">
+                      <React.Fragment>
+                        <span className="!w-fit inline-block m-auto bg-[#2B36D9] py-2  text-sm px-6 rounded-full mb-6 font-semibold placeholder:py-[4px] text-white">
+                          Upload
+                        </span>
+                      </React.Fragment>
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept=".doc,.docx,.pdf"
+                        onChange={(e) => handleFileChanges(e, data?.id)}
+                      />
+                    </label>
+                  </div>
+                  <div className="mb-6">
+                    {selectedFiles.find((file) => file.id === data?.id)
+                      ?.file ? (
+                      <div>
+                        <p>
+                          {
+                            selectedFiles.find((file) => file.id === data?.id)
+                              ?.file.name
+                          }
+                        </p>
                       </div>
-                      <div className="text-center">
-                        <label className="cursor-pointer">
-                          <React.Fragment>
-                            <span className="!w-fit inline-block m-auto bg-[#2B36D9] py-2  text-sm px-6 rounded-full mb-6 font-semibold placeholder:py-[4px] text-white">
-                              Upload
-                            </span>
-                          </React.Fragment>
-                          <input
-                            type="file"
-                            className="hidden"
-                            accept=".doc,.docx,.pdf"
-                            onChange={(e) => handleFileChanges(e, data?.id)}
-                          />
-                        </label>
-                      </div>
-                      <div className="mb-6">
-                        {selectedFiles.find((file) => file.id === data?.id)
-                          ?.file ? (
-                          <div>
-                            <p>
-                              {
-                                selectedFiles.find(
-                                  (file) => file.id === data?.id
-                                )?.file.name
-                              }
-                            </p>
-                          </div>
-                        ) : (
-                          <span
-                            className="!w-fit m-auto  py-2 cursor-pointer  px-6 rounded-full mb-6 text-black"
-                            // onClick={() =>
-                            //   handleUploadFileWithId(data?.id, combinedObject)
-                            // }
-                          >
-                            No file Uploaded
-                          </span>
-                        )}
-                      </div>
-                      <div className="mb-6">
+                    ) : (
+                      <span
+                        className="!w-fit m-auto  py-2 cursor-pointer  px-6 rounded-full mb-6 text-black"
+                        // onClick={() =>
+                        //   handleUploadFileWithId(data?.id, combinedObject)
+                        // }
+                      >
+                        No file Uploaded
+                      </span>
+                    )}
+                  </div>
+                  <div className="mb-6">
+                    <div>
+                      {selectedFiles.find((file) => file.id === data?.id) ? (
                         <div>
-                          {selectedFiles.find(
-                            (file) => file.id === data?.id
-                          ) ? (
-                            <div>
-                              <p>
-                                {selectedFiles.find(
-                                  (file) => file.id === data?.id
-                                )?.currentDate
-                                  ? formatDate(
-                                      selectedFiles.find(
-                                        (file) => file.id === data?.id
-                                      )?.currentDate
-                                    )
-                                  : "No date available"}
-                              </p>
-                            </div>
-                          ) : (
-                            <p>No date available</p>
-                          )}
+                          <p>
+                            {selectedFiles.find((file) => file.id === data?.id)
+                              ?.currentDate
+                              ? formatDate(
+                                  selectedFiles.find(
+                                    (file) => file.id === data?.id
+                                  )?.currentDate
+                                )
+                              : "No date available"}
+                          </p>
                         </div>
-                      </div>
-                      <div className="mb-6 flex gap-2 justify-center">
-                        <Image
-                          src={"/edit.svg"}
-                          alt="svg"
-                          width={24}
-                          height={24}
-                        />
-                        <Image
-                          src={"/trash.svg"}
-                          alt="svg"
-                          width={24}
-                          height={24}
-                        />
-                      </div>
-                    </>
-                  );
-                })}
-              </div>
+                      ) : (
+                        <p>No date available</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="mb-6 flex gap-2 justify-center">
+                    <Image src={"/edit.svg"} alt="svg" width={24} height={24} />
+                    <Image
+                      src={"/trash.svg"}
+                      alt="svg"
+                      width={24}
+                      height={24}
+                    />
+                  </div>
+                </>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
@@ -1687,6 +1715,9 @@ const drivingLicenceCollection = [
   {
     value: "Dangerous Goods",
   },
+  {
+    value: "Other",
+  },
 ];
 
 const countryCollection = [
@@ -1726,6 +1757,9 @@ const licenceTypes = [
   {
     value: "HR (Heavy Combination Licence)",
   },
+  {
+    value: "Other",
+  },
 ];
 
 const stateCollection = [
@@ -1752,5 +1786,8 @@ const stateCollection = [
   },
   {
     value: "Western Australia",
+  },
+  {
+    value: "Other",
   },
 ];

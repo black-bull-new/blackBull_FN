@@ -405,28 +405,34 @@ const User = () => {
                     }}
                     errorMessage={error.usernameError}
                   />
-                  <span className="absolute right-[-15px] bottom-2">@</span>
                 </div>
-                <DropDownMap
-                  label="Domains"
-                  mapOption={domainsCollection}
-                  selectedData={selectedData}
-                  setSelectedData={selectedData}
-                  value={user.domains}
-                  onChange={(e: any) => {
-                    setUser({
-                      ...user,
-                      domains: e.target.value,
-                    });
-                    if (e.target.value.length > 0) {
-                      setError({
-                        ...error,
-                        domainsError: "",
+                <div>
+                  <DropDownMap
+                    label="Domains"
+                    mapOption={domainsCollection}
+                    selectedData={selectedData}
+                    setSelectedData={selectedData}
+                    value={user.domains}
+                    onChange={(e: any) => {
+                      setUser({
+                        ...user,
+                        domains: e.target.value,
                       });
-                    }
-                  }}
-                  errorMessage={error.domainsError}
-                />
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          domainsError: "",
+                        });
+                      }
+                    }}
+                    errorMessage={error.domainsError}
+                  />
+                  {user?.domains === "Other" && (
+                    <div className="mt-3">
+                      <Maininputfield label="Other" className="w-full" />
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
             <div className="mt-4">
@@ -492,28 +498,34 @@ const User = () => {
             </div>
             <div className="mt-4">
               <h2 className="font-semibold mb-4 text-black">User Role</h2>
-
-              <div className="grid grid-cols-3 gap-4">
-                <DropDownMap
-                  label="Role Selected"
-                  mapOption={roleCollection}
-                  selectedData={selectedData}
-                  setSelectedData={setSelectedData}
-                  value={user.role}
-                  onChange={(e: any) => {
-                    setUser({
-                      ...user,
-                      role: e.target.value,
-                    });
-                    if (e.target.value.length > 0) {
-                      setError({
-                        ...error,
-                        roleError: "",
+              <div>
+                <div className="grid grid-cols-3 gap-4">
+                  <DropDownMap
+                    label="Role Selected"
+                    mapOption={roleCollection}
+                    selectedData={selectedData}
+                    setSelectedData={setSelectedData}
+                    value={user.role}
+                    onChange={(e: any) => {
+                      setUser({
+                        ...user,
+                        role: e.target.value,
                       });
-                    }
-                  }}
-                  errorMessage={error.roleError}
-                />
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          roleError: "",
+                        });
+                      }
+                    }}
+                    errorMessage={error.roleError}
+                  />
+                </div>
+                {user?.role === "Other" && (
+                  <div className="mt-3 grid grid-cols-3 gap-4">
+                    <Maininputfield label="Other" className="w-full" />
+                  </div>
+                )}
               </div>
             </div>
             <div className="mt-8">
@@ -602,6 +614,9 @@ const domainsCollection = [
   {
     value: "domain2",
   },
+  {
+    value: "Other",
+  },
 ];
 const roleCollection = [
   {
@@ -631,5 +646,8 @@ const roleCollection = [
   },
   {
     value: "Custom Access",
+  },
+  {
+    value: "Other",
   },
 ];

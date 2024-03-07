@@ -752,32 +752,40 @@ const AddCustomer = () => {
                 className="w-full"
                 errorMessage={error.companyAddressError?.suburb}
               />
-              <DropDownMap
-                label="State"
-                mapOption={stateCollection}
-                value={customer.companyAddress.state}
-                onChange={(e: any) => {
-                  setCustomer({
-                    ...customer,
-                    companyAddress: {
-                      ...customer.companyAddress,
-                      state: e.target.value,
-                    },
-                  });
-                  if (e.target.value.length > 0) {
-                    setError({
-                      ...error,
-                      companyAddressError: {
-                        ...error.companyAddressError,
-                        state: "",
+              <div>
+                <DropDownMap
+                  label="State"
+                  mapOption={stateCollection}
+                  value={customer.companyAddress.state}
+                  onChange={(e: any) => {
+                    setCustomer({
+                      ...customer,
+                      companyAddress: {
+                        ...customer.companyAddress,
+                        state: e.target.value,
                       },
                     });
-                  }
-                }}
-                errorMessage={error.companyAddressError?.state}
-                // selectedData={selectedData}
-                // setSelectedData={setSelectedData}
-              />
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        companyAddressError: {
+                          ...error.companyAddressError,
+                          state: "",
+                        },
+                      });
+                    }
+                  }}
+                  errorMessage={error.companyAddressError?.state}
+                  // selectedData={selectedData}
+                  // setSelectedData={setSelectedData}
+                />
+                {customer?.companyAddress?.state === "Other" && (
+                  <div className="mt-3">
+                    <Maininputfield label="Other" className="w-full" />
+                  </div>
+                )}
+              </div>
+
               <Maininputfield
                 label="Country"
                 // mapOption={countryCollection}
@@ -1443,51 +1451,66 @@ const AddCustomer = () => {
             <h3 className="font-semibold px-4 text-sm text-[#28353A] text-[16px]">
               Invoice Preferences
             </h3>
-
-            <div className="grid grid-cols-3 gap-4 p-4">
-              <DropDownMap
-                label="Invoice Preferences"
-                mapOption={invoiceColletion}
-                value={customer.invoicePrefrences}
-                onChange={(e: any) => {
-                  setCustomer({
-                    ...customer,
-                    invoicePrefrences: e.target.value,
-                  });
-                  if (e.target.value.length > 0) {
-                    setError({
-                      ...error,
-                      invoicePrefrencesError: "",
+            <div>
+              <div className="grid grid-cols-3 gap-4 ml-4 mt-4 mb-3">
+                <DropDownMap
+                  label="Invoice Preferences"
+                  mapOption={invoiceColletion}
+                  value={customer.invoicePrefrences}
+                  onChange={(e: any) => {
+                    setCustomer({
+                      ...customer,
+                      invoicePrefrences: e.target.value,
                     });
-                  }
-                }}
-                errorMessage={error.invoicePrefrencesError}
-              />
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        invoicePrefrencesError: "",
+                      });
+                    }
+                  }}
+                  errorMessage={error.invoicePrefrencesError}
+                />
+              </div>
+              {customer?.invoicePrefrences === "Other" && (
+                <div className="grid grid-cols-3 gap-4 ml-4 mb-4 mt-3">
+                  <Maininputfield label="Other" className="w-full" />
+                </div>
+              )}
             </div>
+
             <h3 className="font-semibold px-4 text-sm text-[#28353A] text-[16px]">
               Invoice Communication Preferences
             </h3>
 
-            <div className="grid grid-cols-3 gap-4 p-4">
-              <DropDownMap
-                label="Select Email"
-                mapOption={invoiceComuColletion}
-                value={customer.invoiceCommunicationPrefrences}
-                onChange={(e: any) => {
-                  setCustomer({
-                    ...customer,
-                    invoiceCommunicationPrefrences: e.target.value,
-                  });
-                  if (e.target.value.length > 0) {
-                    setError({
-                      ...error,
-                      invoiceCommunicationPrefrencesError: "",
+            <div>
+              <div className="grid grid-cols-3 gap-4 ml-4 mt-4 mb-4">
+                <DropDownMap
+                  label="Select Email"
+                  mapOption={invoiceComuColletion}
+                  value={customer.invoiceCommunicationPrefrences}
+                  onChange={(e: any) => {
+                    setCustomer({
+                      ...customer,
+                      invoiceCommunicationPrefrences: e.target.value,
                     });
-                  }
-                }}
-                errorMessage={error.invoiceCommunicationPrefrencesError}
-              />
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        invoiceCommunicationPrefrencesError: "",
+                      });
+                    }
+                  }}
+                  errorMessage={error.invoiceCommunicationPrefrencesError}
+                />
+              </div>
+              {customer.invoiceCommunicationPrefrences === "Other" && (
+                <div className="grid grid-cols-3 gap-4 ml-4 mt-3 mb-4">
+                  <Maininputfield label="Other" className="w-full" />
+                </div>
+              )}
             </div>
+
             <h3 className="font-semibold mb-4 px-4 text-sm text-[#28353A] text-[16px]">
               Company C-Suite Details
             </h3>
@@ -1849,23 +1872,31 @@ const AddCustomer = () => {
             <h3 className="font-semibold px-4 text-sm text-[#28353A] text-[16px]">
               Payment Terms
             </h3>
-            <div className="grid grid-cols-3 gap-4 p-4">
-              <DropDownMap
-                label="Term"
-                mapOption={paymentTermsCollection}
-                value={customer.paymentTerm}
-                onChange={(e: any) => {
-                  setCustomer({ ...customer, paymentTerm: e.target.value });
-                  if (e.target.value.length > 0) {
-                    setError({
-                      ...error,
-                      paymentTermError: "",
-                    });
-                  }
-                }}
-                errorMessage={error.paymentTermError}
-              />
+            <div>
+              <div className="grid grid-cols-3 gap-4 ml-4 mt-4 mb-4">
+                <DropDownMap
+                  label="Term"
+                  mapOption={paymentTermsCollection}
+                  value={customer.paymentTerm}
+                  onChange={(e: any) => {
+                    setCustomer({ ...customer, paymentTerm: e.target.value });
+                    if (e.target.value.length > 0) {
+                      setError({
+                        ...error,
+                        paymentTermError: "",
+                      });
+                    }
+                  }}
+                  errorMessage={error.paymentTermError}
+                />
+              </div>
+              {customer?.paymentTerm === "Other" && (
+                <div className="grid grid-cols-3 gap-4 ml-4 mt-3">
+                  <Maininputfield label="Other" className="w-full" />
+                </div>
+              )}
             </div>
+
             <h2 className="font-semibold p-4 text-[#151515] text-[18px]">
               {" "}
               Warehouse Locations & Address
@@ -1883,24 +1914,6 @@ const AddCustomer = () => {
                       onChange={(e: any) =>
                         handleAddressChange(e, "street1", index)
                       }
-                      // onChange={(e: any) => {
-                      //   setCustomer({
-                      //     ...customer,
-                      //     warehouseLocation: {
-                      //       ...customer.warehouseLocation,
-                      //       street1: e.target.value,
-                      //     },
-                      //   });
-                      //   if (e.target.value.length > 0) {
-                      //     setError({
-                      //       ...error,
-                      //       warehouseLocationError: {
-                      //         ...error.warehouseLocationError,
-                      //         street1: "",
-                      //       },
-                      //     });
-                      //   }
-                      // }}
                       className="w-full"
                       errorMessage={error.warehouseLocationError?.street1}
                     />
@@ -1910,24 +1923,6 @@ const AddCustomer = () => {
                       onChange={(e: any) =>
                         handleAddressChange(e, "street2", index)
                       }
-                      // onChange={(e: any) => {
-                      //   setCustomer({
-                      //     ...customer,
-                      //     warehouseLocation: {
-                      //       ...customer.warehouseLocation,
-                      //       street2: e.target.value,
-                      //     },
-                      //   });
-                      //   if (e.target.value.length > 0) {
-                      //     setError({
-                      //       ...error,
-                      //       warehouseLocationError: {
-                      //         ...error.warehouseLocationError,
-                      //         street2: "",
-                      //       },
-                      //     });
-                      //   }
-                      // }}
                       className="w-full"
                       errorMessage={error.warehouseLocationError?.street2}
                     />
@@ -1937,56 +1932,26 @@ const AddCustomer = () => {
                       onChange={(e: any) =>
                         handleAddressChange(e, "suburb", index)
                       }
-                      // value={customer.warehouseLocation.suburb}
-                      // onChange={(e: any) => {
-                      //   setCustomer({
-                      //     ...customer,
-                      //     warehouseLocation: {
-                      //       ...customer.warehouseLocation,
-                      //       suburb: e.target.value,
-                      //     },
-                      //   });
-                      //   if (e.target.value.length > 0) {
-                      //     setError({
-                      //       ...error,
-                      //       warehouseLocationError: {
-                      //         ...error.warehouseLocationError,
-                      //         suburb: "",
-                      //       },
-                      //     });
-                      //   }
-                      // }}
                       className="w-full"
                       errorMessage={error.warehouseLocationError?.suburb}
                     />
-                    <DropDownMap
-                      label="State"
-                      mapOption={stateCollection}
-                      value={item?.state}
-                      onChange={(e: any) =>
-                        handleAddressChange(e, "state", index)
-                      }
-                      // value={customer.warehouseLocation.state}
-                      // onChange={(e: any) => {
-                      //   setCustomer({
-                      //     ...customer,
-                      //     warehouseLocation: {
-                      //       ...customer.warehouseLocation,
-                      //       state: e.target.value,
-                      //     },
-                      //   });
-                      //   if (e.target.value.length > 0) {
-                      //     setError({
-                      //       ...error,
-                      //       warehouseLocationError: {
-                      //         ...error.warehouseLocationError,
-                      //         state: "",
-                      //       },
-                      //     });
-                      //   }
-                      // }}
-                      errorMessage={error.warehouseLocationError?.state}
-                    />
+                    <div>
+                      <DropDownMap
+                        label="State"
+                        mapOption={stateCollection}
+                        value={item?.state}
+                        onChange={(e: any) =>
+                          handleAddressChange(e, "state", index)
+                        }
+                        errorMessage={error.warehouseLocationError?.state}
+                      />
+                      {item?.state === "Other" && (
+                        <div className="mt-4">
+                          <Maininputfield label="Other" className="w-full" />
+                        </div>
+                      )}
+                    </div>
+
                     <Maininputfield
                       label="Country"
                       mapOption={countryCollection}
@@ -1994,25 +1959,6 @@ const AddCustomer = () => {
                       onChange={(e: any) =>
                         handleAddressChange(e, "country", index)
                       }
-                      // value={customer.warehouseLocation.country}
-                      // onChange={(e: any) => {
-                      //   setCustomer({
-                      //     ...customer,
-                      //     warehouseLocation: {
-                      //       ...customer.warehouseLocation,
-                      //       country: e.target.value,
-                      //     },
-                      //   });
-                      //   if (e.target.value.length > 0) {
-                      //     setError({
-                      //       ...error,
-                      //       warehouseLocationError: {
-                      //         ...error.warehouseLocationError,
-                      //         country: "",
-                      //       },
-                      //     });
-                      //   }
-                      // }}
                       errorMessage={error.warehouseLocationError?.country}
                     />
                     <Maininputfield
@@ -2021,25 +1967,6 @@ const AddCustomer = () => {
                       onChange={(e: any) =>
                         handleAddressChange(e, "postCode", index)
                       }
-                      // value={customer.warehouseLocation.postCode}
-                      // onChange={(e: any) => {
-                      //   setCustomer({
-                      //     ...customer,
-                      //     warehouseLocation: {
-                      //       ...customer.warehouseLocation,
-                      //       postCode: e.target.value,
-                      //     },
-                      //   });
-                      //   if (e.target.value.length > 0) {
-                      //     setError({
-                      //       ...error,
-                      //       warehouseLocationError: {
-                      //         ...error.warehouseLocationError,
-                      //         postCode: "",
-                      //       },
-                      //     });
-                      //   }
-                      // }}
                       className="w-full"
                       errorMessage={error.warehouseLocationError?.postCode}
                     />
@@ -2281,6 +2208,9 @@ const stateCollection = [
   {
     value: "Western Australia",
   },
+  {
+    value: "Other",
+  },
 ];
 const countryCollection = [
   {
@@ -2309,6 +2239,9 @@ const invoiceColletion = [
   {
     value: "None",
   },
+  {
+    value: "Other",
+  },
 ];
 const invoiceComuColletion = [
   {
@@ -2328,6 +2261,9 @@ const invoiceComuColletion = [
   },
   {
     value: "Admin Email",
+  },
+  {
+    value: "Other",
   },
 ];
 const paymentTermsCollection = [
@@ -2360,5 +2296,8 @@ const paymentTermsCollection = [
   },
   {
     value: "Cash on Delivery",
+  },
+  {
+    value: "Other",
   },
 ];

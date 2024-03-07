@@ -40,21 +40,23 @@ const DropDownMap = ({
           className="pl-[10px] pt-[6px] bg-[#EFF2F3] outline-none w-[97%] h-[70%]  !text-[#35454C] leading-[24px] text-[16px]"
           onChange={onChange}
           value={value}
-          defaultValue="India"
         >
-          {mapOption?.map((items: any, index: number) => {
-            return (
-                <option
-                  className="!text-[#35454C] leading-[24px] text-[16px]"
-                  key={index}
-                  value={items.value}
-                  // onClick={() => selectValue(items.value)}
-                  // onChange={() => selectValue(items.value)}
-                >
-                  {items.value}
-                </option>
-            );
-          })}
+          <option
+            disabled
+            value=""
+            className="!text-gray-400  cursor-none"
+          >
+            Select
+          </option>
+          {mapOption?.map((items: any, index: number) => (
+            <option
+              className="!text-[#35454C] leading-[24px] text-[16px]"
+              key={index}
+              value={items.value}
+            >
+              {items.value}
+            </option>
+          ))}
         </select>
       </div>
       {errorMessage && (

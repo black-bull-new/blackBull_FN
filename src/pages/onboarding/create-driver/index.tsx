@@ -843,30 +843,38 @@ const CreateDriver = () => {
                   className="w-full"
                   errorMessage={error.currentAddressError?.suburb}
                 />
-                <DropDownMap
-                  label="State"
-                  mapOption={stateCollection}
-                  onChange={(e: any) => {
-                    setDriverDetails({
-                      ...driverDetails,
-                      currentAddress: {
-                        ...driverDetails.currentAddress,
-                        state: e.target.value,
-                      },
-                    });
-                    if (e.target.value.length > 0) {
-                      setError({
-                        ...error,
-                        currentAddressError: {
-                          ...error.currentAddressError,
-                          state: "",
+                <div>
+                  <DropDownMap
+                    label="State"
+                    mapOption={stateCollection}
+                    onChange={(e: any) => {
+                      setDriverDetails({
+                        ...driverDetails,
+                        currentAddress: {
+                          ...driverDetails.currentAddress,
+                          state: e.target.value,
                         },
                       });
-                    }
-                  }}
-                  value={driverDetails.currentAddress.state}
-                  errorMessage={error.currentAddressError?.state}
-                />
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          currentAddressError: {
+                            ...error.currentAddressError,
+                            state: "",
+                          },
+                        });
+                      }
+                    }}
+                    value={driverDetails.currentAddress?.state}
+                    errorMessage={error.currentAddressError?.state}
+                  />
+                  {driverDetails.currentAddress?.state === "Other" && (
+                    <div className="mt-3">
+                      <Maininputfield label="Other" className="w-full" />
+                    </div>
+                  )}
+                </div>
+
                 <Maininputfield
                   label="Country"
                   // mapOption={countryCollection}
@@ -1005,32 +1013,40 @@ const CreateDriver = () => {
                   className="w-full"
                   errorMessage={error.permanentAddressError?.suburb}
                 />
-                <DropDownMap
-                  label="State"
-                  mapOption={stateCollection}
-                  // selectedData={selectedData}
-                  // setSelectedData={setSelectedData}
-                  value={driverDetails.permanentAddress.state}
-                  onChange={(e: any) => {
-                    setDriverDetails({
-                      ...driverDetails,
-                      permanentAddress: {
-                        ...driverDetails.permanentAddress,
-                        state: e.target.value,
-                      },
-                    });
-                    if (e.target.value.length > 0) {
-                      setError({
-                        ...error,
-                        permanentAddressError: {
-                          ...error.permanentAddressError,
-                          state: "",
+                <div>
+                  <DropDownMap
+                    label="State"
+                    mapOption={stateCollection}
+                    // selectedData={selectedData}
+                    // setSelectedData={setSelectedData}
+                    value={driverDetails.permanentAddress.state}
+                    onChange={(e: any) => {
+                      setDriverDetails({
+                        ...driverDetails,
+                        permanentAddress: {
+                          ...driverDetails.permanentAddress,
+                          state: e.target.value,
                         },
                       });
-                    }
-                  }}
-                  errorMessage={error.permanentAddressError?.state}
-                />
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          permanentAddressError: {
+                            ...error.permanentAddressError,
+                            state: "",
+                          },
+                        });
+                      }
+                    }}
+                    errorMessage={error.permanentAddressError?.state}
+                  />
+                  {driverDetails.permanentAddress?.state === "Other" && (
+                    <div className="mt-3">
+                      <Maininputfield label="Other" className="w-full" />
+                    </div>
+                  )}
+                </div>
+
                 <Maininputfield
                   label="Country"
                   // mapOption={countryCollection}
@@ -1586,58 +1602,73 @@ const CreateDriver = () => {
                   errorMessage={error.licenseDetailsError?.licenseCardNumber}
                   className="w-full"
                 />
-                <DropDownMap
-                  label="Licence Type"
-                  mapOption={licenceTypes}
-                  // selectedData={selectedData}
-                  // setSelectedData={setSelectedData}
-                  value={driverDetails.licenseDetails.licenceType}
-                  onChange={(e: any) => {
-                    setDriverDetails({
-                      ...driverDetails,
-                      licenseDetails: {
-                        ...driverDetails.licenseDetails,
-                        licenceType: e.target.value,
-                      },
-                    });
-                    if (e.target.value.length > 0) {
-                      setError({
-                        ...error,
-                        licenseDetailsError: {
-                          ...error.licenseDetailsError,
-                          licenceType: "",
+                <div>
+                  <DropDownMap
+                    label="Licence Type"
+                    mapOption={licenceTypes}
+                    // selectedData={selectedData}
+                    // setSelectedData={setSelectedData}
+                    value={driverDetails.licenseDetails.licenceType}
+                    onChange={(e: any) => {
+                      setDriverDetails({
+                        ...driverDetails,
+                        licenseDetails: {
+                          ...driverDetails.licenseDetails,
+                          licenceType: e.target.value,
                         },
                       });
-                    }
-                  }}
-                  errorMessage={error.licenseDetailsError?.licenceType}
-                />
-                <DropDownMap
-                  label="State of Issue"
-                  mapOption={stateCollection}
-                  // selectedData={selectedData}
-                  // setSelectedData={setSelectedData}
-                  value={driverDetails.licenseDetails.state}
-                  onChange={(e: any) => {
-                    setDriverDetails({
-                      ...driverDetails,
-                      licenseDetails: {
-                        ...driverDetails.licenseDetails,
-                        state: e.target.value,
-                      },
-                    });
-                    if (e.target.value.length > 0) {
-                      setError({
-                        ...error,
-                        licenseDetailsError: {
-                          ...error.licenseDetailsError,
-                          state: "",
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          licenseDetailsError: {
+                            ...error.licenseDetailsError,
+                            licenceType: "",
+                          },
+                        });
+                      }
+                    }}
+                    errorMessage={error.licenseDetailsError?.licenceType}
+                  />
+                  {driverDetails?.licenseDetails.licenceType === "Other" && (
+                    <div className="mt-3">
+                      <Maininputfield label="Other" className="w-full" />
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <DropDownMap
+                    label="State of Issue"
+                    mapOption={stateCollection}
+                    // selectedData={selectedData}
+                    // setSelectedData={setSelectedData}
+                    value={driverDetails.licenseDetails.state}
+                    onChange={(e: any) => {
+                      setDriverDetails({
+                        ...driverDetails,
+                        licenseDetails: {
+                          ...driverDetails.licenseDetails,
+                          state: e.target.value,
                         },
                       });
-                    }
-                  }}
-                  errorMessage={error.licenseDetailsError?.state}
-                />
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          licenseDetailsError: {
+                            ...error.licenseDetailsError,
+                            state: "",
+                          },
+                        });
+                      }
+                    }}
+                    errorMessage={error.licenseDetailsError?.state}
+                  />
+                  {driverDetails?.licenseDetails?.state === "Other" && (
+                    <div className="mt-3">
+                      <Maininputfield label="Other" className="w-full" />
+                    </div>
+                  )}
+                </div>
+
                 <Maindatefield
                   label="Date Of Issue "
                   value={driverDetails.licenseDetails.dateOfIssue}
@@ -1755,38 +1786,45 @@ const CreateDriver = () => {
                 {" "}
                 Special Driving Licence
               </h3>
-
-              <div className="grid grid-cols-3 gap-4">
-                <DropDownMap
-                  label="Special Driving Licence"
-                  // selectedData={selectedData}
-                  // setSelectedData={setSelectedData}
-                  value={
-                    driverDetails.specialDrivingLicence.specialDrivingLicence
-                  }
-                  onChange={(e: any) => {
-                    setDriverDetails({
-                      ...driverDetails,
-                      specialDrivingLicence: {
-                        ...driverDetails.specialDrivingLicence,
-                        specialDrivingLicence: e.target.value,
-                      },
-                    });
-                    if (e.target.value.length > 0) {
-                      setError({
-                        ...error,
-                        specialDrivingLicenceError: {
-                          ...error.specialDrivingLicenceError,
-                          specialDrivingLicence: "",
+              <div>
+                <div className="grid grid-cols-3 gap-4">
+                  <DropDownMap
+                    label="Special Driving Licence"
+                    // selectedData={selectedData}
+                    // setSelectedData={setSelectedData}
+                    value={
+                      driverDetails.specialDrivingLicence.specialDrivingLicence
+                    }
+                    onChange={(e: any) => {
+                      setDriverDetails({
+                        ...driverDetails,
+                        specialDrivingLicence: {
+                          ...driverDetails.specialDrivingLicence,
+                          specialDrivingLicence: e.target.value,
                         },
                       });
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          specialDrivingLicenceError: {
+                            ...error.specialDrivingLicenceError,
+                            specialDrivingLicence: "",
+                          },
+                        });
+                      }
+                    }}
+                    mapOption={drivingLicenceCollection}
+                    errorMessage={
+                      error.specialDrivingLicenceError?.specialDrivingLicence
                     }
-                  }}
-                  mapOption={drivingLicenceCollection}
-                  errorMessage={
-                    error.specialDrivingLicenceError?.specialDrivingLicence
-                  }
-                />
+                  />
+                </div>
+                {driverDetails?.specialDrivingLicence?.specialDrivingLicence ===
+                  "Other" && (
+                  <div className="mt-3 grid grid-cols-3 gap-4">
+                    <Maininputfield label="Other" className="w-full" />
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -1955,6 +1993,9 @@ const stateCollection = [
   {
     value: "Western Australia",
   },
+  {
+    value: "Other",
+  },
 ];
 const countryCollection = [
   {
@@ -1992,6 +2033,9 @@ const licenceTypes = [
   {
     value: "HR (Heavy Combination Licence)",
   },
+  {
+    value: "Other",
+  },
 ];
 const drivingLicenceCollection = [
   {
@@ -1999,6 +2043,9 @@ const drivingLicenceCollection = [
   },
   {
     value: "Dangerous Goods",
+  },
+  {
+    value: "Other",
   },
 ];
 const documentCollectionHeading = [

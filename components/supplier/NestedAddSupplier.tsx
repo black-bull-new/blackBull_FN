@@ -88,11 +88,11 @@ export const NestedAddSupplier = (props: any) => {
   };
 
   const handleRemoveExperience = (index: number) => {
-    if (index === 0) {
-      setShowOtherFields(false);
-    } else {
-      setShowOtherFields(true);
-    }
+    // if (index === 0) {
+    //   setShowOtherFields(false);
+    // } else {
+    //   setShowOtherFields(true);
+    // }
     setAddMoreFields(addMoreFields.filter((_: any, i: any) => i !== index));
   };
 
@@ -1012,62 +1012,78 @@ export const NestedAddSupplier = (props: any) => {
           <h3 className="text-black font-semibold text-sm my-4">
             Invoice Preferences
           </h3>
-          <div className="grid grid-cols-3 gap-4">
-            <DropDownMap
-              label="Invoice Preferences"
-              mapOption={invoiceColletion}
-              selectedData={selectedData}
-              setSelectedData={setSelectedData}
-              value={addSupplier.invoicePreferences}
-              onChange={(e: any) => {
-                setAddSupplier({
-                  ...addSupplier,
-                  invoicePreferences: e.target.value,
-                });
-                if (e.target.value.length > 0) {
-                  setError({
-                    ...error,
-                    invoicePreferencesError: "",
+          <div>
+            <div className="grid grid-cols-3 gap-4">
+              <DropDownMap
+                label="Invoice Preferences"
+                mapOption={invoiceColletion}
+                selectedData={selectedData}
+                setSelectedData={setSelectedData}
+                value={addSupplier.invoicePreferences}
+                onChange={(e: any) => {
+                  setAddSupplier({
+                    ...addSupplier,
+                    invoicePreferences: e.target.value,
                   });
-                }
-              }}
-              errorMessage={error.invoicePreferencesError}
-            />
+                  if (e.target.value.length > 0) {
+                    setError({
+                      ...error,
+                      invoicePreferencesError: "",
+                    });
+                  }
+                }}
+                errorMessage={error.invoicePreferencesError}
+              />
+            </div>
+            {addSupplier.invoicePreferences === "Other" && (
+              <div className="grid grid-cols-3 gap-4 mt-3">
+                <Maininputfield label="Other" className="w-full" />
+              </div>
+            )}
           </div>
+
           <h3 className="text-black font-semibold text-sm my-4">
             Invoice Communication Preferences
           </h3>
-          <div className="grid mb-4 grid-cols-3 gap-4">
-            <DropDownMap
-              label="Select Email"
-              mapOption={invoiceComuColletion}
-              selectedData={selectedData}
-              setSelectedData={setSelectedData}
-              value={addSupplier.invoiceCommunicationPreferences}
-              onChange={(e: any) => {
-                setAddSupplier({
-                  ...addSupplier,
-                  invoiceCommunicationPreferences: e.target.value,
-                });
-              }}
-            />
-          </div>
-          <div className="flex justify-end">
-            {!showOtherFields && (
-              <Button
-                onClick={() => {
-                  setShowOtherFields(true);
-                  setAddMoreFields([
-                    ...addMoreFields,
-                    {
-                      others: "",
-                    },
-                  ]);
+          <div>
+            <div className="grid mb-4 grid-cols-3 gap-4">
+              <DropDownMap
+                label="Select Email"
+                mapOption={invoiceComuColletion}
+                selectedData={selectedData}
+                setSelectedData={setSelectedData}
+                value={addSupplier.invoiceCommunicationPreferences}
+                onChange={(e: any) => {
+                  setAddSupplier({
+                    ...addSupplier,
+                    invoiceCommunicationPreferences: e.target.value,
+                  });
                 }}
-                text="Add More Fields"
-                className="bg-[#2B36D9] px-4 !w-fit"
               />
+            </div>
+            {addSupplier.invoiceCommunicationPreferences === "Other" && (
+              <div className="mt-3 grid mb-4 grid-cols-3 gap-4">
+                <Maininputfield label="Other" className="w-full" />
+              </div>
             )}
+          </div>
+
+          <div className="flex justify-end">
+            {/* {!showOtherFields && ( */}
+            <Button
+              onClick={() => {
+                setShowOtherFields(true);
+                setAddMoreFields([
+                  ...addMoreFields,
+                  {
+                    others: "",
+                  },
+                ]);
+              }}
+              text="Add More Fields"
+              className="bg-[#2B36D9] px-4 !w-fit"
+            />
+            {/* )} */}
           </div>
           {showOtherFields &&
             addMoreFields?.map((item: any, index: number) => {
@@ -1076,8 +1092,8 @@ export const NestedAddSupplier = (props: any) => {
               return (
                 <div key={displayIndex}>
                   <div>
-                    <h4 className="text-sm font-semibold mb-4 text-black">
-                      Others {displayIndex+1}
+                    <h4 className="text-sm font-semibold mb-1 text-black">
+                      Others {displayIndex + 1}
                     </h4>
                   </div>
                   <div className="grid grid-cols-3 gap-4">
@@ -1125,10 +1141,10 @@ export const NestedAddSupplier = (props: any) => {
             return (
               <div key={index}>
                 <div>
-                  <h3 className="font-semibold px-4 text-sm text-[#28353A] text-[16px]">
+                  <h3 className="font-semibold  text-sm text-[#28353A] text-[16px]">
                     Director {index + 1}
                   </h3>
-                  <div className="grid grid-cols-3 gap-4 p-4">
+                  <div className="grid grid-cols-3 gap-4 mt-3">
                     <Maininputfield
                       label="Designation"
                       value={item?.designation}
@@ -1165,7 +1181,7 @@ export const NestedAddSupplier = (props: any) => {
                     <Button
                       onClick={handleAddMoreDirector}
                       text="Add More Director"
-                      className="!w-fit bg-[#2B36D9] !px-4"
+                      className="!w-fit bg-[#2B36D9] !px-4 mt-3"
                     />
                     {index > 0 && (
                       <span
@@ -1344,58 +1360,72 @@ export const NestedAddSupplier = (props: any) => {
             Business Coverage
           </h2>
           <div className="grid grid-cols-3 gap-4">
-            <DropDownMap
-              label="Area Covered"
-              mapOption={areaCollection}
-              selectedData={selectedData}
-              setSelectedData={setSelectedData}
-              value={addSupplier.businessCoverage?.areaCovered}
-              onChange={(e: any) => {
-                setAddSupplier({
-                  ...addSupplier,
-                  businessCoverage: {
-                    ...addSupplier.businessCoverage,
-                    areaCovered: e.target.value,
-                  },
-                });
-                if (e.target.value.length > 0) {
-                  setError({
-                    ...error,
-                    businessCoverageError: {
-                      ...error.businessCoverageError,
-                      areaCovered: "",
+            <div>
+              <DropDownMap
+                label="Area Covered"
+                mapOption={areaCollection}
+                selectedData={selectedData}
+                setSelectedData={setSelectedData}
+                value={addSupplier.businessCoverage?.areaCovered}
+                onChange={(e: any) => {
+                  setAddSupplier({
+                    ...addSupplier,
+                    businessCoverage: {
+                      ...addSupplier.businessCoverage,
+                      areaCovered: e.target.value,
                     },
                   });
-                }
-              }}
-              errorMessage={error.businessCoverageError?.areaCovered}
-            />
-            <DropDownMap
-              label="Business Operations"
-              mapOption={businessOperationCollection}
-              selectedData={selectedData}
-              setSelectedData={setSelectedData}
-              value={addSupplier.businessCoverage?.businessOpreations}
-              onChange={(e: any) => {
-                setAddSupplier({
-                  ...addSupplier,
-                  businessCoverage: {
-                    ...addSupplier.businessCoverage,
-                    businessOpreations: e.target.value,
-                  },
-                });
-                if (e.target.value.length > 0) {
-                  setError({
-                    ...error,
-                    businessCoverageError: {
-                      ...error.businessCoverageError,
-                      businessOpreations: "",
+                  if (e.target.value.length > 0) {
+                    setError({
+                      ...error,
+                      businessCoverageError: {
+                        ...error.businessCoverageError,
+                        areaCovered: "",
+                      },
+                    });
+                  }
+                }}
+                errorMessage={error.businessCoverageError?.areaCovered}
+              />
+              {addSupplier.businessCoverage?.areaCovered === "Other" && (
+                <div className="mt-3">
+                  <Maininputfield label="Other" className="w-full" />
+                </div>
+              )}
+            </div>
+            <div>
+              <DropDownMap
+                label="Business Operations"
+                mapOption={businessOperationCollection}
+                selectedData={selectedData}
+                setSelectedData={setSelectedData}
+                value={addSupplier.businessCoverage?.businessOpreations}
+                onChange={(e: any) => {
+                  setAddSupplier({
+                    ...addSupplier,
+                    businessCoverage: {
+                      ...addSupplier.businessCoverage,
+                      businessOpreations: e.target.value,
                     },
                   });
-                }
-              }}
-              errorMessage={error.businessCoverageError?.businessOpreations}
-            />
+                  if (e.target.value.length > 0) {
+                    setError({
+                      ...error,
+                      businessCoverageError: {
+                        ...error.businessCoverageError,
+                        businessOpreations: "",
+                      },
+                    });
+                  }
+                }}
+                errorMessage={error.businessCoverageError?.businessOpreations}
+              />
+              {addSupplier.businessCoverage?.businessOpreations === "Other" && (
+                <div className="mt-3">
+                  <Maininputfield label="Other" className="w-full" />
+                </div>
+              )}
+            </div>
           </div>
           <h2 className="text-black font-semibold mt-8 mb-4">
             Warehouse Locations & Address
@@ -1403,34 +1433,16 @@ export const NestedAddSupplier = (props: any) => {
           {addMoreAddress?.map((item: any, index: number) => {
             return (
               <div key={index}>
-                <h3 className="font-semibold px-4 text-sm text-[#28353A] text-[16px]">
+                <h3 className="font-semibold  text-sm text-[#28353A] text-[16px]">
                   Address {index + 1}
                 </h3>
-                <div className="grid grid-cols-3 gap-4 p-4">
+                <div className="grid grid-cols-3 gap-4 mt-4">
                   <Maininputfield
                     label="Street 1"
                     value={item?.street1}
                     onChange={(e: any) =>
                       handleAddressChange(e, "street1", index)
                     }
-                    // onChange={(e: any) => {
-                    //   setCustomer({
-                    //     ...customer,
-                    //     warehouseLocation: {
-                    //       ...customer.warehouseLocation,
-                    //       street1: e.target.value,
-                    //     },
-                    //   });
-                    //   if (e.target.value.length > 0) {
-                    //     setError({
-                    //       ...error,
-                    //       warehouseLocationError: {
-                    //         ...error.warehouseLocationError,
-                    //         street1: "",
-                    //       },
-                    //     });
-                    //   }
-                    // }}
                     className="w-full"
                     errorMessage={error.warehouseLocationError?.street1}
                   />
@@ -1452,15 +1464,23 @@ export const NestedAddSupplier = (props: any) => {
                     className="w-full"
                     errorMessage={error.warehouseLocationError?.suburb}
                   />
-                  <DropDownMap
-                    label="State"
-                    mapOption={stateCollection}
-                    value={item?.state}
-                    onChange={(e: any) =>
-                      handleAddressChange(e, "state", index)
-                    }
-                    errorMessage={error.warehouseLocationError?.state}
-                  />
+                  <div>
+                    <DropDownMap
+                      label="State"
+                      mapOption={stateCollection}
+                      value={item?.state}
+                      onChange={(e: any) =>
+                        handleAddressChange(e, "state", index)
+                      }
+                      errorMessage={error.warehouseLocationError?.state}
+                    />
+                    {item?.state === "Other" && (
+                      <div className="mt-3">
+                        <Maininputfield label="Other" className="w-full" />
+                      </div>
+                    )}
+                  </div>
+
                   <Maininputfield
                     label="Country"
                     // mapOption={countryCollection}
@@ -1484,7 +1504,7 @@ export const NestedAddSupplier = (props: any) => {
                   <Button
                     onClick={handleAddAddress}
                     text="Add More Addresses"
-                    className="!w-fit bg-[#2B36D9] !px-4"
+                    className="!w-fit bg-[#2B36D9] !px-4 mt-3"
                   />
                   {index > 0 && (
                     <span
@@ -2214,108 +2234,99 @@ export const NestedAddSupplier = (props: any) => {
             })}
           </div>
           <div className="grid grid-cols-5 p-4 rounded-md text-black text-center items-center">
-                {documentDataCollection?.map((data: any, index: any) => {
-                  return (
-                    <>
-                      <div className="mb-6 align-middle">
-                        {data.flag ? (
-                          <input
-                            className="border-b-2 text-center border-[#607D8B]"
-                            placeholder="Document Name"
-                            value={data.Vehicle}
-                            onChange={(e) =>
-                              handleInputChange(data.id, e.target.value)
-                            }
-                            onBlur={() => handleInputBlur(data.id)}
-                          />
-                        ) : (
-                          <span
-                            onClick={() => handleInputClick(data.id)}
-                            className="cursor-pointer text-center"
-                          >
-                            {data.Vehicle}
-                          </span>
-                        )}
+            {documentDataCollection?.map((data: any, index: any) => {
+              return (
+                <>
+                  <div className="mb-6 align-middle">
+                    {data.flag ? (
+                      <input
+                        className="border-b-2 text-center border-[#607D8B]"
+                        placeholder="Document Name"
+                        value={data.Vehicle}
+                        onChange={(e) =>
+                          handleInputChange(data.id, e.target.value)
+                        }
+                        onBlur={() => handleInputBlur(data.id)}
+                      />
+                    ) : (
+                      <span
+                        onClick={() => handleInputClick(data.id)}
+                        className="cursor-pointer text-center"
+                      >
+                        {data.Vehicle}
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-center">
+                    <label className="cursor-pointer">
+                      <React.Fragment>
+                        <span className="!w-fit inline-block m-auto bg-[#2B36D9] py-2  text-sm px-6 rounded-full mb-6 font-semibold placeholder:py-[4px] text-white">
+                          Upload
+                        </span>
+                      </React.Fragment>
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept=".doc,.docx,.pdf"
+                        onChange={(e) => handleFileChanges(e, data?.id)}
+                      />
+                    </label>
+                  </div>
+                  <div className="mb-6">
+                    {selectedFiles.find((file) => file.id === data?.id)
+                      ?.file ? (
+                      <div>
+                        <p>
+                          {
+                            selectedFiles.find((file) => file.id === data?.id)
+                              ?.file.name
+                          }
+                        </p>
                       </div>
-                      <div className="text-center">
-                        <label className="cursor-pointer">
-                          <React.Fragment>
-                            <span className="!w-fit inline-block m-auto bg-[#2B36D9] py-2  text-sm px-6 rounded-full mb-6 font-semibold placeholder:py-[4px] text-white">
-                              Upload
-                            </span>
-                          </React.Fragment>
-                          <input
-                            type="file"
-                            className="hidden"
-                            accept=".doc,.docx,.pdf"
-                            onChange={(e) => handleFileChanges(e, data?.id)}
-                          />
-                        </label>
-                      </div>
-                      <div className="mb-6">
-                        {selectedFiles.find((file) => file.id === data?.id)
-                          ?.file ? (
-                          <div>
-                            <p>
-                              {
-                                selectedFiles.find(
-                                  (file) => file.id === data?.id
-                                )?.file.name
-                              }
-                            </p>
-                          </div>
-                        ) : (
-                          <span
-                            className="!w-fit m-auto  py-2 cursor-pointer  px-6 rounded-full mb-6 text-black"
-                            // onClick={() =>
-                            //   handleUploadFileWithId(data?.id, combinedObject)
-                            // }
-                          >
-                            No file Uploaded
-                          </span>
-                        )}
-                      </div>
-                      <div className="mb-6">
+                    ) : (
+                      <span
+                        className="!w-fit m-auto  py-2 cursor-pointer  px-6 rounded-full mb-6 text-black"
+                        // onClick={() =>
+                        //   handleUploadFileWithId(data?.id, combinedObject)
+                        // }
+                      >
+                        No file Uploaded
+                      </span>
+                    )}
+                  </div>
+                  <div className="mb-6">
+                    <div>
+                      {selectedFiles.find((file) => file.id === data?.id) ? (
                         <div>
-                          {selectedFiles.find(
-                            (file) => file.id === data?.id
-                          ) ? (
-                            <div>
-                              <p>
-                                {selectedFiles.find(
-                                  (file) => file.id === data?.id
-                                )?.currentDate
-                                  ? formatDate(
-                                      selectedFiles.find(
-                                        (file) => file.id === data?.id
-                                      )?.currentDate
-                                    )
-                                  : "No date available"}
-                              </p>
-                            </div>
-                          ) : (
-                            <p>No date available</p>
-                          )}
+                          <p>
+                            {selectedFiles.find((file) => file.id === data?.id)
+                              ?.currentDate
+                              ? formatDate(
+                                  selectedFiles.find(
+                                    (file) => file.id === data?.id
+                                  )?.currentDate
+                                )
+                              : "No date available"}
+                          </p>
                         </div>
-                      </div>
-                      <div className="mb-6 flex gap-2 justify-center">
-                        <Image
-                          src={"/edit.svg"}
-                          alt="svg"
-                          width={24}
-                          height={24}
-                        />
-                        <Image
-                          src={"/trash.svg"}
-                          alt="svg"
-                          width={24}
-                          height={24}
-                        />
-                      </div>
-                    </>
-                  );
-                })}
-              </div>
+                      ) : (
+                        <p>No date available</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="mb-6 flex gap-2 justify-center">
+                    <Image src={"/edit.svg"} alt="svg" width={24} height={24} />
+                    <Image
+                      src={"/trash.svg"}
+                      alt="svg"
+                      width={24}
+                      height={24}
+                    />
+                  </div>
+                </>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
@@ -2446,6 +2457,9 @@ const stateCollection = [
   {
     value: "Western Australia",
   },
+  {
+    value: "Other",
+  },
 ];
 
 const businessOperationCollection = [
@@ -2454,6 +2468,9 @@ const businessOperationCollection = [
   },
   {
     value: "Victoria",
+  },
+  {
+    value: "Other",
   },
 ];
 
@@ -2467,6 +2484,9 @@ const areaCollection = [
   {
     value: "Tasmania, Victoria",
   },
+  {
+    value: "Other",
+  },
 ];
 
 const invoiceColletion = [
@@ -2475,6 +2495,9 @@ const invoiceColletion = [
   },
   {
     value: "None",
+  },
+  {
+    value: "Other",
   },
 ];
 
@@ -2496,5 +2519,8 @@ const invoiceComuColletion = [
   },
   {
     value: "Admin Email",
+  },
+  {
+    value: "Other",
   },
 ];
