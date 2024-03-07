@@ -736,27 +736,52 @@ const CreateVehicle = () => {
                   errorMessage={error.vehicleModelError}
                   className="w-full"
                 />
-                {/* <Mainselectfield label="Vehicle Type" option="Choose vehicle" /> */}
-                <DropDownMap
-                  label="Vehicle Type"
-                  mapOption={vehicleTypeColleciton}
-                  // selectedData={selectedData}
-                  // setSelectedData={setSelectedData}
-                  value={vehicleDetails.vehicleType}
-                  onChange={(e: any) => {
-                    setVehicleDetails({
-                      ...vehicleDetails,
-                      vehicleType: e.target.value,
-                    });
-                    if (e.target.value.length > 0) {
-                      setError({
-                        ...error,
-                        vehicleTypeError: "",
+                <div>
+                  <DropDownMap
+                    label="Vehicle Type"
+                    mapOption={vehicleTypeColleciton}
+                    // selectedData={selectedData}
+                    // setSelectedData={setSelectedData}
+                    value={vehicleDetails.vehicleType}
+                    onChange={(e: any) => {
+                      setVehicleDetails({
+                        ...vehicleDetails,
+                        vehicleType: e.target.value,
                       });
-                    }
-                  }}
-                  errorMessage={error.vehicleTypeError}
-                />
+                      if (e.target.value.length > 0) {
+                        setError({
+                          ...error,
+                          vehicleTypeError: "",
+                        });
+                      }
+                    }}
+                    errorMessage={error.vehicleTypeError}
+                  />
+
+                  {vehicleDetails.vehicleType === "Other" && (
+                    <div className="mt-3">
+                      <Maininputfield
+                        label="Other"
+                        // value={vehicleDetails.trailerNumber}
+                        // onChange={(e: any) => {
+                        //   setVehicleDetails({
+                        //     ...vehicleDetails,
+                        //     trailerNumber: e.target.value,
+                        //   });
+                        //   if (e.target.value.length > 0) {
+                        //     setError({
+                        //       ...error,
+                        //       trailerNumberError: "",
+                        //     });
+                        //   }
+                        // }}
+                        className="w-full"
+                        // errorMessage={error.trailerNumberError}
+                      />
+                    </div>
+                  )}
+                </div>
+
                 <DropDownMap
                   label="Type of Trailer"
                   mapOption={trailerTypeCollection}
@@ -1543,6 +1568,9 @@ const vehicleTypeColleciton = [
   },
   {
     value: "UTE",
+  },
+  {
+    value: "Other",
   },
 ];
 const trailerTypeCollection = [

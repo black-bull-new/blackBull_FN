@@ -65,19 +65,36 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 .dropdown select option {
   background-color: white;
-  color: black ;
+  color: black;
   text-align: left;
   font-size: 14px;
   height: 20px !important;
 }
 .dropdown select {
-  color: black ;
+  color: black;
   font-weight: 500;
 }
 input::-webkit-inner-spin-button {
   appearance: none;
 }
 .bg-gradient-opacity {
-  background: linear-gradient(90deg, rgba(43, 54, 217, 0.3) 0%, #BDC1FF00 100%);
+  background: linear-gradient(90deg, rgba(43, 54, 217, 0.3) 0%, #bdc1ff00 100%);
 }
 
+/* Sidebar container */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #334155 #cbd5e1;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #334155;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background-color: #cbd5e1;
+}
