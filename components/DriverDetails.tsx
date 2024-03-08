@@ -111,7 +111,7 @@ const DriverDetails = () => {
                       <p className="mb-4">No Data</p>
                       <p className="mb-4">No Data</p>
                       <div className="flex justify-center gap-2 mb-4">
-                        <Image
+                        {/* <Image
                           src={"/edit.svg"}
                           alt="edit"
                           width={18}
@@ -123,7 +123,7 @@ const DriverDetails = () => {
                             })
                           }}
                           className="cursor-pointer"
-                        />
+                        /> */}
                         <Image
                           src={"/trash.svg"}
                           alt="edit"
