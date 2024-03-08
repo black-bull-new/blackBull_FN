@@ -139,7 +139,7 @@ const VehiDetails = () => {
                         className="mb-6 flex gap-2 justify-center"
                         style={{ color: "#000" }}
                       >
-                        <Image
+                        {/* <Image
                           src={"/edit.svg"}
                           alt="svg"
                           width={24}
@@ -151,7 +151,7 @@ const VehiDetails = () => {
                             });
                           }}
                           className="cursor-pointer"
-                        />
+                        /> */}
                         <Image
                           src={"/trash.svg"}
                           alt="svg"
@@ -299,7 +299,7 @@ const VehiDetails = () => {
                 <Button
                   text="Download Template"
                   className="!bg-transparent border !text-[#000] !py-[6px] !px-4"
-                  // onClick={() => setLink(false)}
+                // onClick={() => setLink(false)}
                 />
                 <Button
                   text="Upload"
@@ -336,6 +336,9 @@ const vehicleDetailsHeading = [
   },
   {
     heading: "Complaints",
+  },
+  {
+    heading: "Action",
   },
 ];
 const vehicleDetailsCollection = [

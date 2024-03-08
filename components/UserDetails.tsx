@@ -95,7 +95,7 @@ const UserDetails = () => {
                         <CommonUI status="Active" />
                       </p>
                       <div className="flex justify-center gap-2 mb-4">
-                        <Image
+                        {/* <Image
                           src={"/edit.svg"}
                           alt="edit"
                           width={18}
@@ -107,7 +107,7 @@ const UserDetails = () => {
                             });
                           }}
                           className="cursor-pointer"
-                        />
+                        /> */}
                         <Image
                           src={"/trash.svg"}
                           alt="edit"
@@ -189,6 +189,9 @@ const driverDetailsHeading = [
   },
   {
     heading: "STATUS",
+  },
+  {
+    heading: "ACTION",
   },
 ];
 const userDetailsData = [
