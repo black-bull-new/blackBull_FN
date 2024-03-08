@@ -19,7 +19,7 @@ const Sidebar = () => {
     option === "Vehicle" ? router.push("/onboarding/vehicle-list") : "";
     option === "Driver" ? router.push("/onboarding/driver-list") : "";
     option === "Customer" ? router.push("/onboarding/add-customer") : "";
-    option === "Supplier" ? router.push("/onboarding/add-supplier") : "";
+    option === "Supplier" ? router.push("/onboarding/supplier-list") : "";
     option === "User" ? router.push("/onboarding/user-list") : "";
     option === "Onboarding" ? router.push("/onboarding") : "";
     option === "Dashboard" ? router.push("/dashboard") : "";

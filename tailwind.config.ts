@@ -28,6 +28,7 @@ const config: Config = {
     "./components/DriverDetails.tsx",
     "./components/imageUpload/ImageUpload.tsx",
     "./components/UserDetails.tsx",
+    "./components/SupplierDetails.tsx",
   ],
   theme: {
     extend: {

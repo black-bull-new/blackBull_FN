@@ -85,7 +85,6 @@ input::-webkit-inner-spin-button {
 .custom-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: #334155 #cbd5e1;
-  
 }
 
 .custom-scrollbar::-webkit-scrollbar {

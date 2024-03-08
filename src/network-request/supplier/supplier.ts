@@ -37,6 +37,21 @@ export const uploadSupplierProfile = async (selectedFile: any) => {
     })
 }
 
+export const getAllSupplier = async (token: string) => {
+  try {
+    console.log(process.env.NEXT_PUBLIC_API_URL)
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/s1/suppliers`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
 // ==================================================== Insurance Documents =====================================================
 // export const uploadSupplierProductLiabilityDocuments = async (selectedFile: any) => {
 //   const formData = new FormData();
