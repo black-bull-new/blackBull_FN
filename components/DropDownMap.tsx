@@ -37,15 +37,11 @@ const DropDownMap = ({
           {label}
         </label>
         <select
-          className="pl-[10px] pt-[6px] bg-[#EFF2F3] outline-none w-[97%] h-[70%]  !text-[#35454C] leading-[24px] text-[16px]"
+          className="pl-[10px] pt-[6px] !bg-[#EFF2F3] outline-none w-[97%] h-[70%]  !text-[#35454C] leading-[24px] text-[16px]"
           onChange={onChange}
           value={value}
         >
-          <option
-            disabled
-            value=""
-            className="!text-gray-400  cursor-none"
-          >
+          <option disabled value="" className="!text-gray-400  cursor-none">
             Select
           </option>
           {mapOption?.map((items: any, index: number) => (

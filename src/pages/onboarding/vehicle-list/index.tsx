@@ -4,7 +4,7 @@ const VehicleList = () => {
   return (
     <>
       {/* <Header /> */}
-      <div className="flex bg-[#E9EFFF] text-black">
+      <div className="flex bg-[#F8F8F8] text-black">
         {/* <div className="sticky top-0">
           <Sidebar />
         </div> */}

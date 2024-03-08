@@ -1118,7 +1118,7 @@ const AddSupplier = () => {
   return (
     <>
       {/* <Header /> */}
-      <div className="flex bg-[#E9EFFF]">
+      <div className="flex bg-[#F8F8F8]">
         <div>
           <Toaster />
         </div>

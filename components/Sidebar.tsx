@@ -18,7 +18,7 @@ const Sidebar = () => {
   const toggleSubmenu = (option: any) => {
     option === "Vehicle" ? router.push("/onboarding/vehicle-list") : "";
     option === "Driver" ? router.push("/onboarding/driver-list") : "";
-    option === "Customer" ? router.push("/onboarding/add-customer") : "";
+    option === "Customer" ? router.push("/onboarding/customer-list") : "";
     option === "Supplier" ? router.push("/onboarding/supplier-list") : "";
     option === "User" ? router.push("/onboarding/user-list") : "";
     option === "Onboarding" ? router.push("/onboarding") : "";
@@ -27,7 +27,7 @@ const Sidebar = () => {
   };
   return (
     <>
-      <div className="text-black flex relative top-0">
+      <div className="text-black flex relative  top-0">
         <nav className="fixed top-0 text-black bg-white p-4 w-[300px] h-screen overflow-y-auto custom-scrollbar">
           <Image
             src="/logoOzi.svg"
@@ -36,89 +36,91 @@ const Sidebar = () => {
             height={100}
             className="m-auto"
           />
-          <ul className="list-none p-6 mb-4 mt-8 max-h-[calc(100% - 170px)] overflow-y-auto">
-            {sidebarCollection.map((value, index) => {
-              return (
-                <>
-                  <li
-                    className={`flex items-center justify-between h-14 
+          <div className="!bg-[#F8F8F8] px-[11px] py-1 mt-2  ">
+            <ul className="list-none px-3    mx-1  bg-white mb-4 mt-4 max-h-[calc(100% - 170px)] overflow-y-auto">
+              {sidebarCollection.map((value, index) => {
+                return (
+                  <>
+                    <li
+                      className={`flex items-center justify-between h-14 
                     ${sidebarValue === value.value ? "text-primary" : ""}
                     `}
-                    key={index}
-                    onClick={() => toggleSidebar(value.value)}
-                  >
-                    <div className="flex justify-between items-center w-full gap-2 cursor-pointer">
-                      <div className="flex items-center gap-2">
-                        {sidebarValue === value.value ? (
-                          <div className="flex justify-end rounded-full ms-[-1.1em] bg-gradient-opacity w-[38px] h-[38px]">
+                      key={index}
+                      onClick={() => toggleSidebar(value.value)}
+                    >
+                      <div className="flex ms-2 justify-between items-center w-full gap-2 cursor-pointer">
+                        <div className="flex items-center gap-2">
+                          {sidebarValue === value.value ? (
+                            <div className="flex justify-end rounded-full ms-[-1.1em] bg-gradient-opacity w-[38px] h-[38px]">
+                              <Image
+                                src={value.imgUrl}
+                                alt={value.imageDesc}
+                                width={20}
+                                height={20}
+                                className=" "
+                              />
+                            </div>
+                          ) : (
                             <Image
                               src={value.imgUrl}
                               alt={value.imageDesc}
                               width={20}
                               height={20}
-                              className=" "
+                              className=""
                             />
+                          )}
+
+                          <div className="font-semibold text-md">
+                            {value.value}
                           </div>
-                        ) : (
+                        </div>
+                        {value?.dropdownIcon ? (
                           <Image
-                            src={value.imgUrl}
+                            src={value.dropdownIcon}
                             alt={value.imageDesc}
                             width={20}
                             height={20}
-                            className=""
+                            className={
+                              sidebarValue === value.value ? "rotate-180" : ""
+                            }
                           />
+                        ) : (
+                          ""
                         )}
-
-                        <div className="font-semibold text-md">
-                          {value.value}
-                        </div>
                       </div>
-                      {value?.dropdownIcon ? (
-                        <Image
-                          src={value.dropdownIcon}
-                          alt={value.imageDesc}
-                          width={20}
-                          height={20}
-                          className={
-                            sidebarValue === value.value ? "rotate-180" : ""
-                          }
-                        />
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                  </li>
+                    </li>
 
-                  {sidebarValue === "Onboarding" && (
-                    <div className="pl-6 font-semibold">
-                      {value.submenu?.map((items, ind) => {
-                        return (
-                          <>
-                            <div
-                              className={`mb-2 cursor-pointer ${
-                                submenu === items.option ? "text-primary" : ""
-                              }`}
-                              onClick={() => toggleSubmenu(items.option)}
-                              key={index}
-                            >
-                              {items.option}
-                            </div>
-                          </>
-                        );
-                      })}
-                    </div>
-                  )}
-                </>
-              );
-            })}
-          </ul>
+                    {sidebarValue === "Onboarding" && (
+                      <div className="pl-6 font-semibold">
+                        {value.submenu?.map((items, ind) => {
+                          return (
+                            <>
+                              <div
+                                className={`mb-2 cursor-pointer ${
+                                  submenu === items.option ? "text-primary" : ""
+                                }`}
+                                onClick={() => toggleSubmenu(items.option)}
+                                key={index}
+                              >
+                                {items.option}
+                              </div>
+                            </>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </>
+                );
+              })}
+            </ul>
+          </div>
           <div>
             <Image
               src="/unlockFeatures.svg"
               alt="logo"
               width={150}
               height={100}
-              className="m-auto"
+              className="m-auto mt-5"
             />
           </div>
         </nav>

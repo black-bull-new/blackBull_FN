@@ -5,20 +5,20 @@ import { useRouter } from "next/router";
 import { getCookie } from "cookies-next";
 import { deleteUser, getAllUser } from "@/network-request/user/createUser";
 import CommonUI from "@/pages/onboarding/utility/CommonUI";
-import { getAllSupplier } from "@/network-request/supplier/supplier";
+import { getAllCustomer } from "@/network-request/customer/customerApi";
 
-const SupplierDetails = () => {
+const CustomerDetails = () => {
   const [deletePopUp, setDelete] = useState(false);
   const router = useRouter();
   const token = getCookie("token");
   const [userToDelete, setUserToDelete] = useState("");
 
-  const [supplier, setSupplier] = useState([]);
+  const [customers, setCustomers] = useState([]);
 
   const getUsers = async () => {
-    const data = await getAllSupplier(token || "");
+    const data = await getAllCustomer(token || "");
     if (data) {
-      setSupplier(data.data);
+      setCustomers(data.data);
     }
   };
 
@@ -38,7 +38,7 @@ const SupplierDetails = () => {
     }
   };
 
-  console.log("supplier :", supplier);
+  console.log("customers :", customers);
 
   function getCurrentDate() {
     const currentDate = new Date();
@@ -57,22 +57,22 @@ const SupplierDetails = () => {
           <div className="mt-4 mb-20 bg-white p-4 rounded-md items-center ">
             <div className="flex items-center justify-between">
               <h3 className="leading-loose font-semibold">
-                Existing Supplier List
+                Existing Customer List
               </h3>
               <div className="flex gap-2 relative">
                 <button className="text-[#2B36D9] font-semibold mx-2">
                   Bulk Upload
                 </button>
                 <Button
-                  text="Add Supplier"
+                  text="Add Customer"
                   className="px-4 rounded-full"
-                  onClick={() => router.push("/onboarding/add-supplier")}
+                  onClick={() => router.push("/onboarding/add-customer")}
                 />
               </div>
             </div>
-            <div>
-              <div className="grid items-center text-center justify-center grid-cols-[17%_17%_17%_17%_17%_17%] bg-[#EFF2F3] p-4 rounded-md mt-4">
-                {supplierDetailsHeading?.map((value, index) => {
+            <div>   
+              <div className="grid items-center text-center grid-cols-[12%_12%_12%_12%_12%_12%_12%_12%] bg-[#EFF2F3] justify-center p-4 rounded-md mt-4">
+                {customerDetailsHeading?.map((value, index) => {
                   return (
                     <>
                       <div className="font-semibold text-sm" key={index}>
@@ -82,15 +82,25 @@ const SupplierDetails = () => {
                   );
                 })}
               </div>
-              <div className="grid items-center text-center grid-cols-[17%_17%_17%_17%_17%_17%] p-4 border justify-center">
-                {supplier?.map((item: any, ind: number) => {
+              <div className="grid items-center text-center grid-cols-[12%_12%_12%_12%_12%_12%_12%_12%] p-4 border justify-center">
+                {customers?.map((item: any, ind: number) => {
                   return (
                     <React.Fragment key={item?._id}>
-                      <p className="mb-4">{ind + 1}</p>
+                      <p className="mb-4">{item?.customerId || "TempID"}</p>
                       <p className="mb-4">{item?.companyName}</p>
                       <p className="mb-4">{item?.tradingName}</p>
-                      <p className="mb-4">{item?.abn}</p>
-                      <p className="mb-4">{item?.legalName}</p>
+                      <p className="mb-4">
+                        {item?.abnNumber}
+                      </p>
+                      <p className="mb-4">
+                        {item?.legalName || "Entire Fleet"}
+                      </p>
+                      <p className="mb-4">
+                        {item?.firstName}
+                      </p>
+                      <p className="mb-4">
+                        {item?.lastName}
+                      </p>
                       <p className="mb-4">
                         <CommonUI status="Active" />
                       </p>
@@ -170,8 +180,8 @@ const SupplierDetails = () => {
     </>
   );
 };
-export default SupplierDetails;
-const supplierDetailsHeading = [
+export default CustomerDetails;
+const customerDetailsHeading = [
   {
     heading: "Customer ID",
   },
@@ -188,32 +198,12 @@ const supplierDetailsHeading = [
     heading: "Legal Name",
   },
   {
+    heading: "First Name",
+  },
+  {
+    heading: "Last Name",
+  },
+  {
     heading: "Status",
-  },
-];
-const userDetailsData = [
-  {
-    fullName: "Mohd Kaif",
-    username: "Kaif",
-    role: "Admin",
-    lastLogin: "20/02/2024",
-    primaryGroup: "Entire Fleet",
-    status: "Active",
-  },
-  {
-    fullName: "Mohd Shadab",
-    username: "Shadab",
-    role: "Admin",
-    lastLogin: "20/02/2024",
-    primaryGroup: "Entire Fleet",
-    status: "Active",
-  },
-  {
-    fullName: "Mohd Sheeban",
-    username: "Sheeban",
-    role: "Admin",
-    lastLogin: "20/02/2024",
-    primaryGroup: "Entire Fleet",
-    status: "Active",
   },
 ];

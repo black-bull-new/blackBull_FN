@@ -1,14 +1,14 @@
-import SupplierDetails from "../../../../components/SupplierDetails";
+import CustomerDetails from "../../../../components/CustomerDetails";
 
-const SupplierList = () => {
+const CustomerList = () => {
   return (
     <>
       <div className="flex bg-[#F8F8F8] text-black">
         <div className="ml-[316px] w-full mt-4">
-          <SupplierDetails />
+          <CustomerDetails/>
         </div>
       </div>
     </>
   );
 };
-export default SupplierList;
+export default CustomerList;

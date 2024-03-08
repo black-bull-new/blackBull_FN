@@ -385,7 +385,7 @@ export const NestedAddSupplier = (props: any) => {
       </div>
       <div className="bg-white mr-4 px-4 rounded-md mt-4 p-4 rounded-md">
         <div className="mx-2">
-          <Progressbar />
+          <Progressbar value={0} />
         </div>
         <div className="relative w-fit">
           <span className="flex flex-row justify-center my-4">

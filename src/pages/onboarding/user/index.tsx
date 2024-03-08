@@ -2,7 +2,7 @@ import Image from "next/image";
 import Progressbar from "../../../../components/Progressbar";
 import Maininputfield from "../../../../components/Maininputfield";
 import DropDownMap from "../../../../components/DropDownMap";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Checkbox from "../../../../components/Checkbox";
 import PasswordField from "../../../../components/password-field/PasswordFlied";
 import Button from "../../../../components/Button";
@@ -111,7 +111,7 @@ const User = () => {
   );
 
   console.log({ selectedProfile });
-
+  const [progress, setProgress] = useState(0);
   const [user, setUser] = useState<any>({
     firstName: "",
     lastName: "",
@@ -133,6 +133,31 @@ const User = () => {
   });
 
   console.log({ user });
+
+  useEffect(() => {
+    // Calculate the progress based on the filled form inputs
+    const calculateProgress = () => {
+      const {
+        avatar,
+        temporaryPassword,
+        requirePassword,
+        sendPassword,
+        ...rest
+      } = user;
+
+      // Count filled inputs (excluding the 'documents' array)
+      const filledInputs = Object.values(rest).filter(
+        (value) => value !== ""
+      ).length;
+
+      // Count total inputs (excluding the 'documents' array)
+      const totalInputs = Object.keys(rest).length;
+      const newProgress = (filledInputs / totalInputs) * 100;
+      setProgress(Math.ceil(newProgress));
+    };
+
+    calculateProgress();
+  }, [user]);
 
   const createUserHandler = async () => {
     // Check validation and get error status
@@ -211,7 +236,7 @@ const User = () => {
 
   return (
     <>
-      <div className="flex bg-[#E9EFFF]">
+      <div className="flex bg-[#F8F8F8]">
         <div>
           <Toaster />
         </div>
@@ -228,7 +253,7 @@ const User = () => {
           </div>
           <div className="bg-white mr-4 px-4 rounded-md mt-4 p-4 mb-20">
             <div className="mx-2">
-              <Progressbar />
+              <Progressbar value={progress} />
             </div>
             <div className="relative w-fit">
               <span className="flex flex-row justify-center my-4">

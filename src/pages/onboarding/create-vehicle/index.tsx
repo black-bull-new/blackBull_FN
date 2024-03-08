@@ -149,7 +149,43 @@ const CreateVehicle = () => {
   });
 
   const [documentDataCollection, setDocumentDataCollection] = useState<any>([]);
+  const [progress, setProgress] = useState(0);
+  useEffect(() => {
+    // Calculate the progress based on the filled form inputs
+    const calculateProgress = () => {
+      const {
+        rentedCompanyName,
+        dateOfHire,
+        contractValidTill,
+        term,
+        weeklyRent,
+        tax,
+        paymentMethod,
+        bankName,
+        accountNumber,
+        accountName,
+        vehicleDocumentStatus,
+        vehicleUploadDocument,
+        documents,
+        ...rest
+      } = vehicleDetails;
 
+      // Count filled inputs (excluding the 'documents' array)
+      const filledInputs = Object.values(rest).filter(
+        (value) => value !== ""
+      ).length;
+
+      // Count total inputs (excluding the 'documents' array)
+      const totalInputs = Object.keys(rest).length;
+      const newProgress = (filledInputs / totalInputs) * 100;
+      setProgress(Math.ceil(newProgress));
+    };
+
+    calculateProgress();
+  }, [vehicleDetails]);
+
+  console.log("vehicleDetails", vehicleDetails);
+  console.log("progress", progress);
   const handleInputChange = (id: any, value: any) => {
     setDocumentDataCollection((prevCollection: any) => {
       const updatedCollection = prevCollection.map((item: any) =>
@@ -181,7 +217,6 @@ const CreateVehicle = () => {
     });
   };
 
-  console.log("documentDataCollection", documentDataCollection);
   const handleAddRow = () => {
     const newRow = {
       id: documentDataCollection.length + 1,
@@ -264,7 +299,6 @@ const CreateVehicle = () => {
 
   const handleFileChange = (setSide: any, setPreview: any) => (event: any) => {
     const selectedFile = event.target.files && event.target.files[0];
-    console.log({ selectedFile });
     setSide({ file: selectedFile });
     if (selectedFile) {
       const reader = new FileReader();
@@ -401,7 +435,6 @@ const CreateVehicle = () => {
       return updatedValues;
     });
   };
-  console.log({ selectedStatusValues });
 
   // ======================================== Meeting on 23-Feb-2024 ========================================
   // Changes array to objects by using accumulator ...
@@ -423,44 +456,16 @@ const CreateVehicle = () => {
   const [urls, setUrls] = useState<string[]>([]);
   const [showUploadMessage, setShowUploadMessage] = useState(false);
 
-  // const handleUploadFileWithId = async (id: number, combinedObject: any) => {
-  //   try {
-  //     const project = combinedObject[id];
-  //     if (id && project?.id) {
-  //       console.log("Project", { project });
-  //       const file = [project?.file];
-  //       const uploadDocumentResponses = await Promise.all(
-  //         Object.values(file)?.map((file) =>
-  //           uploadSingleSingleVehicleDocuments(file)
-  //         )
-  //       );
-  //       console.log({ uploadDocumentResponses });
-  //       const newUrls = uploadDocumentResponses
-  //         ?.map((response) => response?.response)
-  //         .filter(Boolean);
-  //       setUrls((prevUrls) => [...prevUrls, ...newUrls]);
-  //       setUploadStatus((prevStatus) => ({ ...prevStatus, [id]: true }));
-  //       setTimeout(() => {
-  //         setShowUploadMessage(true);
-  //       }, 4000);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error occurred:", error);
-  //   }
-  // };
-
   const handleUploadFileWithId = async (id: number, combinedObject: any) => {
     try {
       const project = combinedObject[id];
       if (id && project?.id) {
-        console.log("Project", { project });
         const file = [project?.file];
         const uploadDocumentResponses = await Promise.all(
           Object.values(file)?.map((file) =>
             uploadSingleSingleVehicleDocuments(file)
           )
         );
-        console.log({ uploadDocumentResponses });
         const newUrls = uploadDocumentResponses
           ?.map((response) => response?.response)
           .filter(Boolean);
@@ -478,7 +483,6 @@ const CreateVehicle = () => {
       console.error("Error occurred:", error);
     }
   };
-  console.log({ urls });
 
   const modifiedUrls = urls.reduce((acc: any, url, index) => {
     acc[index] = url;
@@ -486,7 +490,6 @@ const CreateVehicle = () => {
   }, []);
 
   // const handleViewDocuments = (id: number) => {
-  //   console.log("modifiedUrls",modifiedUrls)
   //     const index = id;
   //     if (index >= 1 && index < modifiedUrls.length) {
   //       const url = modifiedUrls[index];
@@ -496,7 +499,6 @@ const CreateVehicle = () => {
   //     }
   //   };
   const handleViewDocuments = (id: number) => {
-    console.log("CHECK", id, modifiedUrls);
     const index = id - 1; // Adjust index to start from 0
     if (index >= 0 && index < modifiedUrls.length) {
       const url = modifiedUrls[index];
@@ -507,7 +509,6 @@ const CreateVehicle = () => {
   };
 
   // const handleViewDocuments = (id: number) => {
-  //   console.log("modifiedUrls", modifiedUrls);
   //   const index = id;
   //   if (index >= 1 && index <= modifiedUrls.length) {
   //     const url = modifiedUrls[index];
@@ -536,7 +537,6 @@ const CreateVehicle = () => {
         uploadVehicleRegoDocuemnts(file)
       )
     );
-    console.log({ uploadDocument });
 
     const customVehiclePayload = {
       ...vehicleDetails,
@@ -547,7 +547,6 @@ const CreateVehicle = () => {
         status: selectedStatusValues[index % selectedStatusValues.length],
       })),
     };
-    console.log({ customVehiclePayload });
 
     const response: any = await addVehicle(customVehiclePayload, token || "");
     if (response?.status == 200) {
@@ -562,7 +561,6 @@ const CreateVehicle = () => {
       setTimeout(() => {
         router.push("/onboarding/vehicle-list");
       }, 3000);
-      console.log("response :", response);
     } else {
       toast("Something went wrong", {
         icon: "⚠️",
@@ -605,7 +603,7 @@ const CreateVehicle = () => {
 
   return (
     <>
-      <div className="flex bg-[#E9EFFF]">
+      <div className="flex bg-[#F8F8F8]">
         <div>
           <Toaster />
         </div>
@@ -621,7 +619,7 @@ const CreateVehicle = () => {
             </div>
           </div>
           <div className="bg-white mr-4 px-4 rounded-md mt-4 p-4">
-            <Progressbar />
+            <Progressbar value={progress} />
             <div>
               <h3 className="text-black w-full my-4 rounded-md font-semibold">
                 Vehicle Information
@@ -1752,9 +1750,6 @@ const taxCollection = [
   },
 ];
 const paymentMethodColleciton = [
-  {
-    value: "Select Payment Method",
-  },
   {
     value: "Credit Card",
   },

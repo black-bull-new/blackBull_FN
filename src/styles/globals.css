@@ -81,22 +81,22 @@ input::-webkit-inner-spin-button {
   background: linear-gradient(90deg, rgba(43, 54, 217, 0.3) 0%, #bdc1ff00 100%);
 }
 
-/* Sidebar container */
 .custom-scrollbar {
+  /* Hide the scrollbar */
   scrollbar-width: thin;
-  scrollbar-color: #334155 #cbd5e1;
+  scrollbar-color: transparent transparent; /* Set the scrollbar color to transparent */
+
+  /* Adjust scrollbar track and thumb */
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
+  width: 4px; /* Set a thin width for the scrollbar */
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #334155;
+  background-color: transparent; /* Make the scrollbar thumb transparent */
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background-color: #cbd5e1;
-  border-radius: 50%;
-
+  background-color: transparent; /* Make the scrollbar track transparent */
 }

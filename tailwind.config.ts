@@ -29,6 +29,7 @@ const config: Config = {
     "./components/imageUpload/ImageUpload.tsx",
     "./components/UserDetails.tsx",
     "./components/SupplierDetails.tsx",
+    "./components/CustomerDetails.tsx",
   ],
   theme: {
     extend: {
