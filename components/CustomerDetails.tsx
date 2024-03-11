@@ -15,96 +15,33 @@ const CustomerDetails = () => {
 
   const [customers, setCustomers] = useState([]);
 
-  const getUsers = async () => {
-    const data = await getAllCustomer(token || "");
-    if (data) {
-      setCustomers(data.data);
-    }
-  };
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(5); // Number of items to display per page
 
-  useEffect(() => {
-    getUsers();
-  }, []);
+  // Get current items based on pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = customers.slice(indexOfFirstItem, indexOfLastItem);
 
-  const handleDelete = async () => {
-    const response = await deleteUser(token || "", userToDelete);
-    if (response) {
-      setUserToDelete("");
-      setDelete(false);
-      getUsers();
-    } else {
-      setDelete(false);
-      setUserToDelete("");
-    }
-  };
-
-  console.log("customers :", customers);
-
-  function getCurrentDate() {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Months are zero-based
-    const day = String(currentDate.getDate()).padStart(2, "0");
-
-    const formattedDate = `${year}-${month}-${day}`;
-    return formattedDate;
-  }
-
-  return (
-    <>
-      <div className="mr-4">
-        <div>
-          <div className="mt-4 mb-20 bg-white p-4 rounded-md items-center ">
-            <div className="flex items-center justify-between">
-              <h3 className="leading-loose font-semibold">
-                Existing Customer List
-              </h3>
-              <div className="flex gap-2 relative">
-                <button className="text-[#2B36D9] font-semibold mx-2">
-                  Bulk Upload
-                </button>
-                <Button
-                  text="Add Customer"
-                  className="px-4 rounded-full"
-                  onClick={() => router.push("/onboarding/add-customer")}
-                />
-              </div>
-            </div>
-            <div>   
-              <div className="grid items-center text-center grid-cols-[12%_12%_12%_12%_12%_12%_12%_12%] bg-[#EFF2F3] justify-center p-4 rounded-md mt-4">
-                {customerDetailsHeading?.map((value, index) => {
-                  return (
-                    <>
-                      <div className="font-semibold text-sm" key={index}>
-                        {value.heading}
-                      </div>
-                    </>
-                  );
-                })}
-              </div>
-              <div className="grid items-center text-center grid-cols-[12%_12%_12%_12%_12%_12%_12%_12%] p-4 border justify-center">
-                {customers?.map((item: any, ind: number) => {
-                  return (
-                    <React.Fragment key={item?._id}>
-                      <p className="mb-4">{item?.customerId || "TempID"}</p>
-                      <p className="mb-4">{item?.companyName}</p>
-                      <p className="mb-4">{item?.tradingName}</p>
-                      <p className="mb-4">
-                        {item?.abnNumber}
-                      </p>
-                      <p className="mb-4">
-                        {item?.legalName || "Entire Fleet"}
-                      </p>
-                      <p className="mb-4">
-                        {item?.firstName}
-                      </p>
-                      <p className="mb-4">
-                        {item?.lastName}
-                      </p>
-                      <p className="mb-4">
-                        <CommonUI status="Active" />
-                      </p>
-                      {/* <div className="flex justify-center gap-2 mb-4">
+  // Render vehicle items
+  const renderCustomerItems = () => {
+    return currentItems.map((item: any, index) => (
+      <div
+        key={index}
+        className="grid text-center grid-cols-[12%_12%_12%_12%_12%_12%_12%_12%] p-4 border"
+      >
+        <React.Fragment key={item?._id}>
+          <p className="mb-4">{item?.customerId || "TempID"}</p>
+          <p className="mb-4">{item?.companyName}</p>
+          <p className="mb-4">{item?.tradingName}</p>
+          <p className="mb-4">{item?.abnNumber}</p>
+          <p className="mb-4">{item?.legalName || "Entire Fleet"}</p>
+          <p className="mb-4">{item?.firstName}</p>
+          <p className="mb-4">{item?.lastName}</p>
+          <p className="mb-4">
+            <CommonUI status="Active" />
+          </p>
+          {/* <div className="flex justify-center gap-2 mb-4">
                         <Image
                           src={"/edit.svg"}
                           alt="edit"
@@ -130,10 +67,89 @@ const CustomerDetails = () => {
                           }}
                         />
                       </div> */}
-                    </React.Fragment>
+        </React.Fragment>
+      </div>
+    ));
+  };
+
+  const getUsers = async () => {
+    const data = await getAllCustomer(token || "");
+    if (data) {
+      setCustomers(data.data);
+    }
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+  const handleDelete = async () => {
+    const response = await deleteUser(token || "", userToDelete);
+    if (response) {
+      setUserToDelete("");
+      setDelete(false);
+      getUsers();
+    } else {
+      setDelete(false);
+      setUserToDelete("");
+    }
+  };
+
+  console.log("customers :", customers);
+
+  return (
+    <>
+      <div className="mr-4">
+        <div>
+          <div className="mt-4 mb-20 bg-white p-4 rounded-md items-center ">
+            <div className="flex items-center justify-between">
+              <h3 className="leading-loose font-semibold">
+                Existing Customer List
+              </h3>
+              <div className="flex gap-2 relative">
+                <button className="text-[#2B36D9] font-semibold mx-2">
+                  Bulk Upload
+                </button>
+                <Button
+                  text="Add Customer"
+                  className="px-4 rounded-full"
+                  onClick={() => router.push("/onboarding/add-customer")}
+                />
+              </div>
+            </div>
+            <div>
+              <div className="grid items-center text-center grid-cols-[12%_12%_12%_12%_12%_12%_12%_12%] bg-[#EFF2F3] justify-center p-4 rounded-md mt-4">
+                {customerDetailsHeading?.map((value, index) => {
+                  return (
+                    <>
+                      <div className="font-semibold text-sm" key={index}>
+                        {value.heading}
+                      </div>
+                    </>
                   );
                 })}
               </div>
+              {/* <div className="grid items-center text-center grid-cols-[12%_12%_12%_12%_12%_12%_12%_12%] p-4 border justify-center">
+                {customers?.map((item: any, ind: number) => {
+                  return (
+                    <React.Fragment key={item?._id}>
+                      <p className="mb-4">{item?.customerId || "TempID"}</p>
+                      <p className="mb-4">{item?.companyName}</p>
+                      <p className="mb-4">{item?.tradingName}</p>
+                      <p className="mb-4">{item?.abnNumber}</p>
+                      <p className="mb-4">
+                        {item?.legalName || "Entire Fleet"}
+                      </p>
+                      <p className="mb-4">{item?.firstName}</p>
+                      <p className="mb-4">{item?.lastName}</p>
+                      <p className="mb-4">
+                        <CommonUI status="Active" />
+                      </p>
+                    </React.Fragment>
+                  );
+                })}
+              </div> */}
+              {renderCustomerItems()}
               {deletePopUp === true ? (
                 <>
                   <div className="w-screen h-screen  fixed top-0 left-0 backdrop-blur-md flex">
@@ -163,15 +179,55 @@ const CustomerDetails = () => {
                 ""
               )}
             </div>
+            {/* Pagination */}
             <div className="flex justify-between pt-4 bg-white  p-4">
-              <div>Showing 1 to 6 of 56 entries</div>
-              <div className="bg-[#CED7DB] w-8 h-8 rounded-full flex items-center justify-center cursor-pointer">
-                <Image
-                  src="/chevron_right.png"
-                  alt="chevron right"
-                  width={22}
-                  height={22}
-                />
+              <div>
+                Showing {indexOfFirstItem + 1} to{" "}
+                {Math.min(indexOfLastItem, customers.length)} of{" "}
+                {customers.length} entries
+              </div>
+              <div className="flex gap-2">
+                <div
+                  className={`bg-[#CED7DB] w-8 h-8 rounded-full flex items-center justify-center cursor-pointer ${
+                    currentPage === 1
+                      ? "bg-gray-100 cursor-not-allowed"
+                      : "bg-[#D9D9D9]"
+                  }`}
+                  onClick={() => {
+                    if (currentPage > 1) {
+                      setCurrentPage(currentPage - 1);
+                    }
+                  }}
+                >
+                  <Image
+                    src="/chevron_right.png"
+                    alt="chevron right"
+                    width={22}
+                    height={22}
+                    className="transform rotate-180"
+                  />
+                </div>
+                <div
+                  className={`bg-[#CED7DB] w-8 h-8 rounded-full flex items-center justify-center cursor-pointer ${
+                    currentPage === Math.ceil(customers.length / itemsPerPage)
+                      ? "bg-gray-100 cursor-not-allowed"
+                      : "bg-[#D9D9D9]"
+                  }`}
+                  onClick={() => {
+                    if (
+                      currentPage !== Math.ceil(customers.length / itemsPerPage)
+                    ) {
+                      setCurrentPage(currentPage + 1);
+                    }
+                  }}
+                >
+                  <Image
+                    src="/chevron_right.png"
+                    alt="chevron right"
+                    width={22}
+                    height={22}
+                  />
+                </div>
               </div>
             </div>
           </div>

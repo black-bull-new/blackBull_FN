@@ -14,6 +14,60 @@ const SupplierDetails = () => {
   const [userToDelete, setUserToDelete] = useState("");
 
   const [supplier, setSupplier] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(5); // Number of items to display per page
+
+  // Get current items based on pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = supplier.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Render vehicle items
+  const renderSupplierItems = () => {
+    return currentItems.map((item: any, index) => (
+      <div
+        key={index}
+        className="grid text-center grid-cols-[17%_17%_17%_17%_17%_17%] p-4 border"
+      >
+        <React.Fragment key={item?._id}>
+          <p className="mb-4">{index + 1}</p>
+          <p className="mb-4">{item?.companyName}</p>
+          <p className="mb-4">{item?.tradingName}</p>
+          <p className="mb-4">{item?.abn}</p>
+          <p className="mb-4">{item?.legalName}</p>
+          <p className="mb-4">
+            <CommonUI status="Active" />
+          </p>
+          {/* <div className="flex justify-center gap-2 mb-4">
+                        <Image
+                          src={"/edit.svg"}
+                          alt="edit"
+                          width={18}
+                          height={18}
+                          onClick={() => {
+                            router.push({
+                              pathname: "/onboarding/edit-user",
+                              query: { id: item?._id },
+                            });
+                          }}
+                          className="cursor-pointer"
+                        />
+                        <Image
+                          src={"/trash.svg"}
+                          alt="edit"
+                          width={18}
+                          height={18}
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setDelete(true);
+                            setUserToDelete(item?._id);
+                          }}
+                        />
+                      </div> */}
+        </React.Fragment>
+      </div>
+    ));
+  };
 
   const getUsers = async () => {
     const data = await getAllSupplier(token || "");
@@ -82,7 +136,7 @@ const SupplierDetails = () => {
                   );
                 })}
               </div>
-              <div className="grid items-center text-center grid-cols-[17%_17%_17%_17%_17%_17%] p-4 border justify-center">
+              {/* <div className="grid items-center text-center grid-cols-[17%_17%_17%_17%_17%_17%] p-4 border justify-center">
                 {supplier?.map((item: any, ind: number) => {
                   return (
                     <React.Fragment key={item?._id}>
@@ -94,36 +148,11 @@ const SupplierDetails = () => {
                       <p className="mb-4">
                         <CommonUI status="Active" />
                       </p>
-                      {/* <div className="flex justify-center gap-2 mb-4">
-                        <Image
-                          src={"/edit.svg"}
-                          alt="edit"
-                          width={18}
-                          height={18}
-                          onClick={() => {
-                            router.push({
-                              pathname: "/onboarding/edit-user",
-                              query: { id: item?._id },
-                            });
-                          }}
-                          className="cursor-pointer"
-                        />
-                        <Image
-                          src={"/trash.svg"}
-                          alt="edit"
-                          width={18}
-                          height={18}
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setDelete(true);
-                            setUserToDelete(item?._id);
-                          }}
-                        />
-                      </div> */}
                     </React.Fragment>
                   );
                 })}
-              </div>
+              </div> */}
+              {renderSupplierItems()}
               {deletePopUp === true ? (
                 <>
                   <div className="w-screen h-screen  fixed top-0 left-0 backdrop-blur-md flex">
@@ -153,15 +182,55 @@ const SupplierDetails = () => {
                 ""
               )}
             </div>
+            {/* Pagination */}
             <div className="flex justify-between pt-4 bg-white  p-4">
-              <div>Showing 1 to 6 of 56 entries</div>
-              <div className="bg-[#CED7DB] w-8 h-8 rounded-full flex items-center justify-center cursor-pointer">
-                <Image
-                  src="/chevron_right.png"
-                  alt="chevron right"
-                  width={22}
-                  height={22}
-                />
+              <div>
+                Showing {indexOfFirstItem + 1} to{" "}
+                {Math.min(indexOfLastItem, supplier.length)} of{" "}
+                {supplier.length} entries
+              </div>
+              <div className="flex gap-2">
+                <div
+                  className={`bg-[#CED7DB] w-8 h-8 rounded-full flex items-center justify-center cursor-pointer ${
+                    currentPage === 1
+                      ? "bg-gray-100 cursor-not-allowed"
+                      : "bg-[#D9D9D9]"
+                  }`}
+                  onClick={() => {
+                    if (currentPage > 1) {
+                      setCurrentPage(currentPage - 1);
+                    }
+                  }}
+                >
+                  <Image
+                    src="/chevron_right.png"
+                    alt="chevron right"
+                    width={22}
+                    height={22}
+                    className="transform rotate-180"
+                  />
+                </div>
+                <div
+                  className={`bg-[#CED7DB] w-8 h-8 rounded-full flex items-center justify-center cursor-pointer ${
+                    currentPage === Math.ceil(supplier.length / itemsPerPage)
+                      ? "bg-gray-100 cursor-not-allowed"
+                      : "bg-[#D9D9D9]"
+                  }`}
+                  onClick={() => {
+                    if (
+                      currentPage !== Math.ceil(supplier.length / itemsPerPage)
+                    ) {
+                      setCurrentPage(currentPage + 1);
+                    }
+                  }}
+                >
+                  <Image
+                    src="/chevron_right.png"
+                    alt="chevron right"
+                    width={22}
+                    height={22}
+                  />
+                </div>
               </div>
             </div>
           </div>

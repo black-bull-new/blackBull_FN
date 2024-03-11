@@ -36,8 +36,8 @@ const Sidebar = () => {
             height={100}
             className="m-auto"
           />
-          <div className="!bg-[#F8F8F8] px-[11px] py-1 mt-2  ">
-            <ul className="list-none px-3    mx-1  bg-white mb-4 mt-4 max-h-[calc(100% - 170px)] overflow-y-auto">
+          <div className="!bg-[#F8F8F8] rounded-2xl  px-[11px] py-1 mt-2  ">
+            <ul className="list-none px-3 rounded-2xl   mx-1  bg-white mb-4 mt-4 max-h-[calc(100% - 170px)] overflow-y-auto">
               {sidebarCollection.map((value, index) => {
                 return (
                   <>

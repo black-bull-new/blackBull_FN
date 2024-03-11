@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Progressbar from "../Progressbar";
 import Maininputfield from "../Maininputfield";
 import DateWithoutDropdown from "../DateWithoutDropdown";
@@ -30,6 +30,25 @@ export const NestedAddVehicle = (props: any) => {
   const [documentRender, setDocumentRender] = React.useState("");
   // const [selectedUploadRegoDocument, setSelectedUploadRegoDocument] =
   //   React.useState("");
+
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const calculateProgress = () => {
+      const { vehicleDocuments, document, ...rest } = addVehicle;
+      // Count filled inputs (excluding the 'documents' array)
+      const filledInputs = Object.values(rest).filter(
+        (value) => value !== ""
+      ).length;
+
+      // Count total inputs (excluding the 'documents' array)
+      const totalInputs = Object.keys(rest).length;
+      const newProgress = (filledInputs / totalInputs) * 100;
+      setProgress(Math.ceil(newProgress));
+    };
+
+    calculateProgress();
+  }, [addVehicle]);
 
   const [selectedFiles, setSelectedFiles] = useState<
     {
@@ -277,6 +296,31 @@ export const NestedAddVehicle = (props: any) => {
     });
   };
 
+  // Function to calculate the difference in days
+  const calculateDaysDifference = () => {
+    const renewalDate: any = new Date(addVehicle.renewalDate);
+    const dateValidUntil: any = new Date(addVehicle.dateValidUntil);
+
+    // Calculate the difference in milliseconds
+    const differenceInMilliseconds = dateValidUntil - renewalDate;
+
+    // Convert milliseconds to days
+    const differenceInDays = Math.ceil(
+      differenceInMilliseconds / (1000 * 60 * 60 * 24)
+    );
+
+    setAddVehicle({
+      ...addVehicle,
+      daysLeft: differenceInDays.toString(),
+    });
+  };
+
+  useEffect(() => {
+    if (addVehicle.renewalDate !== "" && addVehicle.dateValidUntil !== "") {
+      calculateDaysDifference();
+    }
+  }, [addVehicle.renewalDate, addVehicle.dateValidUntil]);
+
   return (
     <div>
       <div>
@@ -285,7 +329,7 @@ export const NestedAddVehicle = (props: any) => {
         </h3>
       </div>
       <div className="p-4 bg-white mr-4 mt-4 rounded-md">
-        <Progressbar />
+        <Progressbar value={progress} />
 
         <h4 className="text-black font-semibold text-sm my-4">
           Vehicle Information
@@ -614,6 +658,7 @@ export const NestedAddVehicle = (props: any) => {
               }
             }}
             errorMessage={error.dateValidUntilError}
+            min={addVehicle.renewalDate}
           />
 
           <Maininputfield

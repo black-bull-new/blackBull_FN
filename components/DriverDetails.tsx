@@ -4,16 +4,92 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { deleteDriver, getAllDrives } from "@/network-request/driver/driverApi";
 import { getCookie } from "cookies-next";
-
+import MobileInput from "./mobile-input/MobileInput";
+import toast, { Toaster } from "react-hot-toast";
+import Maininputfield from "./Maininputfield";
 const DriverDetails = () => {
   const [action, setAction] = useState(false);
   const [addPopUp, setAddPop] = useState(false);
+  const [link, setLink] = useState(false);
   const [deletePopUp, setDelete] = useState(false);
   const router = useRouter();
   const token = getCookie("token");
   const [driveToDelete, setDriverToDelete] = useState("");
 
   const [drivers, setDrivers] = useState([]);
+  const regexOfEmail =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.+([a-zA-Z0-9-]+)2*$/;
+  const [sendLinkContact, setSendLinkContact] = useState({
+    phoneNumber: "",
+    email: "",
+  });
+
+  const [sendLinkError, setSendLinkError] = useState({
+    emailError: "",
+  });
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(5); // Number of items to display per page
+
+  // Get current items based on pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = drivers.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Render vehicle items
+  const renderDriverItems = () => {
+    return currentItems.map((item: any, index) => (
+      <div
+        key={index}
+        className="grid text-center grid-cols-[10%_10%_10%_10%_10%_10%_10%_10%_10%_10%] p-4 border"
+      >
+        <React.Fragment key={item?._id}>
+          <p className="mb-4">{item?.firstName}</p>
+          <p className="mb-4">{item?.lastName}</p>
+          <p className="mb-4">{item?.licenseDetails?.licenseCardNumber}</p>
+          <p className="mb-4">{item?.licenseHistory?.type}</p>
+          <p className="mb-4">{item?.licenseDetails?.expiryDate}</p>
+          <p className="mb-4">{item?.licenseDetails?.state}</p>
+          <p className="mb-4">No Data</p>
+          <p className="mb-4">No Data</p>
+          <p className="mb-4">No Data</p>
+          <div className="flex justify-center gap-2 mb-4">
+            {/* <Image
+                          src={"/edit.svg"}
+                          alt="edit"
+                          width={18}
+                          height={18}
+                          onClick={() => {
+                            router.push({
+                              pathname: "/onboarding/edit-driver",
+                              query: { id: item?._id },
+                            })
+                          }}
+                          className="cursor-pointer"
+                        /> */}
+            <Image
+              src={"/trash.svg"}
+              alt="edit"
+              width={18}
+              height={18}
+              className="cursor-pointer"
+              onClick={() => {
+                setDelete(true);
+                setDriverToDelete(item?._id);
+              }}
+            />
+          </div>
+
+          {/* <div className="mb-4">{item?.licenseDetails?.licenseType}</div>
+                      <div className="mb-4">{item?.licenseDetails?.expiryDate}</div>
+                      <div className="mb-4">{item?.licenseDetails?.state}</div>
+                      <div className="mb-4">{item?.licenceDoc}</div>
+                      <div className="mb-4">{item?.visaStatus}</div>
+                      <div className="mb-4">{item?.complaint}</div> */}
+        </React.Fragment>
+      </div>
+    ));
+  };
 
   const getDrivers = async () => {
     const data = await getAllDrives(token || "");
@@ -27,18 +103,71 @@ const DriverDetails = () => {
   }, []);
 
   const handleDelete = async () => {
-    const response = await deleteDriver(token || "", driveToDelete)
+    const response = await deleteDriver(token || "", driveToDelete);
     if (response) {
-      setDriverToDelete('')
-      setDelete(false)
-      getDrivers()
+      setDriverToDelete("");
+      setDelete(false);
+      getDrivers();
     } else {
-      setDelete(false)
-      setDriverToDelete('')
+      setDelete(false);
+      setDriverToDelete("");
     }
   };
 
   console.log({ drivers }, { token });
+
+  const sendLinkHandler = () => {
+    const hasErrors = checkValidation();
+    if (hasErrors) {
+      toast("Please fix the validation errors before submitting.", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+      return;
+    }
+    toast("Link sent successfully.", {
+      icon: "👏",
+      style: {
+        borderRadius: "10px",
+        background: "#333",
+        color: "#fff",
+      },
+    });
+    setTimeout(() => {
+      setLink(false);
+      setAction(false);
+    }, 3000);
+  };
+
+  const checkValidation = () => {
+    let hasError = false;
+    if (sendLinkContact.email === "" && sendLinkContact.phoneNumber === "") {
+      hasError = true;
+      toast("Please type email OR phone number!!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+    } else if (sendLinkError.emailError !== "") {
+      hasError = true;
+      toast("Please type valid email address !!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+    }
+    return hasError;
+  };
 
   return (
     <>
@@ -72,7 +201,10 @@ const DriverDetails = () => {
                       >
                         Add Driver
                       </div>
-                      <div className="py-2 rounded cursor-pointer hover:bg-[#032272] hover:text-white">
+                      <div
+                        onClick={() => setLink(true)}
+                        className="py-2 rounded cursor-pointer hover:bg-[#032272] hover:text-white"
+                      >
                         Send Form Link
                       </div>
                       <div className="py-2 rounded cursor-pointer hover:bg-[#032272] hover:text-white">
@@ -95,7 +227,7 @@ const DriverDetails = () => {
                   );
                 })}
               </div>
-              <div className="grid items-center text-center grid-cols-[10%_10%_10%_10%_10%_10%_10%_10%_10%_10%] p-4 border">
+              {/* <div className="grid items-center text-center grid-cols-[10%_10%_10%_10%_10%_10%_10%_10%_10%_10%] p-4 border">
                 {drivers?.map((item: any, ind: number) => {
                   return (
                     <React.Fragment key={item?._id}>
@@ -111,39 +243,23 @@ const DriverDetails = () => {
                       <p className="mb-4">No Data</p>
                       <p className="mb-4">No Data</p>
                       <div className="flex justify-center gap-2 mb-4">
-                        {/* <Image
-                          src={"/edit.svg"}
-                          alt="edit"
-                          width={18}
-                          height={18}
-                          onClick={() => {
-                            router.push({
-                              pathname: "/onboarding/edit-driver",
-                              query: { id: item?._id },
-                            })
-                          }}
-                          className="cursor-pointer"
-                        /> */}
                         <Image
                           src={"/trash.svg"}
                           alt="edit"
                           width={18}
                           height={18}
                           className="cursor-pointer"
-                          onClick={() => { setDelete(true); setDriverToDelete(item?._id) }}
+                          onClick={() => {
+                            setDelete(true);
+                            setDriverToDelete(item?._id);
+                          }}
                         />
                       </div>
-
-                      {/* <div className="mb-4">{item?.licenseDetails?.licenseType}</div>
-                      <div className="mb-4">{item?.licenseDetails?.expiryDate}</div>
-                      <div className="mb-4">{item?.licenseDetails?.state}</div>
-                      <div className="mb-4">{item?.licenceDoc}</div>
-                      <div className="mb-4">{item?.visaStatus}</div>
-                      <div className="mb-4">{item?.complaint}</div> */}
                     </React.Fragment>
                   );
                 })}
-              </div>
+              </div> */}
+              {renderDriverItems()}
               {deletePopUp === true ? (
                 <>
                   <div className="w-screen h-screen  fixed top-0 left-0 backdrop-blur-md flex">
@@ -155,7 +271,10 @@ const DriverDetails = () => {
                         <Button
                           text="Cancel"
                           className="!bg-transparent border !text-[#000] !py-[4px] !px-[8px]"
-                          onClick={() => { setDelete(false); setDriverToDelete('') }}
+                          onClick={() => {
+                            setDelete(false);
+                            setDriverToDelete("");
+                          }}
                         />
                         <Button
                           text="Confirm"
@@ -170,15 +289,56 @@ const DriverDetails = () => {
                 ""
               )}
             </div>
+            {/* Pagination */}
             <div className="flex justify-between pt-4 bg-white  p-4">
-              <div>Showing 1 to 6 of 56 entries</div>
-              <div className="bg-[#CED7DB] w-8 h-8 rounded-full flex items-center justify-center cursor-pointer">
-                <Image
-                  src="/chevron_right.png"
-                  alt="chevron right"
-                  width={22}
-                  height={22}
-                />
+              <div>
+                Showing {indexOfFirstItem + 1} to{" "}
+                {Math.min(indexOfLastItem, drivers.length)} of{" "}
+                {drivers.length} entries
+              </div>
+              <div className="flex gap-2">
+                <div
+                  className={`bg-[#CED7DB] w-8 h-8 rounded-full flex items-center justify-center cursor-pointer ${
+                    currentPage === 1
+                      ? "bg-gray-100 cursor-not-allowed"
+                      : "bg-[#D9D9D9]"
+                  }`}
+                  onClick={() => {
+                    if (currentPage > 1) {
+                      setCurrentPage(currentPage - 1);
+                    }
+                  }}
+                >
+                  <Image
+                    src="/chevron_right.png"
+                    alt="chevron right"
+                    width={22}
+                    height={22}
+                    className="transform rotate-180"
+                  />
+                </div>
+                <div
+                  className={`bg-[#CED7DB] w-8 h-8 rounded-full flex items-center justify-center cursor-pointer ${
+                    currentPage === Math.ceil(drivers.length / itemsPerPage)
+                      ? "bg-gray-100 cursor-not-allowed"
+                      : "bg-[#D9D9D9]"
+                  }`}
+                  onClick={() => {
+                    if (
+                      currentPage !==
+                      Math.ceil(drivers.length / itemsPerPage)
+                    ) {
+                      setCurrentPage(currentPage + 1);
+                    }
+                  }}
+                >
+                  <Image
+                    src="/chevron_right.png"
+                    alt="chevron right"
+                    width={22}
+                    height={22}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -210,6 +370,63 @@ const DriverDetails = () => {
           </>
         ) : (
           ""
+        )}
+        {link === true && (
+          <div className="w-screen h-screen  fixed top-0 left-0 backdrop-blur-md flex">
+            <div className="w-[550px] h-fit p-4 bg-white m-auto rounded-xl relative border">
+              <h4 className="text-center font-semibold p-4 mb-2">
+                Choose your preferred option for receiving the form link
+              </h4>
+              <div>
+                <Toaster />
+              </div>
+              <div className="grid gap-2 justify-center">
+                <div>
+                  <MobileInput
+                    state={sendLinkContact}
+                    setState={setSendLinkContact}
+                  />
+                </div>
+                <div className="text-center">or</div>
+                <div>
+                  <Maininputfield
+                    label="Email"
+                    labelClass="text-sm mb-1 font-semibold"
+                    value={sendLinkContact.email}
+                    onChange={(e: any) => {
+                      const inputValue = e.target.value;
+                      if (!regexOfEmail.test(inputValue)) {
+                        setSendLinkError({
+                          ...sendLinkError,
+                          emailError: "Please enter a valid email address",
+                        });
+                      } else {
+                        setSendLinkError({ ...sendLinkError, emailError: "" });
+                      }
+                      setSendLinkContact({
+                        ...sendLinkContact,
+                        email: e.target.value,
+                      });
+                    }}
+                    className="!font-bold"
+                    errorMessage={sendLinkError.emailError}
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end mt-4 gap-2">
+                <Button
+                  text="Cancel"
+                  className="!bg-transparent border !text-[#000] !py-[6px] !px-4"
+                  onClick={() => setLink(false)}
+                />
+                <Button
+                  text="Send Link"
+                  className=" !py-[6px] !px-4"
+                  onClick={sendLinkHandler}
+                />
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </>

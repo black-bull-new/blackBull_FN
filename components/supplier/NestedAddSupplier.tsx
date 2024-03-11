@@ -43,6 +43,204 @@ export const NestedAddSupplier = (props: any) => {
     setAddMoreAddress,
   } = props;
 
+  const [progress, setProgress] = useState(0);
+
+  const [progressOfState, SetProgressOfState] = useState({
+    companyName: "",
+    tradingName: "",
+    abn: "",
+    legalName: "",
+    website: "",
+    profile: "",
+    opreationsContactPerson: "",
+    opreationsDesgination: "",
+    opreationsNumber: "",
+    opreationsOpreationEmail: "",
+    complianceContactPerson: "",
+    complianceDesgination: "",
+    complianceNumber: "",
+    complianceComplianceEmail: "",
+    adminContactPerson: "",
+    adminDesgination: "",
+    adminNumber: "",
+    adminAdminEmail: "",
+    dispatchContactPerson: "",
+    dispatchDesgination: "",
+    dispatchNumber: "",
+    dispatchDispatchEmail: "",
+    invoicePreferences: "",
+    invoiceCommunicationPreferences: "",
+    companySuiteDetailsDesignation: "",
+    companySuiteDetailsDirectorEmailAddress: "",
+    companySuiteDetailsDirectorNumber: "",
+    bankDetailsAccountName: "",
+    bankDetailsBankName: "",
+    bankDetailsBsb: "",
+    bankDetailsAccountNumber: "",
+    businessCoverageAreaCovered: "",
+    businessCoverageBusinessOpreations: "",
+    warehouseDetailsStreet1: "",
+    warehouseDetailsStreet2: "",
+    warehouseDetailsSuburb: "",
+    warehouseDetailsState: "",
+    warehouseDetailsCountry: "",
+    warehouseDetailsPostcode: "",
+    certificateOfAccreditationAccreditationNumber: "",
+    certificateOfAccreditationMassManagementExpiryDate: "",
+    certificateOfAccreditationBasicFatigueExpiryDate: "",
+    certificateOfAccreditationDangerousGoodsExpiryDate: "",
+    certificateOfAccreditationNhvassExpiryDate: "",
+    certificateOfAccreditationHaccpExpiryDate: "",
+    insuranceDetailsProductLiabilityPolicyNumber: "",
+    insuranceDetailsProductLiabilityInsurer: "",
+    insuranceDetailsProductLiabilityExpiryDate: "",
+    insuranceDetailsProductLiabilitySumAssured: "",
+    insuranceDetailsPublicLiabilityPolicyNumber: "",
+    insuranceDetailsPublicLiabilityInsurer: "",
+    insuranceDetailsPublicLiabilityExpiryDate: "",
+    insuranceDetailsPublicLiabilitySumAssured: "",
+    insuranceDetailsWorkCoverEmployerNumber: "",
+    insuranceDetailsWorkCoverValid: "",
+    insuranceDetailsWorkCoverValidTill: "",
+    insuranceDetailsWorkCoverDuesDays: "",
+    insuranceDetailsMarineGeneralPolicyNumber: "",
+    insuranceDetailsMarineGeneralInsurer: "",
+    insuranceDetailsMarineGeneralExpiryDate: "",
+    insuranceDetailsMarineGeneralSumAssured: "",
+    insuranceDetailsMarineAlcoholPolicyNumber: "",
+    insuranceDetailsMarineAlcoholInsurer: "",
+    insuranceDetailsMarineAlcoholExpiryDate: "",
+    insuranceDetailsMarineAlcoholSumAssured: "",
+    insuranceDetailsCocPolicyNumber: "",
+    insuranceDetailsCocInsurer: "",
+    insuranceDetailsCocExpiryDate: "",
+    insuranceDetailsCocSumAssured: "",
+  });
+
+  useEffect(() => {
+    SetProgressOfState({
+      ...progressOfState,
+      companyName: addSupplier.companyName,
+      tradingName: addSupplier.tradingName,
+      abn: addSupplier.abn,
+      legalName: addSupplier.legalName,
+      website: addSupplier.website,
+      opreationsContactPerson: addSupplier.opreations.contactPerson,
+      opreationsDesgination: addSupplier.opreations.desgination,
+      opreationsNumber: addSupplier.opreations.number,
+      opreationsOpreationEmail: addSupplier.opreations.opreationEmail,
+      complianceContactPerson: addSupplier.compliance.contactPerson,
+      complianceDesgination: addSupplier.compliance.desgination,
+      complianceNumber: addSupplier.compliance.number,
+      complianceComplianceEmail: addSupplier.compliance.complianceEmail,
+      adminContactPerson: addSupplier.admin.contactPerson,
+      adminDesgination: addSupplier.admin.desgination,
+      adminNumber: addSupplier.admin.number,
+      adminAdminEmail: addSupplier.admin.adminEmail,
+      dispatchContactPerson: addSupplier.dispatch.contactPerson,
+      dispatchDesgination: addSupplier.dispatch.desgination,
+      dispatchNumber: addSupplier.dispatch.number,
+      dispatchDispatchEmail: addSupplier.dispatch.dispatchEmail,
+      invoicePreferences: addSupplier.invoicePreferences,
+      invoiceCommunicationPreferences:
+        addSupplier.invoiceCommunicationPreferences,
+      companySuiteDetailsDesignation: addMoreDirector[0]?.designation,
+      companySuiteDetailsDirectorEmailAddress:
+        addMoreDirector[0]?.directorEmailAddress,
+      companySuiteDetailsDirectorNumber: addMoreDirector[0]?.directorNumber,
+      bankDetailsAccountName: addSupplier.bankDetails.accountName,
+      bankDetailsBankName: addSupplier.bankDetails.bankName,
+      bankDetailsBsb: addSupplier.bankDetails.bsb,
+      bankDetailsAccountNumber: addSupplier.bankDetails.accountNumber,
+      businessCoverageAreaCovered: addSupplier.businessCoverage.areaCovered,
+      businessCoverageBusinessOpreations:
+        addSupplier.businessCoverage.businessOpreations,
+      warehouseDetailsStreet1: addMoreAddress[0]?.street1,
+      warehouseDetailsStreet2: addMoreAddress[0]?.street2,
+      warehouseDetailsSuburb: addMoreAddress[0]?.suburb,
+      warehouseDetailsState: addMoreAddress[0]?.state,
+      warehouseDetailsCountry: addMoreAddress[0]?.country,
+      warehouseDetailsPostcode: addMoreAddress[0]?.postcode,
+      certificateOfAccreditationAccreditationNumber:
+        addSupplier.certificateOfAccreditation.accreditationNumber,
+      certificateOfAccreditationMassManagementExpiryDate:
+        addSupplier.certificateOfAccreditation.massManagementExpiryDate,
+      certificateOfAccreditationBasicFatigueExpiryDate:
+        addSupplier.certificateOfAccreditation.basicFatigueExpiryDate,
+      certificateOfAccreditationDangerousGoodsExpiryDate:
+        addSupplier.certificateOfAccreditation.dangerousGoodsExpiryDate,
+      certificateOfAccreditationNhvassExpiryDate:
+        addSupplier.certificateOfAccreditation.nhvassExpiryDate,
+      certificateOfAccreditationHaccpExpiryDate:
+        addSupplier.certificateOfAccreditation.haccpExpiryDate,
+      insuranceDetailsProductLiabilityPolicyNumber:
+        addSupplier.insuranceDetails.productLiability.policyNumber,
+      insuranceDetailsProductLiabilityInsurer:
+        addSupplier.insuranceDetails.productLiability.insurer,
+      insuranceDetailsProductLiabilityExpiryDate:
+        addSupplier.insuranceDetails.productLiability.expiryDate,
+      insuranceDetailsProductLiabilitySumAssured:
+        addSupplier.insuranceDetails.productLiability.sumAssured,
+      insuranceDetailsPublicLiabilityPolicyNumber:
+        addSupplier.insuranceDetails.publicLiability.policyNumber,
+      insuranceDetailsPublicLiabilityInsurer:
+        addSupplier.insuranceDetails.publicLiability.insurer,
+      insuranceDetailsPublicLiabilityExpiryDate:
+        addSupplier.insuranceDetails.publicLiability.expiryDate,
+      insuranceDetailsPublicLiabilitySumAssured:
+        addSupplier.insuranceDetails.publicLiability.sumAssured,
+      insuranceDetailsWorkCoverEmployerNumber:
+        addSupplier.insuranceDetails.workCover.employerNumber,
+      insuranceDetailsWorkCoverValid:
+        addSupplier.insuranceDetails.workCover.valid,
+      insuranceDetailsWorkCoverValidTill:
+        addSupplier.insuranceDetails.workCover.validTill,
+      insuranceDetailsWorkCoverDuesDays:
+        addSupplier.insuranceDetails.workCover.duesDays,
+      insuranceDetailsMarineGeneralPolicyNumber:
+        addSupplier.insuranceDetails.marineGeneral.policyNumber,
+      insuranceDetailsMarineGeneralInsurer:
+        addSupplier.insuranceDetails.marineGeneral.insurer,
+      insuranceDetailsMarineGeneralExpiryDate:
+        addSupplier.insuranceDetails.marineGeneral.expiryDate,
+      insuranceDetailsMarineGeneralSumAssured:
+        addSupplier.insuranceDetails.marineGeneral.sumAssured,
+      insuranceDetailsMarineAlcoholPolicyNumber:
+        addSupplier.insuranceDetails.marineAlcohol.policyNumber,
+      insuranceDetailsMarineAlcoholInsurer:
+        addSupplier.insuranceDetails.marineAlcohol.insurer,
+      insuranceDetailsMarineAlcoholExpiryDate:
+        addSupplier.insuranceDetails.marineAlcohol.expiryDate,
+      insuranceDetailsMarineAlcoholSumAssured:
+        addSupplier.insuranceDetails.marineAlcohol.sumAssured,
+      insuranceDetailsCocPolicyNumber:
+        addSupplier.insuranceDetails.coc.policyNumber,
+      insuranceDetailsCocInsurer: addSupplier.insuranceDetails.coc.insurer,
+      insuranceDetailsCocExpiryDate:
+        addSupplier.insuranceDetails.coc.expiryDate,
+      insuranceDetailsCocSumAssured:
+        addSupplier.insuranceDetails.coc.sumAssured,
+    });
+  }, [addSupplier, addMoreDirector, addMoreAddress]);
+
+  useEffect(() => {
+    const calculateProgress = () => {
+      // Count filled inputs (excluding the 'documents' array)
+      const filledInputs = Object.values(progressOfState).filter(
+        (value) => value !== ""
+      ).length;
+
+      // Count total inputs (excluding the 'documents' array)
+      const totalInputs = Object.keys(progressOfState).length;
+      const newProgress = (filledInputs / totalInputs) * 100;
+      setProgress(Math.ceil(newProgress));
+    };
+
+    calculateProgress();
+  }, [progressOfState]);
+
+  console.log("progressOfState",progressOfState)
+
   const [selectedFiles, setSelectedFiles] = useState<
     { id: number; file: File; currentDate: Date | null }[]
   >([]);
@@ -385,7 +583,7 @@ export const NestedAddSupplier = (props: any) => {
       </div>
       <div className="bg-white mr-4 px-4 rounded-md mt-4 p-4 rounded-md">
         <div className="mx-2">
-          <Progressbar value={0} />
+          <Progressbar value={progress} />
         </div>
         <div className="relative w-fit">
           <span className="flex flex-row justify-center my-4">
