@@ -324,11 +324,18 @@ export const NestedAddVehicle = (props: any) => {
   return (
     <div>
       <div>
-        <h3 className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">
-          Add Vehicle
-        </h3>
+        <div className="bg-white mr-4 flex justify-between items-center rounded-2xl">
+          <h2 className=" w-full p-4 rounded-2xl font-bold text-[#16161D] text-[24px]">
+            Add Vehicle
+          </h2>
+          <div className="h-8 w-8 flex justify-center cursor-pointer text-2xl items-center bg-blueGrey-100 rounded-full mr-4">
+            <span className="mt-[-2px] ml-[2px] text-[#292D32] rotate-45">
+              +
+            </span>
+          </div>
+        </div>
       </div>
-      <div className="p-4 bg-white mr-4 mt-4 rounded-md">
+      <div className="p-4 bg-white mr-4 mt-4 rounded-2xl">
         <Progressbar value={progress} />
 
         <h4 className="text-black font-semibold text-sm my-4">
@@ -798,7 +805,7 @@ export const NestedAddVehicle = (props: any) => {
             </button>
           </div>
 
-          <div className="grid grid-cols-[16%_16%_16%_16%_16%_20%] text-black bg-[#EFF2F3] py-4 rounded-md flex text-center">
+          <div className="grid grid-cols-[16%_16%_16%_16%_16%_20%] text-black bg-[#EFF2F3] py-4 rounded-2xl flex text-center">
             {vehicleDocumentCollection?.map((value, index) => {
               return (
                 <>

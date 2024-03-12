@@ -368,10 +368,15 @@ const NestedAddDriver = (props: any) => {
 
   return (
     <div>
-      <div className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">
-        <h2 className="text-black">Add Driver</h2>
+      <div className="bg-white mr-4 flex justify-between items-center rounded-2xl">
+        <h2 className=" w-full p-4 rounded-2xl font-bold text-[#16161D] text-[24px]">
+          Add Driver
+        </h2>
+        <div className="h-8 w-8 flex justify-center cursor-pointer text-2xl items-center bg-blueGrey-100 rounded-full mr-4">
+          <span className="mt-[-2px] ml-[2px] text-[#292D32] rotate-45">+</span>
+        </div>
       </div>
-      <div className=" mt-4 bg-white p-4 mr-4 rounded-md mb-20">
+      <div className=" mt-4 bg-white p-4 mr-4 rounded-2xl mb-20">
         <Progressbar value={progress} />
         <div className="relative w-fit">
           <span className="flex flex-row justify-center my-4">
@@ -1610,7 +1615,7 @@ const NestedAddDriver = (props: any) => {
 
         <div className="mb-4 mt-8">
           <div className="flex">
-            <h3 className="w-full mb-4 rounded-md font-semibold text-black">
+            <h3 className="w-full mb-4 rounded-2xl font-semibold text-black">
               {" "}
               Onboarding Documents
             </h3>
@@ -1622,7 +1627,7 @@ const NestedAddDriver = (props: any) => {
             </button>
           </div>
 
-          <div className="grid grid-cols-5 bg-table-header p-4 rounded-md text-black text-center mb-2 ">
+          <div className="grid grid-cols-5 bg-table-header p-4 rounded-2xl text-black text-center mb-2 ">
             {documentCollectionHeading?.map((value, index) => {
               return (
                 <>
@@ -1633,7 +1638,7 @@ const NestedAddDriver = (props: any) => {
               );
             })}
           </div>
-          <div className="grid grid-cols-5 p-4 rounded-md text-black text-center items-center">
+          <div className="grid grid-cols-5 p-4 rounded-2xl text-black text-center items-center">
             {documentDataCollection?.map((data: any, index: any) => {
               return (
                 <>

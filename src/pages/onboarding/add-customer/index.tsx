@@ -587,16 +587,16 @@ const AddCustomer = () => {
   return (
     <>
       {/* <Header /> */}
-      <div className="flex bg-[#F8F8F8]">
+      <div className="flex ml-[301px] ps-4 rounded-2xl bg-[#F8F8F8]">
         <div>
           <Toaster />
         </div>
         {/* <div className="sticky top-0">
           <Sidebar />
         </div> */}
-        <div className="ml-[316px] w-full mt-4">
-          <div className="bg-white mr-4 flex justify-between items-center rounded-md">
-            <h2 className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">
+        <div className="w-full mt-4">
+          <div className="bg-white mr-4 flex justify-between items-center rounded-2xl">
+            <h2 className=" w-full p-4 rounded-2xl font-bold text-[#16161D] text-[24px]">
               Add Customer
             </h2>
             <div className="h-8 w-8 flex justify-center cursor-pointer text-2xl items-center bg-blueGrey-100 rounded-full mr-4">
@@ -605,7 +605,7 @@ const AddCustomer = () => {
               </span>
             </div>
           </div>
-          <div className="bg-white mr-4 px-4  mt-4 p-4 rounded-md">
+          <div className="bg-white mr-4 px-4  mt-4 p-4 rounded-2xl">
             <div className="mx-2">
               <Progressbar value={progress} />
             </div>
@@ -657,7 +657,7 @@ const AddCustomer = () => {
               </span>
             </div>
           </div>
-          <div className="bg-white mr-4 mt-4 rounded-md">
+          <div className="bg-white mr-4 mt-4 rounded-2xl">
             <h2 className="font-semibold p-4 text-[#151515] text-[18px]">
               Company Information
             </h2>
@@ -790,7 +790,7 @@ const AddCustomer = () => {
               />
             </div>
           </div>
-          <div className="bg-white mr-4 mt-4 rounded-md">
+          <div className="bg-white mr-4 mt-4 rounded-2xl">
             <h2 className="font-semibold p-4 text-[#151515] text-[18px]">
               Company Address
             </h2>
@@ -954,7 +954,7 @@ const AddCustomer = () => {
               />
             </div>
           </div>
-          <div className="bg-white mr-4 mt-4 rounded-md">
+          <div className="bg-white mr-4 mt-4 rounded-2xl">
             <h2 className="font-semibold p-4 text-[#151515] text-[18px]">
               Contact Information
             </h2>
@@ -2283,11 +2283,11 @@ const AddCustomer = () => {
           <div className="flex justify-end gap-4 my-4 px-4 mb-20">
             <Button
               text="Save"
-              className="!bg-transparent !w-fit border border-[#e5e5e5] !text-black px-8"
+              className="!bg-transparent !w-fit border-[null] font-semibold border-[#e5e5e5] !text-black px-8"
             />
             <Button
               onClick={handleSubmit}
-              text="Create"
+              text="Submit"
               className="!w-fit px-8"
             />
           </div>

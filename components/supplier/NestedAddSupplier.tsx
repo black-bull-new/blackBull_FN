@@ -572,16 +572,16 @@ export const NestedAddSupplier = (props: any) => {
   const handleCocDocument = handleFileChange(setCocDocument, setDocumentRender);
 
   return (
-    <div className="">
-      <div className="bg-white mr-4 flex justify-between items-center rounded-md">
-        <h2 className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">
+    <div>
+      <div className="bg-white mr-4 flex justify-between items-center rounded-2xl">
+        <h2 className=" w-full p-4 rounded-2xl font-bold text-[#16161D] text-[24px]">
           Add Supplier
         </h2>
         <div className="h-8 w-8 flex justify-center cursor-pointer text-2xl items-center bg-blueGrey-100 rounded-full mr-4">
           <span className="mt-[-2px] ml-[2px] text-[#292D32] rotate-45">+</span>
         </div>
       </div>
-      <div className="bg-white mr-4 px-4 rounded-md mt-4 p-4 rounded-md">
+      <div className="bg-white mr-4 px-4 mt-4 p-4 rounded-2xl">
         <div className="mx-2">
           <Progressbar value={progress} />
         </div>
@@ -632,7 +632,7 @@ export const NestedAddSupplier = (props: any) => {
             </span>
           </span>
         </div>
-        <div className="bg-white mr-4 mt-4 rounded-md">
+        <div className="bg-white mr-4 mt-4 rounded-2xl">
           <h2 className="text-black font-semibold mt-8">
             Supplier Information
           </h2>
@@ -2405,10 +2405,10 @@ export const NestedAddSupplier = (props: any) => {
           </div>
         </div>
       </div>
-      <div className="bg-white mr-4 px-4 rounded-md mt-4 p-4">
+      <div className="bg-white mr-4 px-4 rounded-2xl mt-4 p-4">
         <div className="mb-4 mt-8">
           <div className="flex">
-            <h3 className="w-full mb-4 rounded-md font-semibold text-black">
+            <h3 className="w-full mb-4 rounded-2xl font-semibold text-black">
               {" "}
               Compliance Documents
             </h3>
@@ -2420,7 +2420,7 @@ export const NestedAddSupplier = (props: any) => {
             </button>
           </div>
 
-          <div className="grid grid-cols-5 bg-table-header p-4 rounded-md text-black text-center mb-2 ">
+          <div className="grid grid-cols-5 bg-table-header p-4 rounded-2xl text-black text-center mb-2 ">
             {documentCollectionHeading?.map((value, index) => {
               return (
                 <>
@@ -2431,7 +2431,7 @@ export const NestedAddSupplier = (props: any) => {
               );
             })}
           </div>
-          <div className="grid grid-cols-5 p-4 rounded-md text-black text-center items-center">
+          <div className="grid grid-cols-5 p-4 rounded-2xl text-black text-center items-center">
             {documentDataCollection?.map((data: any, index: any) => {
               return (
                 <>

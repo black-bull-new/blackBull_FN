@@ -7,10 +7,12 @@ import { getCookie } from "cookies-next";
 import MobileInput from "./mobile-input/MobileInput";
 import toast, { Toaster } from "react-hot-toast";
 import Maininputfield from "./Maininputfield";
+import FileBulkUpload from "./FileBulkUpload";
 const DriverDetails = () => {
   const [action, setAction] = useState(false);
   const [addPopUp, setAddPop] = useState(false);
   const [link, setLink] = useState(false);
+  const [bulkUpload, setBulkUpload] = useState(false);
   const [deletePopUp, setDelete] = useState(false);
   const router = useRouter();
   const token = getCookie("token");
@@ -29,7 +31,7 @@ const DriverDetails = () => {
   });
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5); // Number of items to display per page
+  const [itemsPerPage] = useState(20); // Number of items to display per page
 
   // Get current items based on pagination
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -172,20 +174,22 @@ const DriverDetails = () => {
   return (
     <>
       <div className="mr-4">
-        <h2 className="bg-white w-full p-4 rounded-md font-bold">
+        <h2 className="bg-white w-full p-4 rounded-2xl font-bold">
           Driver Details
         </h2>
         <div>
-          <div className="mt-4 mb-20 bg-white p-4 rounded-md items-center ">
+          <div className="mt-4 mb-20 bg-white p-4 rounded-2xl items-center ">
             <div className="flex items-center justify-between">
               <h3 className="leading-loose font-semibold">
                 Existing Driver List
               </h3>
               <div className="flex gap-2 relative">
-                <Button
-                  text="Bulk Upload"
-                  className="bg-accent3  px-4 rounded-xl border border-[#6599FF] tracking-wide"
-                />
+                <button
+                  onClick={() => setBulkUpload(true)}
+                  className="text-[#2B36D9] font-semibold mx-2"
+                >
+                  Bulk Upload
+                </button>
                 <Button
                   text="Choose Action"
                   className="px-4 rounded-xl"
@@ -270,7 +274,7 @@ const DriverDetails = () => {
                       <div className="flex justify-end absolute bottom-4 right-4 gap-2">
                         <Button
                           text="Cancel"
-                          className="!bg-transparent border !text-[#000] !py-[4px] !px-[8px]"
+                          className="!bg-transparent border-[null] font-semibold !text-[#000] !py-[4px] !px-[8px]"
                           onClick={() => {
                             setDelete(false);
                             setDriverToDelete("");
@@ -278,7 +282,7 @@ const DriverDetails = () => {
                         />
                         <Button
                           text="Confirm"
-                          className=" !py-[4px] !px-[8px] !bg-red-500"
+                          className="rounded-md !py-[4px] !px-[8px] !bg-red-500"
                           onClick={() => handleDelete()}
                         />
                       </div>
@@ -293,8 +297,8 @@ const DriverDetails = () => {
             <div className="flex justify-between pt-4 bg-white  p-4">
               <div>
                 Showing {indexOfFirstItem + 1} to{" "}
-                {Math.min(indexOfLastItem, drivers.length)} of{" "}
-                {drivers.length} entries
+                {Math.min(indexOfLastItem, drivers.length)} of {drivers.length}{" "}
+                entries
               </div>
               <div className="flex gap-2">
                 <div
@@ -325,8 +329,7 @@ const DriverDetails = () => {
                   }`}
                   onClick={() => {
                     if (
-                      currentPage !==
-                      Math.ceil(drivers.length / itemsPerPage)
+                      currentPage !== Math.ceil(drivers.length / itemsPerPage)
                     ) {
                       setCurrentPage(currentPage + 1);
                     }
@@ -356,12 +359,12 @@ const DriverDetails = () => {
                 <div className="flex justify-end absolute bottom-4 right-4 gap-2">
                   <Button
                     text="Cancel"
-                    className="!bg-transparent border !text-[#000] !py-[4px] !px-[8px]"
+                    className="!bg-transparent border-[null] font-semibold !text-[#000] !py-[4px] !px-[8px]"
                     onClick={() => setAddPop(false)}
                   />
                   <Button
                     text="Add Driver"
-                    className=" !py-[4px] !px-[8px]"
+                    className="rounded-md !py-[4px] !px-[8px]"
                     onClick={() => router.push("/onboarding/create-driver")}
                   />
                 </div>
@@ -416,13 +419,51 @@ const DriverDetails = () => {
               <div className="flex justify-end mt-4 gap-2">
                 <Button
                   text="Cancel"
-                  className="!bg-transparent border !text-[#000] !py-[6px] !px-4"
+                  className="!bg-transparent border-[null] font-semibold !text-[#000] !py-[6px] !px-4"
                   onClick={() => setLink(false)}
                 />
                 <Button
                   text="Send Link"
-                  className=" !py-[6px] !px-4"
+                  className="rounded-md !py-[6px] !px-4"
                   onClick={sendLinkHandler}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+        {bulkUpload === true && (
+          <div className="w-screen h-screen  fixed top-0 left-0 backdrop-blur-md flex">
+            <div className="w-[450px] h-fit p-4 bg-white m-auto rounded-xl relative border">
+              <div
+                className="flex justify-end cursor-pointer"
+                onClick={() => setBulkUpload(false)}
+              >
+                <Image src="/add.svg" alt="calender" width={42} height={42} />
+              </div>
+              <h4 className="text-center mt-[-1.5em] font-bold p-4">
+                Streamline Your Fleet
+              </h4>
+              <p className="mb-4 text-center">
+                Upload your list in bulk for a seamless and time-saving
+                experience.
+              </p>
+              <div className="grid gap-2 justify-center">
+                <FileBulkUpload
+                  file="Upload Vehicle Document"
+                  className="font-semibold"
+                  fileName="Upload Vehicle Document"
+                />
+              </div>
+              <div className="flex justify-end mt-4 gap-2">
+                <Button
+                  text="Download Template"
+                  className="!bg-transparent border-[null] font-semibold !text-[#000] !py-[6px] !px-4"
+                  // onClick={() => setLink(false)}
+                />
+                <Button
+                  text="Upload"
+                  className="rounded-md !py-[6px] !px-4"
+                  onClick={() => router.push("/onboarding/create-vehicle")}
                 />
               </div>
             </div>
