@@ -653,12 +653,12 @@ const CreateDriver = () => {
 
   return (
     <>
-      <div className="flex bg-[#F8F8F8]">
+      <div className="flex ml-[301px] ps-4 rounded-2xl bg-[#F8F8F8]">
         <div>
           <Toaster />
         </div>
-        <div className="ml-[316px] w-full mt-4">
-          <div className="bg-white mr-4 flex justify-between items-center rounded-md">
+        <div className=" w-full mt-4">
+          <div className="bg-white mr-4 flex justify-between items-center rounded-2xl">
             <h2 className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">
               Add Driver
             </h2>
@@ -668,7 +668,7 @@ const CreateDriver = () => {
               </span>
             </div>
           </div>
-          <div className="bg-white mr-4 px-4 rounded-md mt-4 p-4">
+          <div className="bg-white mr-4 px-4 rounded-2xl mt-4 p-4">
             <div className="mx-2">
               <Progressbar value={progress} />
             </div>

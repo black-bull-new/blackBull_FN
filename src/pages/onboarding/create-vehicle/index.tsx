@@ -314,50 +314,7 @@ const CreateVehicle = () => {
     setDocumentRender
   );
 
-  // const [selectedFiles, setSelectedFiles] = useState<
-  //   { id: number; file: File; currentDate: Date | null }[]
-  // >([]);
-
-  // const [selectedFileContent, setSelectedFileContent] = useState<string | null>(
-  //   null
-  // );
-  // const [isPreviewVisible, setIsPreviewVisible] = useState(false);
-
-  // const handleFileChanges = (
-  //   event: React.ChangeEvent<HTMLInputElement>,
-  //   documentId: number
-  // ) => {
-  //   const file = event.target.files ? event.target.files[0] : null;
-  //   const documentExists = documentDataCollection.find(
-  //     (doc: any) => doc.id === documentId
-  //   );
-  //   if (file && documentExists) {
-  //     const newSelectedFiles = [...selectedFiles];
-  //     const existingFileIndex = newSelectedFiles.findIndex(
-  //       (file) => file.id === documentId
-  //     );
-  //     const currentDate = new Date();
-  //     if (existingFileIndex !== -1) {
-  //       newSelectedFiles[existingFileIndex] = {
-  //         id: documentId,
-  //         file,
-  //         currentDate,
-  //       };
-  //     } else {
-  //       newSelectedFiles.push({ id: documentId, file, currentDate });
-  //     }
-  //     setSelectedFiles(newSelectedFiles);
-  //   }
-  // };
-
-  const [selectedFiles, setSelectedFiles] = useState<
-    {
-      id: number;
-      file: File;
-      currentDate: Date | null;
-      content: string | null;
-    }[]
-  >([]);
+  const [selectedFiles, setSelectedFiles] = useState<any>([]);
 
   const handleFileChanges = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -416,7 +373,9 @@ const CreateVehicle = () => {
 
   const handleOpenPreview = (documentId: number) => {
     // Open a new tab for the selected document ID
-    const selectedFile = selectedFiles.find((file) => file.id === documentId);
+    const selectedFile = selectedFiles.find(
+      (file: any) => file.id === documentId
+    );
 
     if (selectedFile?.content) {
       const newTab: any = window.open();
@@ -603,12 +562,12 @@ const CreateVehicle = () => {
 
   return (
     <>
-      <div className="flex bg-[#F8F8F8]">
+      <div className="flex ml-[301px] ps-4 rounded-2xl bg-[#F8F8F8]">
         <div>
           <Toaster />
         </div>
-        <div className="ml-[316px] w-full mt-4">
-          <div className="bg-white mr-4 flex justify-between items-center rounded-md">
+        <div className="w-full mt-4">
+          <div className="bg-white mr-4 flex justify-between items-center rounded-2xl">
             <h2 className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">
               Add Vehicle
             </h2>
@@ -618,7 +577,7 @@ const CreateVehicle = () => {
               </span>
             </div>
           </div>
-          <div className="bg-white mr-4 px-4 rounded-md mt-4 p-4">
+          <div className="bg-white mr-4 px-4 rounded-2xl mt-4 p-4">
             <Progressbar value={progress} />
             <div>
               <h3 className="text-black w-full my-4 rounded-md font-semibold">
@@ -1463,16 +1422,16 @@ const CreateVehicle = () => {
                         </div>
                         <div>
                           {selectedFiles.find(
-                            (file) => file.id === data?.id
+                            (file: any) => file.id === data?.id
                           ) ? (
                             <div>
                               <p>
                                 {selectedFiles.find(
-                                  (file) => file.id === data?.id
+                                  (file: any) => file.id === data?.id
                                 )?.currentDate
                                   ? formatDate(
                                       selectedFiles.find(
-                                        (file) => file.id === data?.id
+                                        (file: any) => file.id === data?.id
                                       )?.currentDate
                                     )
                                   : "No date available"}
@@ -1483,13 +1442,14 @@ const CreateVehicle = () => {
                           )}
                         </div>
                         <div>
-                          {selectedFiles.find((file) => file.id === data?.id)
-                            ?.file ? (
+                          {selectedFiles.find(
+                            (file: any) => file.id === data?.id
+                          )?.file ? (
                             <div>
                               <p>
                                 {
                                   selectedFiles.find(
-                                    (file) => file.id === data?.id
+                                    (file: any) => file.id === data?.id
                                   )?.file.name
                                 }
                               </p>
@@ -1530,12 +1490,12 @@ const CreateVehicle = () => {
           <div className="mr-4 px-4 rounded-md mt-4 mb-20 p-4 flex justify-end gap-2">
             <Button
               text="Save"
-              className="!bg-transparent !text-[#000] border px-8 !rounded-xl text-sm border-[#032272]"
+              className="!bg-transparent !text-[#000] border-[null] font-semibold px-8 !rounded-xl text-sm border-[#032272]"
             />
             <Button
               onClick={handleSubmit}
-              text="Create"
-              className="px-8 !rounded-xl text-sm"
+              text="Submit"
+              className="px-8 !rounded-full text-sm"
             />
           </div>
         </div>

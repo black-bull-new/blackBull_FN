@@ -16,7 +16,7 @@ const UserDetails = () => {
   const [users, setUsers] = useState([]);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5); // Number of items to display per page
+  const [itemsPerPage] = useState(20); // Number of items to display per page
 
   // Get current items based on pagination
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -108,11 +108,11 @@ const UserDetails = () => {
   return (
     <>
       <div className="mr-4">
-        <h2 className="bg-white w-full p-4 rounded-md font-bold">
+        <h2 className="bg-white w-full p-4 rounded-2xl font-bold">
           User Details
         </h2>
         <div>
-          <div className="mt-4 mb-20 bg-white p-4 rounded-md items-center ">
+          <div className="mt-4 mb-20 bg-white p-4 rounded-2xl items-center ">
             <div className="flex items-center justify-between">
               <h3 className="leading-loose font-semibold">
                 Existing User List
@@ -120,13 +120,13 @@ const UserDetails = () => {
               <div className="flex gap-2 relative">
                 <Button
                   text="Add User"
-                  className="px-4 rounded-xl"
+                  className="px-4 rounded-full"
                   onClick={() => router.push("/onboarding/user")}
                 />
               </div>
             </div>
             <div>
-              <div className="grid text-center grid-cols-[15%_15%_15%_15%_15%_15%_10%] bg-[#EFF2F3] p-4 rounded-md mt-4">
+              <div className="grid text-center grid-cols-[15%_15%_15%_15%_15%_15%_10%] bg-[#EFF2F3] p-4 rounded-2xl mt-4">
                 {driverDetailsHeading?.map((value, index) => {
                   return (
                     <>

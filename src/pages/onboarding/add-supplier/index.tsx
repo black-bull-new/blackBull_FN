@@ -1118,14 +1118,14 @@ const AddSupplier = () => {
   return (
     <>
       {/* <Header /> */}
-      <div className="flex bg-[#F8F8F8]">
+      <div className="flex ml-[301px] ps-4 rounded-2xl bg-[#F8F8F8]">
         <div>
           <Toaster />
         </div>
         {/* <div className="sticky top-0">
           <Sidebar />
         </div> */}
-        <div className="ml-[316px] w-full mt-4">
+        <div className="w-full mt-4">
           {buttonState === step1Btn ? (
             <NestedAddSupplier
               addSupplier={addSupplier}
@@ -1232,7 +1232,7 @@ const AddSupplier = () => {
           <div className="mr-4 px-4 rounded-md mb-20 p-4 flex justify-end gap-2">
             <Button
               text="Save"
-              className="!bg-transparent !text-[#000] border px-8 !rounded-xl text-sm border-[#032272]"
+              className="!bg-transparent !text-[#000] border-[null] font-semibold px-8 !rounded-xl text-sm border-[#032272]"
             />
             <Button
               onClick={handleSubmit}

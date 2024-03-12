@@ -6,16 +6,17 @@ import { getCookie } from "cookies-next";
 import { deleteUser, getAllUser } from "@/network-request/user/createUser";
 import CommonUI from "@/pages/onboarding/utility/CommonUI";
 import { getAllSupplier } from "@/network-request/supplier/supplier";
+import FileBulkUpload from "./FileBulkUpload";
 
 const SupplierDetails = () => {
   const [deletePopUp, setDelete] = useState(false);
   const router = useRouter();
   const token = getCookie("token");
   const [userToDelete, setUserToDelete] = useState("");
-
+  const [bulkUpload, setBulkUpload] = useState(false);
   const [supplier, setSupplier] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5); // Number of items to display per page
+  const [itemsPerPage] = useState(20); // Number of items to display per page
 
   // Get current items based on pagination
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -114,7 +115,10 @@ const SupplierDetails = () => {
                 Existing Supplier List
               </h3>
               <div className="flex gap-2 relative">
-                <button className="text-[#2B36D9] font-semibold mx-2">
+                <button
+                  onClick={() => setBulkUpload(true)}
+                  className="text-[#2B36D9] font-semibold mx-2"
+                >
                   Bulk Upload
                 </button>
                 <Button
@@ -233,6 +237,49 @@ const SupplierDetails = () => {
                 </div>
               </div>
             </div>
+            {bulkUpload === true && (
+              <div className="w-screen h-screen  fixed top-0 left-0 backdrop-blur-md flex">
+                <div className="w-[450px] h-fit p-4 bg-white m-auto rounded-xl relative border">
+                  <div
+                    className="flex justify-end cursor-pointer"
+                    onClick={() => setBulkUpload(false)}
+                  >
+                    <Image
+                      src="/add.svg"
+                      alt="calender"
+                      width={42}
+                      height={42}
+                    />
+                  </div>
+                  <h4 className="text-center mt-[-1.5em] font-bold p-4">
+                    Streamline Your Fleet
+                  </h4>
+                  <p className="mb-4 text-center">
+                    Upload your list in bulk for a seamless and time-saving
+                    experience.
+                  </p>
+                  <div className="grid gap-2 justify-center">
+                    <FileBulkUpload
+                      file="Upload Vehicle Document"
+                      className="font-semibold"
+                      fileName="Upload Vehicle Document"
+                    />
+                  </div>
+                  <div className="flex justify-end mt-4 gap-2">
+                    <Button
+                      text="Download Template"
+                      className="!bg-transparent border-[null] font-semibold !text-[#000] !py-[6px] !px-4"
+                      // onClick={() => setLink(false)}
+                    />
+                    <Button
+                      text="Upload"
+                      className="rounded-md !py-[6px] !px-4"
+                      onClick={() => router.push("/onboarding/create-vehicle")}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
