@@ -5,7 +5,10 @@ import { useRouter } from "next/router";
 import { getCookie } from "cookies-next";
 import { deleteUser, getAllUser } from "@/network-request/user/createUser";
 import CommonUI from "@/pages/onboarding/utility/CommonUI";
-import { getAllSupplier } from "@/network-request/supplier/supplier";
+import {
+  getAllSupplier,
+  uploadSupplierBulkDocuments,
+} from "@/network-request/supplier/supplier";
 import FileBulkUpload from "./FileBulkUpload";
 
 const SupplierDetails = () => {
@@ -22,6 +25,27 @@ const SupplierDetails = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = supplier.slice(indexOfFirstItem, indexOfLastItem);
+
+  const [documentRender, setDocumentRender] = React.useState("");
+  const [selectedUploadBulkDocument, setselectedUploadBulkDocument] =
+    React.useState<any>("");
+
+  const handleFileChange = (setSide: any, setPreview: any) => (event: any) => {
+    const selectedFile = event.target.files && event.target.files[0];
+    setSide({ file: selectedFile });
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader?.result! as any);
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+  };
+
+  const handleProfileFileChange = handleFileChange(
+    setselectedUploadBulkDocument,
+    setDocumentRender
+  );
 
   // Render vehicle items
   const renderSupplierItems = () => {
@@ -95,15 +119,22 @@ const SupplierDetails = () => {
 
   console.log("supplier :", supplier);
 
-  function getCurrentDate() {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Months are zero-based
-    const day = String(currentDate.getDate()).padStart(2, "0");
-
-    const formattedDate = `${year}-${month}-${day}`;
-    return formattedDate;
-  }
+  const bulkUploadHanlder = async () => {
+    try {
+      const uploadDocument = await Promise.all(
+        Object.values(selectedUploadBulkDocument)?.map(
+          (file) => uploadSupplierBulkDocuments(token, file) // Corrected function name
+        )
+      );
+      setTimeout(() => {
+        setselectedUploadBulkDocument("");
+        setBulkUpload(false);
+        getUsers();
+      }, 2000);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -260,21 +291,30 @@ const SupplierDetails = () => {
                   </p>
                   <div className="grid gap-2 justify-center">
                     <FileBulkUpload
-                      file="Upload Vehicle Document"
+                      id="supplierDocumentFile"
                       className="font-semibold"
-                      fileName="Upload Vehicle Document"
+                      name="vehicleDocumentDocument"
+                      onChange={handleProfileFileChange}
+                      fileName={
+                        selectedUploadBulkDocument?.file?.name ||
+                        "Upload Vehicle Document"
+                      }
                     />
                   </div>
                   <div className="flex justify-end mt-4 gap-2">
-                    <Button
-                      text="Download Template"
-                      className="!bg-transparent border-[null] font-semibold !text-[#000] !py-[6px] !px-4"
-                      // onClick={() => setLink(false)}
-                    />
+                    <button>
+                      <a
+                        className="font-semibold me-2"
+                        href="/supplier.csv"
+                        download
+                      >
+                        Download Template
+                      </a>
+                    </button>
                     <Button
                       text="Upload"
                       className="rounded-md !py-[6px] !px-4"
-                      onClick={() => router.push("/onboarding/create-vehicle")}
+                      onClick={bulkUploadHanlder}
                     />
                   </div>
                 </div>

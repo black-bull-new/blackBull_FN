@@ -211,7 +211,9 @@ const VehiDetails = () => {
           (file) => uploadBulkDocuments(token, file) // Corrected function name
         )
       );
+      console.log("uploadDocument",uploadDocument)
       setTimeout(() => {
+        setselectedUploadBulkDocument("")
         setBulkUpload(false);
         getVehicles();
       }, 2000);
