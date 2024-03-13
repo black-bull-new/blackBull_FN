@@ -79,7 +79,6 @@ const AddCustomer = () => {
     firstName: "",
     lastName: "",
     designation: "",
-
     companyAddress: {
       street1: "",
       street2: "",
@@ -122,11 +121,6 @@ const AddCustomer = () => {
     },
     invoicePrefrences: "",
     invoiceCommunicationPrefrences: "",
-    // companySuiteDetails: {
-    //   designation: "",
-    //   directorEmailAddress: "",
-    //   directorContactNumber: "",
-    // },
     companySuiteDetails: [],
     payment: {
       accountName: "",
@@ -136,14 +130,6 @@ const AddCustomer = () => {
     },
     paymentTerm: "",
     warehouseLocation: [],
-    // warehouseLocation: {
-    //   street1: "",
-    //   street2: "",
-    //   suburb: "",
-    //   state: "",
-    //   country: "Australia",
-    //   postCode: "",
-    // },
     document: "",
   });
 
@@ -208,9 +194,140 @@ const AddCustomer = () => {
     paymentTermError: "",
   });
 
-  // *********** Add More Director ********************************
-
+  const [progressOfState, setProgressOfState] = useState({
+    companyName: "",
+    tradingName: "",
+    abnNumber: "",
+    legalName: "",
+    websiteAddress: "",
+    firstName: "",
+    lastName: "",
+    designation: "",
+    companyAddressStreet1: "",
+    companyAddressStreet2: "",
+    companyAddressSuburb: "",
+    companyAddressState: "",
+    companyAddressCountry: "Australia",
+    companyAddressPostCode: "",
+    accountPaybleContactPerson: "",
+    accountPaybleDesignation: "",
+    accountPaybleContactNumber: "",
+    accountPaybleAccountsPaybleEmail: "",
+    accountReceivableContactPerson: "",
+    accountReceivableDesignation: "",
+    accountReceivableContactNumber: "",
+    accountReceivableAccountsReceivableEmail: "",
+    opreationsContactPerson: "",
+    opreationsDesignation: "",
+    opreationsContactNumber: "",
+    opreationsOpreationsEmail: "",
+    complianceContactPerson: "",
+    complianceDesignation: "",
+    complianceContactNumber: "",
+    complianceComplianceEmail: "",
+    adminContactPerson: "",
+    adminDesignation: "",
+    adminContactNumber: "",
+    adminAdminEmail: "",
+    invoicePrefrences: "",
+    invoiceCommunicationPrefrences: "",
+    companySuiteDetailsDesignation: "",
+    companySuiteDetailsDirectorEmailAddress: "",
+    companySuiteDetailsDirectorContactNumber: "",
+    paymentAccountName: "",
+    paymentBankName: "",
+    paymentBsb: "",
+    paymentAccountNumber: "",
+    paymentTerm: "",
+    warehouseLocationStreet1: "",
+    warehouseLocationStreet2: "",
+    warehouseLocationSuburb: "",
+    warehouseLocationState: "",
+    warehouseLocationCountry: "Australia",
+    warehouseLocationPostCode: "",
+  });
   const [addMoreDirector, setAddMoreDirector] = useState<Array<any>>([]);
+  const [addMoreAddress, setAddMoreAddress] = useState<Array<any>>([]);
+  const [progress, setProgress] = useState(0);
+  useEffect(() => {
+    setProgressOfState({
+      ...progressOfState,
+      companyName: customer.companyName,
+      tradingName: customer.tradingName,
+      abnNumber: customer.abnNumber,
+      legalName: customer.legalName,
+      websiteAddress: customer.websiteAddress,
+      firstName: customer.firstName,
+      lastName: customer.lastName,
+      designation: customer.designation,
+      companyAddressStreet1: customer.companyAddress.street1,
+      companyAddressStreet2: customer.companyAddress.street2,
+      companyAddressSuburb: customer.companyAddress.suburb,
+      companyAddressState: customer.companyAddress.state,
+      companyAddressCountry: customer.companyAddress.country,
+      companyAddressPostCode: customer.companyAddress.postCode,
+      accountPaybleContactPerson: customer.accountPayble.contactPerson,
+      accountPaybleDesignation: customer.accountPayble.designation,
+      accountPaybleContactNumber: customer.accountPayble.contactNumber,
+      accountPaybleAccountsPaybleEmail:
+        customer.accountPayble.accountsPaybleEmail,
+      accountReceivableContactPerson: customer.accountReceivable.contactPerson,
+      accountReceivableDesignation: customer.accountReceivable.designation,
+      accountReceivableContactNumber: customer.accountReceivable.contactNumber,
+      accountReceivableAccountsReceivableEmail:
+        customer.accountReceivable.accountsReceivableEmail,
+      opreationsContactPerson: customer.opreations.contactPerson,
+      opreationsDesignation: customer.opreations.designation,
+      opreationsContactNumber: customer.opreations.contactNumber,
+      opreationsOpreationsEmail: customer.opreations.opreationsEmail,
+      complianceContactPerson: customer.compliance.contactPerson,
+      complianceDesignation: customer.compliance.designation,
+      complianceContactNumber: customer.compliance.contactNumber,
+      complianceComplianceEmail: customer.compliance.complianceEmail,
+      adminContactPerson: customer.admin.contactPerson,
+      adminDesignation: customer.admin.designation,
+      adminContactNumber: customer.admin.contactNumber,
+      adminAdminEmail: customer.admin.adminEmail,
+      invoicePrefrences: customer.invoicePrefrences,
+      invoiceCommunicationPrefrences: customer.invoiceCommunicationPrefrences,
+      companySuiteDetailsDesignation: addMoreDirector[0]?.designation,
+      companySuiteDetailsDirectorEmailAddress:
+        addMoreDirector[0]?.directorEmailAddress,
+      companySuiteDetailsDirectorContactNumber:
+        addMoreDirector[0]?.directorContactNumber,
+      paymentAccountName: customer.payment.accountName,
+      paymentBankName: customer.payment.bankName,
+      paymentBsb: customer.payment.bsb,
+      paymentAccountNumber: customer.payment.accountNumber,
+      paymentTerm: customer.paymentTerm,
+      warehouseLocationStreet1: addMoreAddress[0]?.street1,
+      warehouseLocationStreet2: addMoreAddress[0]?.street2,
+      warehouseLocationSuburb: addMoreAddress[0]?.suburb,
+      warehouseLocationState: addMoreAddress[0]?.state,
+      warehouseLocationCountry: addMoreAddress[0]?.country,
+      warehouseLocationPostCode: addMoreAddress[0]?.postCode,
+    });
+  }, [addMoreAddress, customer, addMoreDirector]);
+
+  useEffect(() => {
+    const calculateProgress = () => {
+      // Count filled inputs (excluding the 'documents' array)
+      const filledInputs = Object.values(progressOfState).filter(
+        (value) => value !== ""
+      ).length;
+
+      // Count total inputs (excluding the 'documents' array)
+      const totalInputs = Object.keys(progressOfState).length;
+      const newProgress = (filledInputs / totalInputs) * 100;
+      setProgress(Math.ceil(newProgress));
+    };
+
+    calculateProgress();
+  }, [progressOfState]);
+
+  console.log("progressOfState", progressOfState);
+
+  // *********** Add More Director ********************************
 
   useEffect(() => {
     if (addMoreDirector.length === 0) {
@@ -246,8 +363,6 @@ const AddCustomer = () => {
   };
 
   // *********** Add More Address ********************************
-
-  const [addMoreAddress, setAddMoreAddress] = useState<Array<any>>([]);
 
   useEffect(() => {
     if (addMoreAddress.length === 0) {
@@ -472,16 +587,16 @@ const AddCustomer = () => {
   return (
     <>
       {/* <Header /> */}
-      <div className="flex bg-[#E9EFFF]">
+      <div className="flex ml-[301px] ps-4 rounded-2xl bg-[#F8F8F8]">
         <div>
           <Toaster />
         </div>
         {/* <div className="sticky top-0">
           <Sidebar />
         </div> */}
-        <div className="ml-[316px] w-full mt-4">
-          <div className="bg-white mr-4 flex justify-between items-center rounded-md">
-            <h2 className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">
+        <div className="w-full mt-4">
+          <div className="bg-white mr-4 flex justify-between items-center rounded-2xl">
+            <h2 className=" w-full p-4 rounded-2xl font-bold text-[#16161D] text-[24px]">
               Add Customer
             </h2>
             <div className="h-8 w-8 flex justify-center cursor-pointer text-2xl items-center bg-blueGrey-100 rounded-full mr-4">
@@ -490,9 +605,9 @@ const AddCustomer = () => {
               </span>
             </div>
           </div>
-          <div className="bg-white mr-4 px-4  mt-4 p-4 rounded-md">
+          <div className="bg-white mr-4 px-4  mt-4 p-4 rounded-2xl">
             <div className="mx-2">
-              <Progressbar />
+              <Progressbar value={progress} />
             </div>
             <div className="relative w-fit">
               <span className="flex flex-row justify-center my-4">
@@ -542,7 +657,7 @@ const AddCustomer = () => {
               </span>
             </div>
           </div>
-          <div className="bg-white mr-4 mt-4 rounded-md">
+          <div className="bg-white mr-4 mt-4 rounded-2xl">
             <h2 className="font-semibold p-4 text-[#151515] text-[18px]">
               Company Information
             </h2>
@@ -675,7 +790,7 @@ const AddCustomer = () => {
               />
             </div>
           </div>
-          <div className="bg-white mr-4 mt-4 rounded-md">
+          <div className="bg-white mr-4 mt-4 rounded-2xl">
             <h2 className="font-semibold p-4 text-[#151515] text-[18px]">
               Company Address
             </h2>
@@ -839,7 +954,7 @@ const AddCustomer = () => {
               />
             </div>
           </div>
-          <div className="bg-white mr-4 mt-4 rounded-md">
+          <div className="bg-white mr-4 mt-4 rounded-2xl">
             <h2 className="font-semibold p-4 text-[#151515] text-[18px]">
               Contact Information
             </h2>
@@ -2168,11 +2283,11 @@ const AddCustomer = () => {
           <div className="flex justify-end gap-4 my-4 px-4 mb-20">
             <Button
               text="Save"
-              className="!bg-transparent !w-fit border border-[#e5e5e5] !text-black px-8"
+              className="!bg-transparent !w-fit border-[null] font-semibold border-[#e5e5e5] !text-black px-8"
             />
             <Button
               onClick={handleSubmit}
-              text="Create"
+              text="Submit"
               className="!w-fit px-8"
             />
           </div>

@@ -2,7 +2,7 @@ import Image from "next/image";
 import Progressbar from "../../../../components/Progressbar";
 import Maininputfield from "../../../../components/Maininputfield";
 import DropDownMap from "../../../../components/DropDownMap";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Checkbox from "../../../../components/Checkbox";
 import PasswordField from "../../../../components/password-field/PasswordFlied";
 import Button from "../../../../components/Button";
@@ -111,7 +111,7 @@ const User = () => {
   );
 
   console.log({ selectedProfile });
-
+  const [progress, setProgress] = useState(0);
   const [user, setUser] = useState<any>({
     firstName: "",
     lastName: "",
@@ -133,6 +133,31 @@ const User = () => {
   });
 
   console.log({ user });
+
+  useEffect(() => {
+    // Calculate the progress based on the filled form inputs
+    const calculateProgress = () => {
+      const {
+        avatar,
+        temporaryPassword,
+        requirePassword,
+        sendPassword,
+        ...rest
+      } = user;
+
+      // Count filled inputs (excluding the 'documents' array)
+      const filledInputs = Object.values(rest).filter(
+        (value) => value !== ""
+      ).length;
+
+      // Count total inputs (excluding the 'documents' array)
+      const totalInputs = Object.keys(rest).length;
+      const newProgress = (filledInputs / totalInputs) * 100;
+      setProgress(Math.ceil(newProgress));
+    };
+
+    calculateProgress();
+  }, [user]);
 
   const createUserHandler = async () => {
     // Check validation and get error status
@@ -211,13 +236,13 @@ const User = () => {
 
   return (
     <>
-      <div className="flex bg-[#E9EFFF]">
+      <div className="flex ml-[301px] ps-4 rounded-2xl bg-[#F8F8F8]">
         <div>
           <Toaster />
         </div>
-        <div className="ml-[316px] w-full mt-4">
-          <div className="bg-white mr-4 flex justify-between items-center rounded-md">
-            <h2 className=" w-full p-4 rounded-md font-bold text-black">
+        <div className="w-full mt-4">
+          <div className="bg-white mr-4 flex justify-between items-center rounded-2xl">
+            <h2 className=" w-full p-4 rounded-2xl font-bold text-black">
               Create User
             </h2>
             <div className="h-8 w-8 flex justify-center cursor-pointer text-2xl items-center bg-blueGrey-100 rounded-full mr-4">
@@ -226,9 +251,9 @@ const User = () => {
               </span>
             </div>
           </div>
-          <div className="bg-white mr-4 px-4 rounded-md mt-4 p-4 mb-20">
+          <div className="bg-white mr-4 px-4 rounded-2xl mt-4 p-4 mb-20">
             <div className="mx-2">
-              <Progressbar />
+              <Progressbar value={progress} />
             </div>
             <div className="relative w-fit">
               <span className="flex flex-row justify-center my-4">
@@ -588,12 +613,12 @@ const User = () => {
             </div>
             <div className="flex justify-end gap-2 mt-4">
               <Button
-                text="Cancel"
-                className="!bg-transparent !text-black border border-[#e5e5e5] px-6"
+                text="Save"
+                className="!bg-transparent !text-black border-[null] font-semibold border-[#e5e5e5] px-6"
               />
               <Button
                 onClick={createUserHandler}
-                text="Create"
+                text="Add"
                 className="px-6"
               />
             </div>

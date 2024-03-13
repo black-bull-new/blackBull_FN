@@ -16,6 +16,7 @@ const config: Config = {
     "./components/Maindatefield.tsx",
     "./components/Mainselectfield.tsx",
     "./components/FileUpload.tsx",
+    "./components/FileBulkUpload.tsx",
     "./components/Footer.tsx",
     "./src/pages/dashboard/index.tsx",
     "./components/InputField.tsx",
@@ -28,6 +29,8 @@ const config: Config = {
     "./components/DriverDetails.tsx",
     "./components/imageUpload/ImageUpload.tsx",
     "./components/UserDetails.tsx",
+    "./components/SupplierDetails.tsx",
+    "./components/CustomerDetails.tsx",
   ],
   theme: {
     extend: {

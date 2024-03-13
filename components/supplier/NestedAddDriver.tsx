@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Progressbar from "../Progressbar";
 import Image from "next/image";
 import Maininputfield from "../Maininputfield";
@@ -50,6 +50,113 @@ const NestedAddDriver = (props: any) => {
   const [showUploadMessage, setShowUploadMessage] = useState(false);
 
   const [documentDataCollection, setDocumentDataCollection] = useState<any>([]);
+  const [progress, setProgress] = useState(0);
+  const [progressOfState, setProgressOfState] = useState({
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    dateOfBirth: "",
+    email: "",
+    mobile: "",
+    nationality: "",
+    currentAddressHouseNumber: "",
+    currentAddressStreet: "",
+    currentAddressSuburb: "",
+    currentAddressState: "",
+    currentAddressCountry: "",
+    currentAddressPincode: "",
+    permanentAddressHouseNumber: "",
+    permanentAddressStreet: "",
+    permanentAddressSuburb: "",
+    permanentAddressState: "",
+    permanentAddressCountry: "",
+    permanentAddressPincode: "",
+    emergencyContactInformationContactName: "",
+    emergencyContactInformationContactNumber: "",
+    emergencyContactInformationRelationship: "",
+    employmentHistoryPreviousEmployer: "",
+    employmentHistoryYearsOfExperience: "",
+    employmentHistoryReasonOfLeaving: "",
+    employmentHistoryCompanyName: "",
+    employmentHistoryReferenceContactName: "",
+    employmentHistoryReferenceEmailId: "",
+    employmentHistoryReferenceContactNumber: "",
+    licenseDetailsLicenseNumber: "",
+    licenseDetailsLicenseCardNumber: "",
+    licenseDetailsLicenseType: "",
+    licenseDetailsState: "",
+    licenseDetailsDateOfIssue: "",
+    licenseDetailsExpiryDate: "",
+    licenseDetailsDaysLeftForRenewal: "",
+    specialDrivingLicense: "",
+  });
+
+  useEffect(() => {
+    setProgressOfState({
+      ...progressOfState,
+      firstName: addDriver.firstName,
+      middleName: addDriver.middleName,
+      lastName: addDriver.lastName,
+      dateOfBirth: addDriver.dateOfBirth,
+      email: addDriver.email,
+      mobile: addDriver.mobile,
+      nationality: addDriver.nationality,
+      currentAddressHouseNumber: addDriver.currentAddress.houseNumber,
+      currentAddressStreet: addDriver.currentAddress.street,
+      currentAddressSuburb: addDriver.currentAddress.suburb,
+      currentAddressState: addDriver.currentAddress.state,
+      currentAddressCountry: addDriver.currentAddress.country,
+      currentAddressPincode: addDriver.currentAddress.pincode,
+      permanentAddressHouseNumber: addDriver.permanentAddress.houseNumber,
+      permanentAddressStreet: addDriver.permanentAddress.street,
+      permanentAddressSuburb: addDriver.permanentAddress.suburb,
+      permanentAddressState: addDriver.permanentAddress.state,
+      permanentAddressCountry: addDriver.permanentAddress.country,
+      permanentAddressPincode: addDriver.permanentAddress.pincode,
+      emergencyContactInformationContactName:
+        addDriver.emergencyContactInformation.contactName,
+      emergencyContactInformationContactNumber:
+        addDriver.emergencyContactInformation.contactNumber,
+      emergencyContactInformationRelationship:
+        addDriver.emergencyContactInformation.relationship,
+      employmentHistoryPreviousEmployer: addMoreExperience[0]?.previousEmployer,
+      employmentHistoryYearsOfExperience:
+        addMoreExperience[0]?.yearsOfExperience,
+      employmentHistoryReasonOfLeaving: addMoreExperience[0]?.reasonOfLeaving,
+      employmentHistoryCompanyName: addMoreExperience[0]?.companyName,
+      employmentHistoryReferenceContactName:
+        addMoreExperience[0]?.referenceContactName,
+      employmentHistoryReferenceEmailId: addMoreExperience[0]?.referenceEmailId,
+      employmentHistoryReferenceContactNumber:
+        addMoreExperience[0]?.referenceContactNumber,
+      licenseDetailsLicenseNumber: addDriver.licenseDetails.licenseNumber,
+      licenseDetailsLicenseCardNumber:
+        addDriver.licenseDetails.licenseCardNumber,
+      licenseDetailsLicenseType: addDriver.licenseDetails.licenseType,
+      licenseDetailsState: addDriver.licenseDetails.state,
+      licenseDetailsDateOfIssue: addDriver.licenseDetails.dateOfIssue,
+      licenseDetailsExpiryDate: addDriver.licenseDetails.expiryDate,
+      licenseDetailsDaysLeftForRenewal:
+        addDriver.licenseDetails.daysLeftForRenewal,
+      specialDrivingLicense: addDriver.specialDrivingLicense,
+    });
+  }, [addDriver, addMoreExperience]);
+
+  useEffect(() => {
+    const calculateProgress = () => {
+      // Count filled inputs (excluding the 'documents' array)
+      const filledInputs = Object.values(progressOfState).filter(
+        (value) => value !== ""
+      ).length;
+
+      // Count total inputs (excluding the 'documents' array)
+      const totalInputs = Object.keys(progressOfState).length;
+      const newProgress = (filledInputs / totalInputs) * 100;
+      setProgress(Math.ceil(newProgress));
+    };
+
+    calculateProgress();
+  }, [progressOfState]);
 
   // ******************************** ADD More Experince ********************************
   // const [addMoreExperience, setAddMoreExperience] = React.useState<Array<any>>(
@@ -261,11 +368,16 @@ const NestedAddDriver = (props: any) => {
 
   return (
     <div>
-      <div className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">
-        <h2 className="text-black">Add Driver</h2>
+      <div className="bg-white mr-4 flex justify-between items-center rounded-2xl">
+        <h2 className=" w-full p-4 rounded-2xl font-bold text-[#16161D] text-[24px]">
+          Add Driver
+        </h2>
+        <div className="h-8 w-8 flex justify-center cursor-pointer text-2xl items-center bg-blueGrey-100 rounded-full mr-4">
+          <span className="mt-[-2px] ml-[2px] text-[#292D32] rotate-45">+</span>
+        </div>
       </div>
-      <div className=" mt-4 bg-white p-4 mr-4 rounded-md mb-20">
-        <Progressbar />
+      <div className=" mt-4 bg-white p-4 mr-4 rounded-2xl mb-20">
+        <Progressbar value={progress} />
         <div className="relative w-fit">
           <span className="flex flex-row justify-center my-4">
             <span className="mb-4 text-center flex justify-center items-center">
@@ -1503,7 +1615,7 @@ const NestedAddDriver = (props: any) => {
 
         <div className="mb-4 mt-8">
           <div className="flex">
-            <h3 className="w-full mb-4 rounded-md font-semibold text-black">
+            <h3 className="w-full mb-4 rounded-2xl font-semibold text-black">
               {" "}
               Onboarding Documents
             </h3>
@@ -1515,7 +1627,7 @@ const NestedAddDriver = (props: any) => {
             </button>
           </div>
 
-          <div className="grid grid-cols-5 bg-table-header p-4 rounded-md text-black text-center mb-2 ">
+          <div className="grid grid-cols-5 bg-table-header p-4 rounded-2xl text-black text-center mb-2 ">
             {documentCollectionHeading?.map((value, index) => {
               return (
                 <>
@@ -1526,7 +1638,7 @@ const NestedAddDriver = (props: any) => {
               );
             })}
           </div>
-          <div className="grid grid-cols-5 p-4 rounded-md text-black text-center items-center">
+          <div className="grid grid-cols-5 p-4 rounded-2xl text-black text-center items-center">
             {documentDataCollection?.map((data: any, index: any) => {
               return (
                 <>

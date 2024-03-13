@@ -55,3 +55,50 @@ export const uploadCustomerContractDocuments = async (selectedFile: any) => {
             return error
         })
 }
+
+export const getAllCustomer = async (token: string) => {
+    try {
+      console.log(process.env.NEXT_PUBLIC_API_URL)
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/c1/customers`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  // Bulk Upload
+
+export const uploadCustomerBulkDocuments = async (
+    token: any,
+    selectedFile: any
+  ) => {
+    // Create FormData object
+    const formData = new FormData();
+    formData.append("files", selectedFile);
+  
+    try {
+      // Send formData in the POST request
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/c1/importCustomers`,
+        formData,
+        {
+          withCredentials: false,
+          headers: {
+            "Content-Type": "multipart/form-data", // Use multipart/form-data for FormData
+            Authorization: `Basic ${token}`,
+          },
+        }
+      );
+  
+      console.log({ response });
+      return response.data;
+    } catch (error) {
+      console.log({ error });
+      return error;
+    }
+  };

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DropDownMap from "../../../../components/DropDownMap";
 import Maindatefield from "../../../../components/Maindatefield";
 import Maininputfield from "../../../../components/Maininputfield";
@@ -89,7 +89,7 @@ const CreateDriver = () => {
     nationality: "",
 
     currentAddress: {
-      houseNumber: undefined,
+      houseNumber: "",
       street: "",
       suburb: "",
       state: "",
@@ -97,7 +97,7 @@ const CreateDriver = () => {
       pincode: "",
     },
     permanentAddress: {
-      houseNumber: undefined,
+      houseNumber: "",
       street: "",
       suburb: "",
       state: "",
@@ -176,7 +176,6 @@ const CreateDriver = () => {
   });
 
   const [documentDataCollection, setDocumentDataCollection] = useState<any>([]);
-  console.log({ error });
 
   const [uploadStatus, setUploadStatus] = useState<{ [id: number]: boolean }>(
     {}
@@ -188,6 +187,121 @@ const CreateDriver = () => {
     { id: number; file: File; currentDate: Date | null }[]
   >([]);
 
+  const [addMoreExperience, setAddMoreExperience] = React.useState<Array<any>>(
+    []
+  );
+
+  const [progress, setProgress] = useState(0);
+  const [progressOfState, setProgressOfState] = useState({
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    dateOfBirth: "",
+    email: "",
+    mobile: "",
+    nationality: "",
+    currentAddressHouseNumber: "",
+    currentAddressStreet: "",
+    currentAddressSuburb: "",
+    currentAddressState: "",
+    currentAddressCountry: "Australia",
+    currentAddressPincode: "",
+    permanentAddressHouseNumber: "",
+    permanentAddressStreet: "",
+    permanentAddressSuburb: "",
+    permanentAddressState: "",
+    permanentAddressCountry: "Australia",
+    permanentAddressPincode: "",
+    emergencyContactInformationContactName: "",
+    emergencyContactInformationContactNumber: "",
+    emergencyContactInformationRelationship: "",
+    licenseDetailsLicenseNumber: "",
+    licenseDetailsLicenseCardNumber: "",
+    licenseDetailsLicenceType: "",
+    licenseDetailsState: "",
+    licenseDetailsDateOfIssue: "",
+    licenseDetailsExpiryDate: "",
+    licenseDetailsDaysLeftForRenewal: "",
+    employmentHistoryPreviousEmployer: "",
+    employmentHistoryYearsOfExperience: "",
+    employmentHistoryReasonOfLeaving: "",
+    employmentHistoryCompanyName: "",
+    employmentHistoryReferenceContactName: "",
+    employmentHistoryReferenceEmailId: "",
+    employmentHistoryReferenceContactNumber: "",
+    specialDrivingLicence: "",
+  });
+
+  useEffect(() => {
+    setProgressOfState({
+      ...progressOfState,
+      firstName: driverDetails?.firstName,
+      middleName: driverDetails?.middleName,
+      lastName: driverDetails?.lastName,
+      dateOfBirth: driverDetails?.dateOfBirth,
+      email: driverDetails?.email,
+      mobile: driverDetails?.mobile,
+      nationality: driverDetails?.nationality,
+      currentAddressHouseNumber: driverDetails?.currentAddress?.houseNumber,
+      currentAddressStreet: driverDetails?.currentAddress?.street,
+      currentAddressSuburb: driverDetails?.currentAddress?.suburb,
+      currentAddressState: driverDetails?.currentAddress?.state,
+      currentAddressCountry: driverDetails?.currentAddress?.country,
+      currentAddressPincode: driverDetails?.currentAddress?.pincode,
+      permanentAddressHouseNumber: driverDetails?.permanentAddress?.houseNumber,
+      permanentAddressStreet: driverDetails?.permanentAddress?.street,
+      permanentAddressSuburb: driverDetails?.permanentAddress?.suburb,
+      permanentAddressState: driverDetails?.permanentAddress?.state,
+      permanentAddressCountry: driverDetails?.permanentAddress?.country,
+      permanentAddressPincode: driverDetails?.permanentAddress?.pincode,
+      emergencyContactInformationContactName:
+        driverDetails?.emergencyContactInformation?.contactName,
+      emergencyContactInformationContactNumber:
+        driverDetails?.emergencyContactInformation?.contactNumber,
+      emergencyContactInformationRelationship:
+        driverDetails?.emergencyContactInformation?.relationship,
+      licenseDetailsLicenseNumber: driverDetails.licenseDetails.licenseNumber,
+      licenseDetailsLicenseCardNumber:
+        driverDetails.licenseDetails.licenseCardNumber,
+      licenseDetailsLicenceType: driverDetails.licenseDetails.licenceType,
+      licenseDetailsState: driverDetails.licenseDetails.state,
+      licenseDetailsDateOfIssue: driverDetails.licenseDetails.dateOfIssue,
+      licenseDetailsExpiryDate: driverDetails.licenseDetails.expiryDate,
+      licenseDetailsDaysLeftForRenewal:
+        driverDetails.licenseDetails.daysLeftForRenewal,
+      employmentHistoryPreviousEmployer: addMoreExperience[0]?.previousEmployer,
+      employmentHistoryYearsOfExperience:
+        addMoreExperience[0]?.yearsOfExperience,
+      employmentHistoryReasonOfLeaving: addMoreExperience[0]?.reasonOfLeaving,
+      employmentHistoryCompanyName: addMoreExperience[0]?.companyName,
+      employmentHistoryReferenceContactName:
+        addMoreExperience[0]?.referenceContactName,
+      employmentHistoryReferenceEmailId: addMoreExperience[0]?.referenceEmailId,
+      employmentHistoryReferenceContactNumber:
+        addMoreExperience[0]?.referenceContactNumber,
+      specialDrivingLicence:
+        driverDetails.specialDrivingLicence.specialDrivingLicence,
+    });
+  }, [driverDetails, addMoreExperience]);
+
+  useEffect(() => {
+    const calculateProgress = () => {
+      // Count filled inputs (excluding the 'documents' array)
+      const filledInputs = Object.values(progressOfState).filter(
+        (value) => value !== ""
+      ).length;
+
+      // Count total inputs (excluding the 'documents' array)
+      const totalInputs = Object.keys(progressOfState).length;
+      const newProgress = (filledInputs / totalInputs) * 100;
+      setProgress(Math.ceil(newProgress));
+    };
+
+    calculateProgress();
+  }, [progressOfState]);
+
+  console.log("progressOfState", progressOfState);
+  console.log("progress", progress);
   const combinedObject = selectedFiles.reduce(
     (accumulator: any, currentItem: any) => {
       accumulator[currentItem.id] = {
@@ -437,7 +551,6 @@ const CreateDriver = () => {
 
     const updatedEmploymentHistory = addMoreExperience?.map(
       (employment: any) => {
-        console.log({ employment });
         return {
           ...employment,
           previousEmployer: employment?.previousEmployer,
@@ -467,7 +580,6 @@ const CreateDriver = () => {
 
     const response = await addDriver(newDriverDetails, token || "");
     const result = response?.data?.data;
-    console.log({ result });
     if (result) {
       toast("Driver has been successfully created..", {
         icon: "👏",
@@ -480,7 +592,6 @@ const CreateDriver = () => {
       setTimeout(() => {
         router.push("/onboarding/driver-list");
       }, 3000);
-      console.log("response :", response);
     } else {
       toast("Something went wrong", {
         icon: "⚠️",
@@ -498,9 +609,6 @@ const CreateDriver = () => {
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.+([a-zA-Z0-9-]+)2*$/;
 
   // ============================================================= Add More Experience =============================================================
-  const [addMoreExperience, setAddMoreExperience] = React.useState<Array<any>>(
-    []
-  );
 
   React.useEffect(() => {
     if (addMoreExperience.length === 0) {
@@ -536,7 +644,6 @@ const CreateDriver = () => {
   const handleRemoveExperience = (index: number) => {
     setAddMoreExperience(addMoreExperience.filter((_, i) => i !== index));
   };
-  console.log({ addMoreExperience });
 
   const handleExperienceChange = (value: any, fieldName: any, index: any) => {
     const data = [...addMoreExperience];
@@ -546,12 +653,12 @@ const CreateDriver = () => {
 
   return (
     <>
-      <div className="flex bg-[#E9EFFF]">
+      <div className="flex ml-[301px] ps-4 rounded-2xl bg-[#F8F8F8]">
         <div>
           <Toaster />
         </div>
-        <div className="ml-[316px] w-full mt-4">
-          <div className="bg-white mr-4 flex justify-between items-center rounded-md">
+        <div className=" w-full mt-4">
+          <div className="bg-white mr-4 flex justify-between items-center rounded-2xl">
             <h2 className=" w-full p-4 rounded-md font-bold text-[#16161D] text-[24px]">
               Add Driver
             </h2>
@@ -561,9 +668,9 @@ const CreateDriver = () => {
               </span>
             </div>
           </div>
-          <div className="bg-white mr-4 px-4 rounded-md mt-4 p-4">
+          <div className="bg-white mr-4 px-4 rounded-2xl mt-4 p-4">
             <div className="mx-2">
-              <Progressbar />
+              <Progressbar value={progress} />
             </div>
             <div className="relative w-fit">
               <span className="flex flex-row justify-center my-4">
@@ -1499,26 +1606,6 @@ const CreateDriver = () => {
                             error.employmentHistoryError?.referenceContactNumber
                           }
                         />
-                        <div className="mb-8 mt-2 flex">
-                          <Button
-                            onClick={handleAddMoreExperience}
-                            text="Add More Experiences"
-                            className="bg-[#2B36D9] px-4 !w-fit"
-                          />
-                          {index > 0 && (
-                            <span
-                              onClick={() => handleRemoveExperience(index)}
-                              className="ml-4 cursor-pointer"
-                              style={{
-                                color: "red",
-                                marginTop: "10px",
-                                marginRight: "10px",
-                              }}
-                            >
-                              Remove
-                            </span>
-                          )}
-                        </div>
                       </div>
                     </div>
                   </div>
