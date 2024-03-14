@@ -239,7 +239,7 @@ export const NestedAddSupplier = (props: any) => {
     calculateProgress();
   }, [progressOfState]);
 
-  console.log("progressOfState",progressOfState)
+  console.log("progressOfState", progressOfState);
 
   const [selectedFiles, setSelectedFiles] = useState<
     { id: number; file: File; currentDate: Date | null }[]
@@ -345,6 +345,7 @@ export const NestedAddSupplier = (props: any) => {
           state: "",
           country: "Australia",
           postcode: "",
+          otherState: "",
         },
       ]);
     }
@@ -366,6 +367,7 @@ export const NestedAddSupplier = (props: any) => {
         state: "",
         country: "Australia",
         postcode: "",
+        otherState: "",
       },
     ]);
   };
@@ -1235,7 +1237,17 @@ export const NestedAddSupplier = (props: any) => {
             </div>
             {addSupplier.invoicePreferences === "Other" && (
               <div className="grid grid-cols-3 gap-4 mt-3">
-                <Maininputfield label="Other" className="w-full" />
+                <Maininputfield
+                  label="Other"
+                  value={addSupplier.otherInvoicePreferences}
+                  onChange={(e: any) => {
+                    setAddSupplier({
+                      ...addSupplier,
+                      otherInvoicePreferences: e.target.value,
+                    });
+                  }}
+                  className="w-full"
+                />
               </div>
             )}
           </div>
@@ -1261,7 +1273,17 @@ export const NestedAddSupplier = (props: any) => {
             </div>
             {addSupplier.invoiceCommunicationPreferences === "Other" && (
               <div className="mt-3 grid mb-4 grid-cols-3 gap-4">
-                <Maininputfield label="Other" className="w-full" />
+                <Maininputfield
+                  label="Other"
+                  value={addSupplier.otherInvoiceCommunicationPreferences}
+                  onChange={(e: any) => {
+                    setAddSupplier({
+                      ...addSupplier,
+                      otherInvoiceCommunicationPreferences: e.target.value,
+                    });
+                  }}
+                  className="w-full"
+                />
               </div>
             )}
           </div>
@@ -1587,7 +1609,20 @@ export const NestedAddSupplier = (props: any) => {
               />
               {addSupplier.businessCoverage?.areaCovered === "Other" && (
                 <div className="mt-3">
-                  <Maininputfield label="Other" className="w-full" />
+                  <Maininputfield
+                    label="Other"
+                    value={addSupplier.businessCoverage?.otherAreaCovered}
+                    onChange={(e: any) => {
+                      setAddSupplier({
+                        ...addSupplier,
+                        businessCoverage: {
+                          ...addSupplier.businessCoverage,
+                          otherAreaCovered: e.target.value,
+                        },
+                      });
+                    }}
+                    className="w-full"
+                  />
                 </div>
               )}
             </div>
@@ -1620,7 +1655,22 @@ export const NestedAddSupplier = (props: any) => {
               />
               {addSupplier.businessCoverage?.businessOpreations === "Other" && (
                 <div className="mt-3">
-                  <Maininputfield label="Other" className="w-full" />
+                  <Maininputfield
+                    label="Other"
+                    value={
+                      addSupplier.businessCoverage?.otherBusinessOpreations
+                    }
+                    onChange={(e: any) => {
+                      setAddSupplier({
+                        ...addSupplier,
+                        businessCoverage: {
+                          ...addSupplier.businessCoverage,
+                          otherBusinessOpreations: e.target.value,
+                        },
+                      });
+                    }}
+                    className="w-full"
+                  />
                 </div>
               )}
             </div>
@@ -1674,7 +1724,13 @@ export const NestedAddSupplier = (props: any) => {
                     />
                     {item?.state === "Other" && (
                       <div className="mt-3">
-                        <Maininputfield label="Other" className="w-full" />
+                        <Maininputfield
+                          label="Other"
+                          onChange={(e: any) =>
+                            handleAddressChange(e, "otherState", index)
+                          }
+                          className="w-full"
+                        />
                       </div>
                     )}
                   </div>

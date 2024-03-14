@@ -453,7 +453,17 @@ export const NestedAddVehicle = (props: any) => {
             />
             {addVehicle.vehicleType === "Other" && (
               <div className="mt-3">
-                <Maininputfield label="Other" className="w-full" />
+                <Maininputfield
+                  value={addVehicle.otherVehicleType}
+                  onChange={(e: any) => {
+                    setAddVehicle({
+                      ...addVehicle,
+                      otherVehicleType: e.target.value,
+                    });
+                  }}
+                  label="Other"
+                  className="w-full"
+                />
               </div>
             )}
           </div>
@@ -478,7 +488,17 @@ export const NestedAddVehicle = (props: any) => {
             />
             {addVehicle.typeOfTrailer === "Other" && (
               <div className="mt-3">
-                <Maininputfield label="Other" className="w-full" />
+                <Maininputfield
+                  value={addVehicle.otherTypeOfTrailer}
+                  onChange={(e: any) => {
+                    setAddVehicle({
+                      ...addVehicle,
+                      otherTypeOfTrailer: e.target.value,
+                    });
+                  }}
+                  label="Other"
+                  className="w-full"
+                />
               </div>
             )}
           </div>
@@ -503,7 +523,17 @@ export const NestedAddVehicle = (props: any) => {
             />
             {addVehicle.stateOfRegistration === "Other" && (
               <div className="mt-3">
-                <Maininputfield label="Other" className="w-full" />
+                <Maininputfield
+                  value={addVehicle.otherStateOfRegistration}
+                  onChange={(e: any) => {
+                    setAddVehicle({
+                      ...addVehicle,
+                      otherStateOfRegistration: e.target.value,
+                    });
+                  }}
+                  label="Other"
+                  className="w-full"
+                />
               </div>
             )}
           </div>
@@ -544,24 +574,41 @@ export const NestedAddVehicle = (props: any) => {
             }}
             errorMessage={error.compliancePlateError}
           />
-          <Maindatefield
-            label="Registration Status"
-            value={addVehicle.registrationStatus}
-            className="w-full"
-            onChange={(e: any) => {
-              setAddVehicle({
-                ...addVehicle,
-                registrationStatus: e.target.value,
-              });
-              if (e.target.value.length > 0) {
-                setError({
-                  ...error,
-                  registrationStatusError: "",
+          <div>
+            <DropDownMap
+              label="Registration Status"
+              mapOption={registrationStatusCollection}
+              value={addVehicle.registrationStatus}
+              onChange={(e: any) => {
+                setAddVehicle({
+                  ...addVehicle,
+                  registrationStatus: e.target.value,
                 });
-              }
-            }}
-            errorMessage={error.registrationStatusError}
-          />
+                if (e.target.value.length > 0) {
+                  setError({
+                    ...error,
+                    registrationStatusError: "",
+                  });
+                }
+              }}
+              errorMessage={error.registrationStatusError}
+            />
+            {addVehicle.registrationStatus === "Other" && (
+              <div className="mt-3">
+                <Maininputfield
+                  value={addVehicle.otherRegistrationStatus}
+                  onChange={(e: any) => {
+                    setAddVehicle({
+                      ...addVehicle,
+                      otherRegistrationStatus: e.target.value,
+                    });
+                  }}
+                  label="Other"
+                  className="w-full"
+                />
+              </div>
+            )}
+          </div>
         </div>
         <div className="mt-4 w-fit">
           <FileUpload
@@ -714,7 +761,17 @@ export const NestedAddVehicle = (props: any) => {
             />
             {addVehicle.insuranceCoverage === "Other" && (
               <div className="mt-3">
-                <Maininputfield label="Other" className="w-full" />
+                <Maininputfield
+                  value={addVehicle.otherInsuranceCoverage}
+                  onChange={(e: any) => {
+                    setAddVehicle({
+                      ...addVehicle,
+                      otherInsuranceCoverage: e.target.value,
+                    });
+                  }}
+                  label="Other"
+                  className="w-full"
+                />
               </div>
             )}
           </div>
@@ -739,7 +796,17 @@ export const NestedAddVehicle = (props: any) => {
             />
             {addVehicle.insuranceStatus === "Other" && (
               <div className="mt-3">
-                <Maininputfield label="Other" className="w-full" />
+                <Maininputfield
+                  value={addVehicle.otherInsuranceStatus}
+                  onChange={(e: any) => {
+                    setAddVehicle({
+                      ...addVehicle,
+                      otherInsuranceStatus: e.target.value,
+                    });
+                  }}
+                  label="Other"
+                  className="w-full"
+                />
               </div>
             )}
           </div>
@@ -764,7 +831,17 @@ export const NestedAddVehicle = (props: any) => {
             />
             {addVehicle.situation === "Other" && (
               <div className="mt-3">
-                <Maininputfield label="Other" className="w-full" />
+                <Maininputfield
+                  value={addVehicle.otherSituation}
+                  onChange={(e: any) => {
+                    setAddVehicle({
+                      ...addVehicle,
+                      otherSituation: e.target.value,
+                    });
+                  }}
+                  label="Other"
+                  className="w-full"
+                />
               </div>
             )}
           </div>
@@ -978,6 +1055,24 @@ const registrationStateCollection = [
   },
   {
     value: "Western Australia",
+  },
+  {
+    value: "Other",
+  },
+];
+
+const registrationStatusCollection = [
+  {
+    value: "Active",
+  },
+  {
+    value: "Cancelled",
+  },
+  {
+    value: "Suspended",
+  },
+  {
+    value: "Renewal Pending",
   },
   {
     value: "Other",

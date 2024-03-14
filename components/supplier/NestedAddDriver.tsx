@@ -656,7 +656,20 @@ const NestedAddDriver = (props: any) => {
             />{" "}
             {addDriver?.currentAddress?.state === "Other" && (
               <div className="mt-3">
-                <Maininputfield label="Other" className="w-full" />
+                <Maininputfield
+                  value={addDriver?.currentAddress?.otherState}
+                  onChange={(e: any) => {
+                    setAddDriver({
+                      ...addDriver,
+                      currentAddress: {
+                        ...addDriver.currentAddress,
+                        otherState: e.target.value,
+                      },
+                    });
+                  }}
+                  label="Other"
+                  className="w-full"
+                />
               </div>
             )}
           </div>
@@ -822,7 +835,20 @@ const NestedAddDriver = (props: any) => {
             />
             {addDriver?.permanentAddress?.state === "Other" && (
               <div className="mt-3">
-                <Maininputfield label="Other" className="w-full" />
+                <Maininputfield
+                  value={addDriver?.permanentAddress?.otherState}
+                  onChange={(e: any) => {
+                    setAddDriver({
+                      ...addDriver,
+                      permanentAddress: {
+                        ...addDriver.permanentAddress,
+                        otherState: e.target.value,
+                      },
+                    });
+                  }}
+                  label="Other"
+                  className="w-full"
+                />
               </div>
             )}
           </div>
@@ -1444,7 +1470,20 @@ const NestedAddDriver = (props: any) => {
             />
             {addDriver?.licenseDetails?.licenseType === "Other" && (
               <div className="mt-3">
-                <Maininputfield label="Other" className="w-full" />
+                <Maininputfield
+                  value={addDriver?.licenseDetails?.otherLicenceType}
+                  onChange={(e: any) => {
+                    setAddDriver({
+                      ...addDriver,
+                      licenseDetails: {
+                        ...addDriver.licenseDetails,
+                        otherLicenceType: e.target.value,
+                      },
+                    });
+                  }}
+                  label="Other"
+                  className="w-full"
+                />
               </div>
             )}
           </div>
@@ -1477,7 +1516,20 @@ const NestedAddDriver = (props: any) => {
             />
             {addDriver?.licenseDetails?.state === "Other" && (
               <div className="mt-3">
-                <Maininputfield label="Other" className="w-full" />
+                <Maininputfield
+                  value={addDriver?.licenseDetails?.otherStateIssue}
+                  onChange={(e: any) => {
+                    setAddDriver({
+                      ...addDriver,
+                      licenseDetails: {
+                        ...addDriver.licenseDetails,
+                        otherStateIssue: e.target.value,
+                      },
+                    });
+                  }}
+                  label="Other"
+                  className="w-full"
+                />
               </div>
             )}
           </div>
@@ -1608,7 +1660,17 @@ const NestedAddDriver = (props: any) => {
           </div>
           {addDriver?.specialDrivingLicense === "Other" && (
             <div className=" grid grid-cols-3 gap-4 ml-4 mt-1">
-              <Maininputfield label="Other" className="w-full" />
+              <Maininputfield
+                value={addDriver?.otherSpecialDrivingLicense}
+                onChange={(e: any) => {
+                  setAddDriver({
+                    ...addDriver,
+                    otherSpecialDrivingLicense: e.target.value,
+                  });
+                }}
+                label="Other"
+                className="w-full"
+              />
             </div>
           )}
         </div>

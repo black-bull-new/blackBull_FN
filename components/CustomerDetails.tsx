@@ -10,7 +10,7 @@ import {
   uploadCustomerBulkDocuments,
 } from "@/network-request/customer/customerApi";
 import FileBulkUpload from "./FileBulkUpload";
-
+import toast, { Toaster } from "react-hot-toast";
 const CustomerDetails = () => {
   const [deletePopUp, setDelete] = useState(false);
   const router = useRouter();
@@ -130,7 +130,26 @@ const CustomerDetails = () => {
           (file) => uploadCustomerBulkDocuments(token, file) // Corrected function name
         )
       );
-      console.log("uploadDocument",uploadDocument)
+      console.log("uploadDocument", uploadDocument);
+      if (uploadDocument[0].success === true) {
+        toast("Data added successfully.", {
+          icon: "👏",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+      } else {
+        toast("Duplicate data found!!", {
+          icon: "⚠️",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+      }
       setTimeout(() => {
         setselectedUploadBulkDocument("");
         setBulkUpload(false);
@@ -144,6 +163,9 @@ const CustomerDetails = () => {
   return (
     <>
       <div className="mr-4">
+        <div>
+          <Toaster />
+        </div>
         <div>
           <div className="mt-4 mb-20 bg-white p-4 rounded-2xl items-center ">
             <div className="flex items-center justify-between">
