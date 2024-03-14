@@ -108,6 +108,16 @@ const CreateVehicle = () => {
     accountNumber: "",
     accountName: "",
     vehicleDocumentStatus: "Complete",
+
+    // =============================================== ADDITONAL FIELDS ADDED ON 04/03/2024 ===============================================
+    otherVehicleType: "",
+    otherTypeTrailer: "",
+    otherStateRegistration: "",
+    otherRegistrationStatus: "",
+    otherOwnershipStatus: "",
+    otherInsuranceCoverage: "",
+    otherInsuranceStatus: "",
+    otherSituation: ""
   });
 
   const [error, setError] = useState<any>({
@@ -184,8 +194,7 @@ const CreateVehicle = () => {
     calculateProgress();
   }, [vehicleDetails]);
 
-  console.log("vehicleDetails", vehicleDetails);
-  console.log("progress", progress);
+  console.log({ error })
   const handleInputChange = (id: any, value: any) => {
     setDocumentDataCollection((prevCollection: any) => {
       const updatedCollection = prevCollection.map((item: any) =>
@@ -243,17 +252,21 @@ const CreateVehicle = () => {
       ) {
         // Handle nested objects with a different logic
         Object.keys(vehicleDetails[key]).forEach((nestedKey) => {
-          const nestedKeyPath = `${key}Error.${nestedKey}`;
           if (
-            !vehicleDetails[key][nestedKey] ||
-            vehicleDetails[key][nestedKey] === undefined
+            nestedKey !== "otherState"
           ) {
-            newErrors[key + "Error"][
-              nestedKey
-            ] = `${nestedKey} is required in ${key}`;
-            hasErrors = true;
-          } else {
-            newErrors[nestedKeyPath] = "";
+            const nestedKeyPath = `${key}Error.${nestedKey}`;
+            if (
+              !vehicleDetails[key][nestedKey] ||
+              vehicleDetails[key][nestedKey] === undefined
+            ) {
+              newErrors[key + "Error"][
+                nestedKey
+              ] = `${nestedKey} is required in ${key}`;
+              hasErrors = true;
+            } else {
+              newErrors[nestedKeyPath] = "";
+            }
           }
         });
       } else {
@@ -275,7 +288,15 @@ const CreateVehicle = () => {
           key !== "bankName" &&
           key !== "accountNumber" &&
           key !== "accountName" &&
-          key !== "vehicleUploadDocument"
+          key !== "vehicleUploadDocument" &&
+          key !== "otherVehicleType" &&
+          key !== "otherTypeTrailer" &&
+          key !== "otherStateRegistration" &&
+          key !== "otherRegistrationStatus" &&
+          key !== "otherOwnershipStatus" &&
+          key !== "otherInsuranceCoverage" &&
+          key !== "otherInsuranceStatus" &&
+          key !== "otherSituation"
         ) {
           if (!vehicleDetails[key]) {
             newErrors[key + "Error"] = `${correctVehicleStateName(
@@ -717,7 +738,15 @@ const CreateVehicle = () => {
 
                   {vehicleDetails.vehicleType === "Other" && (
                     <div className="mt-3">
-                      <Maininputfield label="Other" className="w-full" />
+                      <Maininputfield label="Other" className="w-full"
+                        value={vehicleDetails?.otherVehicleType}
+                        onChange={(e: any) => {
+                          setVehicleDetails({
+                            ...vehicleDetails,
+                            otherVehicleType: e.target.value,
+                          });
+                        }}
+                      />
                     </div>
                   )}
                 </div>
@@ -744,7 +773,15 @@ const CreateVehicle = () => {
                   />
                   {vehicleDetails.typeOfTrailer === "Other" && (
                     <div className="mt-3">
-                      <Maininputfield label="Other" className="w-full" />
+                      <Maininputfield label="Other" className="w-full"
+                        value={vehicleDetails?.otherTypeTrailer}
+                        onChange={(e: any) => {
+                          setVehicleDetails({
+                            ...vehicleDetails,
+                            otherTypeTrailer: e.target.value,
+                          });
+                        }}
+                      />
                     </div>
                   )}
                 </div>
@@ -790,7 +827,15 @@ const CreateVehicle = () => {
                   />
                   {vehicleDetails.stateOfRegistration === "Other" && (
                     <div className="mt-3">
-                      <Maininputfield label="Other" className="w-full" />
+                      <Maininputfield label="Other" className="w-full"
+                        value={vehicleDetails?.otherStateRegistration}
+                        onChange={(e: any) => {
+                          setVehicleDetails({
+                            ...vehicleDetails,
+                            otherStateRegistration: e.target.value,
+                          });
+                        }}
+                      />
                     </div>
                   )}
                 </div>
@@ -859,7 +904,15 @@ const CreateVehicle = () => {
                   />
                   {vehicleDetails.registrationStatus === "Other" && (
                     <div className="mt-3">
-                      <Maininputfield label="Other" className="w-full" />
+                      <Maininputfield label="Other" className="w-full"
+                        value={vehicleDetails?.otherRegistrationStatus}
+                        onChange={(e: any) => {
+                          setVehicleDetails({
+                            ...vehicleDetails,
+                            otherRegistrationStatus: e.target.value,
+                          });
+                        }}
+                      />
                     </div>
                   )}
                 </div>
@@ -886,7 +939,15 @@ const CreateVehicle = () => {
                   />
                   {vehicleDetails.ownershipStatus === "Other" && (
                     <div className="mt-3">
-                      <Maininputfield label="Other" className="w-full" />
+                      <Maininputfield label="Other" className="w-full"
+                        value={vehicleDetails?.otherOwnershipStatus}
+                        onChange={(e: any) => {
+                          setVehicleDetails({
+                            ...vehicleDetails,
+                            otherOwnershipStatus: e.target.value,
+                          });
+                        }}
+                      />
                     </div>
                   )}
                 </div>
@@ -1262,7 +1323,15 @@ const CreateVehicle = () => {
                     />
                     {vehicleDetails.insuranceCoverage === "Other" && (
                       <div className="mt-3">
-                        <Maininputfield label="Other" className="w-full" />
+                        <Maininputfield label="Other" className="w-full"
+                          value={vehicleDetails?.otherInsuranceCoverage}
+                          onChange={(e: any) => {
+                            setVehicleDetails({
+                              ...vehicleDetails,
+                              otherInsuranceCoverage: e.target.value,
+                            });
+                          }}
+                        />
                       </div>
                     )}
                   </div>
@@ -1289,7 +1358,15 @@ const CreateVehicle = () => {
                     />{" "}
                     {vehicleDetails.insuranceStatus === "Other" && (
                       <div className="mt-3">
-                        <Maininputfield label="Other" className="w-full" />
+                        <Maininputfield label="Other" className="w-full"
+                          value={vehicleDetails?.otherInsuranceStatus}
+                          onChange={(e: any) => {
+                            setVehicleDetails({
+                              ...vehicleDetails,
+                              otherInsuranceStatus: e.target.value,
+                            });
+                          }}
+                        />
                       </div>
                     )}
                   </div>
@@ -1316,7 +1393,15 @@ const CreateVehicle = () => {
                     />
                     {vehicleDetails.situation === "Other" && (
                       <div className="mt-3">
-                        <Maininputfield label="Other" className="w-full" />
+                        <Maininputfield label="Other" className="w-full"
+                          value={vehicleDetails?.otherSituation}
+                          onChange={(e: any) => {
+                            setVehicleDetails({
+                              ...vehicleDetails,
+                              otherSituation: e.target.value,
+                            });
+                          }}
+                        />
                       </div>
                     )}
                   </div>
@@ -1430,10 +1515,10 @@ const CreateVehicle = () => {
                                   (file: any) => file.id === data?.id
                                 )?.currentDate
                                   ? formatDate(
-                                      selectedFiles.find(
-                                        (file: any) => file.id === data?.id
-                                      )?.currentDate
-                                    )
+                                    selectedFiles.find(
+                                      (file: any) => file.id === data?.id
+                                    )?.currentDate
+                                  )
                                   : "No date available"}
                               </p>
                             </div>
@@ -1457,9 +1542,9 @@ const CreateVehicle = () => {
                           ) : (
                             <span
                               className="!w-fit m-auto  py-2 cursor-pointer  px-6 rounded-full mb-6 text-black"
-                              // onClick={() =>
-                              //   handleUploadFileWithId(data?.id, combinedObject)
-                              // }
+                            // onClick={() =>
+                            //   handleUploadFileWithId(data?.id, combinedObject)
+                            // }
                             >
                               No file Uploaded
                             </span>

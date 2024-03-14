@@ -86,6 +86,7 @@ const AddCustomer = () => {
       state: "",
       country: "Australia",
       postCode: "",
+      otherState: ""
     },
 
     accountPayble: {
@@ -121,6 +122,8 @@ const AddCustomer = () => {
     },
     invoicePrefrences: "",
     invoiceCommunicationPrefrences: "",
+    otherInvoicePreferences: "",
+    otherInvoiceCommunicationPreferences: "",
     companySuiteDetails: [],
     payment: {
       accountName: "",
@@ -129,6 +132,7 @@ const AddCustomer = () => {
       accountNumber: "",
     },
     paymentTerm: "",
+    otherPaymentTerm: "",
     warehouseLocation: [],
     document: "",
   });
@@ -248,6 +252,7 @@ const AddCustomer = () => {
   });
   const [addMoreDirector, setAddMoreDirector] = useState<Array<any>>([]);
   const [addMoreAddress, setAddMoreAddress] = useState<Array<any>>([]);
+  console.log({ addMoreAddress })
   const [progress, setProgress] = useState(0);
   useEffect(() => {
     setProgressOfState({
@@ -325,7 +330,7 @@ const AddCustomer = () => {
     calculateProgress();
   }, [progressOfState]);
 
-  console.log("progressOfState", progressOfState);
+  console.log({ customer });
 
   // *********** Add More Director ********************************
 
@@ -374,6 +379,7 @@ const AddCustomer = () => {
           state: "",
           country: "Australia",
           postCode: "",
+          otherState: ""
         },
       ]);
     }
@@ -395,6 +401,7 @@ const AddCustomer = () => {
         state: "",
         country: "Australia",
         postCode: "",
+        otherState: "",
       },
     ]);
   };
@@ -534,22 +541,29 @@ const AddCustomer = () => {
         key !== "document" &&
         key !== "avatar" &&
         key !== "companySuiteDetails" &&
-        key !== "warehouseLocation"
+        key !== "warehouseLocation" &&
+        key !== "otherInvoicePreferences" &&
+        key !== "otherInvoiceCommunicationPreferences" &&
+        key !== "otherPaymentTerm"
       ) {
         if (typeof customer[key] === "object" && customer[key] !== null) {
           // Handle nested objects with a different logic
           Object.keys(customer[key]).forEach((nestedKey) => {
             const nestedKeyPath = `${key}Error.${nestedKey}`;
             if (
-              !customer[key][nestedKey] ||
-              customer[key][nestedKey] === undefined
+              nestedKey !== "otherState"
             ) {
-              newErrors[key + "Error"][nestedKey] = `${correctCustomerStateName(
-                nestedKey
-              )} is required in ${correctCustomerStateName(key)}`;
-              hasErrors = true;
-            } else {
-              newErrors[nestedKeyPath] = "";
+              if (
+                !customer[key][nestedKey] ||
+                customer[key][nestedKey] === undefined
+              ) {
+                newErrors[key + "Error"][nestedKey] = `${correctCustomerStateName(
+                  nestedKey
+                )} is required in ${correctCustomerStateName(key)}`;
+                hasErrors = true;
+              } else {
+                newErrors[nestedKeyPath] = "";
+              }
             }
           });
         } else {
@@ -577,7 +591,7 @@ const AddCustomer = () => {
   };
 
   console.log("State", customer);
-  console.log("Error", error);
+  console.log("Error", { error });
 
   const regexOfPhoneNumber = /^(?:\+61|0)[2-478](?:[ -]?[0-9]){8}$/;
   const regexOfEmail =
@@ -891,12 +905,23 @@ const AddCustomer = () => {
                     }
                   }}
                   errorMessage={error.companyAddressError?.state}
-                  // selectedData={selectedData}
-                  // setSelectedData={setSelectedData}
+                // selectedData={selectedData}
+                // setSelectedData={setSelectedData}
                 />
                 {customer?.companyAddress?.state === "Other" && (
                   <div className="mt-3">
-                    <Maininputfield label="Other" className="w-full" />
+                    <Maininputfield label="Other" className="w-full"
+                      value={customer.companyAddress.otherState}
+                      onChange={(e: any) => {
+                        setCustomer({
+                          ...customer,
+                          companyAddress: {
+                            ...customer.companyAddress,
+                            otherState: e.target.value,
+                          },
+                        });
+                      }}
+                    />
                   </div>
                 )}
               </div>
@@ -924,8 +949,8 @@ const AddCustomer = () => {
                   }
                 }}
                 errorMessage={error.companyAddressError?.country}
-                // selectedData={selectedData}
-                // setSelectedData={setSelectedData}
+              // selectedData={selectedData}
+              // setSelectedData={setSelectedData}
               />
               <Maininputfield
                 label="Post Code"
@@ -1589,7 +1614,15 @@ const AddCustomer = () => {
               </div>
               {customer?.invoicePrefrences === "Other" && (
                 <div className="grid grid-cols-3 gap-4 ml-4 mb-4 mt-3">
-                  <Maininputfield label="Other" className="w-full" />
+                  <Maininputfield label="Other" className="w-full"
+                    value={customer?.otherInvoicePreferences}
+                    onChange={(e: any) => {
+                      setCustomer({
+                        ...customer,
+                        otherInvoicePreferences: e.target.value,
+                      });
+                    }}
+                  />
                 </div>
               )}
             </div>
@@ -1621,7 +1654,15 @@ const AddCustomer = () => {
               </div>
               {customer.invoiceCommunicationPrefrences === "Other" && (
                 <div className="grid grid-cols-3 gap-4 ml-4 mt-3 mb-4">
-                  <Maininputfield label="Other" className="w-full" />
+                  <Maininputfield label="Other" className="w-full"
+                    value={customer?.otherInvoiceCommunicationPreferences}
+                    onChange={(e: any) => {
+                      setCustomer({
+                        ...customer,
+                        otherInvoiceCommunicationPreferences: e.target.value,
+                      });
+                    }}
+                  />
                 </div>
               )}
             </div>
@@ -2007,7 +2048,12 @@ const AddCustomer = () => {
               </div>
               {customer?.paymentTerm === "Other" && (
                 <div className="grid grid-cols-3 gap-4 ml-4 mt-3">
-                  <Maininputfield label="Other" className="w-full" />
+                  <Maininputfield label="Other" className="w-full"
+                    value={customer?.otherPaymentTerm}
+                    onChange={(e: any) => {
+                      setCustomer({ ...customer, otherPaymentTerm: e.target.value });
+                    }}
+                  />
                 </div>
               )}
             </div>
@@ -2062,7 +2108,12 @@ const AddCustomer = () => {
                       />
                       {item?.state === "Other" && (
                         <div className="mt-4">
-                          <Maininputfield label="Other" className="w-full" />
+                          <Maininputfield label="Other" className="w-full"
+                            value={item?.otherState}
+                            onChange={(e: any) =>
+                              handleAddressChange(e, "otherState", index)
+                            }
+                          />
                         </div>
                       )}
                     </div>

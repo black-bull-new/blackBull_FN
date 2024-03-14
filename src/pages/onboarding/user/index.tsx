@@ -69,7 +69,9 @@ const User = () => {
         key !== "requirePassword" &&
         key !== "sendPassword" &&
         key !== "temporaryPassword" &&
-        key !== "avatar"
+        key !== "avatar" &&
+        key !== "otherDomains" &&
+        key !== "otherRole"
       ) {
         if (!user[key]) {
           newErrors[key + "Error"] = `${correctUserStateName(key)} is required`;
@@ -120,11 +122,13 @@ const User = () => {
     number: "",
     username: "",
     domains: "",
+    otherDomains: "",
     avatar: "",
     employeeId: "",
     accessLevel: "",
     designation: "",
     role: "",
+    otherRole: "",
     temporaryPassword: false,
     password: "",
     confirmPassword: "",
@@ -454,7 +458,15 @@ const User = () => {
                   />
                   {user?.domains === "Other" && (
                     <div className="mt-3">
-                      <Maininputfield label="Other" className="w-full" />
+                      <Maininputfield label="Other" className="w-full"
+                        value={user?.otherDomains}
+                        onChange={(e: any) => {
+                          setUser({
+                            ...user,
+                            otherDomains: e.target.value,
+                          });
+                        }}
+                      />
                     </div>
                   )}
                 </div>
@@ -548,7 +560,15 @@ const User = () => {
                 </div>
                 {user?.role === "Other" && (
                   <div className="mt-3 grid grid-cols-3 gap-4">
-                    <Maininputfield label="Other" className="w-full" />
+                    <Maininputfield label="Other" className="w-full"
+                      value={user?.otherRole}
+                      onChange={(e: any) => {
+                        setUser({
+                          ...user,
+                          otherRole: e.target.value,
+                        });
+                      }}
+                    />
                   </div>
                 )}
               </div>
