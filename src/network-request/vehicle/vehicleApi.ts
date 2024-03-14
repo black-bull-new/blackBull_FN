@@ -127,7 +127,6 @@ export const uploadSingleSingleVehicleDocuments = async (selectedFile: any) => {
 };
 
 // Bulk Upload
-
 export const uploadBulkDocuments = async (token: any, selectedFile: any) => {
   console.log("selectedFile", selectedFile);
 
