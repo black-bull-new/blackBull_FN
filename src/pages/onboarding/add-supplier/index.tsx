@@ -210,12 +210,16 @@ const AddSupplier = () => {
       dispatchEmail: "",
     },
     invoicePreferences: "",
+    otherInvoicePreferences: "",
     invoiceCommunicationPreferences: "",
+    otherInvoiceCommunicationPreferences: "",
     companySuiteDetails: [],
     warehouseDetails: [],
     businessCoverage: {
       areaCovered: "",
+      otherAreaCovered: "",
       businessOpreations: "",
+      otherBusinessOpreations: "",
     },
     bankDetails: {
       accountName: "",
@@ -312,7 +316,6 @@ const AddSupplier = () => {
     onboardingDocuments: [],
     invoiceOthers: [],
   });
-  console.log("addSupplier", addSupplier);
   const [addMoreFields, setAddMoreFields] = useState<any>([]);
   const [addSupplierError, setAddSupplierError] = useState<any>({
     companyNameError: "",
@@ -367,6 +370,8 @@ const AddSupplier = () => {
     },
     // accreditationDocument: "",
   });
+
+  console.log("addSupplierError", addSupplierError);
   const [addMoreDirector, setAddMoreDirector] = useState<Array<any>>([]);
   const [addMoreAddress, setAddMoreAddress] = useState<Array<any>>([]);
   const [selectedProfileForSupplier, setSelectedProfileForSupplier] =
@@ -380,7 +385,6 @@ const AddSupplier = () => {
     []
   );
   console.log({ selectedProfileForSupplier });
-  console.log("addSupplierError", addSupplierError);
 
   // ================================================== Uploading documents ==================================================
   const [selectedDocuments, setSelectedDocuments] = useState(
@@ -398,11 +402,15 @@ const AddSupplier = () => {
     vehicleManufacturer: "",
     vehicleModel: "",
     vehicleType: "",
+    otherVehicleType: "",
     typeOfTrailer: "",
+    otherTypeOfTrailer: "",
     stateOfRegistration: "",
+    otherStateOfRegistration: "",
     engineNumber: "",
     compliancePlate: "",
     registrationStatus: "",
+    otherRegistrationStatus: "",
     vehicleDocuments: "",
     document: "",
     insuranceCompanyName: "",
@@ -412,8 +420,11 @@ const AddSupplier = () => {
     dateValidUntil: "",
     daysLeft: "",
     insuranceCoverage: "",
+    otherInsuranceCoverage: "",
     insuranceStatus: "",
+    otherInsuranceStatus: "",
     situation: "",
+    otherSituation: "",
     truckOdometer: "",
   });
   const [addVehicleError, setAddVehicleError] = useState<any>({
@@ -467,6 +478,7 @@ const AddSupplier = () => {
       state: "",
       country: "Australia",
       pincode: "",
+      otherState: "",
     },
     permanentAddress: {
       houseNumber: "",
@@ -475,6 +487,7 @@ const AddSupplier = () => {
       state: "",
       country: "Australia",
       pincode: "",
+      otherState: "",
     },
     emergencyContactInformation: {
       contactName: "",
@@ -486,14 +499,16 @@ const AddSupplier = () => {
       licenseNumber: "",
       licenseCardNumber: "",
       licenseType: "",
+      otherLicenceType: "",
       state: "",
+      otherStateIssue: "",
       dateOfIssue: "",
       expiryDate: "",
       daysLeftForRenewal: "",
       documents: [],
     },
     specialDrivingLicense: "",
-
+    otherSpecialDrivingLicense: "",
     // visaStatus: {
     //   type: "visa-status",
     //   uploadDate: "20/02/2024",
@@ -584,7 +599,6 @@ const AddSupplier = () => {
   });
   const [addMoreExperience, setAddMoreExperience] = useState<Array<any>>([]);
 
-  console.log("addDriverError", addDriverError);
   const [selectedProfileForDriver, setSelectedProfileForDriver] = useState("");
   const [
     selectedUploadRegoDocumentForDriver,
@@ -705,7 +719,8 @@ const AddSupplier = () => {
           suburb: address.suburb,
           state: address.state,
           country: address.country,
-          postCode: address.postCode,
+          postcode: address.postcode,
+          otherState: address.otherState,
         };
       });
 
@@ -754,6 +769,8 @@ const AddSupplier = () => {
         companySuiteDetails: updatedCompanySuiteDetails,
         warehouseDetails: updatedWarehouse,
       };
+
+      console.log("newSupplierDetails", newSupplierDetails);
 
       const response: any = await addSupplierIntoSupplier(
         newSupplierDetails,
@@ -939,7 +956,7 @@ const AddSupplier = () => {
       }
     }
   };
-
+  console.log("addDriverError", addDriverError);
   /**
    *
    * @returns true if error occurred in add driver state otherwise false
@@ -963,7 +980,8 @@ const AddSupplier = () => {
         key !== "driverCertificate" &&
         key !== "fitness" &&
         key !== "drugTest" &&
-        key !== "specialDrivingLicense"
+        key !== "specialDrivingLicense" &&
+        key !== "otherSpecialDrivingLicense"
       ) {
         if (typeof addDriver[key] === "object" && addDriver[key] !== null) {
           // Ensure that nested error objects are initialized
@@ -971,7 +989,12 @@ const AddSupplier = () => {
 
           // Handle nested objects with a different logic
           Object.keys(addDriver[key]).forEach((nestedKey) => {
-            if (nestedKey !== "documents") {
+            if (
+              nestedKey !== "documents" &&
+              nestedKey !== "otherLicenceType" &&
+              nestedKey !== "otherStateIssue" &&
+              nestedKey !== "otherState"
+            ) {
               const nestedKeyPath = `${key}Error.${nestedKey}`;
 
               if (
@@ -1038,7 +1061,9 @@ const AddSupplier = () => {
         key !== "workHealthSafetyPolicy" &&
         key !== "certificateOfAccreditation" &&
         key !== "profile" &&
-        key !== "invoiceCommunicationPreferences"
+        key !== "invoiceCommunicationPreferences" &&
+        key !== "otherInvoicePreferences" &&
+        key !== "otherInvoiceCommunicationPreferences"
       ) {
         if (typeof addSupplier[key] === "object" && addSupplier[key] !== null) {
           // Ensure that nested error objects are initialized
@@ -1046,20 +1071,24 @@ const AddSupplier = () => {
 
           // Handle nested objects with a different logic
           Object.keys(addSupplier[key]).forEach((nestedKey) => {
-            const nestedKeyPath = `${key}Error.${nestedKey}`;
-
             if (
-              !addSupplier[key][nestedKey] ||
-              addSupplier[key][nestedKey] === undefined
+              nestedKey !== "otherAreaCovered" &&
+              nestedKey !== "otherBusinessOpreations"
             ) {
-              newErrors[key + "Error"][
-                nestedKey
-              ] = `${correctAddSupplierStateName(
-                nestedKey
-              )} is required in ${correctAddSupplierStateName(key)}`;
-              hasErrors = true;
-            } else {
-              newErrors[key + "Error"][nestedKey] = "";
+              const nestedKeyPath = `${key}Error.${nestedKey}`;
+              if (
+                !addSupplier[key][nestedKey] ||
+                addSupplier[key][nestedKey] === undefined
+              ) {
+                newErrors[key + "Error"][
+                  nestedKey
+                ] = `${correctAddSupplierStateName(
+                  nestedKey
+                )} is required in ${correctAddSupplierStateName(key)}`;
+                hasErrors = true;
+              } else {
+                newErrors[key + "Error"][nestedKey] = "";
+              }
             }
           });
         } else {
@@ -1084,6 +1113,7 @@ const AddSupplier = () => {
     // Return the error status
     return hasErrors;
   };
+  console.log("addVehicleError", addVehicleError);
   /**
    *
    * @returns true if error occurred in add vehicle state otherwise false
@@ -1099,7 +1129,17 @@ const AddSupplier = () => {
         behavior: "smooth", // for smooth scrolling
       });
 
-      if (key !== "document" && key !== "vehicleDocuments") {
+      if (
+        key !== "document" &&
+        key !== "vehicleDocuments" &&
+        key !== "otherInsuranceCoverage" &&
+        key !== "otherInsuranceStatus" &&
+        key !== "otherRegistrationStatus" &&
+        key !== "otherSituation" &&
+        key !== "otherStateOfRegistration" &&
+        key !== "otherTypeOfTrailer" &&
+        key !== "otherVehicleType"
+      ) {
         if (!addVehicle[key]) {
           newErrors[key + "Error"] = `${correctAddVehicleStateName(
             key

@@ -203,6 +203,26 @@ const DriverDetails = () => {
           (file) => uploadDriverBulkDocuments(token, file) // Corrected function name
         )
       );
+      console.log("uploadDocument", uploadDocument);
+      if (uploadDocument[0].success === true) {
+        toast("Data added successfully.", {
+          icon: "👏",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+      } else {
+        toast("Duplicate data found!!", {
+          icon: "⚠️",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+      }
       setTimeout(() => {
         setselectedUploadBulkDocument("");
         setBulkUpload(false);
